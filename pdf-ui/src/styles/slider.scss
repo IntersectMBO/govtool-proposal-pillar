@@ -1,0 +1,20 @@
+@import 'slick-carousel/slick/slick.css';
+@import 'slick-carousel/slick/slick-theme.css';
+
+.slick-list {
+    margin-left: -16px;
+    margin-right: -16px;
+    padding-top: 16px;
+    padding-bottom: 16px;
+    .slick-track {
+        display: flex !important;
+        .slick-slide {
+            height: inherit !important;
+            margin-left: 16px;
+            margin-right: 16px;
+            & > div {
+                height: 100%;
+            }
+        }
+    }
+}
