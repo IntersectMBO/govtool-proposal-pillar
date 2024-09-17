@@ -1,4 +1,4 @@
-# 🚀 PDF (Proposal Discussion Forum) backend
+# 🚀 PDF (Proposal Discussion Forum)
 
 Welcome to the official repository for the PDF backend.
 
@@ -8,6 +8,7 @@ Welcome to the official repository for the PDF backend.
 - [Introduction](#introduction)
 - [Prerequisites](#prerequisites)
 - [Tech stack:](#tech-stack)
+  - [pdf-ui package](#pdf-ui-package)
   - [Backend](#backend)
   - [Database](#database)
 - [Getting started](#getting-started)
@@ -36,6 +37,10 @@ This document serves as a comprehensive guide for setting up the backend and dat
 
 **Container:** [Docker](https://docs.docker.com/get-started/)
 
+### pdf-ui package
+
+The `@intersect.mbo/pdf-ui` is a React.js package that includes all the necessary logic and UI components required for the operation of a proposal discussion forum.
+
 ### Backend
 
 Our backend is powered by Strapi, a versatile headless CMS built on Node.js. It offers an intuitive admin panel, coupled with extensive RESTful and GraphQL API support, enabling efficient content management and API development.
@@ -54,13 +59,13 @@ Before you begin setting up the application, you'll need to clone the repository
    - Navigate to the directory where you want to store the project.
    - Run the following command to clone the repository:
      ```
-     git clone https://github.com/IntersectMBO/govtool-proposal-discussion.git
+     git clone https://github.com/IntersectMBO/govtool-proposal-pillar.git
      ```
 
 2. **Navigate to the Project Directory:**
    - After cloning, change into the project's root directory:
      ```
-     cd govtool-proposal-discussion
+     cd govtool-proposal-pillar
      ```
      This directory contains all the files you need to set up the backend.
 
@@ -118,6 +123,8 @@ By following these steps, you can quickly get your full-stack application runnin
 
 ### Additional Information
 
-For more detailed information, check the README file in the backend folder:
+For more detailed information, check the README files in the corresponding folders:
 
 - [Backend setup](./backend/README.md) - Detailed instructions for setting up the backend part of the application.
+
+- [pdf-ui](./pdf-ui/README.md) - Detailed information regarding the PDF-UI package setup and usage.
