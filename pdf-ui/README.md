@@ -43,6 +43,7 @@ export default function Page() {
 
     return (
         <ProposalDiscussion
+            pdfApiUrl="https://xxxxx"
             walletAPI={{
               ...context,
               ...walletApi,
@@ -80,6 +81,7 @@ export const ProposalDiscussionPillar = () => {
 
   return (
           <ProposalDiscussion
+            pdfApiUrl="https://xxxxx"
             walletAPI={{
               ...context,
               ...walletApi,
@@ -133,5 +135,3 @@ Before starting, please ensure you have the following:
 ## Running locally
 
 To launch the package, it is necessary to have an application (for example, a Next.js app) into which this package is imported. This wrapper application must provide wallet connectivity to supply the wallet API to the package.
-
-In the wrapper application, you need to add the `NEXT_PUBLIC_PROPOSAL_DISCUSSION_API_URL` environment variable to the .env file, with the URL of the proposal discussion backend.
