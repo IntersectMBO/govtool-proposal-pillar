@@ -1,0 +1,32 @@
+{
+  "kind": "collectionType",
+  "collectionName": "proposals",
+  "info": {
+    "singularName": "proposal",
+    "pluralName": "proposals",
+    "displayName": "Proposal",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "prop_likes": {
+      "type": "integer",
+      "default": 0
+    },
+    "prop_dislikes": {
+      "type": "integer",
+      "default": 0
+    },
+    "prop_comments_number": {
+      "type": "integer",
+      "default": 0
+    },
+    "user_id": {
+      "type": "string",
+      "required": true
+    }
+  }
+}

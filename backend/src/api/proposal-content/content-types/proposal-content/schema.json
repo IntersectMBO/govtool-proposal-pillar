@@ -1,0 +1,76 @@
+{
+  "kind": "collectionType",
+  "collectionName": "proposal_contents",
+  "info": {
+    "singularName": "proposal-content",
+    "pluralName": "proposal-contents",
+    "displayName": "Proposal content",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "proposal_id": {
+      "type": "string"
+    },
+    "prop_rev_active": {
+      "type": "boolean",
+      "default": false
+    },
+    "prop_abstract": {
+		"type": "text",
+		"maxLength": 2500
+	},
+    "prop_motivation": {
+		"type": "text",
+		"maxLength": 12000
+	},
+    "prop_rationale": {
+		"type": "text",
+		"maxLength": 12000
+	},
+    "gov_action_type_id": {
+      "type": "string"
+    },
+    "prop_name": {
+		"type": "string",
+		"required": true,
+		"maxLength": 80
+	},
+    "prop_receiving_address": {
+      "type": "string",
+      "required": false,
+      "maxLength": 200
+    },
+    "prop_amount": {
+      "type": "float",
+      "required": false
+    },
+    "proposal_links": {
+      "type": "component",
+      "repeatable": true,
+      "component": "proposal.proposal-link"
+    },
+    "is_draft": {
+      "type": "boolean",
+      "default": false
+    },
+    "user_id": {
+      "type": "string",
+      "required": true
+    },
+    "prop_submitted": {
+      "type": "boolean",
+      "default": false
+    },
+    "prop_submission_tx_hash": {
+      "type": "string",
+      "unique": true
+    },
+    "prop_submission_date": {
+      "type": "date"
+    }
+  }
+}

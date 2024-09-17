@@ -1,0 +1,4561 @@
+info:
+  version: 1.0.0
+  title: Govtool proposal discussion API documentation
+  description: >
+    ## Introduction to the API
+
+    Welcome to our API documentation. Here you'll find a comprehensive guide to understanding and integrating our RESTful API. It's designed with a focus on simplicity and adherence to REST principles, enabling you to perform data retrieval, analysis, and insertion operations seamlessly.
+
+    ### Key Design Principles:
+    
+    - **Resource-Oriented URLs**: Our API uses logical, structured URLs that facilitate easy access to resources.
+    
+    - **JSON Responses**: Interaction with the API is intuitive and efficient, with all responses formatted as JSON.
+    
+    - **Standardized Communication**: We employ standard HTTP response codes for status reporting and HTTP methods for actions, ensuring a consistent interaction model.
+    
+    - **Authentication**: Secure access is a priority, and our API utilizes standard authentication protocols to protect data.
+
+    ### Making Requests:
+
+    When interacting with the API, a typical request includes:
+    
+    - **HTTP Method**: The type of action you're requesting, such as GET for retrieval, POST for creation, PUT for updates, and DELETE for removal.
+    
+    - **Path**: The unique endpoint URL identifying the specific resource you're interacting with.
+    
+    - **Headers**: Additional information (like authentication tokens) passed with the request.
+    
+    - **Parameters**: You may also provide path, query, or body parameters to specify or filter the request further.
+
+    ### Receiving Responses:
+
+    In response to your requests, the API will provide:
+    
+    - **Status Code**: The HTTP status code indicating the result of your request (e.g., 200 OK, 404 Not Found).
+    
+    - **Headers**: Response headers may include metadata about the response or the requested resource.
+    
+    - **Body**: If applicable, the body of the response will contain the requested data in JSON format.
+    
+openapi: 3.0.0
+tags:
+  - name: Proposal
+  - name: Proposal vote
+  - name: Comment
+  - name: Poll
+  - name: Poll vote
+  - name: Proposal category
+  - name: Proposal content
+  - name: Proposal submition
+  - name: Governance action type
+  - name: Wallet type
+  - name: proposal_model
+    x-displayName: Proposal model
+    description: |
+      <SchemaDefinition schemaRef="#/components/schemas/ProposalRequest" showReadOnly={true} showWriteOnly={true} />
+  - name: proposal_content_model
+    x-displayName: Proposal content model
+    description: |
+      <SchemaDefinition schemaRef="#/components/schemas/ProposalContentRequest" showReadOnly={true} showWriteOnly={true} />
+  - name: proposal_vote_model
+    x-displayName: Proposal vote model
+    description: |
+      <SchemaDefinition schemaRef="#/components/schemas/ProposalVoteRequest" showReadOnly={true} showWriteOnly={true} />
+  - name: governance_action_type_model
+    x-displayName: Governance action type model
+    description: |
+      <SchemaDefinition schemaRef="#/components/schemas/ProposalTypeRequest" showReadOnly={true} showWriteOnly={true} />
+  - name: comment_model
+    x-displayName: Comment model
+    description: |
+      <SchemaDefinition schemaRef="#/components/schemas/CommentRequest" showReadOnly={true} showWriteOnly={true} />
+  - name: proposal_category_model
+    x-displayName: Proposal category model
+    description: |
+      <SchemaDefinition schemaRef="#/components/schemas/ProposalCategoryRequest" showReadOnly={true} showWriteOnly={true} />
+  - name: proposal_submition_model
+    x-displayName: Proposal submition model
+    description: |
+      <SchemaDefinition schemaRef="#/components/schemas/ProposalSubmitionRequest" showReadOnly={true} showWriteOnly={true} />
+  - name: poll_model
+    x-displayName: Poll model
+    description: |
+      <SchemaDefinition schemaRef="#/components/schemas/PollRequest" showReadOnly={true} showWriteOnly={true} />
+  - name: poll_vote_model
+    x-displayName: Poll vote model
+    description: |
+      <SchemaDefinition schemaRef="#/components/schemas/PollVoteRequest" showReadOnly={true} showWriteOnly={true} />
+  - name: wallet_type_model
+    x-displayName: Wallet type model
+    description: |
+      <SchemaDefinition schemaRef="#/components/schemas/WalletTypeRequest" showReadOnly={true} showWriteOnly={true} />
+  - name: proposal_status_model
+    x-displayName: Proposal status model
+    description: |
+      <SchemaDefinition schemaRef="#/components/schemas/ProposalStatusRequest" showReadOnly={true} showWriteOnly={true} />
+x-tagGroups:
+  - name: Endpoints
+    tags:
+      - Proposal
+      - Proposal content
+      - Proposal submition
+      - Proposal vote
+      - Governance action type
+      - Comment
+      - Poll
+      - Poll vote
+      - Wallet type
+  - name: Models
+    tags:
+      - proposal_model
+      - proposal_content_model
+      - proposal_submition_model
+      - proposal_vote_model
+      - governance_action_type_model
+      - comment_model
+      - poll_model
+      - poll_vote_model
+      - wallet_type_model
+servers:
+  - url: http://localhost:1337/api
+    description: Development server
+security:
+  - bearerAuth: []
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    Error:
+      type: object
+      required:
+        - error
+      properties:
+        data:
+          nullable: true
+          oneOf:
+            - type: object
+            - type: array
+              items:
+                type: object
+        error:
+          type: object
+          properties:
+            status:
+              type: integer
+            name:
+              type: string
+            message:
+              type: string
+            details:
+              type: object
+    CommentRequest:
+      type: object
+      required:
+        - data
+      properties:
+        data:
+          type: object
+          required:
+            - proposal_id
+            - user_id
+            - comment_text
+          properties:
+            proposal_id:
+              type: string
+            comment_parent_id:
+              type: string
+            user_id:
+              type: string
+            comment_text:
+              type: string
+              maximum: 2500
+    CommentListResponseDataItem:
+      type: object
+      properties:
+        id:
+          type: number
+        attributes:
+          $ref: '#/components/schemas/Comment'
+    CommentListResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/CommentListResponseDataItem'
+        meta:
+          type: object
+          properties:
+            pagination:
+              type: object
+              properties:
+                page:
+                  type: integer
+                pageSize:
+                  type: integer
+                  minimum: 25
+                pageCount:
+                  type: integer
+                  maximum: 1
+                total:
+                  type: integer
+    Comment:
+      type: object
+      properties:
+        proposal_id:
+          type: string
+        comment_parent_id:
+          type: string
+        user_id:
+          type: string
+        comment_text:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+    CommentResponseDataObject:
+      type: object
+      properties:
+        id:
+          type: number
+        attributes:
+          $ref: '#/components/schemas/Comment'
+    CommentResponse:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/CommentResponseDataObject'
+        meta:
+          type: object
+    PollRequest:
+      type: object
+      required:
+        - data
+      properties:
+        data:
+          type: object
+          required: 
+            - proposal_id
+          properties:
+            proposal_id:
+              type: string
+            poll_yes:
+              type: integer
+            poll_no:
+              type: integer
+            poll_start_dt:
+              type: string
+              format: date-time
+            is_poll_active:
+              type: boolean
+              default: false
+    PollListResponseDataItem:
+      type: object
+      properties:
+        id:
+          type: number
+        attributes:
+          $ref: '#/components/schemas/Poll'
+    PollListResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/PollListResponseDataItem'
+        meta:
+          type: object
+          properties:
+            pagination:
+              type: object
+              properties:
+                page:
+                  type: integer
+                pageSize:
+                  type: integer
+                  minimum: 25
+                pageCount:
+                  type: integer
+                  maximum: 1
+                total:
+                  type: integer
+    Poll:
+      type: object
+      properties:
+        proposal_id:
+          type: string
+        poll_yes:
+          type: integer
+        poll_no:
+          type: integer
+        poll_start_dt:
+          type: string
+          format: date-time
+        is_poll_active:
+          type: boolean
+          default: false 
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+    PollResponseDataObject:
+      type: object
+      properties:
+        id:
+          type: number
+        attributes:
+          $ref: '#/components/schemas/Poll'
+    PollResponse:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/PollResponseDataObject'
+        meta:
+          type: object
+    PollVoteRequest:
+      type: object
+      required:
+        - data
+      properties:
+        data:
+          type: object
+          required: 
+            - poll_id
+            - user_id
+            - vote_result
+          properties:
+            poll_id:
+              type: string
+            user_id:
+              type: string
+            vote_result:
+              type: boolean
+    PollVoteListResponseDataItem:
+      type: object
+      properties:
+        id:
+          type: number
+        attributes:
+          $ref: '#/components/schemas/PollVote'
+    PollVoteListResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/PollVoteListResponseDataItem'
+        meta:
+          type: object
+          properties:
+            pagination:
+              type: object
+              properties:
+                page:
+                  type: integer
+                pageSize:
+                  type: integer
+                  minimum: 25
+                pageCount:
+                  type: integer
+                  maximum: 1
+                total:
+                  type: integer
+    PollVote:
+      type: object
+      properties:
+        poll_id:
+          type: string
+        user_id:
+          type: string
+        vote_result:
+          type: boolean
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+    PollVoteResponseDataObject:
+      type: object
+      properties:
+        id:
+          type: number
+        attributes:
+          $ref: '#/components/schemas/PollVote'
+    PollVoteResponse:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/PollVoteResponseDataObject'
+        meta:
+          type: object
+    ProposalVoteRequest:
+      type: object
+      required:
+        - data
+      properties:
+        data:
+          type: object
+          required:
+            - proposal_id
+            - user_id
+            - vote_result
+          properties:
+            proposal_id:
+              type: string
+            user_id:
+              type: string
+            vote_result:
+              type: boolean
+    ProposalVoteListResponseDataItem:
+      type: object
+      properties:
+        id:
+          type: number
+        attributes:
+          $ref: '#/components/schemas/ProposalVote'
+    ProposalVoteListResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProposalVoteListResponseDataItem'
+        meta:
+          type: object
+          properties:
+            pagination:
+              type: object
+              properties:
+                page:
+                  type: integer
+                pageSize:
+                  type: integer
+                  minimum: 25
+                pageCount:
+                  type: integer
+                  maximum: 1
+                total:
+                  type: integer
+    ProposalVote:
+      type: object
+      properties:
+        proposal_id:
+          type: string
+        user_id:
+          type: string
+        vote_result:
+          type: boolean
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+    ProposalVoteResponseDataObject:
+      type: object
+      properties:
+        id:
+          type: number
+        attributes:
+          $ref: '#/components/schemas/ProposalVote'
+    ProposalVoteResponse:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/ProposalVoteResponseDataObject'
+        meta:
+          type: object
+    ProposalRequest:
+      type: object
+      required:
+        - data
+      properties:
+        data:
+          type: object
+          required:
+           - user_id
+          properties:
+            user_id:
+              type: string
+            prop_likes:
+              type: integer
+              default: 0
+            prop_dislikes:
+              type: integer
+              default: 0
+            prop_poll_active:
+              type: boolean
+              default: false
+            prop_comments_number:
+              type: integer
+              default: 0
+    ProposalListResponseDataItem:
+      type: object
+      properties:
+        id:
+          type: number
+        attributes:
+          $ref: '#/components/schemas/Proposal'
+    ProposalListResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProposalListResponseDataItem'
+        meta:
+          type: object
+          properties:
+            pagination:
+              type: object
+              properties:
+                page:
+                  type: integer
+                pageSize:
+                  type: integer
+                  minimum: 25
+                pageCount:
+                  type: integer
+                  maximum: 1
+                total:
+                  type: integer
+    Proposal:
+      type: object
+      properties:
+        user_id:
+          type: string
+        prop_likes:
+          type: integer
+        prop_dislikes:
+          type: integer
+        prop_poll_active:
+          type: boolean
+        prop_comments_number:
+          type: integer
+        gov_action_type: 
+          $ref: '#/components/schemas/ProposalTypeResponseDataObject'
+        content: 
+          $ref: '#/components/schemas/ProposalContentResponseDataObject'
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+    ProposalResponseDataObject:
+      type: object
+      properties:
+        id:
+          type: number
+        attributes:
+          $ref: '#/components/schemas/Proposal'
+    ProposalResponse:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/ProposalResponseDataObject'
+        meta:
+          type: object
+    ProposalProposalLinkComponent:
+      type: object
+      properties:
+        id:
+          type: number
+        prop_link:
+          type: string
+        prop_link_text:
+          type: string
+        prop_link_order:
+          type: integer
+    ProposalCategoryRequest:
+      type: object
+      required:
+        - data
+      properties:
+        data:
+          type: object
+          properties:
+            prop_cat_name:
+              type: string
+    ProposalCategoryListResponseDataItem:
+      type: object
+      properties:
+        id:
+          type: number
+        attributes:
+          $ref: '#/components/schemas/ProposalCategory'
+    ProposalCategoryListResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProposalCategoryListResponseDataItem'
+        meta:
+          type: object
+          properties:
+            pagination:
+              type: object
+              properties:
+                page:
+                  type: integer
+                pageSize:
+                  type: integer
+                  minimum: 25
+                pageCount:
+                  type: integer
+                  maximum: 1
+                total:
+                  type: integer
+    ProposalCategory:
+      type: object
+      properties:
+        prop_cat_name:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+    ProposalCategoryResponseDataObject:
+      type: object
+      properties:
+        id:
+          type: number
+        attributes:
+          $ref: '#/components/schemas/ProposalCategory'
+    ProposalCategoryResponse:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/ProposalCategoryResponseDataObject'
+        meta:
+          type: object
+    ProposalContentRequest:
+      type: object
+      required:
+        - data
+      properties:
+        data:
+          type: object
+          required:
+            - user_id
+            - proposal_id
+            - gov_action_type_id
+            - prop_name
+            - prop_abstract
+            - prop_motivation
+            - prop_rationale
+          properties:
+            user_id:
+              type: string
+            proposal_id:
+              type: string
+            gov_action_type_id:
+              type: string
+            prop_name:
+              type: string
+              maximum: 80
+            prop_rev_active:
+              type: boolean
+              default: false
+            prop_abstract:
+              type: string
+              maximum: 2500
+            prop_motivation:
+              type: string
+              maximum: 12000
+            prop_rationale:
+              type: string
+              maximum: 12000
+            prop_receiving_address:
+              type: string
+              maximum: 200
+            prop_amount:
+              type: number
+            prop_submitted:
+              type: boolean
+              default: false
+            prop_submission_tx_hash:
+              type: string
+              maximum: 256
+            prop_submission_date:
+              type: string
+              format: date-time
+            proposal_links:
+              type: array
+              items:
+                $ref: '#/components/schemas/ProposalProposalLinkComponent'
+    ProposalContentListResponseDataItem:
+      type: object
+      properties:
+        id:
+          type: number
+        attributes:
+          $ref: '#/components/schemas/ProposalContent'
+    ProposalContentListResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProposalContentListResponseDataItem'
+        meta:
+          type: object
+          properties:
+            pagination:
+              type: object
+              properties:
+                page:
+                  type: integer
+                pageSize:
+                  type: integer
+                  minimum: 25
+                pageCount:
+                  type: integer
+                  maximum: 1
+                total:
+                  type: integer
+    ProposalContent:
+      type: object
+      properties:
+        user_id:
+          type: string
+        proposal_id:
+          type: string
+        gov_action_type_id:
+          type: string
+        prop_name:
+          type: string
+        prop_rev_active:
+          type: boolean
+        prop_abstract:
+          type: string
+        prop_motivation:
+          type: string
+        prop_rationale:
+          type: string
+        prop_receiving_address:
+          type: string
+        prop_amount:
+          type: number
+        prop_submitted:
+          type: boolean
+        prop_submission_tx_hash:
+          type: string
+          maximum: 256
+        prop_submission_date:
+          type: string
+          format: date-time
+        proposal_links:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProposalProposalLinkComponent'
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+    ProposalContentResponseDataObject:
+      type: object
+      properties:
+        id:
+          type: number
+        attributes:
+          $ref: '#/components/schemas/ProposalContent'
+    ProposalContentResponse:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/ProposalContentResponseDataObject'
+        meta:
+          type: object
+    ProposalStatusRequest:
+      type: object
+      required:
+        - data
+      properties:
+        data:
+          type: object
+          required:
+            - prop_status_name
+          properties:
+            prop_status_name:
+              type: string
+              maximum: 80
+    ProposalStatusListResponseDataItem:
+      type: object
+      properties:
+        id:
+          type: number
+        attributes:
+          $ref: '#/components/schemas/ProposalStatus'
+    ProposalStatusListResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProposalStatusListResponseDataItem'
+        meta:
+          type: object
+          properties:
+            pagination:
+              type: object
+              properties:
+                page:
+                  type: integer
+                pageSize:
+                  type: integer
+                  minimum: 25
+                pageCount:
+                  type: integer
+                  maximum: 1
+                total:
+                  type: integer
+    ProposalStatus:
+      type: object
+      properties:
+        prop_status_name:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+    ProposalStatusResponseDataObject:
+      type: object
+      properties:
+        id:
+          type: number
+        attributes:
+          $ref: '#/components/schemas/ProposalStatus'
+    ProposalStatusResponse:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/ProposalStatusResponseDataObject'
+        meta:
+          type: object
+    ProposalSubmitionRequest:
+      type: object
+      required:
+        - data
+      properties:
+        data:
+          type: object
+          required:
+            - proposal_id
+            - sub_json_path
+            - sub_location_url
+          properties:
+            proposal_id:
+              type: string
+            sub_json_path: {}
+            sub_location_url:
+              type: string
+              maximum: 500
+    ProposalSubmitionListResponseDataItem:
+      type: object
+      properties:
+        id:
+          type: number
+        attributes:
+          $ref: '#/components/schemas/ProposalSubmition'
+    ProposalSubmitionListResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProposalSubmitionListResponseDataItem'
+        meta:
+          type: object
+          properties:
+            pagination:
+              type: object
+              properties:
+                page:
+                  type: integer
+                pageSize:
+                  type: integer
+                  minimum: 25
+                pageCount:
+                  type: integer
+                  maximum: 1
+                total:
+                  type: integer
+    ProposalSubmition:
+      type: object
+      properties:
+        proposal_id:
+          type: string
+        sub_json_path: {}
+        sub_location_url:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+    ProposalSubmitionResponseDataObject:
+      type: object
+      properties:
+        id:
+          type: number
+        attributes:
+          $ref: '#/components/schemas/ProposalSubmition'
+    ProposalSubmitionResponse:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/ProposalSubmitionResponseDataObject'
+        meta:
+          type: object
+    ProposalTypeRequest:
+      type: object
+      required:
+        - data
+      properties:
+        data:
+          type: object
+          required:
+            - gov_action_type_name
+          properties:
+            gov_action_type_name:
+              type: string
+              maximum: 80
+    ProposalTypeListResponseDataItem:
+      type: object
+      properties:
+        id:
+          type: number
+        attributes:
+          $ref: '#/components/schemas/ProposalType'
+    ProposalTypeListResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProposalTypeListResponseDataItem'
+        meta:
+          type: object
+          properties:
+            pagination:
+              type: object
+              properties:
+                page:
+                  type: integer
+                pageSize:
+                  type: integer
+                  minimum: 25
+                pageCount:
+                  type: integer
+                  maximum: 1
+                total:
+                  type: integer
+    ProposalType:
+      type: object
+      properties:
+        gov_action_type_name:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+    ProposalTypeResponseDataObject:
+      type: object
+      properties:
+        id:
+          type: number
+        attributes:
+          $ref: '#/components/schemas/ProposalType'
+    ProposalTypeResponse:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/ProposalTypeResponseDataObject'
+        meta:
+          type: object
+    WalletTypeRequest:
+      type: object
+      required:
+        - data
+      properties:
+        data:
+          type: object
+          required:
+            - wallet_name
+          properties:
+            wallet_name:
+              type: string
+              maximum: 300
+            wallet_image:
+              type: string
+            wallet_active:
+              type: boolean
+              default: true
+    WalletTypeListResponseDataItem:
+      type: object
+      properties:
+        id:
+          type: number
+        attributes:
+          $ref: '#/components/schemas/WalletType'
+    WalletTypeListResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/WalletTypeListResponseDataItem'
+        meta:
+          type: object
+          properties:
+            pagination:
+              type: object
+              properties:
+                page:
+                  type: integer
+                pageSize:
+                  type: integer
+                  minimum: 25
+                pageCount:
+                  type: integer
+                  maximum: 1
+                total:
+                  type: integer
+    WalletType:
+      type: object
+      properties:
+        wallet_name:
+          type: string
+        wallet_image:
+          type: string
+        wallet_active:
+          type: boolean
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+    WalletTypeResponseDataObject:
+      type: object
+      properties:
+        id:
+          type: number
+        attributes:
+          $ref: '#/components/schemas/WalletType'
+    WalletTypeResponse:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/WalletTypeResponseDataObject'
+        meta:
+          type: object
+paths:
+  /comments:
+    get:
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommentListResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      tags:
+        - Comment
+      parameters:
+        - name: sort
+          in: query
+          description: Sort by attributes ascending (asc) or descending (desc)
+          deprecated: false
+          required: false
+          schema:
+            type: string
+        - name: pagination[withCount]
+          in: query
+          description: 'Return page/pageSize (default: true)'
+          deprecated: false
+          required: false
+          schema:
+            type: boolean
+        - name: pagination[page]
+          in: query
+          description: 'Page number (default: 0)'
+          deprecated: false
+          required: false
+          schema:
+            type: integer
+        - name: pagination[pageSize]
+          in: query
+          description: 'Page size (default: 25)'
+          deprecated: false
+          required: false
+          schema:
+            type: integer
+        - name: pagination[start]
+          in: query
+          description: 'Offset value (default: 0)'
+          deprecated: false
+          required: false
+          schema:
+            type: integer
+        - name: pagination[limit]
+          in: query
+          description: 'Number of entities to return (default: 25)'
+          deprecated: false
+          required: false
+          schema:
+            type: integer
+        - name: fields
+          in: query
+          description: 'Fields to return (ex: title,author)'
+          deprecated: false
+          required: false
+          schema:
+            type: string
+        - name: populate
+          in: query
+          description: Relations to return
+          deprecated: false
+          required: false
+          schema:
+            type: string
+        - name: filters
+          in: query
+          description: Filters to apply
+          deprecated: false
+          required: false
+          schema:
+            type: object
+          style: deepObject
+        - name: locale
+          in: query
+          description: Locale to apply
+          deprecated: false
+          required: false
+          schema:
+            type: string
+      operationId: Get comments
+    post:
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommentResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      tags:
+        - Comment
+      parameters: []
+      operationId: Create comment
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CommentRequest'
+  # /comments/{id}:
+    # get:
+    #   responses:
+    #     '200':
+    #       description: OK
+    #       content:
+    #         application/json:
+    #           schema:
+    #             $ref: '#/components/schemas/CommentResponse'
+    #     '400':
+    #       description: Bad Request
+    #       content:
+    #         application/json:
+    #           schema:
+    #             $ref: '#/components/schemas/Error'
+    #     '401':
+    #       description: Unauthorized
+    #       content:
+    #         application/json:
+    #           schema:
+    #             $ref: '#/components/schemas/Error'
+    #     '403':
+    #       description: Forbidden
+    #       content:
+    #         application/json:
+    #           schema:
+    #             $ref: '#/components/schemas/Error'
+    #     '404':
+    #       description: Not Found
+    #       content:
+    #         application/json:
+    #           schema:
+    #             $ref: '#/components/schemas/Error'
+    #     '500':
+    #       description: Internal Server Error
+    #       content:
+    #         application/json:
+    #           schema:
+    #             $ref: '#/components/schemas/Error'
+    #   tags:
+    #     - Comment
+    #   parameters:
+    #     - name: id
+    #       in: path
+    #       description: ''
+    #       deprecated: false
+    #       required: true
+    #       schema:
+    #         type: number
+    #   operationId: Get single comment
+    # put:
+    #   responses:
+    #     '200':
+    #       description: OK
+    #       content:
+    #         application/json:
+    #           schema:
+    #             $ref: '#/components/schemas/CommentResponse'
+    #     '400':
+    #       description: Bad Request
+    #       content:
+    #         application/json:
+    #           schema:
+    #             $ref: '#/components/schemas/Error'
+    #     '401':
+    #       description: Unauthorized
+    #       content:
+    #         application/json:
+    #           schema:
+    #             $ref: '#/components/schemas/Error'
+    #     '403':
+    #       description: Forbidden
+    #       content:
+    #         application/json:
+    #           schema:
+    #             $ref: '#/components/schemas/Error'
+    #     '404':
+    #       description: Not Found
+    #       content:
+    #         application/json:
+    #           schema:
+    #             $ref: '#/components/schemas/Error'
+    #     '500':
+    #       description: Internal Server Error
+    #       content:
+    #         application/json:
+    #           schema:
+    #             $ref: '#/components/schemas/Error'
+    #   tags:
+    #     - Comment
+    #   parameters:
+    #     - name: id
+    #       in: path
+    #       description: ''
+    #       deprecated: false
+    #       required: true
+    #       schema:
+    #         type: number
+    #   operationId: Update comment
+    #   requestBody:
+    #     required: true
+    #     content:
+    #       application/json:
+    #         schema:
+    #           $ref: '#/components/schemas/CommentRequest'
+    # delete:
+    #   responses:
+    #     '200':
+    #       description: OK
+    #       content:
+    #         application/json:
+    #           schema:
+    #             type: integer
+    #             format: int64
+    #     '400':
+    #       description: Bad Request
+    #       content:
+    #         application/json:
+    #           schema:
+    #             $ref: '#/components/schemas/Error'
+    #     '401':
+    #       description: Unauthorized
+    #       content:
+    #         application/json:
+    #           schema:
+    #             $ref: '#/components/schemas/Error'
+    #     '403':
+    #       description: Forbidden
+    #       content:
+    #         application/json:
+    #           schema:
+    #             $ref: '#/components/schemas/Error'
+    #     '404':
+    #       description: Not Found
+    #       content:
+    #         application/json:
+    #           schema:
+    #             $ref: '#/components/schemas/Error'
+    #     '500':
+    #       description: Internal Server Error
+    #       content:
+    #         application/json:
+    #           schema:
+    #             $ref: '#/components/schemas/Error'
+    #   tags:
+    #     - Comment
+    #   parameters:
+    #     - name: id
+    #       in: path
+    #       description: ''
+    #       deprecated: false
+    #       required: true
+    #       schema:
+    #         type: number
+    #   operationId: Delete comment
+  /polls:
+    get:
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PollListResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      tags:
+        - Poll
+      parameters:
+        - name: sort
+          in: query
+          description: Sort by attributes ascending (asc) or descending (desc)
+          deprecated: false
+          required: false
+          schema:
+            type: string
+        - name: pagination[withCount]
+          in: query
+          description: 'Return page/pageSize (default: true)'
+          deprecated: false
+          required: false
+          schema:
+            type: boolean
+        - name: pagination[page]
+          in: query
+          description: 'Page number (default: 0)'
+          deprecated: false
+          required: false
+          schema:
+            type: integer
+        - name: pagination[pageSize]
+          in: query
+          description: 'Page size (default: 25)'
+          deprecated: false
+          required: false
+          schema:
+            type: integer
+        - name: pagination[start]
+          in: query
+          description: 'Offset value (default: 0)'
+          deprecated: false
+          required: false
+          schema:
+            type: integer
+        - name: pagination[limit]
+          in: query
+          description: 'Number of entities to return (default: 25)'
+          deprecated: false
+          required: false
+          schema:
+            type: integer
+        - name: fields
+          in: query
+          description: 'Fields to return (ex: title,author)'
+          deprecated: false
+          required: false
+          schema:
+            type: string
+        - name: populate
+          in: query
+          description: Relations to return
+          deprecated: false
+          required: false
+          schema:
+            type: string
+        - name: filters
+          in: query
+          description: Filters to apply
+          deprecated: false
+          required: false
+          schema:
+            type: object
+          style: deepObject
+        - name: locale
+          in: query
+          description: Locale to apply
+          deprecated: false
+          required: false
+          schema:
+            type: string
+      operationId: Get polls
+    post:
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PollResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      tags:
+        - Poll
+      parameters: []
+      operationId: Create poll
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PollRequest'
+  /polls/{id}:
+    # get:
+    #   responses:
+    #     '200':
+    #       description: OK
+    #       content:
+    #         application/json:
+    #           schema:
+    #             $ref: '#/components/schemas/PollResponse'
+    #     '400':
+    #       description: Bad Request
+    #       content:
+    #         application/json:
+    #           schema:
+    #             $ref: '#/components/schemas/Error'
+    #     '401':
+    #       description: Unauthorized
+    #       content:
+    #         application/json:
+    #           schema:
+    #             $ref: '#/components/schemas/Error'
+    #     '403':
+    #       description: Forbidden
+    #       content:
+    #         application/json:
+    #           schema:
+    #             $ref: '#/components/schemas/Error'
+    #     '404':
+    #       description: Not Found
+    #       content:
+    #         application/json:
+    #           schema:
+    #             $ref: '#/components/schemas/Error'
+    #     '500':
+    #       description: Internal Server Error
+    #       content:
+    #         application/json:
+    #           schema:
+    #             $ref: '#/components/schemas/Error'
+    #   tags:
+    #     - Poll
+    #   parameters:
+    #     - name: id
+    #       in: path
+    #       description: ''
+    #       deprecated: false
+    #       required: true
+    #       schema:
+    #         type: number
+    #   operationId: Get single poll
+    put:
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PollResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      tags:
+        - Poll
+      parameters:
+        - name: id
+          in: path
+          description: ''
+          deprecated: false
+          required: true
+          schema:
+            type: number
+      operationId: Update poll
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PollRequest'
+    # delete:
+    #   responses:
+    #     '200':
+    #       description: OK
+    #       content:
+    #         application/json:
+    #           schema:
+    #             type: integer
+    #             format: int64
+    #     '400':
+    #       description: Bad Request
+    #       content:
+    #         application/json:
+    #           schema:
+    #             $ref: '#/components/schemas/Error'
+    #     '401':
+    #       description: Unauthorized
+    #       content:
+    #         application/json:
+    #           schema:
+    #             $ref: '#/components/schemas/Error'
+    #     '403':
+    #       description: Forbidden
+    #       content:
+    #         application/json:
+    #           schema:
+    #             $ref: '#/components/schemas/Error'
+    #     '404':
+    #       description: Not Found
+    #       content:
+    #         application/json:
+    #           schema:
+    #             $ref: '#/components/schemas/Error'
+    #     '500':
+    #       description: Internal Server Error
+    #       content:
+    #         application/json:
+    #           schema:
+    #             $ref: '#/components/schemas/Error'
+    #   tags:
+    #     - Poll
+    #   parameters:
+    #     - name: id
+    #       in: path
+    #       description: ''
+    #       deprecated: false
+    #       required: true
+    #       schema:
+    #         type: number
+    #   operationId: Delete poll
+  /poll-votes:
+    get:
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PollVoteListResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      tags:
+        - Poll vote
+      parameters:
+        - name: sort
+          in: query
+          description: Sort by attributes ascending (asc) or descending (desc)
+          deprecated: false
+          required: false
+          schema:
+            type: string
+        - name: pagination[withCount]
+          in: query
+          description: 'Return page/pageSize (default: true)'
+          deprecated: false
+          required: false
+          schema:
+            type: boolean
+        - name: pagination[page]
+          in: query
+          description: 'Page number (default: 0)'
+          deprecated: false
+          required: false
+          schema:
+            type: integer
+        - name: pagination[pageSize]
+          in: query
+          description: 'Page size (default: 25)'
+          deprecated: false
+          required: false
+          schema:
+            type: integer
+        - name: pagination[start]
+          in: query
+          description: 'Offset value (default: 0)'
+          deprecated: false
+          required: false
+          schema:
+            type: integer
+        - name: pagination[limit]
+          in: query
+          description: 'Number of entities to return (default: 25)'
+          deprecated: false
+          required: false
+          schema:
+            type: integer
+        - name: fields
+          in: query
+          description: 'Fields to return (ex: title,author)'
+          deprecated: false
+          required: false
+          schema:
+            type: string
+        - name: populate
+          in: query
+          description: Relations to return
+          deprecated: false
+          required: false
+          schema:
+            type: string
+        - name: filters
+          in: query
+          description: Filters to apply
+          deprecated: false
+          required: false
+          schema:
+            type: object
+          style: deepObject
+        - name: locale
+          in: query
+          description: Locale to apply
+          deprecated: false
+          required: false
+          schema:
+            type: string
+      operationId: Get poll votes
+    post:
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PollVoteResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      tags:
+        - Poll vote
+      parameters: []
+      operationId: Create poll vote
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PollVoteRequest'
+  /poll-votes/{id}:
+    # get:
+    #   responses:
+    #     '200':
+    #       description: OK
+    #       content:
+    #         application/json:
+    #           schema:
+    #             $ref: '#/components/schemas/PollVoteResponse'
+    #     '400':
+    #       description: Bad Request
+    #       content:
+    #         application/json:
+    #           schema:
+    #             $ref: '#/components/schemas/Error'
+    #     '401':
+    #       description: Unauthorized
+    #       content:
+    #         application/json:
+    #           schema:
+    #             $ref: '#/components/schemas/Error'
+    #     '403':
+    #       description: Forbidden
+    #       content:
+    #         application/json:
+    #           schema:
+    #             $ref: '#/components/schemas/Error'
+    #     '404':
+    #       description: Not Found
+    #       content:
+    #         application/json:
+    #           schema:
+    #             $ref: '#/components/schemas/Error'
+    #     '500':
+    #       description: Internal Server Error
+    #       content:
+    #         application/json:
+    #           schema:
+    #             $ref: '#/components/schemas/Error'
+    #   tags:
+    #     - Poll vote
+    #   parameters:
+    #     - name: id
+    #       in: path
+    #       description: ''
+    #       deprecated: false
+    #       required: true
+    #       schema:
+    #         type: number
+    #   operationId: Get single poll vote
+    put:
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PollVoteResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      tags:
+        - Poll vote
+      parameters:
+        - name: id
+          in: path
+          description: ''
+          deprecated: false
+          required: true
+          schema:
+            type: number
+      operationId: Update poll vote
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PollVoteRequest'
+    # delete:
+    #   responses:
+    #     '200':
+    #       description: OK
+    #       content:
+    #         application/json:
+    #           schema:
+    #             type: integer
+    #             format: int64
+    #     '400':
+    #       description: Bad Request
+    #       content:
+    #         application/json:
+    #           schema:
+    #             $ref: '#/components/schemas/Error'
+    #     '401':
+    #       description: Unauthorized
+    #       content:
+    #         application/json:
+    #           schema:
+    #             $ref: '#/components/schemas/Error'
+    #     '403':
+    #       description: Forbidden
+    #       content:
+    #         application/json:
+    #           schema:
+    #             $ref: '#/components/schemas/Error'
+    #     '404':
+    #       description: Not Found
+    #       content:
+    #         application/json:
+    #           schema:
+    #             $ref: '#/components/schemas/Error'
+    #     '500':
+    #       description: Internal Server Error
+    #       content:
+    #         application/json:
+    #           schema:
+    #             $ref: '#/components/schemas/Error'
+    #   tags:
+    #     - Poll vote
+    #   parameters:
+    #     - name: id
+    #       in: path
+    #       description: ''
+    #       deprecated: false
+    #       required: true
+    #       schema:
+    #         type: number
+    #   operationId: Delete poll vote
+  /proposal-votes:
+    get:
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProposalVoteListResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      tags:
+        - Proposal vote
+      parameters:
+        - name: sort
+          in: query
+          description: Sort by attributes ascending (asc) or descending (desc)
+          deprecated: false
+          required: false
+          schema:
+            type: string
+        - name: pagination[withCount]
+          in: query
+          description: 'Return page/pageSize (default: true)'
+          deprecated: false
+          required: false
+          schema:
+            type: boolean
+        - name: pagination[page]
+          in: query
+          description: 'Page number (default: 0)'
+          deprecated: false
+          required: false
+          schema:
+            type: integer
+        - name: pagination[pageSize]
+          in: query
+          description: 'Page size (default: 25)'
+          deprecated: false
+          required: false
+          schema:
+            type: integer
+        - name: pagination[start]
+          in: query
+          description: 'Offset value (default: 0)'
+          deprecated: false
+          required: false
+          schema:
+            type: integer
+        - name: pagination[limit]
+          in: query
+          description: 'Number of entities to return (default: 25)'
+          deprecated: false
+          required: false
+          schema:
+            type: integer
+        - name: fields
+          in: query
+          description: 'Fields to return (ex: title,author)'
+          deprecated: false
+          required: false
+          schema:
+            type: string
+        - name: populate
+          in: query
+          description: Relations to return
+          deprecated: false
+          required: false
+          schema:
+            type: string
+        - name: filters
+          in: query
+          description: Filters to apply
+          deprecated: false
+          required: false
+          schema:
+            type: object
+          style: deepObject
+        - name: locale
+          in: query
+          description: Locale to apply
+          deprecated: false
+          required: false
+          schema:
+            type: string
+      operationId: Get proposal votes
+    post:
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProposalVoteResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      tags:
+        - Proposal vote
+      parameters: []
+      operationId: Create proposal vote
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProposalVoteRequest'
+  /proposal-votes/{id}:
+    # get:
+    #   responses:
+    #     '200':
+    #       description: OK
+    #       content:
+    #         application/json:
+    #           schema:
+    #             $ref: '#/components/schemas/PollVoteResponse'
+    #     '400':
+    #       description: Bad Request
+    #       content:
+    #         application/json:
+    #           schema:
+    #             $ref: '#/components/schemas/Error'
+    #     '401':
+    #       description: Unauthorized
+    #       content:
+    #         application/json:
+    #           schema:
+    #             $ref: '#/components/schemas/Error'
+    #     '403':
+    #       description: Forbidden
+    #       content:
+    #         application/json:
+    #           schema:
+    #             $ref: '#/components/schemas/Error'
+    #     '404':
+    #       description: Not Found
+    #       content:
+    #         application/json:
+    #           schema:
+    #             $ref: '#/components/schemas/Error'
+    #     '500':
+    #       description: Internal Server Error
+    #       content:
+    #         application/json:
+    #           schema:
+    #             $ref: '#/components/schemas/Error'
+    #   tags:
+    #     - Proposal vote
+    #   parameters:
+    #     - name: id
+    #       in: path
+    #       description: ''
+    #       deprecated: false
+    #       required: true
+    #       schema:
+    #         type: number
+    #   operationId: Get single proposal vote
+    # put:
+    #   responses:
+    #     '200':
+    #       description: OK
+    #       content:
+    #         application/json:
+    #           schema:
+    #             $ref: '#/components/schemas/PollVoteResponse'
+    #     '400':
+    #       description: Bad Request
+    #       content:
+    #         application/json:
+    #           schema:
+    #             $ref: '#/components/schemas/Error'
+    #     '401':
+    #       description: Unauthorized
+    #       content:
+    #         application/json:
+    #           schema:
+    #             $ref: '#/components/schemas/Error'
+    #     '403':
+    #       description: Forbidden
+    #       content:
+    #         application/json:
+    #           schema:
+    #             $ref: '#/components/schemas/Error'
+    #     '404':
+    #       description: Not Found
+    #       content:
+    #         application/json:
+    #           schema:
+    #             $ref: '#/components/schemas/Error'
+    #     '500':
+    #       description: Internal Server Error
+    #       content:
+    #         application/json:
+    #           schema:
+    #             $ref: '#/components/schemas/Error'
+    #   tags:
+    #     - Proposal vote
+    #   parameters:
+    #     - name: id
+    #       in: path
+    #       description: ''
+    #       deprecated: false
+    #       required: true
+    #       schema:
+    #         type: number
+    #   operationId: Update proposal vote
+    #   requestBody:
+    #     required: true
+    #     content:
+    #       application/json:
+    #         schema:
+    #           $ref: '#/components/schemas/PollVoteRequest'
+    delete:
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: integer
+                format: int64
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      tags:
+        - Proposal vote
+      parameters:
+        - name: id
+          in: path
+          description: ''
+          deprecated: false
+          required: true
+          schema:
+            type: number
+      operationId: Delete proposal vote
+  /proposals:
+    get:
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProposalListResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      tags:
+        - Proposal
+      parameters:
+        - name: sort
+          in: query
+          description: Sort by attributes ascending (asc) or descending (desc)
+          deprecated: false
+          required: false
+          schema:
+            type: string
+        - name: pagination[withCount]
+          in: query
+          description: 'Return page/pageSize (default: true)'
+          deprecated: false
+          required: false
+          schema:
+            type: boolean
+        - name: pagination[page]
+          in: query
+          description: 'Page number (default: 0)'
+          deprecated: false
+          required: false
+          schema:
+            type: integer
+        - name: pagination[pageSize]
+          in: query
+          description: 'Page size (default: 25)'
+          deprecated: false
+          required: false
+          schema:
+            type: integer
+        - name: pagination[start]
+          in: query
+          description: 'Offset value (default: 0)'
+          deprecated: false
+          required: false
+          schema:
+            type: integer
+        - name: pagination[limit]
+          in: query
+          description: 'Number of entities to return (default: 25)'
+          deprecated: false
+          required: false
+          schema:
+            type: integer
+        - name: fields
+          in: query
+          description: 'Fields to return (ex: title,author)'
+          deprecated: false
+          required: false
+          schema:
+            type: string
+        - name: populate
+          in: query
+          description: Relations to return
+          deprecated: false
+          required: false
+          schema:
+            type: string
+        - name: filters
+          in: query
+          description: Filters to apply
+          deprecated: false
+          required: false
+          schema:
+            type: object
+          style: deepObject
+        - name: locale
+          in: query
+          description: Locale to apply
+          deprecated: false
+          required: false
+          schema:
+            type: string
+      operationId: Get proposals
+    post:
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProposalResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      tags:
+        - Proposal
+      parameters: []
+      operationId: Create proposal
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProposalRequest'
+  /proposals/{id}:
+    get:
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProposalResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      tags:
+        - Proposal
+      parameters:
+        - name: id
+          in: path
+          description: ''
+          deprecated: false
+          required: true
+          schema:
+            type: number
+      operationId: Get single proposal
+    put:
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProposalResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      tags:
+        - Proposal
+      parameters:
+        - name: id
+          in: path
+          description: ''
+          deprecated: false
+          required: true
+          schema:
+            type: number
+      operationId: Update proposal
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProposalRequest'
+    delete:
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: integer
+                format: int64
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      tags:
+        - Proposal
+      parameters:
+        - name: id
+          in: path
+          description: ''
+          deprecated: false
+          required: true
+          schema:
+            type: number
+      operationId: Delete proposal
+  /proposal-categories:
+    get:
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProposalCategoryListResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      tags:
+        - Proposal category
+      parameters:
+        - name: sort
+          in: query
+          description: Sort by attributes ascending (asc) or descending (desc)
+          deprecated: false
+          required: false
+          schema:
+            type: string
+        - name: pagination[withCount]
+          in: query
+          description: 'Return page/pageSize (default: true)'
+          deprecated: false
+          required: false
+          schema:
+            type: boolean
+        - name: pagination[page]
+          in: query
+          description: 'Page number (default: 0)'
+          deprecated: false
+          required: false
+          schema:
+            type: integer
+        - name: pagination[pageSize]
+          in: query
+          description: 'Page size (default: 25)'
+          deprecated: false
+          required: false
+          schema:
+            type: integer
+        - name: pagination[start]
+          in: query
+          description: 'Offset value (default: 0)'
+          deprecated: false
+          required: false
+          schema:
+            type: integer
+        - name: pagination[limit]
+          in: query
+          description: 'Number of entities to return (default: 25)'
+          deprecated: false
+          required: false
+          schema:
+            type: integer
+        - name: fields
+          in: query
+          description: 'Fields to return (ex: title,author)'
+          deprecated: false
+          required: false
+          schema:
+            type: string
+        - name: populate
+          in: query
+          description: Relations to return
+          deprecated: false
+          required: false
+          schema:
+            type: string
+        - name: filters
+          in: query
+          description: Filters to apply
+          deprecated: false
+          required: false
+          schema:
+            type: object
+          style: deepObject
+        - name: locale
+          in: query
+          description: Locale to apply
+          deprecated: false
+          required: false
+          schema:
+            type: string
+      operationId: Get proposal categories
+    post:
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProposalCategoryResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      tags:
+        - Proposal category
+      parameters: []
+      operationId: Create proposal category
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProposalCategoryRequest'
+  /proposal-categories/{id}:
+    get:
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProposalCategoryResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      tags:
+        - Proposal category
+      parameters:
+        - name: id
+          in: path
+          description: ''
+          deprecated: false
+          required: true
+          schema:
+            type: number
+      operationId: Get single proposal category
+    put:
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProposalCategoryResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      tags:
+        - Proposal category
+      parameters:
+        - name: id
+          in: path
+          description: ''
+          deprecated: false
+          required: true
+          schema:
+            type: number
+      operationId: Update proposal category
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProposalCategoryRequest'
+    delete:
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: integer
+                format: int64
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      tags:
+        - Proposal category
+      parameters:
+        - name: id
+          in: path
+          description: ''
+          deprecated: false
+          required: true
+          schema:
+            type: number
+      operationId: Delete proposal category
+  /proposal-contents:
+    get:
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProposalContentListResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      tags:
+        - Proposal content
+      parameters:
+        - name: sort
+          in: query
+          description: Sort by attributes ascending (asc) or descending (desc)
+          deprecated: false
+          required: false
+          schema:
+            type: string
+        - name: pagination[withCount]
+          in: query
+          description: 'Return page/pageSize (default: true)'
+          deprecated: false
+          required: false
+          schema:
+            type: boolean
+        - name: pagination[page]
+          in: query
+          description: 'Page number (default: 0)'
+          deprecated: false
+          required: false
+          schema:
+            type: integer
+        - name: pagination[pageSize]
+          in: query
+          description: 'Page size (default: 25)'
+          deprecated: false
+          required: false
+          schema:
+            type: integer
+        - name: pagination[start]
+          in: query
+          description: 'Offset value (default: 0)'
+          deprecated: false
+          required: false
+          schema:
+            type: integer
+        - name: pagination[limit]
+          in: query
+          description: 'Number of entities to return (default: 25)'
+          deprecated: false
+          required: false
+          schema:
+            type: integer
+        - name: fields
+          in: query
+          description: 'Fields to return (ex: title,author)'
+          deprecated: false
+          required: false
+          schema:
+            type: string
+        - name: populate
+          in: query
+          description: Relations to return
+          deprecated: false
+          required: false
+          schema:
+            type: string
+        - name: filters
+          in: query
+          description: Filters to apply
+          deprecated: false
+          required: false
+          schema:
+            type: object
+          style: deepObject
+        - name: locale
+          in: query
+          description: Locale to apply
+          deprecated: false
+          required: false
+          schema:
+            type: string
+      operationId: Get proposal contents
+    post:
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProposalContentResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      tags:
+        - Proposal content
+      parameters: []
+      operationId: Create proposal content
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProposalContentRequest'
+  /proposal-contents/{id}:
+    get:
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProposalContentResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      tags:
+        - Proposal content
+      parameters:
+        - name: id
+          in: path
+          description: ''
+          deprecated: false
+          required: true
+          schema:
+            type: number
+      operationId: Get single proposal content
+    put:
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProposalContentResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      tags:
+        - Proposal content
+      parameters:
+        - name: id
+          in: path
+          description: ''
+          deprecated: false
+          required: true
+          schema:
+            type: number
+      operationId: Update proposal content
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProposalContentRequest'
+    # delete:
+    #   responses:
+    #     '200':
+    #       description: OK
+    #       content:
+    #         application/json:
+    #           schema:
+    #             type: integer
+    #             format: int64
+    #     '400':
+    #       description: Bad Request
+    #       content:
+    #         application/json:
+    #           schema:
+    #             $ref: '#/components/schemas/Error'
+    #     '401':
+    #       description: Unauthorized
+    #       content:
+    #         application/json:
+    #           schema:
+    #             $ref: '#/components/schemas/Error'
+    #     '403':
+    #       description: Forbidden
+    #       content:
+    #         application/json:
+    #           schema:
+    #             $ref: '#/components/schemas/Error'
+    #     '404':
+    #       description: Not Found
+    #       content:
+    #         application/json:
+    #           schema:
+    #             $ref: '#/components/schemas/Error'
+    #     '500':
+    #       description: Internal Server Error
+    #       content:
+    #         application/json:
+    #           schema:
+    #             $ref: '#/components/schemas/Error'
+    #   tags:
+    #     - Proposal content
+    #   parameters:
+    #     - name: id
+    #       in: path
+    #       description: ''
+    #       deprecated: false
+    #       required: true
+    #       schema:
+    #         type: number
+    #   operationId: Delete proposal content
+  /proposal-statuses:
+    get:
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProposalStatusListResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      tags:
+        - Proposal status
+      parameters:
+        - name: sort
+          in: query
+          description: Sort by attributes ascending (asc) or descending (desc)
+          deprecated: false
+          required: false
+          schema:
+            type: string
+        - name: pagination[withCount]
+          in: query
+          description: 'Return page/pageSize (default: true)'
+          deprecated: false
+          required: false
+          schema:
+            type: boolean
+        - name: pagination[page]
+          in: query
+          description: 'Page number (default: 0)'
+          deprecated: false
+          required: false
+          schema:
+            type: integer
+        - name: pagination[pageSize]
+          in: query
+          description: 'Page size (default: 25)'
+          deprecated: false
+          required: false
+          schema:
+            type: integer
+        - name: pagination[start]
+          in: query
+          description: 'Offset value (default: 0)'
+          deprecated: false
+          required: false
+          schema:
+            type: integer
+        - name: pagination[limit]
+          in: query
+          description: 'Number of entities to return (default: 25)'
+          deprecated: false
+          required: false
+          schema:
+            type: integer
+        - name: fields
+          in: query
+          description: 'Fields to return (ex: title,author)'
+          deprecated: false
+          required: false
+          schema:
+            type: string
+        - name: populate
+          in: query
+          description: Relations to return
+          deprecated: false
+          required: false
+          schema:
+            type: string
+        - name: filters
+          in: query
+          description: Filters to apply
+          deprecated: false
+          required: false
+          schema:
+            type: object
+          style: deepObject
+        - name: locale
+          in: query
+          description: Locale to apply
+          deprecated: false
+          required: false
+          schema:
+            type: string
+      operationId: Get proposal statuses
+    post:
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProposalStatusResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      tags:
+        - Proposal status
+      parameters: []
+      operationId: Create proposal status
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProposalStatusRequest'
+  /proposal-statuses/{id}:
+    # get:
+    #   responses:
+    #     '200':
+    #       description: OK
+    #       content:
+    #         application/json:
+    #           schema:
+    #             $ref: '#/components/schemas/ProposalStatusResponse'
+    #     '400':
+    #       description: Bad Request
+    #       content:
+    #         application/json:
+    #           schema:
+    #             $ref: '#/components/schemas/Error'
+    #     '401':
+    #       description: Unauthorized
+    #       content:
+    #         application/json:
+    #           schema:
+    #             $ref: '#/components/schemas/Error'
+    #     '403':
+    #       description: Forbidden
+    #       content:
+    #         application/json:
+    #           schema:
+    #             $ref: '#/components/schemas/Error'
+    #     '404':
+    #       description: Not Found
+    #       content:
+    #         application/json:
+    #           schema:
+    #             $ref: '#/components/schemas/Error'
+    #     '500':
+    #       description: Internal Server Error
+    #       content:
+    #         application/json:
+    #           schema:
+    #             $ref: '#/components/schemas/Error'
+    #   tags:
+    #     - Proposal status
+    #   parameters:
+    #     - name: id
+    #       in: path
+    #       description: ''
+    #       deprecated: false
+    #       required: true
+    #       schema:
+    #         type: number
+    #   operationId: Get single proposal status
+    put:
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProposalStatusResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      tags:
+        - Proposal status
+      parameters:
+        - name: id
+          in: path
+          description: ''
+          deprecated: false
+          required: true
+          schema:
+            type: number
+      operationId: Update proposal status
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProposalStatusRequest'
+    delete:
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: integer
+                format: int64
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      tags:
+        - Proposal status
+      parameters:
+        - name: id
+          in: path
+          description: ''
+          deprecated: false
+          required: true
+          schema:
+            type: number
+      operationId: Delete proposal status
+  /proposal-submitions:
+    get:
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProposalSubmitionListResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      tags:
+        - Proposal submition
+      parameters:
+        - name: sort
+          in: query
+          description: Sort by attributes ascending (asc) or descending (desc)
+          deprecated: false
+          required: false
+          schema:
+            type: string
+        - name: pagination[withCount]
+          in: query
+          description: 'Return page/pageSize (default: true)'
+          deprecated: false
+          required: false
+          schema:
+            type: boolean
+        - name: pagination[page]
+          in: query
+          description: 'Page number (default: 0)'
+          deprecated: false
+          required: false
+          schema:
+            type: integer
+        - name: pagination[pageSize]
+          in: query
+          description: 'Page size (default: 25)'
+          deprecated: false
+          required: false
+          schema:
+            type: integer
+        - name: pagination[start]
+          in: query
+          description: 'Offset value (default: 0)'
+          deprecated: false
+          required: false
+          schema:
+            type: integer
+        - name: pagination[limit]
+          in: query
+          description: 'Number of entities to return (default: 25)'
+          deprecated: false
+          required: false
+          schema:
+            type: integer
+        - name: fields
+          in: query
+          description: 'Fields to return (ex: title,author)'
+          deprecated: false
+          required: false
+          schema:
+            type: string
+        - name: populate
+          in: query
+          description: Relations to return
+          deprecated: false
+          required: false
+          schema:
+            type: string
+        - name: filters
+          in: query
+          description: Filters to apply
+          deprecated: false
+          required: false
+          schema:
+            type: object
+          style: deepObject
+        - name: locale
+          in: query
+          description: Locale to apply
+          deprecated: false
+          required: false
+          schema:
+            type: string
+      operationId: Get proposal submitions
+    post:
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProposalSubmitionResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      tags:
+        - Proposal submition
+      parameters: []
+      operationId: Create proposal submition
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProposalSubmitionRequest'
+  /proposal-submitions/{id}:
+    get:
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProposalSubmitionResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      tags:
+        - Proposal submition
+      parameters:
+        - name: id
+          in: path
+          description: ''
+          deprecated: false
+          required: true
+          schema:
+            type: number
+      operationId: Get single proposal submition
+    put:
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProposalSubmitionResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      tags:
+        - Proposal submition
+      parameters:
+        - name: id
+          in: path
+          description: ''
+          deprecated: false
+          required: true
+          schema:
+            type: number
+      operationId: Update proposal submition
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProposalSubmitionRequest'
+    delete:
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: integer
+                format: int64
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      tags:
+        - Proposal submition
+      parameters:
+        - name: id
+          in: path
+          description: ''
+          deprecated: false
+          required: true
+          schema:
+            type: number
+      operationId: Delete proposal submition
+  /governance-action-types:
+    get:
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProposalTypeListResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      tags:
+        - Governance action type
+      parameters:
+        - name: sort
+          in: query
+          description: Sort by attributes ascending (asc) or descending (desc)
+          deprecated: false
+          required: false
+          schema:
+            type: string
+        - name: pagination[withCount]
+          in: query
+          description: 'Return page/pageSize (default: true)'
+          deprecated: false
+          required: false
+          schema:
+            type: boolean
+        - name: pagination[page]
+          in: query
+          description: 'Page number (default: 0)'
+          deprecated: false
+          required: false
+          schema:
+            type: integer
+        - name: pagination[pageSize]
+          in: query
+          description: 'Page size (default: 25)'
+          deprecated: false
+          required: false
+          schema:
+            type: integer
+        - name: pagination[start]
+          in: query
+          description: 'Offset value (default: 0)'
+          deprecated: false
+          required: false
+          schema:
+            type: integer
+        - name: pagination[limit]
+          in: query
+          description: 'Number of entities to return (default: 25)'
+          deprecated: false
+          required: false
+          schema:
+            type: integer
+        - name: fields
+          in: query
+          description: 'Fields to return (ex: title,author)'
+          deprecated: false
+          required: false
+          schema:
+            type: string
+        - name: populate
+          in: query
+          description: Relations to return
+          deprecated: false
+          required: false
+          schema:
+            type: string
+        - name: filters
+          in: query
+          description: Filters to apply
+          deprecated: false
+          required: false
+          schema:
+            type: object
+          style: deepObject
+        - name: locale
+          in: query
+          description: Locale to apply
+          deprecated: false
+          required: false
+          schema:
+            type: string
+      operationId: Get governance action types
+    post:
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProposalTypeResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      tags:
+        - Governance action type
+      parameters: []
+      operationId: Create governance action type
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProposalTypeRequest'
+  /governance-action-types/{id}:
+    # get:
+    #   responses:
+    #     '200':
+    #       description: OK
+    #       content:
+    #         application/json:
+    #           schema:
+    #             $ref: '#/components/schemas/ProposalTypeResponse'
+    #     '400':
+    #       description: Bad Request
+    #       content:
+    #         application/json:
+    #           schema:
+    #             $ref: '#/components/schemas/Error'
+    #     '401':
+    #       description: Unauthorized
+    #       content:
+    #         application/json:
+    #           schema:
+    #             $ref: '#/components/schemas/Error'
+    #     '403':
+    #       description: Forbidden
+    #       content:
+    #         application/json:
+    #           schema:
+    #             $ref: '#/components/schemas/Error'
+    #     '404':
+    #       description: Not Found
+    #       content:
+    #         application/json:
+    #           schema:
+    #             $ref: '#/components/schemas/Error'
+    #     '500':
+    #       description: Internal Server Error
+    #       content:
+    #         application/json:
+    #           schema:
+    #             $ref: '#/components/schemas/Error'
+    #   tags:
+    #     - Governance action type
+    #   parameters:
+    #     - name: id
+    #       in: path
+    #       description: ''
+    #       deprecated: false
+    #       required: true
+    #       schema:
+    #         type: number
+    #   operationId: Get single governance action type
+    put:
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProposalTypeResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      tags:
+        - Governance action type
+      parameters:
+        - name: id
+          in: path
+          description: ''
+          deprecated: false
+          required: true
+          schema:
+            type: number
+      operationId: Update governance action type
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProposalTypeRequest'
+    delete:
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: integer
+                format: int64
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      tags:
+        - Governance action type
+      parameters:
+        - name: id
+          in: path
+          description: ''
+          deprecated: false
+          required: true
+          schema:
+            type: number
+      operationId: Delete governance action type
+  /wallet-types:
+    get:
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WalletTypeListResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      tags:
+        - Wallet type
+      parameters:
+        - name: sort
+          in: query
+          description: Sort by attributes ascending (asc) or descending (desc)
+          deprecated: false
+          required: false
+          schema:
+            type: string
+        - name: pagination[withCount]
+          in: query
+          description: 'Return page/pageSize (default: true)'
+          deprecated: false
+          required: false
+          schema:
+            type: boolean
+        - name: pagination[page]
+          in: query
+          description: 'Page number (default: 0)'
+          deprecated: false
+          required: false
+          schema:
+            type: integer
+        - name: pagination[pageSize]
+          in: query
+          description: 'Page size (default: 25)'
+          deprecated: false
+          required: false
+          schema:
+            type: integer
+        - name: pagination[start]
+          in: query
+          description: 'Offset value (default: 0)'
+          deprecated: false
+          required: false
+          schema:
+            type: integer
+        - name: pagination[limit]
+          in: query
+          description: 'Number of entities to return (default: 25)'
+          deprecated: false
+          required: false
+          schema:
+            type: integer
+        - name: fields
+          in: query
+          description: 'Fields to return (ex: title,author)'
+          deprecated: false
+          required: false
+          schema:
+            type: string
+        - name: populate
+          in: query
+          description: Relations to return
+          deprecated: false
+          required: false
+          schema:
+            type: string
+        - name: filters
+          in: query
+          description: Filters to apply
+          deprecated: false
+          required: false
+          schema:
+            type: object
+          style: deepObject
+        - name: locale
+          in: query
+          description: Locale to apply
+          deprecated: false
+          required: false
+          schema:
+            type: string
+      operationId: Get wallet types
+    post:
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WalletTypeResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      tags:
+        - Wallet type
+      parameters: []
+      operationId: Create wallet type
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WalletTypeRequest'
+  /wallet-types/{id}:
+    # get:
+    #   responses:
+    #     '200':
+    #       description: OK
+    #       content:
+    #         application/json:
+    #           schema:
+    #             $ref: '#/components/schemas/WalletTypeResponse'
+    #     '400':
+    #       description: Bad Request
+    #       content:
+    #         application/json:
+    #           schema:
+    #             $ref: '#/components/schemas/Error'
+    #     '401':
+    #       description: Unauthorized
+    #       content:
+    #         application/json:
+    #           schema:
+    #             $ref: '#/components/schemas/Error'
+    #     '403':
+    #       description: Forbidden
+    #       content:
+    #         application/json:
+    #           schema:
+    #             $ref: '#/components/schemas/Error'
+    #     '404':
+    #       description: Not Found
+    #       content:
+    #         application/json:
+    #           schema:
+    #             $ref: '#/components/schemas/Error'
+    #     '500':
+    #       description: Internal Server Error
+    #       content:
+    #         application/json:
+    #           schema:
+    #             $ref: '#/components/schemas/Error'
+    #   tags:
+    #     - Wallet type
+    #   parameters:
+    #     - name: id
+    #       in: path
+    #       description: ''
+    #       deprecated: false
+    #       required: true
+    #       schema:
+    #         type: number
+    #   operationId: Get single wallet type
+    put:
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WalletTypeResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      tags:
+        - Wallet type
+      parameters:
+        - name: id
+          in: path
+          description: ''
+          deprecated: false
+          required: true
+          schema:
+            type: number
+      operationId: Update wallet type
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WalletTypeRequest'
+    delete:
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: integer
+                format: int64
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      tags:
+        - Wallet type
+      parameters:
+        - name: id
+          in: path
+          description: ''
+          deprecated: false
+          required: true
+          schema:
+            type: number
+      operationId: Delete wallet type

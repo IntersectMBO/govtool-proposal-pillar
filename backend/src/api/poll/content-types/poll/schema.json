@@ -1,0 +1,34 @@
+{
+  "kind": "collectionType",
+  "collectionName": "polls",
+  "info": {
+    "singularName": "poll",
+    "pluralName": "polls",
+    "displayName": "Poll",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "proposal_id": {
+      "type": "string"
+    },
+    "poll_yes": {
+      "type": "integer",
+      "default": 0
+    },
+    "poll_no": {
+      "type": "integer",
+      "default": 0
+    },
+    "poll_start_dt": {
+      "type": "datetime"
+    },
+    "is_poll_active": {
+      "type": "boolean",
+      "default": false
+    }
+  }
+}

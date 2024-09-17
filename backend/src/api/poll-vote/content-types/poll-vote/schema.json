@@ -1,0 +1,27 @@
+{
+  "kind": "collectionType",
+  "collectionName": "poll_votes",
+  "info": {
+    "singularName": "poll-vote",
+    "pluralName": "poll-votes",
+    "displayName": "Poll vote"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "user_id": {
+      "type": "string",
+      "required": true
+    },
+    "poll_id": {
+      "type": "string",
+      "required": true
+    },
+    "vote_result": {
+      "type": "boolean",
+      "required": true
+    }
+  }
+}
