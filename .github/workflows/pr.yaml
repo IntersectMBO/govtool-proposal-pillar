@@ -1,7 +1,7 @@
-name: Check,Build,Deploy
+name: Lint,Test,Security Checks
 
 on:
-  push:
+  pull_request:
     branches:
       - dev
       - qa
@@ -9,15 +9,12 @@ on:
       - main
 
 permissions:
-  contents: write
+  contents: read
   pull-requests: write
   packages: write
 
-env:
-  ENVIRONMENT: ${{ (github.ref_name == 'main' && 'prod-pdf') || (github.ref_name == 'pre-prod' && 'pre-prod-pdf') || (github.ref_name == 'qa' && 'qa-pdf') || (github.ref_name == 'dev' && 'dev-pdf') }}
-
 jobs:
-  check-build-deploy:
+  static-checks:
     strategy:
       fail-fast: false
       matrix:
@@ -26,21 +23,11 @@ jobs:
             name: backend
             dockerfile: ./backend/Dockerfile
             image: ghcr.io/${{ github.repository }}-backend
-            qovery_container_name: backend
 
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-
-      - name: Set TAG Environment Variable
-        id: set_tag
-        run: |
-          if [ "${{ github.ref_name }}" = "main" ]; then
-            echo "TAG=${{ github.sha }}" >> $GITHUB_ENV
-          else
-            echo "TAG=${{ github.ref_name }}-${{ github.sha }}" >> $GITHUB_ENV
-          fi
 
       - name: Lint Dockerfile
         id: hadolint
@@ -109,19 +96,12 @@ jobs:
         with:
           context: ${{ matrix.workdir }}
           file: ${{ matrix.dockerfile }}
-          tags: ${{ steps.image_lowercase.outputs.lowercase }}:${{ env.TAG }}
+          tags: ${{ steps.image_lowercase.outputs.lowercase }}:${{ github.sha }}
           load: false
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,dest=/tmp/.buildx-cache
-          outputs: type=docker,dest=/tmp/image-${{ matrix.name }}-${{ env.ENVIRONMENT }}.tar
-
-      - name: Login to GHCR
-        uses: docker/login-action@v2
-        with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
+          outputs: type=docker,dest=/tmp/image-${{ matrix.name }}-${{ github.sha }}-pr.tar
+          
       - name: Scan Docker image with Dockle
         id: dockle
         run: |
@@ -129,47 +109,70 @@ jobs:
             tar zxf dockle_0.4.14_Linux-64bit.tar.gz
             sudo mv dockle /usr/local/bin
 
-            dockle --exit-code 1 --exit-level fatal --format json --input '/tmp/image-${{ matrix.name }}-${{ env.ENVIRONMENT }}.tar' --output ${{ matrix.workdir }}/dockle_scan_output.json
+            dockle --exit-code 1 --exit-level fatal --format json --input '/tmp/image-${{ matrix.name }}-${{ github.sha }}-pr.tar' --output ${{ matrix.workdir }}/dockle_scan_output.json
+            rm -rf '/tmp/image-${{ matrix.name }}-${{ github.sha }}-pr.tar'
             cat ${{ matrix.workdir }}/dockle_scan_output.json
 
             echo "outcome=success" >> $GITHUB_OUTPUT
 
-      - name: Push Docker image to GHCR
-        run: |
-          docker load -i '/tmp/image-${{ matrix.name }}-${{ env.ENVIRONMENT }}.tar'
-          rm -rf '/tmp/image-${{ matrix.name }}-${{ env.ENVIRONMENT }}.tar'
-          docker push ${{ steps.image_lowercase.outputs.lowercase }}:${{ env.TAG }}
-
-      - name: Add tag as a PR comment
-        uses: ubie-oss/comment-to-merged-pr-action@v0.3.3
-        id: comment-to-merged-pr
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          message: |-
-            This PR is in the tag: ${{ env.TAG }} , for ${{ matrix.name }} service
-
-      - name: Deploy with Qovery
-        if: github.ref == 'refs/heads/dev'
+      - name: Create PR comment
+        if: always()
+        uses: actions/github-script@v6
         env:
-          QOVERY_CLI_ACCESS_TOKEN: ${{secrets.QOVERY_CLI_ACCESS_TOKEN }}
-        run: |
+          HADOLINT_RESULT: ${{ steps.hadolint.outcome }}
+          CODE_LINT_RESULT: ${{ steps.code_lint.outcome }}
+          UNIT_TEST_RESULT: ${{ steps.unit_tests.outcome }}
+          DOCKLE_RESULT: ${{ steps.dockle.outcome }}
+        with:
+          script: |
+            const fs = require('fs');
 
-          echo "Deploying on $ENVIRONMENT"
-          echo "Organization - ${{ vars.ORGANIZATION }}"
-          echo "Project - ${{ vars.PROJECT }}"
+            const hadolintResult = fs.existsSync('${{ matrix.workdir }}/hadolint_output.json') ? fs.readFileSync('${{ matrix.workdir }}/hadolint_output.json', 'utf8') : 'No output';
+            const codeLintResult = fs.existsSync('${{ matrix.workdir }}/code_lint_output.txt') ? fs.readFileSync('${{ matrix.workdir }}/code_lint_output.txt', 'utf8') : 'No output';
+            const unitTestResult = fs.existsSync('${{ matrix.workdir }}/unit_test_output.txt') ? fs.readFileSync('${{ matrix.workdir }}/unit_test_output.txt', 'utf8') : 'No output';
+            const dockleScanResult = fs.existsSync('${{ matrix.workdir }}/dockle_scan_output.json') ? fs.readFileSync('${{ matrix.workdir }}/dockle_scan_output.json', 'utf8') : 'No output';
 
-          # Download and install Qovery CLI
-          curl -s https://get.qovery.com | bash
+            let commentBody = '';
 
-          qovery container list \
-            --organization ${{ vars.ORGANIZATION }} \
-            --project ${{ vars.PROJECT }} \
-            --environment $ENVIRONMENT
+            if (process.env.HADOLINT_RESULT !== 'success') {
+              commentBody = `
+              :x: Dockerfile Lint (Hadolint) failed
+              \`\`\`json
+              ${hadolintResult}
+              \`\`\`
+                            `;
+                          } else if (process.env.CODE_LINT_RESULT !== 'success') {
+                            commentBody = `
+              :x: Code Lint failed
+              \`\`\`
+              ${codeLintResult}
+              \`\`\`
+                            `;
+                          } else if (process.env.UNIT_TEST_RESULT !== 'success') {
+                            commentBody = `
+              :x: Unit Tests failed
+              \`\`\`
+              ${unitTestResult}
+              \`\`\`
+                            `;
+                          } else if (process.env.DOCKLE_RESULT !== 'success') {
+                            commentBody = `
+              :x: Docker Image Scan (Dockle) failed
+              \`\`\`json
+              ${dockleScanResult}
+              \`\`\`
+                            `;
+                          } else {
+                            commentBody = ':white_check_mark: All checks succeeded';
+                          }
 
-          qovery container deploy \
-            --organization ${{ vars.ORGANIZATION }} \
-            --project ${{ vars.PROJECT }} \
-            --environment $ENVIRONMENT \
-            --container ${{ matrix.qovery_container_name }} \
-            --tag ${{ env.TAG }} \
-            --watch
+                          const { owner, repo } = context.repo;
+                          const issue_number = context.issue.number;
+
+                          await github.rest.issues.createComment({
+                            owner,
+                            repo,
+                            issue_number,
+                            body: commentBody
+                          });
+                          
