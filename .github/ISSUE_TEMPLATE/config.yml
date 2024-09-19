@@ -1,0 +1,6 @@
+blank_issues_enabled: true
+contact_links:
+
+  - name: Consider creating issue via GovTool repository
+    url: https://github.com/IntersectMBO/govtool/issues/new/choose
+    about: To ensure issues are all in one place please make your issue via the GovTool wrapper repository.
