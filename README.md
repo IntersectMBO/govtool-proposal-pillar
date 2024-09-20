@@ -1,23 +1,26 @@
-# 🚀 PDF (Proposal Discussion Forum)
+# GovTool Proposal Pillar
 
-Welcome to the official repository for the PDF backend.
+This is the repository which holds GovTool's Voting Pillar packages.
+
+For further information and documentation see [GovTool](https://github.com/IntersectMBO/govtool).
 
 ## Table of content:
 
-- [Table of content:](#table-of-content)
-- [Introduction](#introduction)
-- [Prerequisites](#prerequisites)
-- [Tech stack:](#tech-stack)
-  - [pdf-ui package](#pdf-ui-package)
-  - [Backend](#backend)
-  - [Database](#database)
-- [Getting started](#getting-started)
-- [Running locally](#running-locally)
-  - [Backend setup](#backend-setup)
-  - [Database configuration](#database-configuration)
-- [Running using docker compose](#running-using-docker-compose)
-- [Overview of services in docker compose:](#overview-of-services-in-docker-compose)
-- [Additional Information](#additional-information)
+- [GovTool Proposal Pillar](#govtool-proposal-pillar)
+  - [Table of content:](#table-of-content)
+  - [Introduction](#introduction)
+  - [Prerequisites](#prerequisites)
+  - [Tech stack:](#tech-stack)
+    - [pdf-ui package](#pdf-ui-package)
+    - [Backend](#backend)
+    - [Database](#database)
+  - [Getting started](#getting-started)
+  - [Running locally](#running-locally)
+    - [Backend setup](#backend-setup)
+    - [Database configuration](#database-configuration)
+  - [Running using docker compose](#running-using-docker-compose)
+    - [Overview of services in docker compose:](#overview-of-services-in-docker-compose)
+    - [Additional Information](#additional-information)
 
 ## Introduction
 
