@@ -8,6 +8,28 @@
 const { createCoreController } = require('@strapi/strapi').factories;
 
 module.exports = createCoreController('api::poll.poll', ({ strapi }) => ({
+	async create(ctx) {
+		try {
+		const { data } = ctx?.request?.body;
+		const user = ctx?.state?.user;
+		const proposal = await strapi.entityService.findOne("api::proposal.proposal",data.proposal_id);
+		if(user.id.toString() !== proposal.user_id.toString())
+		{
+			return ctx.badRequest(null, 'User is not owner of this proposal');
+		}
+		
+		const newPool = await strapi.entityService.create("api::poll.poll",{data:data});
+		return this.transformResponse(newPool);
+		}
+		catch (error) {
+			console.error(error);
+			ctx.status = 500;
+			ctx.body = { error: error, message: error.message };
+		}
+	},
+
+
+
 	async update(ctx) {
 		const { id } = ctx.params;
 		const { data } = ctx?.request?.body;
