@@ -44,6 +44,25 @@ module.exports = createCoreController(
 			};
 
 			try {
+				// Check if vote already exist 
+				try{
+					const findVote = await strapi.entityService.findMany("api::poll-vote.poll-vote",{
+						filters:{$and:[{
+							user_id: user?.id
+						},
+						{
+							poll_Id: pollId
+						}
+						]}
+					})
+					if(findVote?.length >0){
+						return ctx.badRequest(null, "Poll vote for this user already exist");
+					}
+				}
+				catch(error){
+					ctx.status = 500;
+					ctx.body = { error: error, message: error.message };
+				}
 				// Create the Poll Vote
 				try {
 					pollVote = await strapi.entityService.create(
@@ -111,7 +130,6 @@ module.exports = createCoreController(
 				// Global error catch
 			} catch (error) {
 				pollVote && (await deletePollVote());
-
 				ctx.status = 500;
 				ctx.body = { error: error, message: error.message };
 			}
