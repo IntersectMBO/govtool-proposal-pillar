@@ -166,7 +166,6 @@ const EditProposalDialog = ({
         }
     };
     const setDraftData = (proposalData) => {
-        console.table(proposalData);
         const draft = {
             proposal_id: proposalData?.id,
             gov_action_type_id:
@@ -321,11 +320,9 @@ const EditProposalDialog = ({
     useEffect(() => {
         fetchGovernanceActionTypes();
     }, []);
-
     useEffect(() => {
         setDraft(setDraftData(proposal));
     }, [proposal]);
-console.log(draft);
     useEffect(() => {
         handleIsSaveDisabled();
     }, [draft, errors, linksErrors]);
