@@ -8,7 +8,7 @@ import {
     Typography,
 } from '@mui/material';
 import { useEffect, useState } from 'react';
-import { LinkManager } from '.';
+import { LinkManager, WithdrawalsManager } from '.';
 import { useAppContext } from '../../context/context';
 import { getGovernanceActionTypes } from '../../lib/api';
 import {
@@ -32,6 +32,8 @@ const Step2 = ({
     setHelperText,
     linksErrors,
     setLinksErrors,
+    withdrawalsErrors,
+    setWithdrawalsErrors,
 }) => {
     const titleMaxLength = 80;
     const abstractMaxLength = 2500;
@@ -43,87 +45,87 @@ const Step2 = ({
         )?.label || ''
     );
 
-    const handleAddressChange = async (e) => {
-        const newAddress = e.target.value?.trim();
-        setProposalData((prev) => ({
-            ...prev,
-            prop_receiving_address: newAddress,
-        }));
+    // const handleAddressChange = async (e) => {
+    //     const newAddress = e.target.value?.trim();
+    //     setProposalData((prev) => ({
+    //         ...prev,
+    //         prop_receiving_address: newAddress,
+    //     }));
 
-        if (newAddress === '') {
-            setErrors((prev) => ({
-                ...prev,
-                address: false,
-            }));
-            setHelperText((prev) => ({
-                ...prev,
-                address: ``,
-            }));
-            return;
-        }
+    //     if (newAddress === '') {
+    //         setErrors((prev) => ({
+    //             ...prev,
+    //             address: false,
+    //         }));
+    //         setHelperText((prev) => ({
+    //             ...prev,
+    //             address: ``,
+    //         }));
+    //         return;
+    //     }
 
-        const validationResult = await isRewardAddress(newAddress);
-        if (validationResult === true) {
-            setErrors((prev) => ({
-                ...prev,
-                address: false,
-            }));
-            setHelperText((prev) => ({
-                ...prev,
-                address: ``,
-            }));
-        } else {
-            setErrors((prev) => ({
-                ...prev,
-                address: true,
-            }));
-            setHelperText((prev) => ({
-                ...prev,
-                address: validationResult,
-            }));
-        }
-    };
+    //     const validationResult = await isRewardAddress(newAddress);
+    //     if (validationResult === true) {
+    //         setErrors((prev) => ({
+    //             ...prev,
+    //             address: false,
+    //         }));
+    //         setHelperText((prev) => ({
+    //             ...prev,
+    //             address: ``,
+    //         }));
+    //     } else {
+    //         setErrors((prev) => ({
+    //             ...prev,
+    //             address: true,
+    //         }));
+    //         setHelperText((prev) => ({
+    //             ...prev,
+    //             address: validationResult,
+    //         }));
+    //     }
+    // };
 
-    const handleAmountChange = (e) => {
-        const newAmount = e.target.value?.trim();
-        setProposalData((prev) => ({
-            ...prev,
-            prop_amount: newAmount,
-        }));
+    // const handleAmountChange = (e) => {
+    //     const newAmount = e.target.value?.trim();
+    //     setProposalData((prev) => ({
+    //         ...prev,
+    //         prop_amount: newAmount,
+    //     }));
 
-        if (newAmount === '') {
-            setErrors((prev) => ({
-                ...prev,
-                amount: false,
-            }));
-            setHelperText((prev) => ({
-                ...prev,
-                amount: ``,
-            }));
-            return;
-        }
+    //     if (newAmount === '') {
+    //         setErrors((prev) => ({
+    //             ...prev,
+    //             amount: false,
+    //         }));
+    //         setHelperText((prev) => ({
+    //             ...prev,
+    //             amount: ``,
+    //         }));
+    //         return;
+    //     }
 
-        const validationResult = numberValidation(newAmount);
-        if (validationResult === true) {
-            setErrors((prev) => ({
-                ...prev,
-                amount: false,
-            }));
-            setHelperText((prev) => ({
-                ...prev,
-                amount: ``,
-            }));
-        } else {
-            setErrors((prev) => ({
-                ...prev,
-                amount: true,
-            }));
-            setHelperText((prev) => ({
-                ...prev,
-                amount: validationResult,
-            }));
-        }
-    };
+    //     const validationResult = numberValidation(newAmount);
+    //     if (validationResult === true) {
+    //         setErrors((prev) => ({
+    //             ...prev,
+    //             amount: false,
+    //         }));
+    //         setHelperText((prev) => ({
+    //             ...prev,
+    //             amount: ``,
+    //         }));
+    //     } else {
+    //         setErrors((prev) => ({
+    //             ...prev,
+    //             amount: true,
+    //         }));
+    //         setHelperText((prev) => ({
+    //             ...prev,
+    //             amount: validationResult,
+    //         }));
+    //     }
+    // };
 
     const handleChange = (e) => {
         const selectedValue = e.target.value;
@@ -134,8 +136,7 @@ const Step2 = ({
         setProposalData((prev) => ({
             ...prev,
             gov_action_type_id: selectedValue,
-            prop_receiving_address: null,
-            prop_amount: null,
+            proposal_withdrawals:[{ prop_receiving_address: null, prop_amount: null }]
         }));
 
         setSelectedGovActionName(selectedLabel);
@@ -449,7 +450,21 @@ const Step2 = ({
 
                     {selectedGovActionName === 'Treasury' ? (
                         <>
-                            <TextField
+                            <Box
+                        sx={{
+                            align: 'center',
+                            textAlign: 'center',
+                            mt: 2,
+                        }}
+                            >
+                            <WithdrawalsManager
+                                proposalData={proposalData}
+                                setProposalData={setProposalData}
+                                withdrawalsErrors={withdrawalsErrors}
+                                setWithdrawalsErrors={setWithdrawalsErrors}
+                            />
+
+                            {/* <TextField
                                 margin='normal'
                                 label='Receiving stake address'
                                 variant='outlined'
@@ -458,7 +473,7 @@ const Step2 = ({
                                     proposalData?.prop_receiving_address || ''
                                 }
                                 fullWidth
-                                onChange={handleAddressChange}
+                               // onChange={handleWithdrawalChange}
                                 required
                                 inputProps={{
                                     'data-testid': 'receiving-address-input',
@@ -479,7 +494,7 @@ const Step2 = ({
                                 placeholder='e.g. 2000 ada'
                                 value={proposalData?.prop_amount || ''}
                                 fullWidth
-                                onChange={handleAmountChange}
+                                //onChange={handleWithdrawalChange}
                                 required
                                 inputProps={{
                                     'data-testid': 'amount-input',
@@ -489,8 +504,10 @@ const Step2 = ({
                                 FormHelperTextProps={{
                                     'data-testid': 'amount-text-error',
                                 }}
-                            />
+                            /> */}
+                            </Box>
                         </>
+
                     ) : null}
 
                     <Box
