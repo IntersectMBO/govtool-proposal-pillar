@@ -29,32 +29,31 @@ const CreateGovernanceActionDialog = ({ open = false, onClose = false }) => {
     const [step, setStep] = useState(1);
     const [proposalData, setProposalData] = useState({
         proposal_links: [],
+        proposal_withdrawals: []
     });
+
 
     const [governanceActionTypes, setGovernanceActionTypes] = useState([]);
     const [isContinueDisabled, setIsContinueDisabled] = useState(true);
-    const [showDraftSuccessfulModal, setShowDraftSuccessfulModal] =
-        useState(false);
+    const [showDraftSuccessfulModal, setShowDraftSuccessfulModal] = useState(false);
     const [selectedDraftId, setSelectedDraftId] = useState(null);
     const [errors, setErrors] = useState({
         name: false,
         abstract: false,
         motivation: false,
         rationale: false,
-        address: false,
-        amount: false,
+        // address: false,
+        // amount: false,
     });
     const [helperText, setHelperText] = useState({
         name: '',
         abstract: '',
         motivation: '',
         rationale: '',
-        address: ``,
-        amount: ``,
     });
 
     const [linksErrors, setLinksErrors] = useState({});
-
+    const [withdrawalsErrors, setWithdrawalsErrors ] = useState({});
     const isSmallScreen = useMediaQuery((theme) =>
         theme.breakpoints.down('sm')
     );
@@ -101,15 +100,17 @@ const CreateGovernanceActionDialog = ({ open = false, onClose = false }) => {
             )?.label;
 
             if (selectedLabel === 'Treasury') {
-                if (
-                    proposalData?.prop_receiving_address &&
-                    !errors?.address &&
-                    proposalData?.prop_amount &&
-                    !errors?.amount
-                ) {
-                    setIsContinueDisabled(false);
-                } else {
-                    setIsContinueDisabled(true);
+                if (proposalData?.proposal_withdravals) {
+                    if (
+                        proposalData?.proposal_withdravals?.some(
+                            (proposal_withdraval) => !proposal_withdraval.prop_receiving_address || !proposal_withdraval.prop_amount
+                        ) ||
+                        Object.values(withdrawalsErrors).some((error) => error.url)
+                    ) {
+                        return setIsContinueDisabled(true);
+                    } else {
+                        setIsContinueDisabled(false);
+                    }
                 }
             } else {
                 setIsContinueDisabled(false);
@@ -117,7 +118,7 @@ const CreateGovernanceActionDialog = ({ open = false, onClose = false }) => {
         } else {
             setIsContinueDisabled(true);
         }
-    }, [proposalData, errors, linksErrors]); // proposalData is a dependency
+    }, [proposalData, errors, linksErrors, withdrawalsErrors]); // proposalData is a dependency
 
     const handleCreateProposal = async (isDraft = false) => {
         setLoading(true);
@@ -262,6 +263,8 @@ const CreateGovernanceActionDialog = ({ open = false, onClose = false }) => {
                                     setHelperText={setHelperText}
                                     linksErrors={linksErrors}
                                     setLinksErrors={setLinksErrors}
+                                    withdrawalsErrors={withdrawalsErrors}
+                                    setWithdrawalsErrors={setWithdrawalsErrors}
                                 />
                             )}
 

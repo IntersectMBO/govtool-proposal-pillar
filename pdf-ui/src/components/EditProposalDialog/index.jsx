@@ -38,6 +38,7 @@ import {
     numberValidation,
 } from '../../lib/utils';
 import { LinkManager } from '../CreationGoveranceAction';
+import { WithdrawalsManager } from '../CreationGoveranceAction';
 import DeleteProposalModal from '../DeleteProposalModal';
 
 import CreateGA2 from '../../assets/svg/CreateGA2.jsx';
@@ -90,19 +91,17 @@ const EditProposalDialog = ({
         abstract: false,
         motivation: false,
         rationale: false,
-        address: false,
-        amount: false,
     });
     const [helperText, setHelperText] = useState({
         name: '',
         abstract: '',
         motivation: '',
         rationale: '',
-        address: ``,
-        amount: ``,
     });
 
     const [linksErrors, setLinksErrors] = useState({});
+    const [withdrawalsErrors, setWithdrawalsErrors] = useState({});
+
 
     const isSmallScreen = useMediaQuery((theme) =>
         theme.breakpoints.down('sm')
@@ -132,8 +131,19 @@ const EditProposalDialog = ({
                     setIsSaveDisabled(false);
                 }
             }
-
-            const selectedLabel = governanceActionTypes.find(
+            if (draft?.proposal_withdrawals) {
+                 if (
+                     draft?.proposal_withdrawals?.some(
+                         (proposal_withdrawal) => !proposal_withdrawal || !proposal_withdrawal.prop_receiving_address
+                     ) ||
+                     Object.values(withdrawalsErrors).some((error) => error.prop_receiving_address)
+                 ) {
+                     return setIsSaveDisabled(true);
+                 } else {
+                     setIsSaveDisabled(false);
+                 }
+             }
+             const selectedLabel = governanceActionTypes.find(
                 (option) => option?.value === draft?.gov_action_type_id
             )?.label;
 
@@ -155,7 +165,6 @@ const EditProposalDialog = ({
             setIsSaveDisabled(true);
         }
     };
-
     const setDraftData = (proposalData) => {
         const draft = {
             proposal_id: proposalData?.id,
@@ -164,20 +173,16 @@ const EditProposalDialog = ({
                     ?.gov_action_type_id,
             prop_abstract:
                 proposalData?.attributes?.content?.attributes?.prop_abstract,
-            prop_amount:
-                proposalData?.attributes?.content?.attributes?.prop_amount,
             prop_motivation:
                 proposalData?.attributes?.content?.attributes?.prop_motivation,
             prop_name: proposalData?.attributes?.content?.attributes?.prop_name,
             prop_rationale:
                 proposalData?.attributes?.content?.attributes?.prop_rationale,
-            prop_receiving_address:
-                proposalData?.attributes?.content?.attributes
-                    ?.prop_receiving_address,
+            proposal_withdrawals:
+                proposalData?.attributes?.content?.attributes?.proposal_withdrawals,
             proposal_links:
                 proposalData?.attributes?.content?.attributes?.proposal_links,
         };
-
         return draft;
     };
 
@@ -196,91 +201,8 @@ const EditProposalDialog = ({
         }
     };
 
-    const handleAddressChange = async (e) => {
-        const newAddress = e.target.value?.trim();
-        setDraft((prev) => ({
-            ...prev,
-            prop_receiving_address: newAddress,
-        }));
-
-        if (newAddress === '') {
-            setErrors((prev) => ({
-                ...prev,
-                address: false,
-            }));
-            setHelperText((prev) => ({
-                ...prev,
-                address: ``,
-            }));
-            return;
-        }
-
-        const validationResult = await isRewardAddress(newAddress);
-        if (validationResult === true) {
-            setErrors((prev) => ({
-                ...prev,
-                address: false,
-            }));
-            setHelperText((prev) => ({
-                ...prev,
-                address: ``,
-            }));
-        } else {
-            setErrors((prev) => ({
-                ...prev,
-                address: true,
-            }));
-            setHelperText((prev) => ({
-                ...prev,
-                address: validationResult,
-            }));
-        }
-    };
-
-    const handleAmountChange = (e) => {
-        const newAmount = e.target.value?.trim();
-        setDraft((prev) => ({
-            ...prev,
-            prop_amount: newAmount,
-        }));
-
-        if (newAmount === '') {
-            setErrors((prev) => ({
-                ...prev,
-                amount: false,
-            }));
-            setHelperText((prev) => ({
-                ...prev,
-                amount: ``,
-            }));
-            return;
-        }
-
-        const validationResult = numberValidation(newAmount);
-        if (validationResult === true) {
-            setErrors((prev) => ({
-                ...prev,
-                amount: false,
-            }));
-            setHelperText((prev) => ({
-                ...prev,
-                amount: ``,
-            }));
-        } else {
-            setErrors((prev) => ({
-                ...prev,
-                amount: true,
-            }));
-            setHelperText((prev) => ({
-                ...prev,
-                amount: validationResult,
-            }));
-        }
-    };
-
     const handleTextAreaChange = (event, field, errorField) => {
         const value = event?.target?.value;
-
         setDraft((prev) => ({
             ...prev,
             [field]: value,
@@ -398,11 +320,9 @@ const EditProposalDialog = ({
     useEffect(() => {
         fetchGovernanceActionTypes();
     }, []);
-
     useEffect(() => {
         setDraft(setDraftData(proposal));
     }, [proposal]);
-
     useEffect(() => {
         handleIsSaveDisabled();
     }, [draft, errors, linksErrors]);
@@ -864,7 +784,13 @@ const EditProposalDialog = ({
                                         {selectedGovActionName ===
                                         'Treasury' ? (
                                             <>
-                                                <TextField
+                                            <WithdrawalsManager
+                                                proposalData={draft}
+                                                setProposalData={setDraft}
+                                                withdrawalsErrors={withdrawalsErrors}
+                                                setWithdrawalsErrors={setWithdrawalsErrors}
+                                            />
+                                                {/* <TextField
                                                     fullWidth
                                                     margin='normal'
                                                     label='Receiving stake address'
@@ -918,7 +844,7 @@ const EditProposalDialog = ({
                                                         'data-testid':
                                                             'amount-text-error',
                                                     }}
-                                                />
+                                                /> */}
                                             </>
                                         ) : null}
 

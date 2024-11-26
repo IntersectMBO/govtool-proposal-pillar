@@ -44,7 +44,7 @@ const ReviewVersions = ({ open, onClose, id }) => {
 
     const fetchVersions = async () => {
         try {
-            let query = `filters[$and][0][prop_id]=${id}&pagination[page]=1&pagination[pageSize]=25&sort[createdAt]=desc&populate[0]=proposal_links`;
+            let query = `filters[$and][0][prop_id]=${id}&pagination[page]=1&pagination[pageSize]=25&sort[createdAt]=desc&populate[0]=proposal_links&populate[1]=proposal_withdrawals`;
             const { proposals } = await getProposals(query);
             if (!proposals) return;
 

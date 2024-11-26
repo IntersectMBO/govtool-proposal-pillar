@@ -20,33 +20,24 @@
       "default": false
     },
     "prop_abstract": {
-		"type": "text",
-		"maxLength": 2500
-	},
+      "type": "text",
+      "maxLength": 2500
+    },
     "prop_motivation": {
-		"type": "text",
-		"maxLength": 12000
-	},
+      "type": "text",
+      "maxLength": 12000
+    },
     "prop_rationale": {
-		"type": "text",
-		"maxLength": 12000
-	},
+      "type": "text",
+      "maxLength": 12000
+    },
     "gov_action_type_id": {
       "type": "string"
     },
     "prop_name": {
-		"type": "string",
-		"required": true,
-		"maxLength": 80
-	},
-    "prop_receiving_address": {
       "type": "string",
-      "required": false,
-      "maxLength": 200
-    },
-    "prop_amount": {
-      "type": "float",
-      "required": false
+      "required": true,
+      "maxLength": 80
     },
     "proposal_links": {
       "type": "component",
@@ -71,6 +62,12 @@
     },
     "prop_submission_date": {
       "type": "date"
+    },
+    "proposal_withdrawals": {
+      "displayName": "proposal_withdrawals",
+      "type": "component",
+      "repeatable": true,
+      "component": "proposal.proposal-withdrawals"
     }
   }
 }
