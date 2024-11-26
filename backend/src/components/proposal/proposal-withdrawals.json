@@ -1,0 +1,18 @@
+{
+  "collectionName": "components_proposal_proposal_withdrawals",
+  "info": {
+    "displayName": "proposal_withdrawals",
+    "description": ""
+  },
+  "options": {},
+  "attributes": {
+    "prop_receiving_address": {
+      "type": "string",
+      "maxLength": 200
+    },
+    "prop_amount": {
+      "type": "float",
+      "min": 0
+    }
+  }
+}
