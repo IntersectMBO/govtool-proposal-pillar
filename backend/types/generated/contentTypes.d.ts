@@ -1025,17 +1025,16 @@ export interface ApiProposalContentProposalContent
       Attribute.SetMinMaxLength<{
         maxLength: 80;
       }>;
-    prop_receiving_address: Attribute.String &
-      Attribute.SetMinMaxLength<{
-        maxLength: 200;
-      }>;
-    prop_amount: Attribute.Float;
     proposal_links: Attribute.Component<'proposal.proposal-link', true>;
     is_draft: Attribute.Boolean & Attribute.DefaultTo<false>;
     user_id: Attribute.String & Attribute.Required;
     prop_submitted: Attribute.Boolean & Attribute.DefaultTo<false>;
     prop_submission_tx_hash: Attribute.String & Attribute.Unique;
     prop_submission_date: Attribute.Date;
+    proposal_withdrawals: Attribute.Component<
+      'proposal.proposal-withdrawals',
+      true
+    >;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     createdBy: Attribute.Relation<

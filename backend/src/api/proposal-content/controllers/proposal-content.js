@@ -22,7 +22,9 @@ module.exports = createCoreController(
       if (!sanitizedQueryParams?.populate?.includes("proposal_links")) {
         sanitizedQueryParams.populate.push("proposal_links");
       }
-
+      if (!sanitizedQueryParams?.populate?.includes("proposal_withdrawals")) {
+        sanitizedQueryParams.populate.push("proposal_withdrawals");
+      }
       const { results, pagination } = await strapi
         .service("api::proposal-content.proposal-content")
         .find(sanitizedQueryParams);

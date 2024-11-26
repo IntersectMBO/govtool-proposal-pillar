@@ -13,7 +13,7 @@
       "name": "Apache 2.0",
       "url": "https://www.apache.org/licenses/LICENSE-2.0.html"
     },
-    "x-generation-date": "2024-05-22T09:15:57.890Z"
+    "x-generation-date": "2024-11-26T08:48:46.401Z"
   },
   "x-strapi-config": {
     "plugins": [],
@@ -22,7 +22,7 @@
   "openapi": "3.0.0",
   "servers": [
     {
-      "url": "http://localhost:1337/api",
+      "url": "http://localhost:1338/api",
       "description": "Development server"
     }
   ],
@@ -103,9 +103,6 @@
               },
               "comment_text": {
                 "type": "string"
-              },
-              "comment_has_replays": {
-                "type": "boolean"
               }
             }
           }
@@ -171,9 +168,6 @@
           },
           "comment_text": {
             "type": "string"
-          },
-          "comment_has_replays": {
-            "type": "boolean"
           },
           "createdAt": {
             "type": "string",
@@ -572,6 +566,10 @@
             "format": "date-time"
           },
           "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "publishedAt": {
             "type": "string",
             "format": "date-time"
           },
@@ -1726,12 +1724,6 @@
               "prop_comments_number": {
                 "type": "integer"
               },
-              "prop_submited": {
-                "type": "boolean"
-              },
-              "prop_status_id": {
-                "type": "string"
-              },
               "user_id": {
                 "type": "string"
               }
@@ -1799,12 +1791,6 @@
           },
           "prop_comments_number": {
             "type": "integer"
-          },
-          "prop_submited": {
-            "type": "boolean"
-          },
-          "prop_status_id": {
-            "type": "string"
           },
           "user_id": {
             "type": "string"
@@ -2136,8 +2122,7 @@
           "data": {
             "required": [
               "prop_name",
-              "prop_receiving_address",
-              "prop_amount"
+              "user_id"
             ],
             "type": "object",
             "properties": {
@@ -2162,17 +2147,32 @@
               "prop_name": {
                 "type": "string"
               },
-              "prop_receiving_address": {
-                "type": "string"
-              },
-              "prop_amount": {
-                "type": "number",
-                "format": "float"
-              },
               "proposal_links": {
                 "type": "array",
                 "items": {
                   "$ref": "#/components/schemas/ProposalProposalLinkComponent"
+                }
+              },
+              "is_draft": {
+                "type": "boolean"
+              },
+              "user_id": {
+                "type": "string"
+              },
+              "prop_submitted": {
+                "type": "boolean"
+              },
+              "prop_submission_tx_hash": {
+                "type": "string"
+              },
+              "prop_submission_date": {
+                "type": "string",
+                "format": "date"
+              },
+              "proposal_withdrawals": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/ProposalProposalWithdrawalsComponent"
                 }
               }
             }
@@ -2229,8 +2229,7 @@
         "type": "object",
         "required": [
           "prop_name",
-          "prop_receiving_address",
-          "prop_amount"
+          "user_id"
         ],
         "properties": {
           "proposal_id": {
@@ -2254,17 +2253,32 @@
           "prop_name": {
             "type": "string"
           },
-          "prop_receiving_address": {
-            "type": "string"
-          },
-          "prop_amount": {
-            "type": "number",
-            "format": "float"
-          },
           "proposal_links": {
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/ProposalProposalLinkComponent"
+            }
+          },
+          "is_draft": {
+            "type": "boolean"
+          },
+          "user_id": {
+            "type": "string"
+          },
+          "prop_submitted": {
+            "type": "boolean"
+          },
+          "prop_submission_tx_hash": {
+            "type": "string"
+          },
+          "prop_submission_date": {
+            "type": "string",
+            "format": "date"
+          },
+          "proposal_withdrawals": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ProposalProposalWithdrawalsComponent"
             }
           },
           "createdAt": {
@@ -2599,389 +2613,18 @@
           }
         }
       },
-      "ProposalStatusRequest": {
-        "type": "object",
-        "required": [
-          "data"
-        ],
-        "properties": {
-          "data": {
-            "type": "object",
-            "properties": {
-              "prop_status_name": {
-                "type": "string"
-              }
-            }
-          }
-        }
-      },
-      "ProposalStatusListResponseDataItem": {
+      "ProposalProposalWithdrawalsComponent": {
         "type": "object",
         "properties": {
           "id": {
             "type": "number"
           },
-          "attributes": {
-            "$ref": "#/components/schemas/ProposalStatus"
-          }
-        }
-      },
-      "ProposalStatusListResponse": {
-        "type": "object",
-        "properties": {
-          "data": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/ProposalStatusListResponseDataItem"
-            }
-          },
-          "meta": {
-            "type": "object",
-            "properties": {
-              "pagination": {
-                "type": "object",
-                "properties": {
-                  "page": {
-                    "type": "integer"
-                  },
-                  "pageSize": {
-                    "type": "integer",
-                    "minimum": 25
-                  },
-                  "pageCount": {
-                    "type": "integer",
-                    "maximum": 1
-                  },
-                  "total": {
-                    "type": "integer"
-                  }
-                }
-              }
-            }
-          }
-        }
-      },
-      "ProposalStatus": {
-        "type": "object",
-        "properties": {
-          "prop_status_name": {
+          "prop_receiving_address": {
             "type": "string"
           },
-          "createdAt": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "updatedAt": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "createdBy": {
-            "type": "object",
-            "properties": {
-              "data": {
-                "type": "object",
-                "properties": {
-                  "id": {
-                    "type": "number"
-                  },
-                  "attributes": {
-                    "type": "object",
-                    "properties": {
-                      "firstname": {
-                        "type": "string"
-                      },
-                      "lastname": {
-                        "type": "string"
-                      },
-                      "username": {
-                        "type": "string"
-                      },
-                      "email": {
-                        "type": "string",
-                        "format": "email"
-                      },
-                      "resetPasswordToken": {
-                        "type": "string"
-                      },
-                      "registrationToken": {
-                        "type": "string"
-                      },
-                      "isActive": {
-                        "type": "boolean"
-                      },
-                      "roles": {
-                        "type": "object",
-                        "properties": {
-                          "data": {
-                            "type": "array",
-                            "items": {
-                              "type": "object",
-                              "properties": {
-                                "id": {
-                                  "type": "number"
-                                },
-                                "attributes": {
-                                  "type": "object",
-                                  "properties": {
-                                    "name": {
-                                      "type": "string"
-                                    },
-                                    "code": {
-                                      "type": "string"
-                                    },
-                                    "description": {
-                                      "type": "string"
-                                    },
-                                    "users": {
-                                      "type": "object",
-                                      "properties": {
-                                        "data": {
-                                          "type": "array",
-                                          "items": {
-                                            "type": "object",
-                                            "properties": {
-                                              "id": {
-                                                "type": "number"
-                                              },
-                                              "attributes": {
-                                                "type": "object",
-                                                "properties": {}
-                                              }
-                                            }
-                                          }
-                                        }
-                                      }
-                                    },
-                                    "permissions": {
-                                      "type": "object",
-                                      "properties": {
-                                        "data": {
-                                          "type": "array",
-                                          "items": {
-                                            "type": "object",
-                                            "properties": {
-                                              "id": {
-                                                "type": "number"
-                                              },
-                                              "attributes": {
-                                                "type": "object",
-                                                "properties": {
-                                                  "action": {
-                                                    "type": "string"
-                                                  },
-                                                  "actionParameters": {},
-                                                  "subject": {
-                                                    "type": "string"
-                                                  },
-                                                  "properties": {},
-                                                  "conditions": {},
-                                                  "role": {
-                                                    "type": "object",
-                                                    "properties": {
-                                                      "data": {
-                                                        "type": "object",
-                                                        "properties": {
-                                                          "id": {
-                                                            "type": "number"
-                                                          },
-                                                          "attributes": {
-                                                            "type": "object",
-                                                            "properties": {}
-                                                          }
-                                                        }
-                                                      }
-                                                    }
-                                                  },
-                                                  "createdAt": {
-                                                    "type": "string",
-                                                    "format": "date-time"
-                                                  },
-                                                  "updatedAt": {
-                                                    "type": "string",
-                                                    "format": "date-time"
-                                                  },
-                                                  "createdBy": {
-                                                    "type": "object",
-                                                    "properties": {
-                                                      "data": {
-                                                        "type": "object",
-                                                        "properties": {
-                                                          "id": {
-                                                            "type": "number"
-                                                          },
-                                                          "attributes": {
-                                                            "type": "object",
-                                                            "properties": {}
-                                                          }
-                                                        }
-                                                      }
-                                                    }
-                                                  },
-                                                  "updatedBy": {
-                                                    "type": "object",
-                                                    "properties": {
-                                                      "data": {
-                                                        "type": "object",
-                                                        "properties": {
-                                                          "id": {
-                                                            "type": "number"
-                                                          },
-                                                          "attributes": {
-                                                            "type": "object",
-                                                            "properties": {}
-                                                          }
-                                                        }
-                                                      }
-                                                    }
-                                                  }
-                                                }
-                                              }
-                                            }
-                                          }
-                                        }
-                                      }
-                                    },
-                                    "createdAt": {
-                                      "type": "string",
-                                      "format": "date-time"
-                                    },
-                                    "updatedAt": {
-                                      "type": "string",
-                                      "format": "date-time"
-                                    },
-                                    "createdBy": {
-                                      "type": "object",
-                                      "properties": {
-                                        "data": {
-                                          "type": "object",
-                                          "properties": {
-                                            "id": {
-                                              "type": "number"
-                                            },
-                                            "attributes": {
-                                              "type": "object",
-                                              "properties": {}
-                                            }
-                                          }
-                                        }
-                                      }
-                                    },
-                                    "updatedBy": {
-                                      "type": "object",
-                                      "properties": {
-                                        "data": {
-                                          "type": "object",
-                                          "properties": {
-                                            "id": {
-                                              "type": "number"
-                                            },
-                                            "attributes": {
-                                              "type": "object",
-                                              "properties": {}
-                                            }
-                                          }
-                                        }
-                                      }
-                                    }
-                                  }
-                                }
-                              }
-                            }
-                          }
-                        }
-                      },
-                      "blocked": {
-                        "type": "boolean"
-                      },
-                      "preferedLanguage": {
-                        "type": "string"
-                      },
-                      "createdAt": {
-                        "type": "string",
-                        "format": "date-time"
-                      },
-                      "updatedAt": {
-                        "type": "string",
-                        "format": "date-time"
-                      },
-                      "createdBy": {
-                        "type": "object",
-                        "properties": {
-                          "data": {
-                            "type": "object",
-                            "properties": {
-                              "id": {
-                                "type": "number"
-                              },
-                              "attributes": {
-                                "type": "object",
-                                "properties": {}
-                              }
-                            }
-                          }
-                        }
-                      },
-                      "updatedBy": {
-                        "type": "object",
-                        "properties": {
-                          "data": {
-                            "type": "object",
-                            "properties": {
-                              "id": {
-                                "type": "number"
-                              },
-                              "attributes": {
-                                "type": "object",
-                                "properties": {}
-                              }
-                            }
-                          }
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "updatedBy": {
-            "type": "object",
-            "properties": {
-              "data": {
-                "type": "object",
-                "properties": {
-                  "id": {
-                    "type": "number"
-                  },
-                  "attributes": {
-                    "type": "object",
-                    "properties": {}
-                  }
-                }
-              }
-            }
-          }
-        }
-      },
-      "ProposalStatusResponseDataObject": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "number"
-          },
-          "attributes": {
-            "$ref": "#/components/schemas/ProposalStatus"
-          }
-        }
-      },
-      "ProposalStatusResponse": {
-        "type": "object",
-        "properties": {
-          "data": {
-            "$ref": "#/components/schemas/ProposalStatusResponseDataObject"
-          },
-          "meta": {
-            "type": "object"
+          "prop_amount": {
+            "type": "number",
+            "format": "float"
           }
         }
       },
@@ -7214,511 +6857,6 @@
           }
         ],
         "operationId": "delete/proposal-contents/{id}"
-      }
-    },
-    "/proposal-statuses": {
-      "get": {
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProposalStatusListResponse"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Forbidden",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Not Found",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Internal Server Error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "Proposal-status"
-        ],
-        "parameters": [
-          {
-            "name": "sort",
-            "in": "query",
-            "description": "Sort by attributes ascending (asc) or descending (desc)",
-            "deprecated": false,
-            "required": false,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "pagination[withCount]",
-            "in": "query",
-            "description": "Return page/pageSize (default: true)",
-            "deprecated": false,
-            "required": false,
-            "schema": {
-              "type": "boolean"
-            }
-          },
-          {
-            "name": "pagination[page]",
-            "in": "query",
-            "description": "Page number (default: 0)",
-            "deprecated": false,
-            "required": false,
-            "schema": {
-              "type": "integer"
-            }
-          },
-          {
-            "name": "pagination[pageSize]",
-            "in": "query",
-            "description": "Page size (default: 25)",
-            "deprecated": false,
-            "required": false,
-            "schema": {
-              "type": "integer"
-            }
-          },
-          {
-            "name": "pagination[start]",
-            "in": "query",
-            "description": "Offset value (default: 0)",
-            "deprecated": false,
-            "required": false,
-            "schema": {
-              "type": "integer"
-            }
-          },
-          {
-            "name": "pagination[limit]",
-            "in": "query",
-            "description": "Number of entities to return (default: 25)",
-            "deprecated": false,
-            "required": false,
-            "schema": {
-              "type": "integer"
-            }
-          },
-          {
-            "name": "fields",
-            "in": "query",
-            "description": "Fields to return (ex: title,author)",
-            "deprecated": false,
-            "required": false,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "populate",
-            "in": "query",
-            "description": "Relations to return",
-            "deprecated": false,
-            "required": false,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "filters",
-            "in": "query",
-            "description": "Filters to apply",
-            "deprecated": false,
-            "required": false,
-            "schema": {
-              "type": "object"
-            },
-            "style": "deepObject"
-          },
-          {
-            "name": "locale",
-            "in": "query",
-            "description": "Locale to apply",
-            "deprecated": false,
-            "required": false,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "operationId": "get/proposal-statuses"
-      },
-      "post": {
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProposalStatusResponse"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Forbidden",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Not Found",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Internal Server Error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "Proposal-status"
-        ],
-        "parameters": [],
-        "operationId": "post/proposal-statuses",
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/ProposalStatusRequest"
-              }
-            }
-          }
-        }
-      }
-    },
-    "/proposal-statuses/{id}": {
-      "get": {
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProposalStatusResponse"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Forbidden",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Not Found",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Internal Server Error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "Proposal-status"
-        ],
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "description": "",
-            "deprecated": false,
-            "required": true,
-            "schema": {
-              "type": "number"
-            }
-          }
-        ],
-        "operationId": "get/proposal-statuses/{id}"
-      },
-      "put": {
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProposalStatusResponse"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Forbidden",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Not Found",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Internal Server Error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "Proposal-status"
-        ],
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "description": "",
-            "deprecated": false,
-            "required": true,
-            "schema": {
-              "type": "number"
-            }
-          }
-        ],
-        "operationId": "put/proposal-statuses/{id}",
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/ProposalStatusRequest"
-              }
-            }
-          }
-        }
-      },
-      "delete": {
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "integer",
-                  "format": "int64"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Forbidden",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Not Found",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Internal Server Error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "Proposal-status"
-        ],
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "description": "",
-            "deprecated": false,
-            "required": true,
-            "schema": {
-              "type": "number"
-            }
-          }
-        ],
-        "operationId": "delete/proposal-statuses/{id}"
       }
     },
     "/proposal-submitions": {
