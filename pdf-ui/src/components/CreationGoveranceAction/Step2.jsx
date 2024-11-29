@@ -13,9 +13,7 @@ import { useAppContext } from '../../context/context';
 import { getGovernanceActionTypes } from '../../lib/api';
 import {
     containsString,
-    isRewardAddress,
     maxLengthCheck,
-    numberValidation,
 } from '../../lib/utils';
 const Step2 = ({
     setStep,
@@ -44,88 +42,6 @@ const Step2 = ({
             (option) => option?.value === proposalData?.gov_action_type_id
         )?.label || ''
     );
-
-    // const handleAddressChange = async (e) => {
-    //     const newAddress = e.target.value?.trim();
-    //     setProposalData((prev) => ({
-    //         ...prev,
-    //         prop_receiving_address: newAddress,
-    //     }));
-
-    //     if (newAddress === '') {
-    //         setErrors((prev) => ({
-    //             ...prev,
-    //             address: false,
-    //         }));
-    //         setHelperText((prev) => ({
-    //             ...prev,
-    //             address: ``,
-    //         }));
-    //         return;
-    //     }
-
-    //     const validationResult = await isRewardAddress(newAddress);
-    //     if (validationResult === true) {
-    //         setErrors((prev) => ({
-    //             ...prev,
-    //             address: false,
-    //         }));
-    //         setHelperText((prev) => ({
-    //             ...prev,
-    //             address: ``,
-    //         }));
-    //     } else {
-    //         setErrors((prev) => ({
-    //             ...prev,
-    //             address: true,
-    //         }));
-    //         setHelperText((prev) => ({
-    //             ...prev,
-    //             address: validationResult,
-    //         }));
-    //     }
-    // };
-
-    // const handleAmountChange = (e) => {
-    //     const newAmount = e.target.value?.trim();
-    //     setProposalData((prev) => ({
-    //         ...prev,
-    //         prop_amount: newAmount,
-    //     }));
-
-    //     if (newAmount === '') {
-    //         setErrors((prev) => ({
-    //             ...prev,
-    //             amount: false,
-    //         }));
-    //         setHelperText((prev) => ({
-    //             ...prev,
-    //             amount: ``,
-    //         }));
-    //         return;
-    //     }
-
-    //     const validationResult = numberValidation(newAmount);
-    //     if (validationResult === true) {
-    //         setErrors((prev) => ({
-    //             ...prev,
-    //             amount: false,
-    //         }));
-    //         setHelperText((prev) => ({
-    //             ...prev,
-    //             amount: ``,
-    //         }));
-    //     } else {
-    //         setErrors((prev) => ({
-    //             ...prev,
-    //             amount: true,
-    //         }));
-    //         setHelperText((prev) => ({
-    //             ...prev,
-    //             amount: validationResult,
-    //         }));
-    //     }
-    // };
 
     const handleChange = (e) => {
         const selectedValue = e.target.value;
@@ -463,48 +379,6 @@ const Step2 = ({
                                 withdrawalsErrors={withdrawalsErrors}
                                 setWithdrawalsErrors={setWithdrawalsErrors}
                             />
-
-                            {/* <TextField
-                                margin='normal'
-                                label='Receiving stake address'
-                                variant='outlined'
-                                placeholder='e.g. stake1...'
-                                value={
-                                    proposalData?.prop_receiving_address || ''
-                                }
-                                fullWidth
-                               // onChange={handleWithdrawalChange}
-                                required
-                                inputProps={{
-                                    'data-testid': 'receiving-address-input',
-                                }}
-                                error={errors?.address}
-                                helperText={helperText?.address}
-                                FormHelperTextProps={{
-                                    'data-testid':
-                                        'receiving-address-text-error',
-                                }}
-                            />
-
-                            <TextField
-                                margin='normal'
-                                label='Amount'
-                                type='tel'
-                                variant='outlined'
-                                placeholder='e.g. 2000 ada'
-                                value={proposalData?.prop_amount || ''}
-                                fullWidth
-                                //onChange={handleWithdrawalChange}
-                                required
-                                inputProps={{
-                                    'data-testid': 'amount-input',
-                                }}
-                                error={errors?.amount}
-                                helperText={helperText?.amount}
-                                FormHelperTextProps={{
-                                    'data-testid': 'amount-text-error',
-                                }}
-                            /> */}
                             </Box>
                         </>
 

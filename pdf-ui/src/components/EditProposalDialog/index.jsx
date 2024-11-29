@@ -790,61 +790,6 @@ const EditProposalDialog = ({
                                                 withdrawalsErrors={withdrawalsErrors}
                                                 setWithdrawalsErrors={setWithdrawalsErrors}
                                             />
-                                                {/* <TextField
-                                                    fullWidth
-                                                    margin='normal'
-                                                    label='Receiving stake address'
-                                                    placeholder='e.g. stake1...'
-                                                    variant='outlined'
-                                                    value={
-                                                        draft?.prop_receiving_address ||
-                                                        ''
-                                                    }
-                                                    onChange={
-                                                        handleAddressChange
-                                                    }
-                                                    required
-                                                    inputProps={{
-                                                        'data-testid':
-                                                            'receiving-address-input',
-                                                    }}
-                                                    error={errors?.address}
-                                                    helperText={
-                                                        helperText?.address
-                                                    }
-                                                    FormHelperTextProps={{
-                                                        'data-testid':
-                                                            'receiving-address-text-error',
-                                                    }}
-                                                />
-
-                                                <TextField
-                                                    fullWidth
-                                                    margin='normal'
-                                                    label='Amount'
-                                                    type='tel'
-                                                    variant='outlined'
-                                                    placeholder='e.g. 2000 ada'
-                                                    value={
-                                                        draft?.prop_amount || ''
-                                                    }
-                                                    onChange={
-                                                        handleAmountChange
-                                                    }
-                                                    required
-                                                    inputProps={{
-                                                        'data-testid':
-                                                            'amount-input',
-                                                    }}
-                                                    error={errors?.amount}
-                                                    helperText={
-                                                        helperText?.amount
-                                                    }
-                                                    FormHelperTextProps={{
-                                                        'data-testid':
-                                                            'amount-text-error',
-                                                    }}
-                                                /> */}
                                             </>
                                         ) : null}
 
