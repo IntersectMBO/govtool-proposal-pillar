@@ -183,8 +183,9 @@ const Step3 = ({
                             {proposalData?.prop_rationale || ''}
                         </ReactMarkdown>
                     </Box>
-
-                    {proposalData?.prop_receiving_address && (
+                    {proposalData?.proposal_withdrawals?.map(
+                                    (withdrawal, index) => (
+                    <Box>
                         <Box>
                             <Typography
                                 variant='body1'
@@ -198,12 +199,9 @@ const Step3 = ({
                                 gutterBottom
                                 data-testid='receiving-address-content'
                             >
-                                {proposalData?.prop_receiving_address}
+                                {withdrawal.prop_receiving_address}
                             </Typography>
                         </Box>
-                    )}
-
-                    {proposalData?.prop_amount && (
                         <Box>
                             <Typography
                                 variant='body1'
@@ -217,10 +215,11 @@ const Step3 = ({
                                 gutterBottom
                                 data-testid='amount-content'
                             >
-                                {proposalData?.prop_amount}
+                                {withdrawal.prop_amount}
                             </Typography>
                         </Box>
-                    )}
+                    </Box>
+                    ))}
 
                     {proposalData?.proposal_links?.length > 0 && (
                         <Box>

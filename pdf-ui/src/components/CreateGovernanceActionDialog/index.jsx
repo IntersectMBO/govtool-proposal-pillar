@@ -42,8 +42,6 @@ const CreateGovernanceActionDialog = ({ open = false, onClose = false }) => {
         abstract: false,
         motivation: false,
         rationale: false,
-        // address: false,
-        // amount: false,
     });
     const [helperText, setHelperText] = useState({
         name: '',
@@ -100,13 +98,14 @@ const CreateGovernanceActionDialog = ({ open = false, onClose = false }) => {
             )?.label;
 
             if (selectedLabel === 'Treasury') {
-                if (proposalData?.proposal_withdravals) {
-                    if (
-                        proposalData?.proposal_withdravals?.some(
-                            (proposal_withdraval) => !proposal_withdraval.prop_receiving_address || !proposal_withdraval.prop_amount
-                        ) ||
-                        Object.values(withdrawalsErrors).some((error) => error.url)
-                    ) {
+                if (proposalData?.proposal_withdrawals) {
+                     if (
+                         proposalData?.proposal_withdrawals?.some(
+                             (proposal_withdrawal) => !proposal_withdrawal.prop_receiving_address || !proposal_withdrawal.prop_amount
+                         ) ||
+                         Object.values(withdrawalsErrors).some(
+                            (errors) =>!errors.prop_amount== '' || !errors.prop_receiving_address ==''
+                        ) ){
                         return setIsContinueDisabled(true);
                     } else {
                         setIsContinueDisabled(false);
@@ -115,6 +114,7 @@ const CreateGovernanceActionDialog = ({ open = false, onClose = false }) => {
             } else {
                 setIsContinueDisabled(false);
             }
+
         } else {
             setIsContinueDisabled(true);
         }
