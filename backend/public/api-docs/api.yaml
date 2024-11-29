@@ -577,6 +577,15 @@ components:
           type: string
         prop_link_order:
           type: integer
+    ProposalProposalWithdrawalsComponent:
+      type: object
+      properties:
+        id:
+          type: number
+        prop_receiving_address:
+          type: string
+        prop_amountm:
+          type: number
     ProposalCategoryRequest:
       type: object
       required:
@@ -697,6 +706,10 @@ components:
               type: array
               items:
                 $ref: '#/components/schemas/ProposalProposalLinkComponent'
+            proposal_withdrawals:
+              type: array
+              items:
+                $ref: '#/components/schemas/ProposalProposalWithdrawalsComponent'
     ProposalContentListResponseDataItem:
       type: object
       properties:
@@ -746,10 +759,6 @@ components:
           type: string
         prop_rationale:
           type: string
-        prop_receiving_address:
-          type: string
-        prop_amount:
-          type: number
         prop_submitted:
           type: boolean
         prop_submission_tx_hash:
@@ -762,6 +771,9 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/ProposalProposalLinkComponent'
+        proposal_withdrawals:
+          type: array
+          items: '#/components/schemas/ProposalProposalWithdrawalComponent'    
         createdAt:
           type: string
           format: date-time
