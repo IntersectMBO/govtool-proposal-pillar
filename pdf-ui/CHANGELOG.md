@@ -8,6 +8,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 As a minor extension, we also keep a semantic version for the `UNRELEASED`
 changes.
 
+## [v0.5.2](https://www.npmjs.com/package/@intersect.mbo/pdf-ui/v/0.5.2) 2024-12-02
+
+### Added -
+### Fixed -
+   - Changed params for submitting GA so now it is change to multiple addresses. [issue #2447](https://github.com/IntersectMBO/govtool/issues/2447)
+  - After successful submission of GA  modal close button will redirect to dashboard instead of allowing to submit again.[issue #2264](https://github.com/IntersectMBO/govtool/issues/2264)
+### Changed -
+### Removed -
+
 ## [v0.5.1](https://www.npmjs.com/package/@intersect.mbo/pdf-ui/v/0.5.1) 2024-11-29
 
 ### Added -
@@ -33,3 +42,4 @@ changes.
 ### Fixed -
 ### Changed -
 ### Removed -
+
