@@ -122,7 +122,7 @@ const WithdrawalsManager = ({
                                     )}}
                                 required
                                 inputProps={{
-                                    'data-testid': `receiving-address-${index}-input`,
+                                    'data-testid': `receiving-address-${index}-text-error`,
                                 }}
                                 error={!!withdrawalsErrors[index]?.prop_receiving_address}
                                 helperText={withdrawalsErrors[index]?.prop_receiving_address}
@@ -130,7 +130,7 @@ const WithdrawalsManager = ({
                                     sx: {
                                         backgroundColor: 'transparent',
                                     },
-                                    'data-testid': `receiving-address-${index}-input`,
+                                    'data-testid': `receiving-address-${index}-text-error`,
                                 }}
                             />
                         <TextField
@@ -149,7 +149,7 @@ const WithdrawalsManager = ({
                                     )}
                                 required
                                 inputProps={{
-                                    'data-testid': `amount-${index}-input`,
+                                    'data-testid': `amount-${index}-text-error`,
                                 }}
                                 error={!!withdrawalsErrors[index]?.prop_amount}
                                 helperText={withdrawalsErrors[index]?.prop_amount}
@@ -157,7 +157,7 @@ const WithdrawalsManager = ({
                                     sx: {
                                         backgroundColor: 'transparent',
                                     },
-                                    'data-testid': `amount-${index}-input`,
+                                    'data-testid': `amount-${index}-text-error`,
                                 }}
                         />
                     </Box>
