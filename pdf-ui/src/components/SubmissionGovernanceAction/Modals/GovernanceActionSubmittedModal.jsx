@@ -39,7 +39,7 @@ const GovernanceActionSubmittedModal = ({ open, onClose }) => {
                         alignItems={'center'}
                     >
                         <IconButton
-                            onClick={onClose}
+                            onClick={() => navigate('/proposal_discussion')}
                             data-testid='ga-submitted-modal-close-button'
                         >
                             <IconX width='24px' height='24px' />
