@@ -140,10 +140,7 @@ const InformationStorageStep = ({ proposal, handleCloseSubmissionDialog }) => {
                         await walletAPI.buildTreasuryGovernanceAction({
                             hash: hashData,
                             url: fileURL,
-                            amount: proposal?.attributes?.content?.attributes?.prop_amount?.toString(),
-                            receivingAddress:
-                                proposal?.attributes?.content?.attributes
-                                    ?.prop_receiving_address,
+                            withdrawals: getWithdrawalsArray()
                         });
                 }
 
@@ -182,6 +179,15 @@ const InformationStorageStep = ({ proposal, handleCloseSubmissionDialog }) => {
             setCheckingDataModal(false);
         }
     };
+
+    const getWithdrawalsArray = () => {
+        let withdrawalsArray = [];
+        let x = proposal?.attributes?.content?.attributes?.proposal_withdrawals.forEach((withdrawal) =>
+        {
+            withdrawalsArray.push({receivingAddress:withdrawal.prop_receiving_address,amount:withdrawal.prop_amount.toString()})
+        });
+        return withdrawalsArray;
+    }
 
     const handleDownloadJsonLD = () => {
         const blob = new Blob([JSON.stringify(jsonLdData, null, 2)], {
