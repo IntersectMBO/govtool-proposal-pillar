@@ -8,6 +8,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 As a minor extension, we also keep a semantic version for the `UNRELEASED`
 changes.
 
+## [v0.5.3](https://www.npmjs.com/package/@intersect.mbo/pdf-ui/v/0.5.3) 2024-12-04
+
+### Added -
+### Fixed -
+   - Changed input field test id for multiple addresses and amount. [Issue #2437](https://github.com/IntersectMBO/govtool/issues/2437)
+### Changed -
+### Removed -
+
 ## [v0.5.2](https://www.npmjs.com/package/@intersect.mbo/pdf-ui/v/0.5.2) 2024-12-02
 
 ### Added -

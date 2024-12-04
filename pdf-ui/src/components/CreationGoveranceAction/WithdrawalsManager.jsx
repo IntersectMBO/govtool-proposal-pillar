@@ -122,7 +122,7 @@ const WithdrawalsManager = ({
                                     )}}
                                 required
                                 inputProps={{
-                                    'data-testid': `receiving-address-${index}-text-error`,
+                                    'data-testid': `receiving-address-${index}-text-input`,
                                 }}
                                 error={!!withdrawalsErrors[index]?.prop_receiving_address}
                                 helperText={withdrawalsErrors[index]?.prop_receiving_address}
@@ -149,7 +149,7 @@ const WithdrawalsManager = ({
                                     )}
                                 required
                                 inputProps={{
-                                    'data-testid': `amount-${index}-text-error`,
+                                    'data-testid': `amount-${index}-text-input`,
                                 }}
                                 error={!!withdrawalsErrors[index]?.prop_amount}
                                 helperText={withdrawalsErrors[index]?.prop_amount}
