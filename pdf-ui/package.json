@@ -1,6 +1,6 @@
 {
     "name": "@intersect.mbo/pdf-ui",
-    "version": "0.5.2",
+    "version": "0.5.3",
     "description": "Proposal discussion ui",
     "main": "./src/index.js",
     "exports": {
