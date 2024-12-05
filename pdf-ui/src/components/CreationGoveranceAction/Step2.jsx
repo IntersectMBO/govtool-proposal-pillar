@@ -39,7 +39,7 @@ const Step2 = ({
     const { setLoading } = useAppContext();
     const [selectedGovActionName, setSelectedGovActionName] = useState(
         governanceActionTypes.find(
-            (option) => option?.value === proposalData?.gov_action_type_id
+            (option) => option?.value === +proposalData?.gov_action_type_id
         )?.label || ''
     );
 
