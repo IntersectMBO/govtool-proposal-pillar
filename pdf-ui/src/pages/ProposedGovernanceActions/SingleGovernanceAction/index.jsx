@@ -335,7 +335,7 @@ const SingleGovernanceAction = ({ id }) => {
 
     const fetchUnactivePolls = async () => {
         try {
-            const query = `filters[$and][0][proposal_id][$eq]=${proposal?.id}&filters[$and][1][is_poll_active]=false&pagination[page]=1&pagination[pageSize]=25&sort[createdAt]=desc`;
+            const query = `filters[$and][0][proposal_id][$eq]=${proposal?.id}&filters[$and][1][is_poll_active]=false&pagination[page]=1&pagination[pageSize]=1&sort[createdAt]=desc`;
             const { polls, pgCount, total } = await getPolls({ query: query });
             if (!polls) return;
             setUnactivePollList(polls);
