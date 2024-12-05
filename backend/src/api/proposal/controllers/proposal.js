@@ -4,9 +4,18 @@
 /**
  * proposal controller
  */
+const {Address,RewardAddress} = require("@emurgo/cardano-serialization-lib-nodejs");
+
 
 const { createCoreController } = require("@strapi/strapi").factories;
-
+async function isRewardAddress(address) {
+  try {
+    const stake = RewardAddress.from_address(Address.from_bech32(address));
+    return stake ? true : false;
+  } catch (e) {
+    return false;
+  }
+}
 module.exports = createCoreController(
   "api::proposal.proposal",
   ({ strapi }) => ({
@@ -22,7 +31,7 @@ module.exports = createCoreController(
       }
 
       /////GOV ACTION TYPE///////////
-      const hasGovActionTypeIDFilter = ctx?.query?.filters["$and"]?.find(
+      const hasGovActionTypeIDFilter = sanitizedQueryParams.filters["$and"]?.find(
         (elem) => elem?.hasOwnProperty("gov_action_type_id")
       );
 
@@ -255,8 +264,24 @@ module.exports = createCoreController(
           return ctx.badRequest(null, "Proposal content not deleted");
         }
       };
-
+      
       try {
+        // chek if treasuiry action have adress and amount
+        const gaTypes = await strapi.entityService.findOne("api::governance-action-type.governance-action-type",data?.gov_action_type_id)
+    
+        if(gaTypes.gov_action_type_name === 'Treasury')
+        {
+            // check if withdrawal parameters exist
+            if (data?.proposal_withdrawals?.length === 0) {
+              return ctx.badRequest(null, "Withdrawal parametars not exist");
+            }
+            // Check if data is invalid
+            const isInvalid = await Promise.all(data.proposal_withdrawals.map(async (item) => {
+              return !(await isRewardAddress(item.prop_receiving_address)) || !item.prop_amount || item.prop_amount <= 0;
+            })).then(results => results.some(result => result));
+            if(isInvalid)
+              return ctx.badRequest(null, "Withdrawal addrress or amount parametars not valid");
+        }
         // Create the Proposal
         try {
           proposal = await strapi.entityService.create(
