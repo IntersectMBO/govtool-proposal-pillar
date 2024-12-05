@@ -8,6 +8,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 As a minor extension, we also keep a semantic version for the `UNRELEASED`
 changes.
 
+## [v0.5.4](https://www.npmjs.com/package/@intersect.mbo/pdf-ui/v/0.5.4) 2024-12-05
+
+### Added -
+### Fixed -
+- Fix display Stake Address and Amount in Draft [Issue #2438](https://github.com/IntersectMBO/govtool/issues/2438)
+- Fix Test Id names in review form [Issue #2437](https://github.com/IntersectMBO/govtool/issues/2437)
+- Fix #2357 Display only last Inactive pool [Issue #2357](https://github.com/IntersectMBO/govtool/issues/2357)
+### Changed -
+### Removed -
+
 ## [v0.5.3](https://www.npmjs.com/package/@intersect.mbo/pdf-ui/v/0.5.3) 2024-12-04
 
 ### Added -
