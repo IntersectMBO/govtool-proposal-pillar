@@ -197,7 +197,7 @@ const Step3 = ({
                             <Typography
                                 variant='body1'
                                 gutterBottom
-                                data-testid='receiving-address-${index}-content'
+                                data-testid={`receiving-address-${index}-content`}
                             >
                                 {withdrawal.prop_receiving_address}
                             </Typography>
@@ -213,7 +213,7 @@ const Step3 = ({
                             <Typography
                                 variant='body1'
                                 gutterBottom
-                                data-testid='amount-${index}-content'
+                                data-testid={`amount-${index}-content`}
                             >
                                 {withdrawal.prop_amount}
                             </Typography>
