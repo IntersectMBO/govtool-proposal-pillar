@@ -62,12 +62,10 @@ const Step2 = ({
         setLoading(true);
         try {
             const governanceActionTypeList = await getGovernanceActionTypes();
-
             const mappedData = governanceActionTypeList?.data?.map((item) => ({
                 value: item?.id,
                 label: item?.attributes?.gov_action_type_name,
             }));
-
             setGovernanceActionTypes(mappedData);
         } catch (error) {
             console.error(error);
@@ -118,6 +116,11 @@ const Step2 = ({
         fetchGovernanceActionTypes();
     }, []);
 
+    useEffect(()=>{
+        setSelectedGovActionName(governanceActionTypes.find(
+            (option) => option?.value === +proposalData?.gov_action_type_id
+        )?.label || '')
+    },[governanceActionTypes])
     return (
         <Card>
             <CardContent
@@ -363,7 +366,6 @@ const Step2 = ({
                                 : 'rationale-helper',
                         }}
                     />
-
                     {selectedGovActionName === 'Treasury' ? (
                         <>
                             <Box
