@@ -12,11 +12,6 @@ const IdentificationPage = ({ handleLogin }) => {
             alignItems={'center'}
         >
             <Box textAlign={'center'} width={'100%'}>
-                <Typography variant='body1'>
-                    This is a pre-release of the Proposal Discussion section of
-                    Govtool.
-                </Typography>
-
                 <Typography
                     variant='body1'
                     sx={{
