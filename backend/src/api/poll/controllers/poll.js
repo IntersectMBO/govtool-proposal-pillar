@@ -17,7 +17,11 @@ module.exports = createCoreController('api::poll.poll', ({ strapi }) => ({
 		{
 			return ctx.badRequest(null, 'User is not owner of this proposal');
 		}
-		
+		const currentActivePool = await strapi.entityService.findMany("api::poll.poll",{filters:{$and:[{proposal_id:data.proposal_id},{is_poll_active:true}]},limit:1});
+		if(currentActivePool.length > 0)
+		{
+			return ctx.badRequest(null, 'There is already an active pool for this proposal');
+		}
 		const newPool = await strapi.entityService.create("api::poll.poll",{data:data});
 		return this.transformResponse(newPool);
 		}
