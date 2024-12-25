@@ -13,9 +13,7 @@ module.exports = createCoreController(
 		async create(ctx) {
 			const { data } = ctx?.request?.body;
 			const { vote_result: voteResult, poll_id: pollId } = data;
-
 			const user = ctx?.state?.user;
-
 			if (!user) {
 				return ctx.badRequest(null, 'User is required');
 			}
@@ -51,7 +49,7 @@ module.exports = createCoreController(
 							user_id: user?.id
 						},
 						{
-							poll_Id: pollId
+							poll_id: pollId
 						}
 						]}
 					})
