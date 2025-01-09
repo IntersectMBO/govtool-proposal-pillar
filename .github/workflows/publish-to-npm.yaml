@@ -22,13 +22,14 @@ jobs:
           registry-url: "https://registry.npmjs.org"
           scope: "@intersect.mbo"
 
-      - name: Authenticate with NPM
+      - name: Authenticate with Scoped NPM
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
           NPM_TOKEN_SCOPED: ${{ secrets.NPM_TOKEN }}
+          registry-url: "https://registry.npmjs.org"
+          scope: "@intersect.mbo"
         run: echo "Authentication successful"
-      
-      - name: Verify NPM Authentication
+
+      - name: Check NPM Authentication
         run: npm whoami
 
       - name: Install dependencies
