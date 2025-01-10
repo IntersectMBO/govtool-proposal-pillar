@@ -41,6 +41,6 @@ jobs:
           NODE_OPTIONS: --max_old_space_size=8192
 
       - name: Publish to npm
-        run: npm publish
+        run: npm publish --access public
         env:
           NODE_OPTIONS: --max_old_space_size=8192
