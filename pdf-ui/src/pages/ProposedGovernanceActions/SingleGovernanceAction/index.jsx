@@ -388,6 +388,7 @@ const SingleGovernanceAction = ({ id }) => {
     return !proposal ? null : proposal?.attributes?.content?.attributes
           ?.is_draft ? null : (
         <>
+        <Typography>
             {openEditDialog ? (
                 <EditProposalDialog
                     proposal={proposal}
@@ -1858,6 +1859,7 @@ const SingleGovernanceAction = ({ id }) => {
                     />
                 </Box>
             )}
+            </Typography>
         </>
     );
 };

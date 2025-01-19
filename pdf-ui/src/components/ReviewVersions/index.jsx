@@ -62,6 +62,7 @@ const ReviewVersions = ({ open, onClose, id }) => {
     }, [open]);
 
     return (
+        <Typography>
         <Dialog
             fullScreen
             open={open}
@@ -635,6 +636,7 @@ const ReviewVersions = ({ open, onClose, id }) => {
                 </Grid>
             )}
         </Dialog>
+        </Typography>
     );
 };
 
