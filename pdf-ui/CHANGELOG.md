@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 As a minor extension, we also keep a semantic version for the `UNRELEASED`
 changes.
+## [v0.5.8](https://www.npmjs.com/package/@intersect.mbo/pdf-ui/v/0.5.8) 2025-01-27
+### Added -
+### Fixed 
+- Temporaly fix for  Sorting Icon [Issue #2650](https://github.com/IntersectMBO/govtool/issues/2650)
+
+## [v0.5.7](https://www.npmjs.com/package/@intersect.mbo/pdf-ui/v/0.5.7) 2025-01-19
+### Added -
+### Fixed 
+- Search Field Bug, Searches Fail with Trailing Spaces [Issue #2472](https://github.com/IntersectMBO/govtool/issues/2471)
+- Markdown Styling Issues in Proposal Formatting [Issue #2651](https://github.com/IntersectMBO/govtool/issues/2651)
 
 ## [v0.5.6](https://www.npmjs.com/package/@intersect.mbo/pdf-ui/v/0.5.6) 2025-01-09
 ### Added -
