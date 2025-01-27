@@ -7,6 +7,8 @@ import {
     IconSort,
     IconPlusCircle,
     IconArrowLeft,
+    IconArrowDown,
+    IconArrowUp,
 } from '@intersect.mbo/intersectmbo.org-icons-set';
 import {
     Box,
@@ -249,14 +251,31 @@ const ProposedGovernanceActions = () => {
                         </Grid>
                         <Grid item>
                             <Box gap={1} display={'flex'}>
-                                <Tooltip title='Filters'>
-                                    <IconButton
-                                        id='filters-button'
-                                        data-testid='filter-button'
-                                        sx={{
-                                            width: 40,
-                                            height: 40,
-                                        }}
+                            <Button
+                                    variant="outlined"
+                                    onClick={handleFiltersClick}
+                                    endIcon={<IconFilter
+                                        color={
+                                            theme.palette.primary.icons
+                                                .black
+                                        }
+                                    />}
+                                    id='filters-button'
+                                    data-testid='filter-button'
+                                    sx={{
+                                        textTransform: 'none',
+                                        borderRadius: '20px', 
+                                        padding: '8px 16px', 
+                                        borderColor: 'primary.main', 
+                                        color: 'text.primary', 
+                                        '&:hover': {
+                                            backgroundColor: 'action.hover', 
+                                        },
+                                    }}
+                                        // sx={{
+                                        //     width: 40,
+                                        //     height: 40,
+                                        // }}
                                         aria-controls={
                                             openFilters
                                                 ? 'filters-menu'
@@ -266,16 +285,10 @@ const ProposedGovernanceActions = () => {
                                         aria-expanded={
                                             openFilters ? 'true' : undefined
                                         }
-                                        onClick={handleFiltersClick}
-                                    >
-                                        <IconFilter
-                                            color={
-                                                theme.palette.primary.icons
-                                                    .black
-                                            }
-                                        />
-                                    </IconButton>
-                                </Tooltip>
+
+
+                                    > Filter:
+                                 </Button>
                                 <Menu
                                     id='filters-menu'
                                     anchorEl={filtersAnchorEl}
@@ -311,7 +324,7 @@ const ProposedGovernanceActions = () => {
                                                         mb: 1,
                                                     }}
                                                 >
-                                                    Proposals types
+                                                    Proposal types
                                                 </Typography>
                                                 <Divider
                                                     sx={{
@@ -381,7 +394,7 @@ const ProposedGovernanceActions = () => {
                                             variant='body1'
                                             sx={{ mb: 1, mt: 2 }}
                                         >
-                                            Proposals status
+                                            Proposal status
                                         </Typography>
                                         <Divider
                                             sx={{
@@ -447,34 +460,53 @@ const ProposedGovernanceActions = () => {
                                                 label={'Active proposal'}
                                             />
                                         </MenuItem>
+                                        
                                         <MenuItem
                                             onClick={() => resetFilters()}
                                             data-testid='reset-filters'
-                                        >
-                                            <Typography color={'primary'}>
+                                        >                                            <Typography color={'primary'}>
                                                 Reset filters
                                             </Typography>
                                         </MenuItem>
                                     </Box>
                                 </Menu>
-                                <Tooltip title='Sort'>
-                                    <IconButton
-                                        id='sort-button'
-                                        data-testid='sort-button'
-                                        onClick={() =>
-                                            setSortType((prev) =>
-                                                prev === 'desc' ? 'asc' : 'desc'
-                                            )
-                                        }
-                                    >
-                                        <IconSort
+                                <Button
+                                    variant="outlined"
+                                    onClick={() =>
+                                        setSortType((prev) =>
+                                            prev === 'desc' ? 'asc' : 'desc'
+                                        )}
+                                    endIcon={
+                                        sortType === 'desc' ? (
+                                            <IconArrowUp
                                             color={
                                                 theme.palette.primary.icons
                                                     .black
                                             }
                                         />
-                                    </IconButton>
-                                </Tooltip>
+                                        ) : (
+                                            <IconArrowDown
+                                            color={
+                                                theme.palette.primary.icons
+                                                    .red
+                                            }
+                                        />
+                                            // <IconArrowDown />
+                                        )
+                                    }
+                                    sx={{
+                                        textTransform: 'none',
+                                        borderRadius: '20px', 
+                                        padding: '8px 16px', 
+                                        borderColor: 'primary.main', 
+                                        color: 'text.primary', 
+                                        '&:hover': {
+                                            backgroundColor: 'action.hover', 
+                                        },
+                                    }}
+                                >
+                                  Sort: {sortType === 'desc' ? 'Last modified (asc)' : 'Last modified (desc)'}  
+                                </Button>
                             </Box>
                         </Grid>
                     </Grid>
