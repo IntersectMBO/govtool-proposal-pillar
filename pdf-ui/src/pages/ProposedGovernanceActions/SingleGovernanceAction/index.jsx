@@ -138,7 +138,19 @@ const SingleGovernanceAction = ({ id }) => {
     const handleShareClick = (event) => {
         setShareAnchorEl(event.currentTarget);
     };
-
+    // Read More / Read Less logic
+    const [showFullText, setShowFullText] = useState(false);
+    const [truncatedText, setTruncatedText] = useState(''); 
+    const [totalCharLength, setTotalCharLength] = useState(0);
+    const [AbstractMarkdownText, setAbstractMarkdownText] = useState('');
+    const maxLength = 500;
+    useEffect(() => {
+        if (maxLength && AbstractMarkdownText.length > maxLength) {
+            setTruncatedText(AbstractMarkdownText.slice(0, maxLength) + '...');
+        } else {
+            setTruncatedText(AbstractMarkdownText);
+        }
+    }, [AbstractMarkdownText, maxLength]);
     const handleShareClose = () => {
         setShareAnchorEl(null);
     };
@@ -189,6 +201,12 @@ const SingleGovernanceAction = ({ id }) => {
                 return navigate('/proposal_discussion');
             }
             setProposal(response);
+
+            if(response?.attributes?.content?.attributes?.prop_abstract.length + response?.attributes?.content?.attributes?.prop_motivation.length + response?.attributes?.content?.attributes?.prop_rationale.length > 500)
+            {
+                setTotalCharLength(response?.attributes?.content?.attributes?.prop_abstract.length + response?.attributes?.content?.attributes?.prop_motivation.length + response?.attributes?.content?.attributes?.prop_rationale.length);    
+                setAbstractMarkdownText(response?.attributes?.content?.attributes?.prop_abstract);
+            }
         } catch (error) {
             if (
                 error?.response?.data?.error?.details ===
@@ -1029,96 +1047,111 @@ const SingleGovernanceAction = ({ id }) => {
                                     >
                                         Abstract
                                     </Typography>
-                                    <ReactMarkdown
-                                        components={{
-                                            p(props) {
-                                                const { children } = props;
-                                                return (
-                                                    <Typography
-                                                        variant='body2'
-                                                        data-testid='abstract-content'
-                                                        style={{
-                                                            wordWrap:
-                                                                'break-word',
-                                                        }}
-                                                    >
-                                                        {children}
-                                                    </Typography>
-                                                );
-                                            },
-                                        }}
-                                    >
-                                        {proposal?.attributes?.content
-                                            ?.attributes?.prop_abstract || ''}
-                                    </ReactMarkdown>
-                                </Box>
-                                <Box mt={4}>
-                                    <Typography
-                                        variant='caption'
-                                        sx={{
-                                            color: (theme) =>
-                                                theme?.palette?.text?.grey,
-                                        }}
-                                    >
-                                        Motivation
-                                    </Typography>
-                                    <ReactMarkdown
-                                        components={{
-                                            p(props) {
-                                                const { children } = props;
-                                                return (
-                                                    <Typography
-                                                        variant='body2'
-                                                        data-testid='motivation-content'
-                                                        style={{
-                                                            wordWrap:
-                                                                'break-word',
-                                                        }}
-                                                    >
-                                                        {children}
-                                                    </Typography>
-                                                );
-                                            },
-                                        }}
-                                    >
-                                        {proposal?.attributes?.content
-                                            ?.attributes?.prop_motivation || ''}
-                                    </ReactMarkdown>
-                                </Box>
-                                <Box mt={4}>
-                                    <Typography
-                                        variant='caption'
-                                        sx={{
-                                            color: (theme) =>
-                                                theme?.palette?.text?.grey,
-                                        }}
-                                    >
-                                        Rationale
-                                    </Typography>
-                                    <ReactMarkdown
-                                        components={{
-                                            p(props) {
-                                                const { children } = props;
-                                                return (
-                                                    <Typography
-                                                        variant='body2'
-                                                        data-testid='rationale-content'
-                                                        style={{
-                                                            wordWrap:
-                                                                'break-word',
-                                                        }}
-                                                    >
-                                                        {children}
-                                                    </Typography>
-                                                );
-                                            },
-                                        }}
-                                    >
-                                        {proposal?.attributes?.content
-                                            ?.attributes?.prop_rationale || ''}
-                                    </ReactMarkdown>
-                                </Box>
+                                    <ReactMarkdown>
+                                        {showFullText || !maxLength ? AbstractMarkdownText : truncatedText}
+                                    
 
+                                    </ReactMarkdown>
+                                    {!showFullText && maxLength && totalCharLength > maxLength && (
+                                        <Button
+                                            variant="text"
+                                            onClick={() => setShowFullText(!showFullText)}
+                                            sx={{
+                                                textTransform: 'none',
+                                                padding: '0',
+                                                marginTop: '8px', 
+                                                color: 'primary.main',
+                                                fontWeight: 'bold',
+                                                '&:hover': {
+                                                    backgroundColor: 'transparent',
+                                                },
+                                            }}
+                                        >
+                                            {showFullText ? 'Read less' : 'Read more'}
+                                        </Button>)}
+                                </Box>
+                                {showFullText && (
+                                <>
+                                    <Box mt={4}>
+                                        <Typography
+                                            variant='caption'
+                                            sx={{
+                                                color: (theme) => theme?.palette?.text?.grey,
+                                            }}
+                                        >
+                                            Motivation
+                                        </Typography>
+                                        <ReactMarkdown
+                                            components={{
+                                                p(props) {
+                                                    const { children } = props;
+                                                    return (
+                                                        <Typography
+                                                            variant='body2'
+                                                            data-testid='motivation-content'
+                                                            style={{
+                                                                wordWrap: 'break-word',
+                                                            }}
+                                                        >
+                                                            {children}
+                                                        </Typography>
+                                                    );
+                                                },
+                                            }}
+                                        >
+                                            {proposal?.attributes?.content
+                                                ?.attributes?.prop_motivation || ''}
+                                        </ReactMarkdown>
+                                    </Box>
+                                    <Box mt={4}>
+                                        <Typography
+                                            variant='caption'
+                                            sx={{
+                                                color: (theme) => theme?.palette?.text?.grey,
+                                            }}
+                                        >
+                                            Rationale
+                                        </Typography>
+                                        <ReactMarkdown
+                                            components={{
+                                                p(props) {
+                                                    const { children } = props;
+                                                    return (
+                                                        <Typography
+                                                            variant='body2'
+                                                            data-testid='rationale-content'
+                                                            style={{
+                                                                wordWrap: 'break-word',
+                                                            }}
+                                                        >
+                                                            {children}
+                                                        </Typography>
+                                                    );
+                                                },
+                                            }}
+                                        >
+                                            {proposal?.attributes?.content
+                                                ?.attributes?.prop_rationale || ''}
+                                        </ReactMarkdown>
+                                    </Box>
+                                    <Button
+                                            variant="text"
+                                            onClick={() => setShowFullText(!showFullText)}
+                                            sx={{
+                                                textTransform: 'none',
+                                                padding: '0',
+                                                marginTop: '8px', 
+                                                color: 'primary.main',
+                                                fontWeight: 'bold',
+                                                '&:hover': {
+                                                    backgroundColor: 'transparent',
+                                                },
+                                            }}
+                                        >
+                                            {showFullText ? 'Read less' : 'Read more'}
+                                    </Button>
+                                </>
+                                )}
                                 {proposal?.attributes?.content?.attributes
                                     ?.proposal_links?.length > 0 && (
                                     <Box mt={4}>

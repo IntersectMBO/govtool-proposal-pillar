@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 As a minor extension, we also keep a semantic version for the `UNRELEASED`
 changes.
+
+## [v0.5.9](https://www.npmjs.com/package/@intersect.mbo/pdf-ui/v/0.5.9) 2025-01-28
+### Fixed 
+- Added "Read More" on proposal page if Character Count is bigger den 500 [Issue #2649](https://github.com/IntersectMBO/govtool/issues/2649)
+
 ## [v0.5.8](https://www.npmjs.com/package/@intersect.mbo/pdf-ui/v/0.5.8) 2025-01-27
 ### Added -
 ### Fixed 
