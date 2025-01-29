@@ -8,6 +8,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 As a minor extension, we also keep a semantic version for the `UNRELEASED`
 changes.
 
+## [v0.5.10](https://www.npmjs.com/package/@intersect.mbo/pdf-ui/v/0.5.11) 2025-01-29
+### Fixed 
+- Proposal rendering fix
+
 ## [v0.5.10](https://www.npmjs.com/package/@intersect.mbo/pdf-ui/v/0.5.10) 2025-01-29
 ### Fixed 
 - Some typo fixes.
