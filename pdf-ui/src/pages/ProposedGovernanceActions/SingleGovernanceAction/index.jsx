@@ -1049,8 +1049,6 @@ const SingleGovernanceAction = ({ id }) => {
                                     </Typography>
                                     <ReactMarkdown>
                                         {showFullText || !maxLength ? AbstractMarkdownText : truncatedText}
-                                    
-
                                     </ReactMarkdown>
                                     {!showFullText && maxLength && totalCharLength > maxLength && (
                                         <Button
@@ -1071,7 +1069,7 @@ const SingleGovernanceAction = ({ id }) => {
                                         </Button>)}
                                 </Box>
                                 {showFullText && (
-                                <>
+                               
                                     <Box mt={4}>
                                         <Typography
                                             variant='caption'
@@ -1079,30 +1077,14 @@ const SingleGovernanceAction = ({ id }) => {
                                                 color: (theme) => theme?.palette?.text?.grey,
                                             }}
                                         >
-                                            Motivation
+                                        Motivation
                                         </Typography>
-                                        <ReactMarkdown
-                                            components={{
-                                                p(props) {
-                                                    const { children } = props;
-                                                    return (
-                                                        <Typography
-                                                            variant='body2'
-                                                            data-testid='motivation-content'
-                                                            style={{
-                                                                wordWrap: 'break-word',
-                                                            }}
-                                                        >
-                                                            {children}
-                                                        </Typography>
-                                                    );
-                                                },
-                                            }}
-                                        >
+                                        <ReactMarkdown>
                                             {proposal?.attributes?.content
                                                 ?.attributes?.prop_motivation || ''}
                                         </ReactMarkdown>
-                                    </Box>
+                                    </Box>)}
+                                    {showFullText && (
                                     <Box mt={4}>
                                         <Typography
                                             variant='caption'
@@ -1110,30 +1092,14 @@ const SingleGovernanceAction = ({ id }) => {
                                                 color: (theme) => theme?.palette?.text?.grey,
                                             }}
                                         >
-                                            Rationale
+                                        Rationale
                                         </Typography>
-                                        <ReactMarkdown
-                                            components={{
-                                                p(props) {
-                                                    const { children } = props;
-                                                    return (
-                                                        <Typography
-                                                            variant='body2'
-                                                            data-testid='rationale-content'
-                                                            style={{
-                                                                wordWrap: 'break-word',
-                                                            }}
-                                                        >
-                                                            {children}
-                                                        </Typography>
-                                                    );
-                                                },
-                                            }}
-                                        >
+                                        <ReactMarkdown>
                                             {proposal?.attributes?.content
                                                 ?.attributes?.prop_rationale || ''}
                                         </ReactMarkdown>
-                                    </Box>
+                                    </Box>)}
+                                    {showFullText && (
                                     <Button
                                             variant="text"
                                             onClick={() => setShowFullText(!showFullText)}
@@ -1149,8 +1115,7 @@ const SingleGovernanceAction = ({ id }) => {
                                             }}
                                         >
                                             {showFullText ? 'Show less' : 'Read more'}
-                                    </Button>
-                                </>
+                                    </Button>                                
                                 )}
                                 {proposal?.attributes?.content?.attributes
                                     ?.proposal_links?.length > 0 && (
