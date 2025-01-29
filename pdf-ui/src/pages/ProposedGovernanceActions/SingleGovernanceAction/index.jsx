@@ -138,7 +138,7 @@ const SingleGovernanceAction = ({ id }) => {
     const handleShareClick = (event) => {
         setShareAnchorEl(event.currentTarget);
     };
-    // Read More / Read Less logic
+    // Read More / Show Less logic
     const [showFullText, setShowFullText] = useState(false);
     const [truncatedText, setTruncatedText] = useState(''); 
     const [totalCharLength, setTotalCharLength] = useState(0);
@@ -1067,7 +1067,7 @@ const SingleGovernanceAction = ({ id }) => {
                                                 },
                                             }}
                                         >
-                                            {showFullText ? 'Read less' : 'Read more'}
+                                            {showFullText ? 'Show less' : 'Read more'}
                                         </Button>)}
                                 </Box>
                                 {showFullText && (
@@ -1148,7 +1148,7 @@ const SingleGovernanceAction = ({ id }) => {
                                                 },
                                             }}
                                         >
-                                            {showFullText ? 'Read less' : 'Read more'}
+                                            {showFullText ? 'Show less' : 'Read more'}
                                     </Button>
                                 </>
                                 )}

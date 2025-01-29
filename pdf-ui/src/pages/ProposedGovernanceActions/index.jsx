@@ -478,14 +478,14 @@ const ProposedGovernanceActions = () => {
                                         )}
                                     endIcon={
                                         sortType === 'desc' ? (
-                                            <IconArrowUp
+                                            <IconArrowDown
                                             color={
                                                 theme.palette.primary.icons
                                                     .black
                                             }
                                         />
                                         ) : (
-                                            <IconArrowDown
+                                            <IconArrowUp
                                             color={
                                                 theme.palette.primary.icons
                                                     .red
@@ -505,7 +505,7 @@ const ProposedGovernanceActions = () => {
                                         },
                                     }}
                                 >
-                                  Sort: {sortType === 'desc' ? 'Last modified (asc)' : 'Last modified (desc)'}  
+                                  Sort: {sortType === 'desc' ? 'Last modified (desc)' : 'Last modified (asc)'}  
                                 </Button>
                             </Box>
                         </Grid>
