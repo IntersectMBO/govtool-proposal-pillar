@@ -20,7 +20,7 @@ module.exports = createCoreController(
   "api::proposal.proposal",
   ({ strapi }) => ({
     async find(ctx) {
-      const sanitizedQueryParams = await this.sanitizeQuery(ctx);
+      const sanitizedQueryParams = ctx.query
 
       if (!sanitizedQueryParams.filters) {
         sanitizedQueryParams.filters = {};
