@@ -20,8 +20,8 @@ module.exports = createCoreController(
   "api::proposal.proposal",
   ({ strapi }) => ({
     async find(ctx) {
-      const sanitizedQueryParams = ctx.query
-
+      
+      const sanitizedQueryParams = ctx.query;
       if (!sanitizedQueryParams.filters) {
         sanitizedQueryParams.filters = {};
       }
@@ -31,10 +31,11 @@ module.exports = createCoreController(
       }
 
       /////GOV ACTION TYPE///////////
+      
       const hasGovActionTypeIDFilter = sanitizedQueryParams.filters["$and"]?.find(
         (elem) => elem?.hasOwnProperty("gov_action_type_id")
       );
-
+      
       if (hasGovActionTypeIDFilter) {
         const hasGovActionTypeIDFilterInSanitize =
           sanitizedQueryParams?.filters["$and"]?.some((elem) =>
@@ -47,7 +48,6 @@ module.exports = createCoreController(
         }
       }
       //////////////////////////
-
       /////PROPOSAL NAME///////////
       const hasPropNameFilter = ctx?.query?.filters["$and"]?.find((elem) =>
         elem?.hasOwnProperty("prop_name")
@@ -64,7 +64,6 @@ module.exports = createCoreController(
         }
       }
       //////////////////////////////
-
       /////PROPOSAL SUBMITTED///////////
       const hasPropSubmitedFilter = ctx?.query?.filters["$and"]?.find((elem) =>
         elem?.hasOwnProperty("prop_submitted")
@@ -96,7 +95,6 @@ module.exports = createCoreController(
         }
       }
       //////////////////////////////
-
       /////PROPOSAL ID///////////
       const hasPropIdFilter = ctx?.query?.filters["$and"]?.find((elem) =>
         elem?.hasOwnProperty("prop_id")
@@ -122,17 +120,14 @@ module.exports = createCoreController(
         });
       }
       //////////////////////////////
-
       /////IS DRAFT///////////
       const hasIsDraftFilter = ctx?.query?.filters["$and"]?.find((elem) =>
         elem?.hasOwnProperty("is_draft")
       );
-
       if (hasIsDraftFilter) {
-        if (!ctx?.state?.user) {
-          return ctx.badRequest(null, "User is required");
-        }
-
+         if (!ctx?.state?.user) {
+           return ctx.badRequest(null, "User is required");
+         }
         const hasIsDraftFilterInSanitize = sanitizedQueryParams?.filters[
           "$and"
         ]?.some((elem) => elem?.hasOwnProperty("is_draft"));
@@ -142,6 +137,14 @@ module.exports = createCoreController(
             user_id: ctx?.state?.user?.id,
           });
         }
+        const hasUserFilterInSanitize = sanitizedQueryParams?.filters[
+          "$and"
+        ]?.some((elem) => elem?.hasOwnProperty("user_id"));
+        if(!hasUserFilterInSanitize){
+          sanitizedQueryParams.filters["$and"].push({
+            user_id: ctx?.state?.user?.id,
+          })
+        };
       } else {
         sanitizedQueryParams.filters["$and"].push({
           is_draft: false,
@@ -176,7 +179,7 @@ module.exports = createCoreController(
         proposal.content = transformedProposalContent?.data;
         proposalsList.push(proposal);
       }
-
+console.log(JSON.stringify(sanitizedQueryParams), "params");
       return this.transformResponse(proposalsList, { pagination });
     },
     async findOne(ctx) {
