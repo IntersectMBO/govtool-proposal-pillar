@@ -22,12 +22,25 @@ jobs:
           registry-url: "https://registry.npmjs.org"
           scope: "@intersect.mbo"
 
+      - name: Authenticate with Scoped NPM
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          registry-url: "https://registry.npmjs.org"
+          scope: "@intersect.mbo"
+        run: |
+          npm config set //registry.npmjs.org/:_authToken=$NPM_TOKEN
+          npm config set scope "@intersect.mbo"
+          npm whoami
+
+      - name: Check NPM Authentication
+        run: npm whoami
+
       - name: Install dependencies
         run: npm ci
         env:
-          NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
+          NODE_OPTIONS: --max_old_space_size=8192
 
       - name: Publish to npm
-        run: npm publish
+        run: npm publish --access public
         env:
-          NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
+          NODE_OPTIONS: --max_old_space_size=8192
