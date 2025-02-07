@@ -1,7 +1,6 @@
 import { useTheme } from '@emotion/react';
 import { IconPlus, IconX } from '@intersect.mbo/intersectmbo.org-icons-set';
-import { Box, Button, TextField } from '@mui/material';
-import IconButton from '@mui/material/IconButton';
+import { Box, Button, TextField,IconButton } from '@mui/material';
 import { isRewardAddress, numberValidation } from '../../lib/utils';
 
 const WithdrawalsManager = ({

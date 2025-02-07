@@ -29,7 +29,8 @@ const CreateGovernanceActionDialog = ({ open = false, onClose = false }) => {
     const [step, setStep] = useState(1);
     const [proposalData, setProposalData] = useState({
         proposal_links: [],
-        proposal_withdrawals: []
+        proposal_withdrawals: [],
+        proposal_constitution_content:{}
     });
 
 
@@ -52,6 +53,7 @@ const CreateGovernanceActionDialog = ({ open = false, onClose = false }) => {
 
     const [linksErrors, setLinksErrors] = useState({});
     const [withdrawalsErrors, setWithdrawalsErrors ] = useState({});
+    const [constitutionErrors,setConstitutionErrors] = useState({});
     const isSmallScreen = useMediaQuery((theme) =>
         theme.breakpoints.down('sm')
     );
@@ -92,12 +94,23 @@ const CreateGovernanceActionDialog = ({ open = false, onClose = false }) => {
                     setIsContinueDisabled(false);
                 }
             }
-
+            if (proposalData?.gov_action_type_id==3){
+                if ((proposalData?.proposal_constitution_content?.prop_constitution_url =='')
+                    ||
+                    constitutionErrors.prop_constitution_url
+                    ||
+                    constitutionErrors.prop_guardrails_script_url
+                ) {
+                    return setIsContinueDisabled(true);
+                } else {
+                    setIsContinueDisabled(false);
+                }
+            }
             const selectedLabel = governanceActionTypes.find(
                 (option) => option?.value === proposalData?.gov_action_type_id
             )?.label;
-
-            if (selectedLabel === 'Treasury') {
+            const selectedType = governanceActionTypes.find((option) => option?.value === proposalData?.gov_action_type_id)?.value;
+            if (selectedType == 2) {
                 if (proposalData?.proposal_withdrawals) {
                      if (
                          proposalData?.proposal_withdrawals?.some(
@@ -114,11 +127,23 @@ const CreateGovernanceActionDialog = ({ open = false, onClose = false }) => {
             } else {
                 setIsContinueDisabled(false);
             }
+            if (selectedType == 3){
+                if ((proposalData?.proposal_constitution_content?.prop_constitution_url =='')
+                    ||
+                    constitutionErrors.prop_constitution_url
+                    ||
+                    constitutionErrors.prop_guardrails_script_url
+                ) {
+                    return setIsContinueDisabled(true);
+                } else {
+                    setIsContinueDisabled(false);
+                }
+            }
 
         } else {
             setIsContinueDisabled(true);
         }
-    }, [proposalData, errors, linksErrors, withdrawalsErrors]); // proposalData is a dependency
+    }, [proposalData, errors, linksErrors, withdrawalsErrors, constitutionErrors]); // proposalData is a dependency
 
     const handleCreateProposal = async (isDraft = false) => {
         setLoading(true);
@@ -265,6 +290,8 @@ const CreateGovernanceActionDialog = ({ open = false, onClose = false }) => {
                                     setLinksErrors={setLinksErrors}
                                     withdrawalsErrors={withdrawalsErrors}
                                     setWithdrawalsErrors={setWithdrawalsErrors}
+                                    constitutionErrors={constitutionErrors}
+                                    setConstitutionErrors={setConstitutionErrors}
                                 />
                             )}
 

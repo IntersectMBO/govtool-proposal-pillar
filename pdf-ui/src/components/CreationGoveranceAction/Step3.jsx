@@ -23,7 +23,8 @@ const Step3 = ({
 }) => {
     const openLink = (link) => openInNewTab(link);
     const theme = useTheme();
-
+    const selectedGATypeId = proposalData?.gov_action_type_id;
+    const pc = proposalData?.proposal_constitution_content;
     return (
         <Card variant='outlined'>
             <CardContent
@@ -183,44 +184,101 @@ const Step3 = ({
                             {proposalData?.prop_rationale || ''}
                         </ReactMarkdown>
                     </Box>
-                    {proposalData?.proposal_withdrawals?.map(
-                                    (withdrawal, index) => (
-                    <Box>
-                        <Box>
-                            <Typography
-                                variant='body1'
-                                color={theme.palette.text.grey}
-                                gutterBottom
-                            >
-                                Receiving address
-                            </Typography>
-                            <Typography
-                                variant='body1'
-                                gutterBottom
-                                data-testid={`receiving-address-${index}-content`}
-                            >
-                                {withdrawal.prop_receiving_address}
-                            </Typography>
-                        </Box>
-                        <Box>
-                            <Typography
-                                variant='body1'
-                                color={theme.palette.text.grey}
-                                gutterBottom
-                            >
-                                Amount
-                            </Typography>
-                            <Typography
-                                variant='body1'
-                                gutterBottom
-                                data-testid={`amount-${index}-content`}
-                            >
-                                {withdrawal.prop_amount}
-                            </Typography>
-                        </Box>
-                    </Box>
-                    ))}
+                    {selectedGATypeId == 2 ?
+                     proposalData?.proposal_withdrawals?.map(
+                     (withdrawal, index) => (
+                                <Box>
+                                    <Box>
+                                        <Typography
+                                            variant='body1'
+                                            color={theme.palette.text.grey}
+                                            gutterBottom
+                                        >
+                                            Receiving address
+                                        </Typography>
+                                        <Typography
+                                            variant='body1'
+                                            gutterBottom
+                                            data-testid={`receiving-address-${index}-content`}
+                                        >
+                                            {withdrawal.prop_receiving_address}
+                                        </Typography>
+                                    </Box>
+                                    <Box>
+                                        <Typography
+                                            variant='body1'
+                                            color={theme.palette.text.grey}
+                                            gutterBottom
+                                        >
+                                            Amount
+                                        </Typography>
+                                        <Typography
+                                            variant='body1'
+                                            gutterBottom
+                                            data-testid={`amount-${index}-content`}
+                                        >
+                                            {withdrawal.prop_amount}
+                                        </Typography>
+                                    </Box>
+                                </Box>
+                            )): null }
+                            {selectedGATypeId === 3 && pc ? (
+                                <Box>
+                                    <Box>
+                                        <Typography
+                                            variant='body1'
+                                            color={theme.palette.text.grey}
+                                            gutterBottom
+                                        >
+                                            New constitution URL
+                                        </Typography>
+                                        <Typography
+                                            variant='body1'
+                                            gutterBottom
+                                            data-testid="new-constitution-url-content"
+                                        >
+                                            {pc.prop_constitution_url}
+                                        </Typography>
+                                    </Box>
 
+                                    {pc.prop_have_guardrails_script && (
+                                        <>
+                                            <Box>
+                                                <Typography
+                                                    variant='body1'
+                                                    color={theme.palette.text.grey}
+                                                    gutterBottom
+                                                >
+                                                    Guardrails script URL
+                                                </Typography>
+                                                <Typography
+                                                    variant='body1'
+                                                    gutterBottom
+                                                    data-testid="guardrails-script-url-content"
+                                                >
+                                                    {pc.prop_guardrails_script_url}
+                                                </Typography>
+                                            </Box>
+                                            <Box>
+                                                <Typography
+                                                    variant='body1'
+                                                    color={theme.palette.text.grey}
+                                                    gutterBottom
+                                                >
+                                                    Guardrails script hash
+                                                </Typography>
+                                                <Typography
+                                                    variant='body1'
+                                                    gutterBottom
+                                                    data-testid="guardrails-script-hash-content"
+                                                >
+                                                    {pc.prop_guardrails_script_hash}
+                                                </Typography>
+                                            </Box>
+                                        </>
+                                    )}
+                                </Box>
+                            ) : null}
                     {proposalData?.proposal_links?.length > 0 && (
                         <Box>
                             <Typography

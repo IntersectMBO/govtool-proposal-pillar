@@ -1,20 +1,9 @@
-import {
-    Box,
-    Button,
-    Card,
-    CardContent,
-    MenuItem,
-    TextField,
-    Typography,
-} from '@mui/material';
+import {Box, Button, Card, CardContent, MenuItem, TextField, Typography } from '@mui/material';
 import { useEffect, useState } from 'react';
-import { LinkManager, WithdrawalsManager } from '.';
+import { LinkManager, WithdrawalsManager, ConstitutionManager} from '.';
 import { useAppContext } from '../../context/context';
 import { getGovernanceActionTypes } from '../../lib/api';
-import {
-    containsString,
-    maxLengthCheck,
-} from '../../lib/utils';
+import { containsString, maxLengthCheck } from '../../lib/utils';
 const Step2 = ({
     setStep,
     proposalData,
@@ -32,17 +21,22 @@ const Step2 = ({
     setLinksErrors,
     withdrawalsErrors,
     setWithdrawalsErrors,
+    constitutionErrors,
+    setConstitutionErrors 
 }) => {
     const titleMaxLength = 80;
     const abstractMaxLength = 2500;
     const motivationRationaleMaxLength = 12000;
     const { setLoading } = useAppContext();
+   
     const [selectedGovActionName, setSelectedGovActionName] = useState(
         governanceActionTypes.find(
             (option) => option?.value === +proposalData?.gov_action_type_id
         )?.label || ''
     );
-
+    const [selectedGovActionId, setSelectedGovActionId] = useState(
+        proposalData?.attributes?.content?.attributes?.gov_action_type?.id || null
+    );
     const handleChange = (e) => {
         const selectedValue = e.target.value;
         const selectedLabel = governanceActionTypes.find(
@@ -54,7 +48,15 @@ const Step2 = ({
             gov_action_type_id: selectedValue,
             proposal_withdrawals:[{ prop_receiving_address: null, prop_amount: null }]
         }));
+        if(selectedValue  != 3)
+        { //cleanup fields co
+            setProposalData((prev) => ({
+                ...prev,
+                proposal_constitution_content:{}
+            }));
 
+        }
+        setSelectedGovActionId(selectedValue);
         setSelectedGovActionName(selectedLabel);
     };
 
@@ -120,6 +122,8 @@ const Step2 = ({
         setSelectedGovActionName(governanceActionTypes.find(
             (option) => option?.value === +proposalData?.gov_action_type_id
         )?.label || '')
+        setSelectedGovActionId(+proposalData?.gov_action_type_id)
+
     },[governanceActionTypes])
     return (
         <Card>
@@ -366,7 +370,8 @@ const Step2 = ({
                                 : 'rationale-helper',
                         }}
                     />
-                    {selectedGovActionName === 'Treasury' ? (
+                    { /// Treasury
+                        selectedGovActionId == 2 ? (
                         <>
                             <Box
                         sx={{
@@ -385,7 +390,16 @@ const Step2 = ({
                         </>
 
                     ) : null}
-
+                    { /// 'Constitution'
+                        selectedGovActionId === 3 ? (
+                        <ConstitutionManager
+                            proposalData={proposalData}
+                            setProposalData={setProposalData}
+                            constitutionManagerErrors={constitutionErrors}
+                            setConstitutionManagerErrors={setConstitutionErrors}
+                        ></ConstitutionManager>
+                        ) : null
+                    }
                     <Box
                         sx={{
                             align: 'center',
