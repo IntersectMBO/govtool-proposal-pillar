@@ -179,7 +179,6 @@ module.exports = createCoreController(
         proposal.content = transformedProposalContent?.data;
         proposalsList.push(proposal);
       }
-console.log(JSON.stringify(sanitizedQueryParams), "params");
       return this.transformResponse(proposalsList, { pagination });
     },
     async findOne(ctx) {
@@ -237,7 +236,7 @@ console.log(JSON.stringify(sanitizedQueryParams), "params");
     async create(ctx) {
       const { data } = ctx?.request?.body;
       const user = ctx?.state?.user;
-
+      const gov_action_type_id  = data?.gov_action_type_id?.toString();
       if (!user) {
         return ctx.badRequest(null, "User is required");
       }
@@ -271,8 +270,8 @@ console.log(JSON.stringify(sanitizedQueryParams), "params");
       try {
         // chek if treasuiry action have adress and amount
         const gaTypes = await strapi.entityService.findOne("api::governance-action-type.governance-action-type",data?.gov_action_type_id)
-    
-        if(gaTypes.gov_action_type_name === 'Treasury')
+        // 2. Treasuty
+        if(gov_action_type_id == 2)
         {
             // check if withdrawal parameters exist
             if (data?.proposal_withdrawals?.length === 0) {
@@ -285,45 +284,153 @@ console.log(JSON.stringify(sanitizedQueryParams), "params");
             if(isInvalid)
               return ctx.badRequest(null, "Withdrawal addrress or amount parametars not valid");
         }
+        // 3. Constitution
+        if (gov_action_type_id == 3) {
+          const { proposal_constitution_content } = data;
+          // Check if proposal_constitution_content exists
+          if (!proposal_constitution_content) {
+              return ctx.badRequest(null, "proposal_constitution_content is required for Constitution action");
+          }
+          // Validate prop_constitution_url (required and must be a valid URL)
+          const isValidUrl = (url) => {
+              try {
+                  new URL(url); // Check if the URL is valid
+                  return true;
+              } catch (e) {
+                  return false;
+              }
+          };
+          if (!proposal_constitution_content.prop_constitution_url || !isValidUrl(proposal_constitution_content.prop_constitution_url)) {
+              return ctx.badRequest(null, "prop_constitution_url is required and must be a valid URL (IPFS is allowed)");
+          }
+          // Validate prop_have_guardrails_script
+          if (proposal_constitution_content.prop_have_guardrails_script === true) {
+              // If true, check if prop_guardrails_script_url and prop_guardrails_script_hash exist
+              if (!proposal_constitution_content.prop_guardrails_script_url || !isValidUrl(proposal_constitution_content.prop_guardrails_script_url)) {
+                  return ctx.badRequest(null, "prop_guardrails_script_url is required and must be a valid URL when prop_have_guardrails_script is true");
+              }
+              if (!proposal_constitution_content.prop_guardrails_script_hash) {
+                  return ctx.badRequest(null, "prop_guardrails_script_hash is required when prop_have_guardrails_script is true");
+              }
+          } else if (proposal_constitution_content.prop_have_guardrails_script === false || proposal_constitution_content.prop_have_guardrails_script === null) {
+              // If false or null, check if prop_guardrails_script_url and prop_guardrails_script_hash are absent
+              if (proposal_constitution_content.prop_guardrails_script_url || proposal_constitution_content.prop_guardrails_script_hash) {
+                  return ctx.badRequest(null, "prop_guardrails_script_url and prop_guardrails_script_hash must not be provided when prop_have_guardrails_script is false or null");
+              }
+          } else {
+              proposal_constitution_content.prop_have_guardrails_script = false
+              // If prop_have_guardrails_script is not a boolean or null, return an error
+              //return ctx.badRequest(null, "prop_have_guardrails_script must be a boolean or null");
+          }
+      }
         // Create the Proposal
         try {
-          proposal = await strapi.entityService.create(
-            "api::proposal.proposal",
-            {
-              data: {
-                ...data,
-                user_id: user?.id?.toString(),
-              },
+          try {
+            proposal = await strapi.entityService.create(
+                "api::proposal.proposal",
+                {
+                    data: {
+                        ...data,
+                        user_id: user?.id?.toString(),
+                    },
+                }
+            );
+            if (!proposal?.id) {
+                return ctx.badRequest(null, "Proposal not created or missing ID");
             }
-          );
-
-          if (!proposal) {
-            return ctx.badRequest(null, "Proposal not created");
-          }
         } catch (error) {
-          return ctx.badRequest(null, "Proposal not created");
+            console.error("Error creating proposal:", error);
+            return ctx.badRequest(null, "Proposal not created");
         }
-
-        // Create Proposal content
         try {
-          proposal_content = await strapi.entityService.create(
-            "api::proposal-content.proposal-content",
-            {
-              data: {
+            const proposalContentData = {
                 ...data,
-                proposal_id: proposal?.id.toString(),
+                proposal_id: proposal.id.toString(),
                 gov_action_type_id: data?.gov_action_type_id?.toString(),
                 prop_rev_active: true,
                 user_id: user?.id?.toString(),
-              },
-            }
-          );
+            };        
+            // Only create proposal_constitution_content if gov_action_type_id is 3
+            let proposalConstitutionContent = null;
+            if (gov_action_type_id == 3 && data.proposal_constitution_content) {
+                proposalConstitutionContent = await strapi.entityService.create(
+                    "api::proposal-constitution-content.proposal-constitution-content",
+                    {
+                        data: {
+                            prop_constitution_url: data.proposal_constitution_content.prop_constitution_url,
+                            prop_have_guardrails_script: data.proposal_constitution_content.prop_have_guardrails_script,
+                            ...(data.proposal_constitution_content.prop_have_guardrails_script === true && {
+                                prop_guardrails_script_url: data.proposal_constitution_content.prop_guardrails_script_url,
+                                prop_guardrails_script_hash: data.proposal_constitution_content.prop_guardrails_script_hash,
+                            }),
+                        },
+                    }
+                );
+                if (!proposalConstitutionContent?.id) {
+                    return ctx.badRequest(null, "Proposal constitution content not created");
+                }
+                // connect proposal_constitution_content with proposal_content
+                proposalContentData.proposal_constitution_content = {
+                    connect: [proposalConstitutionContent.id], // over ID
+                };
+            }        
+            proposal_content = await strapi.entityService.create(
+                "api::proposal-content.proposal-content",
+                {
+                    data: proposalContentData,
+                }
+            );
         } catch (error) {
+            console.error("Error creating proposal content:", error);
+            // Delete the Proposal because the Proposal content was not created
+            await deleteProposal();
+            return ctx.badRequest(null, "Proposal content not created");
+        }
+        //   proposal = await strapi.entityService.create(
+        //     "api::proposal.proposal",
+        //     {
+        //       data: {
+        //         ...data,
+        //         user_id: user?.id?.toString(),
+        //       },
+        //     }
+        //   );
+
+        //   if (!proposal) {
+        //     return ctx.badRequest(null, "Proposal not created");
+        //   }
+        // } catch (error) {
+        //   return ctx.badRequest(null, "Proposal not created");
+        // }
+
+        // // Create Proposal content
+        // try {
+        //   proposal_content = await strapi.entityService.create(
+        //       "api::proposal-content.proposal-content",
+        //       {
+        //           data: {
+        //               ...data,
+        //               proposal_id: proposal?.id.toString(),
+        //               gov_action_type_id: data?.gov_action_type_id?.toString(),
+        //               prop_rev_active: true,
+        //               user_id: user?.id?.toString(),
+        //               proposal_constitution_content: gov_action_type_id == 3 ? {
+        //                   prop_constitution_url: data.proposal_constitution_content.prop_constitution_url,
+        //                   prop_have_guardrails_script: data.proposal_constitution_content.prop_have_guardrails_script,
+        //                   ...(data.proposal_constitution_content.prop_have_guardrails_script === true && {
+        //                       prop_guardrails_script_url: data.proposal_constitution_content.prop_guardrails_script_url,
+        //                       prop_guardrails_script_hash: data.proposal_constitution_content.prop_guardrails_script_hash,
+        //                   }),
+        //               } : null, // Only for gov_action_type_id == 3
+        //           },
+        //       }
+        //   );
+      } catch (error) {
           // Delete the Proposal because the Proposal content was not created
           await deleteProposal();
-
+      
           return ctx.badRequest(null, "Proposal content not created");
-        }
+      }
 
         return this.transformResponse({
           proposal_id: proposal.id,
@@ -334,14 +441,12 @@ console.log(JSON.stringify(sanitizedQueryParams), "params");
       } catch (error) {
         proposal_content && (await deleteProposalContent());
         proposal && (await deleteProposal());
-
         ctx.status = 500;
         ctx.body = { error: error, message: error.message };
       }
     },
     async delete(ctx) {
       const { id } = ctx.params;
-
       try {
         // Delete proposal
         let deletedProposal = await strapi.entityService.delete(
@@ -352,15 +457,37 @@ console.log(JSON.stringify(sanitizedQueryParams), "params");
         if (!deletedProposal) {
           throw new Error("Proposal not found or delete failed");
         }
+        // Find all proposal-content entries related to the proposal
+        const proposalContents = await strapi.db
+            .query("api::proposal-content.proposal-content")
+            .findMany({
+                where: {
+                    proposal_id: id,
+                },
+                populate: {
+                    proposal_constitution_content: true, // Populate the related proposal_constitution_content
+                },
+            });
 
+        // Delete all related proposal_constitution_content
+        for (const proposalContent of proposalContents) {
+            if (proposalContent.proposal_constitution_content) {
+                await strapi.entityService.delete(
+                    "api::proposal-constitution-content.proposal-constitution-content",
+                    proposalContent.proposal_constitution_content.id
+                );
+            }
+        }
         // Delete proposal content
-        await strapi.db
+        let deletedProposalContent = await strapi.db
           .query("api::proposal-content.proposal-content")
           .deleteMany({
             where: {
               proposal_id: id,
             },
           });
+        
+
 
         // Handling proposal submitions
         await strapi.db
