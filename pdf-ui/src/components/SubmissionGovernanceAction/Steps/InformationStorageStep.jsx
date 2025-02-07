@@ -31,6 +31,7 @@ import { IconExternalLink } from '@intersect.mbo/intersectmbo.org-icons-set';
 import { useTheme } from '@emotion/react';
 
 const InformationStorageStep = ({ proposal, handleCloseSubmissionDialog }) => {
+   
     const theme = useTheme();
     const navigate = useNavigate();
     const { walletAPI, validateMetadata } = useAppContext();
@@ -111,7 +112,7 @@ const InformationStorageStep = ({ proposal, handleCloseSubmissionDialog }) => {
         const hash = await walletAPI.createHash(jsonLd);
         setHashData(hash);
     };
-
+    const proposalGATypeId= proposal?.attributes?.content?.attributes.gov_action_type_id;
     const handleGASubmission = async () => {
         try {
             setCheckingDataModal(true);
@@ -123,19 +124,13 @@ const InformationStorageStep = ({ proposal, handleCloseSubmissionDialog }) => {
 
             if (response?.valid) {
                 let govActionBuilder = null;
-                if (
-                    proposal?.attributes?.content?.attributes?.gov_action_type
-                        ?.attributes?.gov_action_type_name === 'Info'
-                ) {
+                if (proposalGATypeId === 1) {
                     govActionBuilder =
                         await walletAPI.buildNewInfoGovernanceAction({
                             hash: hashData,
                             url: fileURL,
                         });
-                } else if (
-                    proposal?.attributes?.content?.attributes?.gov_action_type
-                        ?.attributes?.gov_action_type_name === 'Treasury'
-                ) {
+                } else if (proposalGATypeId === 2) {
                     govActionBuilder =
                         await walletAPI.buildTreasuryGovernanceAction({
                             hash: hashData,
@@ -143,6 +138,19 @@ const InformationStorageStep = ({ proposal, handleCloseSubmissionDialog }) => {
                             withdrawals: getWithdrawalsArray()
                         });
                 }
+                } else if (proposalGATypeId === 3){
+                    const constitUrl = proposal?.attributes?.content?.attributes.proposal_constitution_content.data.attributes.prop_constitution_url;   
+                    const constiUrlHash = await getHashFromUrl(constitUrl);
+                    govActionBuilder =
+                    await walletAPI.buildNewConstitutionGovernanceAction({
+                        hash: hashData,
+                        url: fileURL,
+                        constitutionUrl: constitUrl,
+                        constitutionHash: constiUrlHash
+                    //prevGovernanceActionHash: string;
+                    //prevGovernanceActionIndex: number;
+                    //scriptHash: string;
+                });
 
                 if (govActionBuilder) {
                     const tx = await walletAPI.buildSignSubmitConwayCertTx({
@@ -202,6 +210,28 @@ const InformationStorageStep = ({ proposal, handleCloseSubmissionDialog }) => {
         document.body.removeChild(a);
         URL.revokeObjectURL(url);
     };
+
+    async function getHashFromUrl(url) {
+        try {
+            if (!url) {
+                throw new Error('url is not defined or null');
+            }
+            // Fetch the data from the URL
+            const response = await fetch(url);
+            // Check if the response is successful
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+            // Read the text content from the response
+            const content = await response.text();
+            // Create a hash from the fetched content
+            const urlHash = await walletAPI.createHash(content);
+            return urlHash;
+        } catch (error) {
+            console.error('Error fetching or hashing the content:', error);
+            throw error; // Re-throw the error if you want to handle it further up the call stack
+        }
+    }
 
     useEffect(() => {
         if (proposal && walletAPI) {

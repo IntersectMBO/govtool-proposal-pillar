@@ -25,6 +25,9 @@ module.exports = createCoreController(
       if (!sanitizedQueryParams?.populate?.includes("proposal_withdrawals")) {
         sanitizedQueryParams.populate.push("proposal_withdrawals");
       }
+      if (!sanitizedQueryParams?.populate?.includes("proposal_constitution_content")) {
+        sanitizedQueryParams.populate.push("proposal_constitution_content");
+      }
       const { results, pagination } = await strapi
         .service("api::proposal-content.proposal-content")
         .find(sanitizedQueryParams);
@@ -67,22 +70,57 @@ module.exports = createCoreController(
       if (!proposalId) {
         return ctx.badRequest(null, "Proposal ID is required");
       }
-
       let proposal_content;
-
       try {
-        proposal_content = await strapi.entityService.create(
+        const proposalContentData = {
+          ...data,
+          proposal_id: ""+proposalId,
+          gov_action_type_id: data?.gov_action_type_id?.toString(),
+          prop_rev_active: true,
+          user_id: user?.id?.toString(),
+      };        
+      // Only create proposal_constitution_content if gov_action_type_id is 3
+      let proposalConstitutionContent = null;
+      if (data?.gov_action_type_id == 3 && data.proposal_constitution_content) {
+          proposalConstitutionContent = await strapi.entityService.create(
+              "api::proposal-constitution-content.proposal-constitution-content",
+              {
+                  data: {
+                      prop_constitution_url: data.proposal_constitution_content.prop_constitution_url,
+                      prop_have_guardrails_script: data.proposal_constitution_content.prop_have_guardrails_script,
+                      ...(data.proposal_constitution_content.prop_have_guardrails_script === true && {
+                          prop_guardrails_script_url: data.proposal_constitution_content.prop_guardrails_script_url,
+                          prop_guardrails_script_hash: data.proposal_constitution_content.prop_guardrails_script_hash,
+                      }),
+                  },
+              }
+          );
+          if (!proposalConstitutionContent?.id) {
+              return ctx.badRequest(null, "Proposal constitution content not created");
+          }
+          // connect proposal_constitution_content with proposal_content
+          proposalContentData.proposal_constitution_content = {
+              connect: [proposalConstitutionContent.id], // over ID
+          };
+      }        
+      proposal_content = await strapi.entityService.create(
           "api::proposal-content.proposal-content",
           {
-            data: {
-              ...data,
-              proposal_id: proposalId.toString(),
-              gov_action_type_id: data?.gov_action_type_id.toString(),
-              prop_rev_active: data?.prop_rev_active,
-              user_id: user?.id?.toString(),
-            },
+              data: proposalContentData,
           }
-        );
+      );
+        // proposal_content = await strapi.entityService.create(
+        //   "api::proposal-content.proposal-content",
+        //   {
+        //     data: {
+        //       ...data,
+        //       proposal_id: proposalId.toString(),
+        //       gov_action_type_id: data?.gov_action_type_id.toString(),
+        //       prop_rev_active: data?.prop_rev_active,
+        //       user_id: user?.id?.toString(),
+        //     },
+        //   }
+        // );
 
         // Update the prop_rev_active field for other proposal contents
         if (data?.prop_rev_active === true && !data?.is_draft) {

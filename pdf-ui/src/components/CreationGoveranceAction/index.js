@@ -5,3 +5,4 @@ export { default as LinkManager } from './LinkManager';
 export { default as WithdrawalsManager} from "./WithdrawalsManager";
 export { default as Step3Modal } from './Step3Modal';
 export { default as DraftSuccessfulModal } from './DraftSuccessfulModal';
+export { default as ConstitutionManager } from './ConstitutionManager';

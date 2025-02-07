@@ -1,6 +1,6 @@
 {
     "name": "@intersect.mbo/pdf-ui",
-    "version": "0.5.11",
+    "version": "0.6.0",
     "description": "Proposal discussion ui",
     "main": "./src/index.js",
     "exports": {
@@ -28,7 +28,7 @@
     "dependencies": {
         "@emurgo/cardano-serialization-lib-asmjs": "^12.0.0-beta.2",
         "@fontsource/poppins": "^5.0.14",
-        "@intersect.mbo/intersectmbo.org-icons-set": "^1.0.8",
+        "@intersect.mbo/intersectmbo.org-icons-set": "^1.1.0",
         "axios": "^1.7.2",
         "date-fns": "^3.6.0",
         "react-markdown": "^8.0.6",

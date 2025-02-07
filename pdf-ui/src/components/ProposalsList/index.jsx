@@ -76,10 +76,10 @@ const ProposalsList = ({
             let query = '';
             if (isDraft) {
                 if (statusList?.length === 0 || statusList?.length === 2) {
-                    query = `filters[$and][2][is_draft]=true&pagination[page]=${page}&pagination[pageSize]=25&sort[createdAt]=${sortType}&populate[0]=proposal_links&populate[1]=proposal_withdrawals`;
+                    query = `filters[$and][2][is_draft]=true&pagination[page]=${page}&pagination[pageSize]=25&sort[createdAt]=${sortType}&populate[0]=proposal_links&populate[1]=proposal_withdrawals&populate[2]=proposal_constitution_content`;
                 } else {
                     const isSubmitted = haveSubmittedFilter ? 'true' : 'false';
-                    query = `filters[$and][2][is_draft]=true&filters[$and][3][prop_submitted]=${isSubmitted}&pagination[page]=${page}&pagination[pageSize]=25&sort[createdAt]=${sortType}&populate[0]=proposal_links&populate[1]=proposal_withdrawals`;
+                    query = `filters[$and][2][is_draft]=true&filters[$and][3][prop_submitted]=${isSubmitted}&pagination[page]=${page}&pagination[pageSize]=25&sort[createdAt]=${sortType}&populate[0]=proposal_links&populate[1]=proposal_withdrawals&populate[2]=proposal_constitution_content`;
                 }
             } else {
                 if (statusList?.length === 0 || statusList?.length === 2) {
@@ -87,14 +87,14 @@ const ProposalsList = ({
                         governanceAction?.id
                     }&filters[$and][1][prop_name][$containsi]=${
                         debouncedSearchValue || ''
-                    }&pagination[page]=${page}&pagination[pageSize]=25&sort[createdAt]=${sortType}&populate[0]=proposal_links&populate[1]=proposal_withdrawals`;
+                    }&pagination[page]=${page}&pagination[pageSize]=25&sort[createdAt]=${sortType}&populate[0]=proposal_links&populate[1]=proposal_withdrawals&populate[2]=proposal_constitution_content`;
                 } else {
                     const isSubmitted = haveSubmittedFilter ? 'true' : 'false';
                     query = `filters[$and][0][gov_action_type_id]=${
                         governanceAction?.id
                     }&filters[$and][1][prop_name][$containsi]=${
                         debouncedSearchValue || ''
-                    }&filters[$and][2][prop_submitted]=${isSubmitted}&pagination[page]=${page}&pagination[pageSize]=25&sort[createdAt]=${sortType}&populate[0]=proposal_links&populate[1]=proposal_withdrawals`;
+                    }&filters[$and][2][prop_submitted]=${isSubmitted}&pagination[page]=${page}&pagination[pageSize]=25&sort[createdAt]=${sortType}&populate[0]=proposal_links&populate[1]=proposal_withdrawals&populate[2]=proposal_constitution_content`;
                 }
             }
             const { proposals, pgCount } = await getProposals(query);
