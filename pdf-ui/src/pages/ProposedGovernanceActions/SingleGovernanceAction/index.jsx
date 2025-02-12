@@ -145,9 +145,10 @@ const SingleGovernanceAction = ({ id }) => {
     const [AbstractMarkdownText, setAbstractMarkdownText] = useState('');
     const maxLength = 500;
     useEffect(() => {
-        if (maxLength && AbstractMarkdownText.length > maxLength) {
+        if (AbstractMarkdownText.length > maxLength) {
             setTruncatedText(AbstractMarkdownText.slice(0, maxLength) + '...');
         } else {
+            setShowFullText(true);
             setTruncatedText(AbstractMarkdownText);
         }
     }, [AbstractMarkdownText, maxLength]);
@@ -200,13 +201,12 @@ const SingleGovernanceAction = ({ id }) => {
             if (response?.attributes?.content?.attributes?.is_draft) {
                 return navigate('/proposal_discussion');
             }
+            let totalLength = response.attributes?.content?.attributes?.prop_abstract.length + response.attributes?.content?.attributes?.prop_motivation.length + response.attributes?.content?.attributes?.prop_rationale.length;
             setProposal(response);
-
-            if(response?.attributes?.content?.attributes?.prop_abstract.length + response?.attributes?.content?.attributes?.prop_motivation.length + response?.attributes?.content?.attributes?.prop_rationale.length > 500)
-            {
-                setTotalCharLength(response?.attributes?.content?.attributes?.prop_abstract.length + response?.attributes?.content?.attributes?.prop_motivation.length + response?.attributes?.content?.attributes?.prop_rationale.length);    
-                setAbstractMarkdownText(response?.attributes?.content?.attributes?.prop_abstract);
-            }
+            setTotalCharLength(totalLength);    
+            setAbstractMarkdownText(response?.attributes?.content?.attributes?.prop_abstract);
+            if(totalLength > maxLength)
+                setShowFullText(false);
         } catch (error) {
             if (
                 error?.response?.data?.error?.details ===
@@ -1065,7 +1065,7 @@ const SingleGovernanceAction = ({ id }) => {
                                                 },
                                             }}
                                         >
-                                            {showFullText ? 'Show less' : 'Read more'}
+                                           {showFullText ? 'Show less' : 'Read more'}
                                         </Button>)}
                                 </Box>
                                 {showFullText && (
@@ -1099,7 +1099,7 @@ const SingleGovernanceAction = ({ id }) => {
                                                 ?.attributes?.prop_rationale || ''}
                                         </ReactMarkdown>
                                     </Box>)}
-                                    {showFullText && (
+                                    {showFullText && totalCharLength>maxLength ? (
                                     <Button
                                             variant="text"
                                             onClick={() => setShowFullText(!showFullText)}
@@ -1116,7 +1116,7 @@ const SingleGovernanceAction = ({ id }) => {
                                         >
                                             {showFullText ? 'Show less' : 'Read more'}
                                     </Button>                                
-                                )}
+                                ):null }
                                 {proposal?.attributes?.content?.attributes
                                     ?.proposal_links?.length > 0 && (
                                     <Box mt={4}>
