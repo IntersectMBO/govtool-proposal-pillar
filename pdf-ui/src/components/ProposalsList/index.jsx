@@ -168,7 +168,7 @@ const ProposalsList = ({
                                         }));
                                     }
                                 }}
-                                data-testid='show-all-button'
+                                data-testid={governanceAction?.attributes?.gov_action_type_name.replace(/\s+/g, '-').toLowerCase() +'-show-all-button'}
                             >
                                 {setShowAllActivated
                                     ? setShowAllActivated?.is_activated
