@@ -5,6 +5,9 @@ module.exports = ({ env }) => ({
     config: {
       dsn: env("SENTRY_DSN"), // Set Sentry DSN from environment variable
       sendMetadata: true, // Enable sending metadata to Sentry
+      init: {
+				environment: env('APP_ENV'),
+			},
     },
   },
   // Documentation plugin configuration
