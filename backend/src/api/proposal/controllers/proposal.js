@@ -99,16 +99,17 @@ module.exports = createCoreController(
       const hasPropIdFilter = ctx?.query?.filters["$and"]?.find((elem) =>
         elem?.hasOwnProperty("prop_id")
       );
-
+   
       if (hasPropIdFilter) {
         if (!ctx?.state?.user) {
           return ctx.badRequest(null, "User is required");
         }
 
         const hasPropIdFilterInSanitize = sanitizedQueryParams?.filters[
-          "$and"
-        ]?.some((elem) => elem?.hasOwnProperty("prop_id"));
-        if (!hasPropIdFilterInSanitize) {
+          "$and"          
+        ]?.some((elem) => elem?.hasOwnProperty("prop_id"));  
+        
+        if (hasPropIdFilterInSanitize) {
           sanitizedQueryParams.filters["$and"].push({
             proposal_id: hasPropIdFilter?.prop_id,
             user_id: ctx?.state?.user?.id,
