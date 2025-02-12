@@ -1,0 +1,34 @@
+{
+  "kind": "collectionType",
+  "collectionName": "proposal_constitution_contents",
+  "info": {
+    "singularName": "proposal-constitution-content",
+    "pluralName": "proposal-constitution-contents",
+    "displayName": "Proposal Constitution content",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "prop_constitution_url": {
+      "type": "string"
+    },
+    "prop_have_guardrails_script": {
+      "type": "boolean"
+    },
+    "prop_guardrails_script_url": {
+      "type": "string"
+    },
+    "prop_guardrails_script_hash": {
+      "type": "string"
+    },
+    "proposal_content": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::proposal-content.proposal-content",
+      "inversedBy": "proposal_constitution_content"
+    }
+  }
+}
