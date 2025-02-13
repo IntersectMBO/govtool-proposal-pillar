@@ -8,7 +8,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 As a minor extension, we also keep a semantic version for the `UNRELEASED`
 changes.
 
-## [v0.5.10](https://www.npmjs.com/package/@intersect.mbo/pdf-ui/v/0.5.11) 2025-01-29
+## [v0.6.1](https://www.npmjs.com/package/@intersect.mbo/pdf-ui/v/0.6.1) 2025-02-12
+### Fixed 
+- [Test ID for Sort Button](https://github.com/IntersectMBO/govtool/issues/2838)
+- [Fix Show all proposal Details on Details Page](https://github.com/IntersectMBO/govtool/issues/2831)
+
+## [v0.6.1](https://www.npmjs.com/package/@intersect.mbo/pdf-ui/v/0.6.0) 2025-02-10
+### Added 
+- Added new type Constitution in proposal
+
+## [v0.6.0](https://www.npmjs.com/package/@intersect.mbo/pdf-ui/v/0.5.12) 2025-02-07
+### Added 
+- Propose New Constitution or Guardrails Script Governance Action for an offchain discussion and submit it as a governance action [Issue #2258](https://github.com/IntersectMBO/govtool/issues/2833)
+### Fixed 
+- Removed unnecessary fields [Issue #2258](https://github.com/IntersectMBO/govtool/issues/2833)
+
+## [v0.5.11](https://www.npmjs.com/package/@intersect.mbo/pdf-ui/v/0.5.11) 2025-01-29
 ### Fixed 
 - Proposal rendering fix
 
