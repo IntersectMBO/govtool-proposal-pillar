@@ -124,13 +124,13 @@ const InformationStorageStep = ({ proposal, handleCloseSubmissionDialog }) => {
 
             if (response?.valid) {
                 let govActionBuilder = null;
-                if (proposalGATypeId === 1) {
+                if (parseInt(proposalGATypeId) === 1) {
                     govActionBuilder =
                         await walletAPI.buildNewInfoGovernanceAction({
                             hash: hashData,
                             url: fileURL,
                         });
-                } else if (proposalGATypeId === 2) {
+                } else if (parseInt(proposalGATypeId) === 2) {
                     govActionBuilder =
                         await walletAPI.buildTreasuryGovernanceAction({
                             hash: hashData,
@@ -138,7 +138,7 @@ const InformationStorageStep = ({ proposal, handleCloseSubmissionDialog }) => {
                             withdrawals: getWithdrawalsArray()
                         });
                 }
-                } else if (proposalGATypeId === 3){
+                else if (parseInt(proposalGATypeId) === 3){
                     const constitUrl = proposal?.attributes?.content?.attributes.proposal_constitution_content.data.attributes.prop_constitution_url;   
                     const constiUrlHash = await getHashFromUrl(constitUrl);
                     govActionBuilder =
@@ -151,7 +151,7 @@ const InformationStorageStep = ({ proposal, handleCloseSubmissionDialog }) => {
                     //prevGovernanceActionIndex: number;
                     //scriptHash: string;
                 });
-
+            }
                 if (govActionBuilder) {
                     const tx = await walletAPI.buildSignSubmitConwayCertTx({
                         govActionBuilder: govActionBuilder,
@@ -217,7 +217,7 @@ const InformationStorageStep = ({ proposal, handleCloseSubmissionDialog }) => {
                 throw new Error('url is not defined or null');
             }
             // Fetch the data from the URL
-            const response = await fetch(url);
+            const response = (await fetch(url,{'User-Agent': "govtool-agent"}));
             // Check if the response is successful
             if (!response.ok) {
                 throw new Error(`HTTP error! Status: ${response.status}`);
