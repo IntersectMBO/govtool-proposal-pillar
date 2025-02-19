@@ -119,7 +119,7 @@ const CreateGovernanceActionDialog = ({ open = false, onClose = false }) => {
                     return setIsContinueDisabled(true);
                 if(proposalData.proposal_constitution_content.prop_have_guardrails_script)
                 {
-                    if(constitutionErrors.prop_guardrails_script_url || constitutionErrors?.prop_guardrails_script_hash)
+                    if(constitutionErrors.prop_guardrails_script_url || constitutionErrors.prop_guardrails_script_hash)
                         return setIsContinueDisabled(true);
                 }
                 else {
