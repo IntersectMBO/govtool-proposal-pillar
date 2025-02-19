@@ -9,7 +9,7 @@ module.exports = {
           if (row1 && row1.gov_action_type_name !== 'Info Action') {
               await knex('governance_action_types')
                   .where({ id: 1 })
-                  .update({ 
+                  .update({
                       gov_action_type_name: 'Info Action',
                       published_at: knex.fn.now() // Ensure published_at is set
                   });
