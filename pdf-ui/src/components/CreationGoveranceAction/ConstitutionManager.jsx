@@ -92,7 +92,7 @@ const ConstitutionManager = ({
                 sx: {
                     backgroundColor: 'transparent',
                 },
-                'data-testid': `prop=constitution-url-text-error`,
+                'data-testid': `prop-constitution-url-text-error`,
             }}
         />
     </Box>

@@ -1047,9 +1047,11 @@ const SingleGovernanceAction = ({ id }) => {
                                     >
                                         Abstract
                                     </Typography>
-                                    <ReactMarkdown>
+                                    <div data-testid="abstract-content">
+                                    <ReactMarkdown data-testid="abstract-content">
                                         {showFullText || !maxLength ? AbstractMarkdownText : truncatedText}
                                     </ReactMarkdown>
+                                    </div>
                                     {!showFullText && maxLength && totalCharLength > maxLength && (
                                         <Button
                                             variant="text"
@@ -1079,10 +1081,12 @@ const SingleGovernanceAction = ({ id }) => {
                                         >
                                         Motivation
                                         </Typography>
+                                        <div data-testid="motivation-content">
                                         <ReactMarkdown>
                                             {proposal?.attributes?.content
                                                 ?.attributes?.prop_motivation || ''}
                                         </ReactMarkdown>
+                                        </div>
                                     </Box>)}
                                     {showFullText && (
                                     <Box mt={4}>
@@ -1094,10 +1098,12 @@ const SingleGovernanceAction = ({ id }) => {
                                         >
                                         Rationale
                                         </Typography>
+                                        <div data-testid="rationale-content">
                                         <ReactMarkdown>
                                             {proposal?.attributes?.content
                                                 ?.attributes?.prop_rationale || ''}
                                         </ReactMarkdown>
+                                        </div>
                                     </Box>)}
                                     {showFullText && totalCharLength>maxLength ? (
                                     <Button
@@ -1156,6 +1162,7 @@ const SingleGovernanceAction = ({ id }) => {
                                                                 item?.prop_link
                                                             )
                                                         }
+                                                        data-testid={"link-${index}-text-content"}
                                                     >
                                                         <Typography
                                                             component={'p'}
