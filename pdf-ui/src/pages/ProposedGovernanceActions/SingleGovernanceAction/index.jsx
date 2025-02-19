@@ -315,10 +315,13 @@ const SingleGovernanceAction = ({ id }) => {
 
     const handleKeyDown = (event) => {
         if (event.key === 'Enter') {
-            event.preventDefault();
+         //  event.preventDefault();
         }
     };
-
+    const handleBlur = (event) => {
+        const cleanedValue = event.target.value.replace(/[^\S\n]+/g, ' ').trim();
+        setNewCommentText(cleanedValue);
+      };
     const handleChange = (event) => {
         let value = event.target.value;
 
@@ -326,7 +329,7 @@ const SingleGovernanceAction = ({ id }) => {
             value = value.trimStart();
         }
 
-        value = value.replace(/  +/g, ' ');
+       // value = value.replace(/  +/g, ' ');
 
         if (value.length <= MAX_COMMENT_LENGTH) {
             setNewCommentText(value);
@@ -1791,6 +1794,7 @@ const SingleGovernanceAction = ({ id }) => {
                                         inputProps={{
                                             maxLength: MAX_COMMENT_LENGTH,
                                             onKeyDown: handleKeyDown,
+                                            onBlur: handleBlur,
                                             spellCheck: 'false',
                                             autoCorrect: 'off',
                                             autoCapitalize: 'none',
