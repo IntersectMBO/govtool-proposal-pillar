@@ -1,7 +1,7 @@
 import { useTheme } from '@emotion/react';
 import { useEffect } from 'react';
 import { Box, TextField, FormControlLabel, Checkbox } from '@mui/material';
-import { isValidURLFormat } from '../../lib/utils';
+import { isValidURLFormat,isValidURLLength } from '../../lib/utils';
 
 const ConstitutionManager = ({
     proposalData,
@@ -20,6 +20,8 @@ const ConstitutionManager = ({
             pk.prop_guardrails_script_hash ="";
         }
         setProposalData({...proposalData, proposal_constitution_content: pk});
+        setConstitutionManagerErrors((prev) => ({...prev, ["prop_guardrails_script_url"] : null }));
+        setConstitutionManagerErrors((prev) => ({...prev,  ["prop_guardrails_script_hash"] : null }));
     };
     const handleUrlChange = (url_text) => {
         constcheckLinkValue(url_text,'prop_constitution_url');
@@ -33,27 +35,40 @@ const ConstitutionManager = ({
         pk.prop_guardrails_script_url = url_text;
         setProposalData({...proposalData, proposal_constitution_content: pk});
     }
+   
     const handleHashChange = (hash_text) => {
-        //  test hash value
+          constcheckHashValue(hash_text,"prop_guardrails_script_hash");
           let pk = proposalData.proposal_constitution_content;
           pk.prop_guardrails_script_hash = hash_text;
           setProposalData({...proposalData, proposal_constitution_content: pk});
       }
     const constcheckLinkValue = (prop_value, prop_name) => {
         const isValid = isValidURLFormat(prop_value);
+        const isValid1 = isValidURLLength(prop_value);
         setConstitutionManagerErrors((prev) => ({
                                       ...prev, 
-                                      [prop_name] :isValid ? false : 'Invalid URL format'}));
+                                      [prop_name] :isValid ? (isValid1 === true)? null: "Url longer than 128 char" : 'Invalid URL format'}));
     }
+    const constcheckHashValue = (prop_value, prop_name) => {
+        let isValid = false;
+        if(prop_value)
+        isValid = prop_value?.length > 0 ? true : false;
+        setConstitutionManagerErrors((prev) => ({
+                                      ...prev, 
+                                    [prop_name] :isValid ? null : 'Invalid HASH value'}));
+    }
+
     useEffect(() => {
          let pk = proposalData.proposal_constitution_content;
             if(pk != undefined)
             {
-                console.log(pk);
                 if(Boolean(pk.prop_constitution_url))
                     constcheckLinkValue(pk.prop_constitution_url,'prop_constitution_url')
                 if(Boolean(pk.prop_guardrails_script_url))
+                {
                     constcheckLinkValue(pk.prop_guardrails_script_url,'prop_guardrails_script_url')
+                    constcheckHashValue(pk.prop_guardrails_script_hash,"prop_guardrails_script_hash")
+                }
             }
     }, [proposalData]);
     return (
@@ -77,7 +92,7 @@ const ConstitutionManager = ({
                 sx: {
                     backgroundColor: 'transparent',
                 },
-                'data-testid': `prop=constitution-url-text-error`,
+                'data-testid': `prop-constitution-url-text-error`,
             }}
         />
     </Box>
@@ -159,6 +174,14 @@ const ConstitutionManager = ({
                         }}
                         inputProps={{
                             'data-testid': `prop-guardrails-script-hash-input`,
+                        }}
+                        error={!!constitutionManagerErrors?.prop_guardrails_script_hash}
+                        helperText={constitutionManagerErrors?.prop_guardrails_script_hash}
+                        FormHelperTextProps={{
+                            sx: {
+                                backgroundColor: 'transparent',
+                            },
+                            'data-testid': `prop-guardrails-script-hash-input-error`,
                         }}
                     />
                 </Box>

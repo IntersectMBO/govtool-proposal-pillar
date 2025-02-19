@@ -222,7 +222,7 @@ const Step3 = ({
                                     </Box>
                                 </Box>
                             )): null }
-                            {selectedGATypeId === 3 && pc ? (
+                            {selectedGATypeId == 3 && pc ? (
                                 <Box>
                                     <Box>
                                         <Typography
