@@ -5,9 +5,13 @@ import {
 } from '@emurgo/cardano-serialization-lib-asmjs';
 
 export const URL_REGEX =
-    /^(?:(?:https?:\/\/)?(?:\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}|(?:[a-zA-Z0-9-]+\.)+[a-zA-Z]{2,})(?:\/[^\s]*)?)|(?:ipfs:\/\/(?:[a-zA-Z0-9]+(?:\/[a-zA-Z0-9._-]+)*))$|^$/;
+  /^(?:(?:https?:\/\/)?(?:\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}|(?:[a-zA-Z0-9-]+\.)+[a-zA-Z]{2,})(?:\/[^\s]*)?)|(?:ipfs:\/\/(?:[a-zA-Z0-9]+(?:\/[a-zA-Z0-9._-]+)*))$/;
 
-export const formatIsoDate = (isoDate) => {
+export function isValidHashFormat(str) {
+    return "Not Implemented";
+   // const isValidHash = (hash) => !!bech32.decode(hash)?.words?.length
+}
+  export const formatIsoDate = (isoDate) => {
     if (!isoDate) return '';
 
     return format(new Date(isoDate), 'd MMMM yyyy');

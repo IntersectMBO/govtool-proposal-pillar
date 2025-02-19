@@ -1,7 +1,7 @@
 import { useTheme } from '@emotion/react';
 import { useEffect } from 'react';
 import { Box, TextField, FormControlLabel, Checkbox } from '@mui/material';
-import { isValidURLFormat } from '../../lib/utils';
+import { isValidURLFormat,isValidURLLength } from '../../lib/utils';
 
 const ConstitutionManager = ({
     proposalData,
@@ -33,23 +33,32 @@ const ConstitutionManager = ({
         pk.prop_guardrails_script_url = url_text;
         setProposalData({...proposalData, proposal_constitution_content: pk});
     }
+   
     const handleHashChange = (hash_text) => {
-        //  test hash value
+        //constcheckHashValue(hash_text);
           let pk = proposalData.proposal_constitution_content;
           pk.prop_guardrails_script_hash = hash_text;
           setProposalData({...proposalData, proposal_constitution_content: pk});
       }
     const constcheckLinkValue = (prop_value, prop_name) => {
+
         const isValid = isValidURLFormat(prop_value);
+        const isValid1 = isValidURLLength(prop_value);
         setConstitutionManagerErrors((prev) => ({
                                       ...prev, 
-                                      [prop_name] :isValid ? false : 'Invalid URL format'}));
+                                      [prop_name] :isValid ? (isValid1 === true)? null: "Url longer than 128 char" : 'Invalid URL format'}));
     }
+    const constcheckHashValue = (hash_text) => {
+       // const isValid = true;
+        setConstitutionManagerErrors((prev) => ({
+                                      ...prev, 
+                                    [prop_name] :isValid ? null : 'Invalid HASH value'}));
+    }
+
     useEffect(() => {
          let pk = proposalData.proposal_constitution_content;
             if(pk != undefined)
             {
-                console.log(pk);
                 if(Boolean(pk.prop_constitution_url))
                     constcheckLinkValue(pk.prop_constitution_url,'prop_constitution_url')
                 if(Boolean(pk.prop_guardrails_script_url))
