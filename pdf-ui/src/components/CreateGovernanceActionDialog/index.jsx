@@ -94,18 +94,7 @@ const CreateGovernanceActionDialog = ({ open = false, onClose = false }) => {
                     setIsContinueDisabled(false);
                 }
             }
-            if (proposalData?.gov_action_type_id==3){
-                if ((proposalData?.proposal_constitution_content?.prop_constitution_url =='')
-                    ||
-                    constitutionErrors.prop_constitution_url
-                    ||
-                    constitutionErrors.prop_guardrails_script_url
-                ) {
-                    return setIsContinueDisabled(true);
-                } else {
-                    setIsContinueDisabled(false);
-                }
-            }
+            
             const selectedLabel = governanceActionTypes.find(
                 (option) => option?.value === proposalData?.gov_action_type_id
             )?.label;
@@ -124,22 +113,22 @@ const CreateGovernanceActionDialog = ({ open = false, onClose = false }) => {
                         setIsContinueDisabled(false);
                     }
                 }
-            } else {
-                setIsContinueDisabled(false);
-            }
+            } 
             if (selectedType == 3){
-                if ((proposalData?.proposal_constitution_content?.prop_constitution_url =='')
-                    ||
-                    constitutionErrors.prop_constitution_url
-                    ||
-                    constitutionErrors.prop_guardrails_script_url
-                ) {
+                if(!proposalData.proposal_constitution_content.prop_constitution_url || constitutionErrors.prop_constitution_url)
                     return setIsContinueDisabled(true);
-                } else {
+                if(proposalData.proposal_constitution_content.prop_have_guardrails_script)
+                {
+                    if(constitutionErrors.prop_guardrails_script_url || constitutionErrors.prop_guardrails_script_hash)
+                        return setIsContinueDisabled(true);
+                }
+                else {
                     setIsContinueDisabled(false);
                 }
             }
-
+            else {
+                setIsContinueDisabled(false);
+            }
         } else {
             setIsContinueDisabled(true);
         }
