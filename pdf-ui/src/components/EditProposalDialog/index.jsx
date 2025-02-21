@@ -1,48 +1,18 @@
 'use client';
 
 import { useTheme } from '@emotion/react';
-import {
-    IconCheveronLeft,
-    IconInformationCircle,
-    IconPencil,
-    IconTrash,
-    IconX,
-} from '@intersect.mbo/intersectmbo.org-icons-set';
-import {
-    Box,
-    Button,
-    Card,
-    CardContent,
-    Dialog,
-    Grid,
-    IconButton,
-    MenuItem,
-    Modal,
-    TextField,
-    Typography,
-    useMediaQuery,
-} from '@mui/material';
+import { IconCheveronLeft,IconInformationCircle,IconPencil,IconTrash,IconX} from '@intersect.mbo/intersectmbo.org-icons-set';
+import { Box, Button, Card, CardContent, Dialog, Grid, IconButton, MenuItem, Modal,TextField,Typography,useMediaQuery,Checkbox,FormControlLabel} from '@mui/material';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAppContext } from '../../context/context';
-import {
-    createProposalContent,
-    deleteProposal,
-    getGovernanceActionTypes,
-} from '../../lib/api';
-import {
-    containsString,
-    formatIsoDate,
-    isRewardAddress,
-    maxLengthCheck,
-    numberValidation,
-} from '../../lib/utils';
+import { createProposalContent, deleteProposal, getGovernanceActionTypes} from '../../lib/api';
+import { containsString, formatIsoDate, isRewardAddress, maxLengthCheck, numberValidation} from '../../lib/utils';
 import { LinkManager } from '../CreationGoveranceAction';
 import { WithdrawalsManager } from '../CreationGoveranceAction';
+import { ConstitutionManager } from '../CreationGoveranceAction'; 
 import DeleteProposalModal from '../DeleteProposalModal';
-
 import CreateGA2 from '../../assets/svg/CreateGA2.jsx';
-
 const style = {
     position: 'absolute',
     top: '50%',
@@ -57,7 +27,6 @@ const style = {
     boxShadow: 24,
     borderRadius: '20px',
 };
-
 const EditProposalDialog = ({
     proposal,
     openEditDialog,
@@ -83,9 +52,11 @@ const EditProposalDialog = ({
         proposal?.attributes?.content?.attributes?.gov_action_type?.attributes
             ?.gov_action_type_name
     );
+    const [selectedGovActionId, setSelectedGovActionId] = useState(
+        proposal?.attributes?.content?.attributes?.gov_action_type?.id
+    );
     const [showProposalDeleteModal, setShowProposalDeleteModal] =
         useState(false);
-
     const [errors, setErrors] = useState({
         name: false,
         abstract: false,
@@ -98,15 +69,12 @@ const EditProposalDialog = ({
         motivation: '',
         rationale: '',
     });
-
     const [linksErrors, setLinksErrors] = useState({});
     const [withdrawalsErrors, setWithdrawalsErrors] = useState({});
-
-
+    const [constitutionErrors,setConstitutionErrors] = useState({});
     const isSmallScreen = useMediaQuery((theme) =>
         theme.breakpoints.down('sm')
     );
-
     const handleIsSaveDisabled = () => {
         if (
             draft?.gov_action_type_id &&
@@ -119,7 +87,7 @@ const EditProposalDialog = ({
             draft?.prop_rationale &&
             !errors?.rationale
         ) {
-            if (draft?.proposal_links) {
+            if (draft?.proposal_links.length > 0) {
                 if (
                     draft?.proposal_links?.some(
                         (link) => !link.prop_link || !link.prop_link_text
@@ -131,7 +99,7 @@ const EditProposalDialog = ({
                     setIsSaveDisabled(false);
                 }
             }
-            if (draft?.proposal_withdrawals) {
+            if (draft?.gov_action_type_id==2) {
                  if (
                      draft?.proposal_withdrawals?.some(
                          (proposal_withdrawal) => !proposal_withdrawal || !proposal_withdrawal.prop_receiving_address
@@ -142,17 +110,43 @@ const EditProposalDialog = ({
                  } else {
                      setIsSaveDisabled(false);
                  }
-             }
-             const selectedLabel = governanceActionTypes.find(
-                (option) => option?.value === draft?.gov_action_type_id
-            )?.label;
+            }
+            if (draft?.gov_action_type_id==3){
+                if ((draft?.proposal_constitution_content?.prop_constitution_url =='')
+                    ||
+                    constitutionErrors.prop_constitution_url
+                    ||
+                    constitutionErrors.prop_guardrails_script_url
+                ) {
+                    return setIsSaveDisabled(true);
+                } else {
+                    setIsSaveDisabled(false);
+                }
+            }
 
-            if (selectedLabel === 'Treasury') {
+            const selectedLabel = governanceActionTypes.find((option) => option?.value === draft?.gov_action_type_id)?.label;
+            const selectedType = governanceActionTypes.find((option) => option?.value === draft?.gov_action_type_id)?.value;
+
+            if (selectedType === 2) {
                 if (
                     draft?.prop_receiving_address &&
                     !errors?.address &&
                     draft?.prop_amount &&
                     !errors?.amount
+                ) {
+                    setIsSaveDisabled(false);
+                } else {
+                    setIsSaveDisabled(true);
+                }
+            } else {
+                setIsSaveDisabled(false);
+            }
+            if (selectedType === 3) {
+                if (
+                    draft?.proposal_constitution_content.prop_constitution_url &&
+                    !errors?.prop_constitution_url &&
+                    draft?.proposal_constitution_content.prop_guardrails_script_url &&
+                    !errors?.prop_guardrails_script_url                    
                 ) {
                     setIsSaveDisabled(false);
                 } else {
@@ -182,16 +176,16 @@ const EditProposalDialog = ({
                 proposalData?.attributes?.content?.attributes?.proposal_withdrawals,
             proposal_links:
                 proposalData?.attributes?.content?.attributes?.proposal_links,
+            proposal_constitution_content:
+                proposalData?.attributes?.content?.attributes?.proposal_constitution_content || {}
         };
         return draft;
     };
-
     const handleDeleteProposal = async () => {
         setLoading(true);
         try {
             const response = await deleteProposal(proposal?.id);
             if (!response) return;
-
             setShowProposalDeleteModal(false);
             setOpenDeleteConfirmationModal(true);
         } catch (error) {
@@ -200,7 +194,6 @@ const EditProposalDialog = ({
             setLoading(false);
         }
     };
-
     const handleTextAreaChange = (event, field, errorField) => {
         const value = event?.target?.value;
         setDraft((prev) => ({
@@ -237,7 +230,6 @@ const EditProposalDialog = ({
             [errorField]: errorMessage === true ? false : true,
         }));
     };
-
     const handleUpdatePorposal = async (isDraft = false) => {
         setLoading(true);
 
@@ -266,19 +258,15 @@ const EditProposalDialog = ({
             setLoading(false);
         }
     };
-
     const handleOpenSaveDraftModal = () => {
         setOpenSaveDraftModal(true);
     };
-
     const handleCloseSaveDraftModal = () => {
         setOpenSaveDraftModal(false);
     };
-
     const handleOpenPublishModal = () => {
         setOpenPublishModal(true);
     };
-
     const handleClosePublishModal = () => {
         setOpenPublishModal(false);
     };
@@ -292,7 +280,6 @@ const EditProposalDialog = ({
                 value: item?.id,
                 label: item?.attributes?.gov_action_type_name,
             }));
-
             setGovernanceActionTypes(mappedData);
         } catch (error) {
             console.error(error);
@@ -300,7 +287,6 @@ const EditProposalDialog = ({
             setLoading(false);
         }
     };
-
     const handleChange = (e) => {
         const selectedValue = e.target.value;
         const selectedLabel = governanceActionTypes.find(
@@ -314,20 +300,29 @@ const EditProposalDialog = ({
             prop_amount: null,
         }));
 
+        if(selectedValue  != 3)
+        { //cleanup fields co
+            setDraft((prev) => ({
+                ...prev,
+                proposal_constitution_content:{}
+            }));
+        }
+        setSelectedGovActionId(selectedValue);
         setSelectedGovActionName(selectedLabel);
     };
-
     useEffect(() => {
         fetchGovernanceActionTypes();
     }, []);
     useEffect(() => {
         setDraft(setDraftData(proposal));
+        handleIsSaveDisabled();
     }, [proposal]);
     useEffect(() => {
         handleIsSaveDisabled();
-    }, [draft, errors, linksErrors]);
+    }, [draft, errors, linksErrors, withdrawalsErrors, constitutionErrors]);
 
     return (
+        <>
         <Dialog
             fullScreen
             open={openEditDialog}
@@ -483,34 +478,7 @@ const EditProposalDialog = ({
                                                 mb: 2,
                                             }}
                                         >
-                                            {/* <Box>
-                                                <Typography
-                                                    variant='body2'
-                                                    component='p'
-                                                    sx={{
-                                                        display: 'flex',
-                                                        justifyContent:
-                                                            'center',
-                                                        alignItems: 'center',
-                                                        borderTopLeftRadius:
-                                                            '8px',
-                                                        borderTopRightRadius:
-                                                            '8px',
-                                                        borderBottomLeftRadius: 0,
-                                                        borderBottomRightRadius: 0,
-                                                        gap: 1,
-                                                        backgroundColor:
-                                                            '#B8CDFF',
-                                                        color: 'text.black',
-                                                    }}
-                                                >
-                                                    <IconInformationCircle />
-                                                    {`Submit: ${formatIsoDate(
-                                                        proposal?.attributes
-                                                            ?.createdAt
-                                                    )}`}
-                                                </Typography>
-                                            </Box> */}
+                                           
                                             <Box>
                                                 <Typography
                                                     variant='body2'
@@ -545,7 +513,7 @@ const EditProposalDialog = ({
                                         <TextField
                                             select
                                             label='Governance Action Type'
-                                            fullWidth
+                                            fullwidth
                                             required
                                             value={
                                                 draft?.gov_action_type_id || ''
@@ -575,7 +543,7 @@ const EditProposalDialog = ({
                                             label='Title'
                                             variant='outlined'
                                             value={draft?.prop_name || ''}
-                                            fullWidth
+                                            fullwidth
                                             onChange={(e) =>
                                                 handleTextAreaChange(
                                                     e,
@@ -781,8 +749,9 @@ const EditProposalDialog = ({
                                             }}
                                         />
 
-                                        {selectedGovActionName ===
-                                        'Treasury' ? (
+                                        {/// 'Treasury'
+                                        selectedGovActionId === 2
+                                        ? (
                                             <>
                                             <WithdrawalsManager
                                                 proposalData={draft}
@@ -792,48 +761,59 @@ const EditProposalDialog = ({
                                             />
                                             </>
                                         ) : null}
-
-                                        <Box
-                                            sx={{
-                                                display: 'flex',
-                                                flexDirection: 'column',
-                                                justifyContent: 'center',
-                                                alignItems: 'center',
-                                                mt: 2,
-                                            }}
+                                        { /// 'Constitution'
+                                         selectedGovActionId === 3 ? (
+                                        <ConstitutionManager
+                                            proposalData={draft}
+                                            setProposalData={setDraft}
+                                            constitutionManagerErrors={constitutionErrors}
+                                            setConstitutionManagerErrors={setConstitutionErrors}
+                                        ></ConstitutionManager>
+                                            ) : null
+                                        }
+                                       
+                                       
+                                    <Box
+                                        sx={{
+                                            display: 'flex',
+                                            flexDirection: 'column',
+                                            justifyContent: 'center',
+                                            alignItems: 'center',
+                                            mt: 2,
+                                        }}
+                                    >
+                                        <Typography
+                                            variant='subtitle2'
+                                            color={(theme) =>
+                                                theme.palette.text.orange
+                                            }
+                                            gutterBottom
                                         >
-                                            <Typography
-                                                variant='subtitle2'
-                                                color={(theme) =>
-                                                    theme.palette.text.orange
-                                                }
-                                                gutterBottom
-                                            >
-                                                OPTIONAL
-                                            </Typography>
+                                            OPTIONAL
+                                        </Typography>
 
-                                            <Typography
-                                                variant='h5'
-                                                textAlign='center'
-                                                gutterBottom
-                                            >
-                                                References and Supporting
-                                                Information
-                                            </Typography>
+                                        <Typography
+                                            variant='h5'
+                                            textAlign='center'
+                                            gutterBottom
+                                        >
+                                            References and Supporting
+                                            Information
+                                        </Typography>
 
-                                            <Typography
-                                                variant='subtitle2'
-                                                textAlign='center'
-                                                color={(theme) =>
-                                                    theme.palette.text.grey
-                                                }
-                                                gutterBottom
-                                            >
-                                                Links to additional content or
-                                                social media contacts (up to 7
-                                                entries)
-                                            </Typography>
-                                        </Box>
+                                        <Typography
+                                            variant='subtitle2'
+                                            textAlign='center'
+                                            color={(theme) =>
+                                                theme.palette.text.grey
+                                            }
+                                            gutterBottom
+                                        >
+                                            Links to additional content or
+                                            social media contacts (up to 7
+                                            entries)
+                                        </Typography>
+                                    </Box>
                                         <LinkManager
                                             proposalData={draft}
                                             setProposalData={setDraft}
@@ -865,7 +845,7 @@ const EditProposalDialog = ({
                                                 sx={{
                                                     mb: { xs: 2, md: 0 },
                                                 }}
-                                                fullWidth={isSmallScreen}
+                                                fullwidth={"" + isSmallScreen}
                                                 onClick={() => {
                                                     handleCloseEditDialog();
                                                 }}
@@ -892,7 +872,7 @@ const EditProposalDialog = ({
                                             >
                                                 <Button
                                                     variant='text'
-                                                    fullWidth
+                                                    fullwidth
                                                     disabled={isSaveDisabled}
                                                     onClick={async () => {
                                                         await handleUpdatePorposal(
@@ -916,7 +896,7 @@ const EditProposalDialog = ({
                                                     sx={{
                                                         whiteSpace: 'nowrap',
                                                     }}
-                                                    fullWidth
+                                                    fullwidth
                                                     disabled={isSaveDisabled}
                                                     onClick={() => {
                                                         handleOpenPublishModal();
@@ -979,7 +959,7 @@ const EditProposalDialog = ({
                         >
                             <Button
                                 variant='contained'
-                                fullWidth
+                                fullwidth
                                 onClick={() => {
                                     handleCloseSaveDraftModal();
                                     handleCloseEditDialog();
@@ -1035,7 +1015,7 @@ const EditProposalDialog = ({
                         >
                             <Button
                                 variant='contained'
-                                fullWidth
+                                fullwidth
                                 onClick={async () => {
                                     await handleUpdatePorposal(false);
                                     handleCloseSaveDraftModal();
@@ -1048,7 +1028,7 @@ const EditProposalDialog = ({
                             </Button>
                             <Button
                                 variant='outlined'
-                                fullWidth
+                                fullwidth
                                 onClick={() => {
                                     handleClosePublishModal();
                                 }}
@@ -1112,7 +1092,7 @@ const EditProposalDialog = ({
                         <Box display='flex' flexDirection='column' m={2}>
                             <Button
                                 variant='contained'
-                                fullWidth
+                                fullwidth
                                 onClick={() => {
                                     setOpenDeleteConfirmationModal(false);
                                     handleCloseEditDialog();
@@ -1127,13 +1107,11 @@ const EditProposalDialog = ({
                         </Box>
                     </Box>
                 </Modal>
-
                 <DeleteProposalModal
                     open={showProposalDeleteModal}
                     onClose={() => setShowProposalDeleteModal(false)}
                     handleDeleteProposal={handleDeleteProposal}
                 />
-
                 <Box
                     sx={{
                         position: 'absolute',
@@ -1146,6 +1124,7 @@ const EditProposalDialog = ({
                 </Box>
             </Box>
         </Dialog>
+        </>
     );
 };
 
