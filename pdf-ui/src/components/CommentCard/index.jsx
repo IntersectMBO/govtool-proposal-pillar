@@ -93,23 +93,18 @@ const CommentCard = ({ comment, proposal }) => {
         }
     };
 
-    const handleKeyDown = (event) => {
-        if (event.key === 'Enter') {
-            event.preventDefault();
-        }
-    };
-
-    const handleChange = (event) => {
+       const handleChange = (event) => {
         let value = event.target.value;
-        if (value.startsWith(' ')) {
-            value = value.trimStart();
-        }
-        value = value.replace(/  +/g, ' ');
+        
 
         if (value.length <= subcommentMaxLength) {
             setSubcommentText(value);
         }
     };
+    const handleBlur = (event) => {
+        const cleanedValue = event.target.value.replace(/[^\S\n]+/g, ' ').trim();
+        setSubcommentText(cleanedValue);
+      };
 
     useEffect(() => {
         if (showSubcomments) {
@@ -391,6 +386,7 @@ const CommentCard = ({ comment, proposal }) => {
                                     value={subcommentText || ''}
                                     variant='outlined'
                                     onChange={(e) => handleChange(e)}
+                                    onBlur={handleBlur}
                                     inputProps={{
                                         maxLength: subcommentMaxLength,
                                         onKeyDown: handleKeyDown,

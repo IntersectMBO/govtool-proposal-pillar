@@ -138,7 +138,8 @@ const InformationStorageStep = ({ proposal, handleCloseSubmissionDialog }) => {
                             withdrawals: getWithdrawalsArray()
                         });
                 }
-                else if (parseInt(proposalGATypeId) === 3){
+                else if (parseInt(proposalGATypeId) === 3)
+                {
                     const constitUrl = proposal?.attributes?.content?.attributes.proposal_constitution_content.data.attributes.prop_constitution_url;   
                     const constiUrlHash = await getHashFromUrl(constitUrl);
                     govActionBuilder =
@@ -150,8 +151,18 @@ const InformationStorageStep = ({ proposal, handleCloseSubmissionDialog }) => {
                     //prevGovernanceActionHash: string;
                     //prevGovernanceActionIndex: number;
                     //scriptHash: string;
-                });
-            }
+                    });
+                }
+                else if(parseInt(proposalGATypeId) === 4)
+                { ///Motion of No Confidence
+                    govActionBuilder =
+                        await walletAPI.buildNoConfidenceGovernanceAction({
+                            hash: hashData,
+                            url: fileURL,
+                        });
+                }
+
+
                 if (govActionBuilder) {
                     const tx = await walletAPI.buildSignSubmitConwayCertTx({
                         govActionBuilder: govActionBuilder,

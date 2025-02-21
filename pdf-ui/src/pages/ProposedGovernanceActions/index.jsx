@@ -504,6 +504,7 @@ const ProposedGovernanceActions = () => {
                                             backgroundColor: 'action.hover', 
                                         },
                                     }}
+                                    data-testid="sort-button"
                                 >
                                   Sort: {sortType === 'desc' ? 'Last modified (desc)' : 'Last modified (asc)'}  
                                 </Button>

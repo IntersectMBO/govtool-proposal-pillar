@@ -8,6 +8,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 As a minor extension, we also keep a semantic version for the `UNRELEASED`
 changes.
 
+## [v0.6.2](https://www.npmjs.com/package/@intersect.mbo/pdf-ui/v/0.6.2) 2025-02-19
+### Fixed 
+- [Fix Inaccurate Validation and UI Issues in Constitution Type Proposal Form](https://github.com/IntersectMBO/govtool/issues/2965)
+- [Fixed stucking After Deselecting Guardrails Script with Invalid URL](https://github.com/IntersectMBO/govtool/issues/2992)
+- [Fixed reflection of Updated Constitution URL, Gradual Script Hash, and URL on Proposal Edit](https://github.com/IntersectMBO/govtool/issues/2967)
+- [Added test IDs for PDF components](https://github.com/IntersectMBO/govtool/issues/2988)
+- [Fixed Cursor Jumping to End & No Soft Line Breaks](https://github.com/IntersectMBO/govtool/issues/3019)
+
+
 ## [v0.6.1](https://www.npmjs.com/package/@intersect.mbo/pdf-ui/v/0.6.1) 2025-02-12
 ### Fixed 
 - [Test ID for Sort Button](https://github.com/IntersectMBO/govtool/issues/2838)
