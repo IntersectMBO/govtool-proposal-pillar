@@ -29,6 +29,7 @@ module.exports = createCoreController(
       if (!sanitizedQueryParams.filters["$and"]) {
         sanitizedQueryParams.filters["$and"] = [];
       }
+      
 
       /////GOV ACTION TYPE///////////
       
@@ -272,7 +273,7 @@ module.exports = createCoreController(
         // chek if treasuiry action have adress and amount
         const gaTypes = await strapi.entityService.findOne("api::governance-action-type.governance-action-type",data?.gov_action_type_id)
         // 2. Treasuty
-        if(gov_action_type_id == 2)
+        if(gov_action_type_id == 2 && !data?.is_draft)
         {
             // check if withdrawal parameters exist
             if (data?.proposal_withdrawals?.length === 0) {
@@ -286,7 +287,7 @@ module.exports = createCoreController(
               return ctx.badRequest(null, "Withdrawal addrress or amount parametars not valid");
         }
         // 3. Constitution
-        if (gov_action_type_id == 3) {
+        if (gov_action_type_id == 3 && !data?.is_draft) {
           const { proposal_constitution_content } = data;
           // Check if proposal_constitution_content exists
           if (!proposal_constitution_content) {
