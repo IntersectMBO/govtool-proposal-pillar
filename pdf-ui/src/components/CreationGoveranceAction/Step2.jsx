@@ -28,7 +28,6 @@ const Step2 = ({
     const abstractMaxLength = 2500;
     const motivationRationaleMaxLength = 12000;
     const { setLoading } = useAppContext();
-   
     const [selectedGovActionName, setSelectedGovActionName] = useState(
         governanceActionTypes.find(
             (option) => option?.value === +proposalData?.gov_action_type_id
@@ -37,6 +36,7 @@ const Step2 = ({
     const [selectedGovActionId, setSelectedGovActionId] = useState(
         proposalData?.attributes?.content?.attributes?.gov_action_type?.id || null
     );
+    const [isDraftDisabled,setIsDraftDisabled] = useState(true);
     const handleChange = (e) => {
         const selectedValue = e.target.value;
         const selectedLabel = governanceActionTypes.find(
@@ -125,6 +125,17 @@ const Step2 = ({
         setSelectedGovActionId(+proposalData?.gov_action_type_id)
 
     },[governanceActionTypes])
+    useEffect(() => {
+        if(proposalData?.gov_action_type_id && proposalData?.prop_name.length!=0)
+        {
+            setIsDraftDisabled(false)
+        }
+        else
+        {
+            setIsDraftDisabled(true)
+        }
+
+    },[proposalData])
     return (
         <Card>
             <CardContent
@@ -477,7 +488,7 @@ const Step2 = ({
                             <Button
                                 variant='text'
                                 fullWidth
-                                disabled={isContinueDisabled}
+                                disabled={isDraftDisabled}
                                 onClick={() => {
                                     handleSaveDraft(true);
                                 }}
