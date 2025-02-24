@@ -8,7 +8,7 @@ module.exports = {
 
           if (!row3) {
               await knex('governance_action_types').insert({
-                  id: 3,
+                  id: 4,
                   gov_action_type_name: 'Motion of No Confidence',
                   created_at: knex.fn.now(),
                   updated_at: knex.fn.now(),
