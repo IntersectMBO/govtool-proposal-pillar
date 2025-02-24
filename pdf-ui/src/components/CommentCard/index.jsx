@@ -389,7 +389,6 @@ const CommentCard = ({ comment, proposal }) => {
                                     onBlur={handleBlur}
                                     inputProps={{
                                         maxLength: subcommentMaxLength,
-                                        onKeyDown: handleKeyDown,
                                         spellCheck: 'false',
                                         autoCorrect: 'off',
                                         autoCapitalize: 'none',

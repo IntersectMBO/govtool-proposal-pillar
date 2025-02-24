@@ -18,6 +18,12 @@ const ConstitutionManager = ({
         {
             pk.prop_guardrails_script_url = "";
             pk.prop_guardrails_script_hash ="";
+            setConstitutionManagerErrors((prev) => ({...prev, ["prop_guardrails_script_url"] : null }));
+            setConstitutionManagerErrors((prev) => ({...prev,  ["prop_guardrails_script_hash"] : null }));
+        }
+        else
+        {
+            constcheckLinkValue("",'prop_guardrails_script_url');
         }
         setProposalData({...proposalData, proposal_constitution_content: pk});
         setConstitutionManagerErrors((prev) => ({...prev, ["prop_guardrails_script_url"] : null }));
@@ -43,11 +49,21 @@ const ConstitutionManager = ({
           setProposalData({...proposalData, proposal_constitution_content: pk});
       }
     const constcheckLinkValue = (prop_value, prop_name) => {
-        const isValid = isValidURLFormat(prop_value);
-        const isValid1 = isValidURLLength(prop_value);
-        setConstitutionManagerErrors((prev) => ({
-                                      ...prev, 
-                                      [prop_name] :isValid ? (isValid1 === true)? null: "Url longer than 128 char" : 'Invalid URL format'}));
+
+        if(prop_value === "")
+        {
+            setConstitutionManagerErrors((prev) => ({
+                ...prev, 
+                [prop_name] : "Url is mandatory"}));
+        }
+        else
+        {
+            const isValid = isValidURLFormat(prop_value);
+            const isValid1 = isValidURLLength(prop_value);
+            setConstitutionManagerErrors((prev) => ({
+                                          ...prev, 
+                                          [prop_name] :isValid ? (isValid1 === true)? null: "Url longer than 128 char" : 'Invalid URL format'}));
+            }
     }
     const constcheckHashValue = (prop_value, prop_name) => {
         let isValid = false;

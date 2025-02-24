@@ -5,6 +5,7 @@ module.exports = {
           const row1 = await knex('governance_action_types')
               .where({ id: 1 })
               .first();
+
           if (row1 && row1.gov_action_type_name !== 'Info Action') {
               await knex('governance_action_types')
                   .where({ id: 1 })
