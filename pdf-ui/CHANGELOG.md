@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 As a minor extension, we also keep a semantic version for the `UNRELEASED`
 changes.
+## [v0.6.3](https://www.npmjs.com/package/@intersect.mbo/pdf-ui/v/0.6.3) 2025-02-24
+### Fixed 
+ - [Fixed reply on comments #3067](https://github.com/IntersectMBO/govtool/issues/3067)
+ - [Fixed saving drafts on create proposal page](https://github.com/IntersectMBO/govtool/issues/3045)
+
 
 ## [v0.6.2](https://www.npmjs.com/package/@intersect.mbo/pdf-ui/v/0.6.2) 2025-02-19
 ### Fixed 
@@ -21,9 +26,6 @@ changes.
 ### Fixed 
 - [Test ID for Sort Button](https://github.com/IntersectMBO/govtool/issues/2838)
 - [Fix Show all proposal Details on Details Page](https://github.com/IntersectMBO/govtool/issues/2831)
-
-## [v0.6.1](https://www.npmjs.com/package/@intersect.mbo/pdf-ui/v/0.6.0) 2025-02-10
-### Added 
 - Added new type Constitution in proposal
 
 ## [v0.6.0](https://www.npmjs.com/package/@intersect.mbo/pdf-ui/v/0.5.12) 2025-02-07

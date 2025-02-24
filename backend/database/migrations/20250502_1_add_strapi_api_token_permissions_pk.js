@@ -18,6 +18,7 @@ module.exports = {
         'up_users',
         'route_permissions'
       ];
+
       for (const table of tables) {
         try {
           const primaryKeyCheck = await knex.raw(`
