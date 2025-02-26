@@ -126,7 +126,7 @@ const Step2 = ({
 
     },[governanceActionTypes])
     useEffect(() => {
-        if(proposalData?.gov_action_type_id && proposalData?.prop_name.length!=0)
+        if(proposalData?.gov_action_type_id && proposalData?.prop_name?.length!=0)
         {
             setIsDraftDisabled(false)
         }
