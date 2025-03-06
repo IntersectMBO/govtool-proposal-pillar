@@ -1211,6 +1211,23 @@ const SingleGovernanceAction = ({ id }) => {
                                  ):null }
                                 </div>
                                 ):null}
+                                {showFullText && totalCharLength > maxLength && (
+                                        <Button
+                                            variant="text"
+                                            onClick={() => setShowFullText(!showFullText)}
+                                            sx={{
+                                                textTransform: 'none',
+                                                padding: '0',
+                                                marginTop: '8px', 
+                                                color: 'primary.main',
+                                                fontWeight: 'bold',
+                                                '&:hover': {
+                                                    backgroundColor: 'transparent',
+                                                },
+                                            }}
+                                        >
+                                           {showFullText ? 'Show less' : 'Read more'}
+                                        </Button>)}
                                 {proposal?.attributes?.content?.attributes
                                     ?.proposal_links?.length > 0 && (
                                     <Box mt={4}>
