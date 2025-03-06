@@ -139,7 +139,7 @@ const SingleGovernanceAction = ({ id }) => {
         setShareAnchorEl(event.currentTarget);
     };
     // Read More / Show Less logic
-    const [showFullText, setShowFullText] = useState(false);
+    const [showFullText, setShowFullText] = useState(true);
     const [truncatedText, setTruncatedText] = useState(''); 
     const [totalCharLength, setTotalCharLength] = useState(0);
     const [AbstractMarkdownText, setAbstractMarkdownText] = useState('');
@@ -204,7 +204,7 @@ const SingleGovernanceAction = ({ id }) => {
             let totalLength = response.attributes?.content?.attributes?.prop_abstract.length + response.attributes?.content?.attributes?.prop_motivation.length + response.attributes?.content?.attributes?.prop_rationale.length;
             setProposal(response);
             setTotalCharLength(totalLength);    
-            setAbstractMarkdownText(response?.attributes?.content?.attributes?.prop_abstract);
+            setAbstractMarkdownText(response?.attributes?.content?.attributes?.prop_abstract);   
             if(totalLength > maxLength)
                 setShowFullText(false);
         } catch (error) {
@@ -1055,7 +1055,7 @@ const SingleGovernanceAction = ({ id }) => {
                                         {showFullText || !maxLength ? AbstractMarkdownText : truncatedText}
                                     </ReactMarkdown>
                                     </div>
-                                    {!showFullText && maxLength && totalCharLength > maxLength && (
+                                    {!showFullText && totalCharLength > maxLength && (
                                         <Button
                                             variant="text"
                                             onClick={() => setShowFullText(!showFullText)}
@@ -1108,24 +1108,48 @@ const SingleGovernanceAction = ({ id }) => {
                                         </ReactMarkdown>
                                         </div>
                                     </Box>)}
-                                    {showFullText && totalCharLength>maxLength ? (
-                                    <Button
-                                            variant="text"
-                                            onClick={() => setShowFullText(!showFullText)}
-                                            sx={{
-                                                textTransform: 'none',
-                                                padding: '0',
-                                                marginTop: '8px', 
-                                                color: 'primary.main',
-                                                fontWeight: 'bold',
-                                                '&:hover': {
-                                                    backgroundColor: 'transparent',
-                                                },
-                                            }}
-                                        >
-                                            {showFullText ? 'Show less' : 'Read more'}
-                                    </Button>                                
-                                ):null }
+                                    {console.log("Trnutni at:",proposal?.attributes?.content
+                                                ?.attributes?.gov_action_type_id, "a withdrawals ",proposal.proposal_withdrawals )}
+                                {showFullText &&  proposal?.attributes?.content
+                                                ?.attributes?.gov_action_type_id == 2?
+                                                proposal?.attributes?.content
+                                                ?.attributes.proposal_withdrawals?.map(
+                                    (withdrawal, index) => (
+                                    <Box>
+                                        <Box>
+                                            <Typography
+                                                variant='body1'
+                                                color={theme.palette.text.grey}
+                                                gutterBottom
+                                            >
+                                                Receiving address
+                                            </Typography>
+                                            <Typography
+                                                variant='body1'
+                                                gutterBottom
+                                                data-testid={`receiving-address-${index}-content`}
+                                            >
+                                                {withdrawal.prop_receiving_address}
+                                            </Typography>
+                                        </Box>
+                                        <Box>
+                                            <Typography
+                                                variant='body1'
+                                                color={theme.palette.text.grey}
+                                                gutterBottom
+                                            >
+                                                Amount
+                                            </Typography>
+                                            <Typography
+                                                variant='body1'
+                                                gutterBottom
+                                                data-testid={`amount-${index}-content`}
+                                            >
+                                                {withdrawal.prop_amount}
+                                            </Typography>
+                                        </Box>
+                                    </Box>
+                                )): null }
                                 { showFullText &&  proposal?.attributes?.content
                                                 ?.attributes?.gov_action_type_id == 3? (
                                 <div>
@@ -1138,7 +1162,7 @@ const SingleGovernanceAction = ({ id }) => {
                                         >
                                         New constitution URL
                                         </Typography>
-                                        <div data-testid="new-constitution-url">
+                                        <div data-testid="new-constitution-url-content">
                                         <ReactMarkdown>
                                             {proposal?.attributes?.content
                                                 ?.attributes?.proposal_constitution_content.data.attributes.prop_constitution_url
@@ -1158,7 +1182,7 @@ const SingleGovernanceAction = ({ id }) => {
                                             >
                                             Guardrails script URL
                                             </Typography>
-                                            <div data-testid="rationale-content">
+                                            <div data-testid="guardrails-script-url-content">
                                             <ReactMarkdown>
                                             {proposal?.attributes?.content
                                                     ?.attributes?.proposal_constitution_content.data.attributes.prop_guardrails_script_url
@@ -1175,7 +1199,7 @@ const SingleGovernanceAction = ({ id }) => {
                                         >
                                         Guardrails script hash
                                         </Typography>
-                                        <div data-testid="rationale-content">
+                                        <div data-testid="guardrails-script-hash-content">
                                         <ReactMarkdown>
                                             {proposal?.attributes?.content
                                                     ?.attributes?.proposal_constitution_content.data.attributes.prop_guardrails_script_hash
