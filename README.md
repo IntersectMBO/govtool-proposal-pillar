@@ -1,3 +1,7 @@
+## ⚠️ This repository is now archived
+
+This project has been moved to [IntersectMBO/govtool-proposal-pillar](https://github.com/IntersectMBO/govtool-proposal-pillar).
+
 # GovTool Proposal Pillar
 
 This is the repository which holds GovTool's Voting Pillar packages.
