@@ -24,6 +24,12 @@
     "comment_text": {
       "type": "text",
       "maxLength": 2500
+    },
+    "comments_reports": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::comments-report.comments-report",
+      "mappedBy": "comment"
     }
   }
 }

@@ -12,3 +12,7 @@ export { default as ProposalSubmissionDialog } from './ProposalSubmissionDialog'
 export { default as CreateGovernanceActionDialog } from './CreateGovernanceActionDialog';
 export { default as DeleteProposalModal } from './DeleteProposalModal';
 export { default as MarkdownTextComponent } from './MarkdownTextComponent';
+export { default as CommentReview } from './CommentReview';
+export { default as CommentReportPopup } from './CommentReportPopup';
+export { default as CreateBudgetDiscussionDialog } from './CreateBudgetDiscussionDialog';
+export { default as BudgetDiscussionsList } from './BudgetDiscussionsList';

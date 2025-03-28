@@ -1,0 +1,18 @@
+{
+  "kind": "collectionType",
+  "collectionName": "nationality_lists",
+  "info": {
+    "singularName": "nationality-list",
+    "pluralName": "nationality-lists",
+    "displayName": "Nationality List"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "nationality_name": {
+      "type": "string"
+    }
+  }
+}

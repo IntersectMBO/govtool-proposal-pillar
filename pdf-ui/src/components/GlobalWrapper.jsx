@@ -9,9 +9,13 @@ import {
     ProposedGovernanceActions,
     SingleGovernanceAction,
     IdentificationPage,
+    CommentReviewPage,
+    ProposedBudgetDiscussion,
+    SingleBudgetDiscussion
 } from '../pages';
 import { loginUserToApp } from '../lib/helpers';
 import { setAxiosBaseURL } from '../lib/axiosInstance'; // Import axiosInstance and setAxiosBaseURL
+import BudgetDiscussion from '../pages/BudgetDiscussion';
 
 const GlobalWrapper = ({ ...props }) => {
     const pathname = props?.pathname;
@@ -43,6 +47,14 @@ const GlobalWrapper = ({ ...props }) => {
             return null;
         }
 
+        return lastSegment;
+    }
+    function getReviewHash(url) {
+        const parts = url.split('/');
+        const lastSegment = parts[parts.length - 1];
+        if (lastSegment.trim() === '') {
+            return null;
+        }
         return lastSegment;
     }
 
@@ -98,14 +110,17 @@ const GlobalWrapper = ({ ...props }) => {
             } else {
                 if (path.includes('propose')) {
                     return <ProposedGovernanceActions />;
-                } else if (
-                    path.includes('proposal_discussion/') &&
-                    getProposalID(path)
-                ) {
+                } else if (path.includes('proposal_discussion/proposal_comment_review/') && getReviewHash(path)) {
+                    return <CommentReviewPage reportHash={getReviewHash(path)} />;    
+                } else if (path.includes('proposal_discussion/budget_discussion/') && getProposalID(path)) {
+                    return <SingleBudgetDiscussion  id={getProposalID(path)} />;  
+                } else if (path.includes('proposal_discussion/budget_discussion')){
+                    return <ProposedBudgetDiscussion />;  
+                } else if (path.includes('proposal_discussion/') && getProposalID(path)) {
                     return <SingleGovernanceAction id={getProposalID(path)} />;
                 } else if (path.includes('proposal_discussion')) {
                     return <ProposedGovernanceActions />;
-                } else {
+               } else {
                     return <ProposedGovernanceActions />;
                 }
             }

@@ -1,0 +1,60 @@
+{
+  "kind": "collectionType",
+  "collectionName": "budget_discussion_contact_informations",
+  "info": {
+    "singularName": "budget-discussion-contact-information",
+    "pluralName": "budget-discussion-contact-informations",
+    "displayName": "Budget Discussion Contact Information",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "beneficiary_full_name": {
+      "type": "string"
+    },
+    "beneficiary_email": {
+      "type": "email"
+    },
+    "beneficiary_country_of_residence": {
+      "type": "string"
+    },
+    "beneficiary_nationality": {
+      "type": "string"
+    },
+    "submission_lead_full_name": {
+      "type": "string"
+    },
+    "submission_lead_email": {
+      "type": "email"
+    },
+    "submited_on_behalf": {
+      "type": "enumeration",
+      "enum": [
+        "Individual",
+        "Company",
+        "Group"
+      ]
+    },
+    "company_name": {
+      "type": "string"
+    },
+    "company_domain_name": {
+      "type": "string"
+    },
+    "country_of_incorporation": {
+      "type": "string"
+    },
+    "group_name": {
+      "type": "string"
+    },
+    "tpe_of_group": {
+      "type": "string"
+    },
+    "key_information_to_identify_group": {
+      "type": "text"
+    }
+  }
+}

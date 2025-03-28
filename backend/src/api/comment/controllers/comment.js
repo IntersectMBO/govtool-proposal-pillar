@@ -15,9 +15,7 @@ module.exports = createCoreController("api::comment.comment", ({ strapi }) => ({
     if (!user) {
       return ctx.badRequest(null, "User is required");
     }
-
     let comment;
-
     const deleteComment = async () => {
       let deletedComment = await strapi.entityService.delete(
         "api::comment.comment",
@@ -89,7 +87,41 @@ module.exports = createCoreController("api::comment.comment", ({ strapi }) => ({
 
   async find(ctx) {
     const sanitizedQueryParams = await this.sanitizeQuery(ctx);
-
+// ako je moderator status true znaci da je report validan i da komentar ne treba prikazati
+sanitizedQueryParams.filters = {
+  ...sanitizedQueryParams.filters,
+  $and: [
+    ...(sanitizedQueryParams.filters.$and || []),
+    // Isključi komentare sa bar jednim reportom gde je moderation_status true
+    {
+      comment_reports: {
+        $not: {
+          $elemMatch: {
+            moderation_status: true
+          }
+        }
+      }
+    },
+    // Proveri da broj reportova sa moderation_status null je manji od 3
+    {
+      $expr: {
+        $lt: [
+          {
+            $size: {
+              $filter: {
+                input: "$comment_reports",
+                as: "report",
+                cond: { $eq: ["$$report.moderation_status", null] }
+              }
+            }
+          },
+          3
+        ]
+      }
+    }
+  ]
+};
+//sanitizedQueryParams.filters["$and"]=[...sanitizedQueryParams.filters["$and"],{comment_reports:{moderation_status:{$ne:true}}}];
     const { results, pagination } = await strapi
       .service("api::comment.comment")
       .find(sanitizedQueryParams);
@@ -122,5 +154,5 @@ module.exports = createCoreController("api::comment.comment", ({ strapi }) => ({
     }
 
     return this.transformResponse(proposalsList, { pagination });
-  },
+  }
 }));

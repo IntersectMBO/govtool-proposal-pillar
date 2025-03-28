@@ -22,6 +22,124 @@ export const getProposals = async (query = '') => {
         return error;
     }
 };
+export const getBudgetDiscussions = async (query = '') => {
+    try {
+        const { data } = await axiosInstance.get(`/api/proposals?${query}`);
+
+        const proposals = data?.data;
+        const pgCount = data?.meta?.pagination?.pageCount;
+        const total = data?.meta?.pagination?.total;
+        return { proposals, pgCount, total };
+    } catch (error) {
+        return error;
+    }
+};
+export const getBudgetDiscussion = async (id) => {
+    try {
+        const { data } = await axiosInstance.get(`/api/proposals/${id}`);
+
+        return data?.data;
+    } catch (error) {
+        throw error;
+    }
+};
+export const getBudgetDiscussionTypes = async () => {
+    try {
+        const { data } = await axiosInstance.get(
+            `/api/budget-discussion-types`
+        );
+        return data;
+    } catch (error) {
+        throw error;
+    }
+};
+export const getCountryList = async () => {
+    try {
+        const { data } = await axiosInstance.get(
+            `/api/country-lists?pagination[pageSize]=1000`
+        );
+        return data;
+    } catch (error) {
+        throw error;
+    }
+};
+export const getNationalityList = async () => {
+    try {
+        const { data } = await axiosInstance.get(
+            `api/nationality-lists?pagination[pageSize]=1000`
+        );
+        return data;
+    } catch (error) {
+        throw error;
+    }
+};
+export const getAllCurrencies = async () => {
+    try {
+        const { data } = await axiosInstance.get(
+            `api/budget-discussion-currency-lists?pagination[pageSize]=1000`
+        );
+        return data;
+    } catch (error) {
+        throw error;
+    }
+};
+export const getBudgetDiscussionRoadMapList = async () => {
+    try {
+        const { data } = await axiosInstance.get(
+            `api/budget-discussion-road-maps?pagination[pageSize]=1000`
+        );
+        return data;
+    } catch (error) {
+        throw error;
+    }
+};
+export const getBudgetDiscussionIntersectCommittee = async () => {
+    try {
+        const { data } = await axiosInstance.get(
+            `api/budget-discussion-intersect-committees?pagination[pageSize]=1000`
+        );
+        return data;
+    } catch (error) {
+        throw error;
+    }
+};
+export const getContractTypeList = async () => {
+    try {
+        const { data } = await axiosInstance.get(
+            `api/budget-discussion-contract-types?pagination[pageSize]=1000`
+        );
+        return data;
+    } catch (error) {
+        throw error;
+    }
+};
+
+export const createBudgetDiscussionDraft = async (data) => {
+    try {
+        const response = await axiosInstance.post(`/api/budget-discussion-drafts`, {
+            data:{
+            draft_data: {
+                ...data,
+            }},
+        });
+        return response?.data;
+    } catch (error) {
+        console.error('Error in createProposal:', error);
+        throw error;
+    }
+};
+
+export const updateBudgetDiscussionDraft = async (data,draftId) => {
+    try {
+        const { data } = await axiosInstance.put(
+            `api/budget-discussion-drafts/`+draftId
+        );
+        return data;
+    } catch (error) {
+        throw error;
+    }
+};
+
 export const getSingleProposal = async (id) => {
     try {
         const { data } = await axiosInstance.get(`/api/proposals/${id}`);
@@ -53,7 +171,6 @@ export const getGovernanceActionTypes = async () => {
         const { data } = await axiosInstance.get(
             `/api/governance-action-types`
         );
-
         return data;
     } catch (error) {
         throw error;
@@ -150,6 +267,67 @@ export const createComment = async (commentData) => {
         console.error(error);
     }
 };
+
+export const addCommentReport = async (commentId,user) => {
+    try {
+        console.log("CID",commentId);
+        const { data } = await axiosInstance.post(`api/comments-reports`, {
+            data :{
+                comment: commentId, 
+                reporter: user,
+                moderator: null,
+            }
+        }
+        
+      );
+        return data;
+    } catch (error) {
+        console.error(error);
+    }
+};
+export const removeCommentReport = async (commentReportId) => {
+    try {
+        const { data } = await axiosInstance.delete(`api/comments-reports/${commentReportId}`);
+        return data;
+    } catch (error) {
+        console.error(error);
+    }
+};
+export const getCommentReports = async (query) => {
+    try {
+        const { data } = await axiosInstance.get(`api/comments/${query}`);
+        return data;
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+export const approveCommentReport = async (comment,user)=>{
+    try {
+        const { data } = await axiosInstance.put(`api/comments-reports/`);
+        return data;
+    } catch (error) {
+        console.error(error);
+    }
+}
+export const removeComment= async (comment, user)=>{
+    try {
+        const { data } = await axiosInstance.put(`api/comments-reports/`);
+        return data;
+    } catch (error) {
+        console.error(error);
+    }
+}
+export const getCommentReportByHash= async (hash)=>{
+    try {
+        const { data } = await axiosInstance.get(`api/comments-reports/`);
+        return data;
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+
 
 export const createProposalLikeOrDislike = async ({ createData }) => {
     try {
