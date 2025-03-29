@@ -13,7 +13,7 @@
       "name": "Apache 2.0",
       "url": "https://www.apache.org/licenses/LICENSE-2.0.html"
     },
-    "x-generation-date": "2025-03-29T17:24:55.885Z"
+    "x-generation-date": "2025-03-29T21:16:04.854Z"
   },
   "x-strapi-config": {
     "plugins": [],
@@ -161,7 +161,7 @@
                 ],
                 "example": "string or id"
               },
-              "itersect_named_administrator": {
+              "intersect_named_administrator": {
                 "type": "boolean"
               },
               "bd_proposal_ownership": {
@@ -1187,6 +1187,9 @@
                       "resourcing_duration_estimates": {
                         "type": "string"
                       },
+                      "other_contract_type": {
+                        "type": "string"
+                      },
                       "createdAt": {
                         "type": "string",
                         "format": "date-time"
@@ -1348,6 +1351,9 @@
                             }
                           }
                         }
+                      },
+                      "other_contract_type": {
+                        "type": "string"
                       },
                       "createdAt": {
                         "type": "string",
@@ -1747,7 +1753,7 @@
               }
             }
           },
-          "itersect_named_administrator": {
+          "intersect_named_administrator": {
             "type": "boolean"
           },
           "bd_proposal_ownership": {
@@ -1962,6 +1968,9 @@
                   }
                 ],
                 "example": "string or id"
+              },
+              "other_contract_type": {
+                "type": "string"
               }
             }
           }
@@ -2369,6 +2378,9 @@
                 }
               }
             }
+          },
+          "other_contract_type": {
+            "type": "string"
           },
           "createdAt": {
             "type": "string",
@@ -5413,6 +5425,9 @@
               },
               "resourcing_duration_estimates": {
                 "type": "string"
+              },
+              "other_contract_type": {
+                "type": "string"
               }
             }
           }
@@ -5805,6 +5820,9 @@
             "type": "string"
           },
           "resourcing_duration_estimates": {
+            "type": "string"
+          },
+          "other_contract_type": {
             "type": "string"
           },
           "createdAt": {

@@ -154,6 +154,7 @@ const CreateBudgetDiscussionDialog = ({ open = false, onClose = false }) => {
         return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
       };
     const validateField = (e,dataName)=>{
+        //console.log(e.target.type,e.target.required)
         setErrors({})
         if(e.target.required)
         {
@@ -164,7 +165,7 @@ const CreateBudgetDiscussionDialog = ({ open = false, onClose = false }) => {
         if (e.target.type === 'email' && !isValidEmail(e.target.value)) {
             setErrors({ ...errors, [dataName]: "Invalid email format" });
         }
-        if(e.target.type === 'number' && isNaN(Number(value))) {
+        if(e.target.type === 'number' && isNaN(Number(e.target.value))) {
             setErrors({ ...errors, [dataName]: "Must be a number" });
         }
     }
@@ -271,7 +272,7 @@ const CreateBudgetDiscussionDialog = ({ open = false, onClose = false }) => {
                                 <ProposalOwnership
                                     setStep={setStep}
                                     step={step}
-                                    онClose={() => closeCreateBDDialog()}
+                                    onClose={() => closeCreateBDDialog()}
                                     setBudgetDiscussionData={setBudgetDiscussionData}
                                     currentBudgetDiscussionData={budgetDiscussionData}
                                     errors={errors}

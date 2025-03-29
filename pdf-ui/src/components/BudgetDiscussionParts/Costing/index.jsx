@@ -3,10 +3,11 @@ import { useEffect, useState } from 'react';
 import { getAllCurrencies } from '../../../lib/api';
 import { StepperActionButtons } from '../../BudgetDiscussionParts';
 
-const Costing = ({ setStep, step, currentBudgetDiscussionData, setBudgetDiscussionData, onClose, setSelectedDraftId, selectedDraftId, handleSaveDraft, errors, setErrors }) => {
+const Costing = ({ setStep, step, currentBudgetDiscussionData, setBudgetDiscussionData, onClose, setSelectedDraftId, selectedDraftId, handleSaveDraft, errors, setErrors, validateField }) => {
     const [allCurrencyList, setAllCurrencyList] = useState([]);
     const costBreakdownMaxLength = 256;
     const handleDataChange = (e, dataName) => {
+        validateField(e,'bd_costing.'+dataName);
         setBudgetDiscussionData({
              ...currentBudgetDiscussionData,
              bd_costing: {
@@ -71,9 +72,12 @@ const Costing = ({ setStep, step, currentBudgetDiscussionData, setBudgetDiscussi
                                         label='ADA Amount'
                                         value={currentBudgetDiscussionData?.bd_costing?.ada_amount || ''}
                                         required
+                                        type='number'
                                         fullWidth
                                         onChange={(e) => handleDataChange(e, 'ada_amount')}
                                         sx={{ mb: 2 }}
+                                        helperText={errors['bd_costing.ada_amount']?.trim()}
+                                        error={!!errors['bd_costing.ada_amount']?.trim()}
                                      />    
                                 </Grid>
                                 <Grid item xs={6}>
@@ -83,7 +87,9 @@ const Costing = ({ setStep, step, currentBudgetDiscussionData, setBudgetDiscussi
                                         value={currentBudgetDiscussionData?.bd_costing?.usd_to_ada_conversion_rate || ''}
                                         required
                                         fullWidth
-                                        helperText={"The rate you used to budget for this proposal"}
+                                        type="number"
+                                        helperText={errors['bd_costing.usd_to_ada_conversion_rate']?.trim() || "The rate you used to budget for this proposal"}
+                                        error={!!errors['bd_costing.usd_to_ada_conversion_rate']?.trim()}
                                         onChange={(e) => handleDataChange(e, 'usd_to_ada_conversion_rate')}
                                         sx={{ mb: 2 }}
                                      />  
@@ -96,6 +102,8 @@ const Costing = ({ setStep, step, currentBudgetDiscussionData, setBudgetDiscussi
                                         value={currentBudgetDiscussionData?.bd_costing?.preferred_currency || ''}
                                         required
                                         fullWidth
+                                        helperText={errors['bd_costing.preferred_currency']?.trim()}
+                                        error={!!errors['bd_costing.preferred_currency']?.trim()}
                                         onChange={(e) => handleDataChange(e, 'preferred_currency')}
                                         SelectProps={{
                                                 SelectDisplayProps: {
@@ -121,6 +129,9 @@ const Costing = ({ setStep, step, currentBudgetDiscussionData, setBudgetDiscussi
                                         label='Amount in preferred currency'
                                         value={currentBudgetDiscussionData?.bd_costing?.amount_in_preferred_currency || ''}
                                         required
+                                        type="number"
+                                        helperText={errors['bd_costing.amount_in_preferred_currency']?.trim()}
+                                        error={!!errors['bd_costing.amount_in_preferred_currency']?.trim()}
                                         fullWidth
                                         onChange={(e) => handleDataChange(e, 'amount_in_preferred_currency')}
                                         sx={{ mb: 2 }}
@@ -138,7 +149,8 @@ const Costing = ({ setStep, step, currentBudgetDiscussionData, setBudgetDiscussi
                             multiline
                             value={currentBudgetDiscussionData?.bd_costing?.cost_breakdown || ''}
                             onChange={(e) => handleDataChange(e, 'cost_breakdown')}
-                            helperText={(
+                            helperText={ errors['bd_costing.cost_breakdown']?.trim() ||
+                                (
                                     <>
                                         <Typography
                                             variant='caption'
@@ -164,7 +176,7 @@ const Costing = ({ setStep, step, currentBudgetDiscussionData, setBudgetDiscussi
                                     'data-testid': 'cost-breakdown-input',
                                 },
                             }}
-                            error={errors?.bd_costing?.cost_breakdown}
+                            error={!!errors['bd_costing.cost_breakdown']?.trim()}
                             FormHelperTextProps={{
                                 'data-testid': errors?.bd_costing?.cost_breakdown
                                     ? 'cost-breakdown-helper-error'
@@ -172,7 +184,7 @@ const Costing = ({ setStep, step, currentBudgetDiscussionData, setBudgetDiscussi
                             }}
                         />
                         <StepperActionButtons onClose={onClose} onSaveDraft={handleSaveDraft} onContinue={setStep}
-                            onBack={setStep} selectedDraftId={selectedDraftId} nextStep={step+1} backStep={step-1}
+                            onBack={setStep} selectedDraftId={selectedDraftId} nextStep={step+1} backStep={step-1} errors={errors}
                          />
                         </CardContent>
                 </Card>
