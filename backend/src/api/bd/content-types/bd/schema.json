@@ -25,7 +25,7 @@
       "relation": "oneToOne",
       "target": "api::bd-costing.bd-costing"
     },
-    "bd_proposal_details": {
+    "bd_proposal_detail": {
       "type": "relation",
       "relation": "oneToOne",
       "target": "api::bd-proposal-detail.bd-proposal-detail"

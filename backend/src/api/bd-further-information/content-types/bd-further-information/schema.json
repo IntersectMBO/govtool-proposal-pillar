@@ -12,10 +12,10 @@
   },
   "pluginOptions": {},
   "attributes": {
-    "bd_proposal_links": {
+    "proposal_links": {
       "displayName": "BD Links",
       "type": "component",
-      "repeatable": false,
+      "repeatable": true,
       "component": "bd.bd-links"
     }
   }

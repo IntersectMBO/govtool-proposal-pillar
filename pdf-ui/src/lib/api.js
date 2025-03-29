@@ -24,20 +24,19 @@ export const getProposals = async (query = '') => {
 };
 export const getBudgetDiscussions = async (query = '') => {
     try {
-        const { data } = await axiosInstance.get(`/api/proposals?${query}`);
+        const { data } = await axiosInstance.get(`/api/bds?${query}`);
 
-        const proposals = data?.data;
+        const budgetDiscussions = data?.data;
         const pgCount = data?.meta?.pagination?.pageCount;
         const total = data?.meta?.pagination?.total;
-        return { proposals, pgCount, total };
+        return { budgetDiscussions, pgCount, total };
     } catch (error) {
         return error;
     }
 };
 export const getBudgetDiscussion = async (id) => {
     try {
-        const { data } = await axiosInstance.get(`/api/proposals/${id}`);
-
+        const { data } = await axiosInstance.get(`/api/bds/${id}`);
         return data?.data;
     } catch (error) {
         throw error;
@@ -155,6 +154,7 @@ export const getBudgetDiscussionDrafts = async () => {
 
 export const createBudgetDiscussion = async (data) => {
     try {
+        console.log("api",data);
         const response = await axiosInstance.post(`/api/bds`, {
             data:{...data},
         });

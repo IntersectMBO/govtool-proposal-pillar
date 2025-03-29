@@ -13,7 +13,7 @@
       "name": "Apache 2.0",
       "url": "https://www.apache.org/licenses/LICENSE-2.0.html"
     },
-    "x-generation-date": "2025-03-29T07:32:37.680Z"
+    "x-generation-date": "2025-03-29T09:47:22.408Z"
   },
   "x-strapi-config": {
     "plugins": [],
@@ -117,7 +117,7 @@
                 ],
                 "example": "string or id"
               },
-              "bd_proposal_details": {
+              "bd_proposal_detail": {
                 "oneOf": [
                   {
                     "type": "integer"
@@ -1087,7 +1087,7 @@
               }
             }
           },
-          "bd_proposal_details": {
+          "bd_proposal_detail": {
             "type": "object",
             "properties": {
               "data": {
@@ -1459,17 +1459,20 @@
                   "attributes": {
                     "type": "object",
                     "properties": {
-                      "bd_proposal_links": {
-                        "type": "object",
-                        "properties": {
-                          "id": {
-                            "type": "number"
-                          },
-                          "prop_link": {
-                            "type": "string"
-                          },
-                          "prop_link_text": {
-                            "type": "string"
+                      "proposal_links": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "id": {
+                              "type": "number"
+                            },
+                            "prop_link": {
+                              "type": "string"
+                            },
+                            "prop_link_text": {
+                              "type": "string"
+                            }
                           }
                         }
                       },
@@ -4680,8 +4683,11 @@
           "data": {
             "type": "object",
             "properties": {
-              "bd_proposal_links": {
-                "$ref": "#/components/schemas/BdBdLinksComponent"
+              "proposal_links": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/BdBdLinksComponent"
+                }
               }
             }
           }
@@ -4736,8 +4742,11 @@
       "BdFurtherInformation": {
         "type": "object",
         "properties": {
-          "bd_proposal_links": {
-            "$ref": "#/components/schemas/BdBdLinksComponent"
+          "proposal_links": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/BdBdLinksComponent"
+            }
           },
           "createdAt": {
             "type": "string",

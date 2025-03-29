@@ -9,13 +9,13 @@ const { createCoreRouter } = require('@strapi/strapi').factories;
 module.exports = createCoreRouter('api::bd.bd', {
     config: {
       find: {
-        roles: ["authenticated"],
+        roles: ["authenticated","public"],
       },
       create: {
         roles: ["authenticated"],
       },
       findOne: { 
-        roles: ["authenticated"],
+        roles: ["authenticated","public"],
       },
       update: {
         roles: ["authenticated"],
