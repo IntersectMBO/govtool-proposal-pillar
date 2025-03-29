@@ -91,13 +91,27 @@ const CreateBudgetDiscussionDialog = ({ open = false, onClose = false }) => {
             setLoading(false);
         }
     };
+    const  hasAnyNonEmptyString = (obj) => {
+      if (typeof obj === 'string') {
+             return obj.trim() !== '';
+        }
+      if (typeof obj !== 'object' || obj === null) {
+        return false;
+        }
+      if (Array.isArray(obj)) {
+        return obj.some(item => hasAnyNonEmptyString(item));
+        }
 
-    // Define handleIsContinueDisabled using useCallback
-    const handleIsContinueDisabled = useCallback(() => { }
+        return Object.values(obj).some(value => hasAnyNonEmptyString(value));
+      }
+
+    const handleIsContinueDisabled = useCallback(() => { 
+
+    }
     , [ errors ]); 
 
     const handleCreateBudgetDiscussion = async (isDraft = false) => {
-        console.log(handleCreateBudgetDiscussion);
+     //   console.log(handleCreateBudgetDiscussion);
         setLoading(true);
         try {
                 const newBD = await createBudgetDiscussion(budgetDiscussionData);
@@ -136,7 +150,36 @@ const CreateBudgetDiscussionDialog = ({ open = false, onClose = false }) => {
             setLoading(false);
         }
     };
+    const isValidEmail = (email) => {
+        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+      };
+    const validateField = (e,dataName)=>{
+       
+        if(e.target.required)
+        {
+            setErrors({ ...errors, [dataName]: ''})
+            if (!e.target.value.trim()) {
+                setErrors({ ...errors, [dataName]:  e.target.name +` is required`})
+            } 
+        }
+        if (e.target.type === 'email' && isValidEmail(e.target.value)) {
+            setErrors({ ...errors, [name]: "Invalid email format" });
+        }
+        if(name === 'nu' && isNaN(Number(value))) {
+            setErrors({ ...errors, [name]: "Must be a number" });
+        }
+        if(e.target.required)
+        {
+            console.log("validacija",e,dataName);
+        }
 
+
+    }
+    useEffect(() => {
+        console.log('promenjen Error',errors);
+  //      console.log(hasAnyNonEmptyString(errors));
+       //  console.table(budgetDiscussionData);
+     }, [errors]);
     // Use handleIsContinueDisabled in useEffect
     // useEffect(() => {
     //     handleIsContinueDisabled();
@@ -228,6 +271,7 @@ const CreateBudgetDiscussionDialog = ({ open = false, onClose = false }) => {
                                     setErrors={setErrors}                                    
                                     setSelectedDraftId={setSelectedDraftId}
                                     handleSaveDraft={handleSaveDraft}
+                                    validateField={validateField}
                                 />
                             )}
                             {step === 3 && (

@@ -24,8 +24,7 @@ const BudgetDiscussionLinkManager = ({maxLinks = 7, budgetDiscussionData, setBud
     }, []);
 
     useEffect(() => {
-        //errors.bd_further_information.['']=[polje, greska ]
-        setErrors((prev) => ({  ...prev, ...linksErrors }));
+        setErrors((prev) => ({  ...prev, linkErrors:{...linksErrors }}));
     }, [linksErrors]); 
 
 

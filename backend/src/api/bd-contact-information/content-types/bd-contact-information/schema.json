@@ -32,7 +32,7 @@
     "be_nationality": {
       "type": "relation",
       "relation": "oneToOne",
-      "target": "api::nationality-list.nationality-list"
+      "target": "api::country-list.country-list"
     }
   }
 }

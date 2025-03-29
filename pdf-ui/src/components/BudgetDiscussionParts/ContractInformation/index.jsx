@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { getCountryList, getNationalityList } from '../../../lib/api';
 import { StepperActionButtons } from '../../BudgetDiscussionParts';
 
-const ContractInformation = ({ setStep, step, onClose, currentBudgetDiscussionData, setBudgetDiscussionData,  setSelectedDraftId, selectedDraftId, handleSaveDraft, errors, setErrors }) => {
+const ContractInformation = ({ setStep, step, onClose, currentBudgetDiscussionData, setBudgetDiscussionData,  setSelectedDraftId, selectedDraftId, handleSaveDraft, errors, setErrors, validateField }) => {
      const [allCountries, setAllCountries] = useState([]);
      const [allNationalities, setAllNationalities] = useState([]);
 
@@ -25,8 +25,9 @@ const ContractInformation = ({ setStep, step, onClose, currentBudgetDiscussionDa
 
           fetchData();
      }, []);
-    
+     
      const handleDataChange = (e, dataName) => {
+          validateField(e,"bd_contact_information."+dataName);
           setBudgetDiscussionData({
                ...currentBudgetDiscussionData,
                bd_contact_information: {
@@ -34,6 +35,7 @@ const ContractInformation = ({ setStep, step, onClose, currentBudgetDiscussionDa
                     [dataName]: e.target.value
                }})
      };
+
      return (
           <Box display='flex' flexDirection='column'>
                <Box>
@@ -111,18 +113,24 @@ const ContractInformation = ({ setStep, step, onClose, currentBudgetDiscussionDa
                               </Box>
                               <Box>
                                    <TextField
+                                        name= 'Beneficiary Full Name'
                                         label='*Beneficiary Full Name'
                                         value={currentBudgetDiscussionData?.bd_contact_information?.be_full_name || ''}
-                                        helperText='The person responsible for signing the legal contract on behalf of a company / entity (if approved on-chain).'
+                                        helperText={errors['bd_contact_information.be_full_name']?.trim() || 'The person responsible for signing the legal contract on behalf of a company / entity (if approved on-chain).'}
                                         required
                                         fullWidth
+                                        error={!!errors['bd_contact_information.be_full_name']?.trim()}
                                         onChange={(e) => handleDataChange(e, 'be_full_name')}
                                         sx={{ mb: 2 }}
                                    />
                                    <TextField
+                                        name='Beneficiary e-mail'
                                         label='*Beneficiary e-mail'
                                         value={currentBudgetDiscussionData?.bd_contact_information?.be_email || ''}
                                         required
+                                        helperText={errors['bd_contact_information.be_email']?.trim()}
+                                        error={!!errors['bd_contact_information.be_email']?.trim()}
+                                        type='email'
                                         fullWidth
                                         onChange={(e) => handleDataChange(e, 'be_email')}
                                         sx={{ mb: 2 }}
@@ -294,7 +302,7 @@ const ContractInformation = ({ setStep, step, onClose, currentBudgetDiscussionDa
                                </Box>) 
                               : ""} */}
                               <StepperActionButtons onClose={onClose} onSaveDraft={handleSaveDraft} onContinue={setStep}
-                                onBack={setStep} selectedDraftId={selectedDraftId} nextStep={step+1} backStep={step-1}
+                                onBack={setStep} selectedDraftId={selectedDraftId} nextStep={step+1} backStep={step-1} errors={errors} 
                               />
                              
                          </CardContent>

@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Box, Button } from '@mui/material';
 import PropTypes from 'prop-types';
+import { UNSAFE_ErrorResponseImpl } from 'react-router-dom';
 
 const StepperActionButtons = ({
   onClose,
@@ -17,11 +18,30 @@ const StepperActionButtons = ({
   cancelText = 'Cancel',
   saveDraftText = 'Save Draft',
   continueText = 'Continue',
-  backText = 'Back'
+  backText = 'Back',
+  errors
 }) => {
   // Calculate backStep if not provided
   const calculatedBackStep = backStep !== undefined ? backStep : nextStep - 2;
+  const [continueDisabled,setContinueDisabled] = useState(false);
+  const  hasAnyNonEmptyString = (obj) => {
+    if (typeof obj === 'string') {
+           return obj.trim() !== '';
+      }
+    if (typeof obj !== 'object' || obj === null) {
+      return false;
+      }
+    if (Array.isArray(obj)) {
+      return obj.some(item => hasAnyNonEmptyString(item));
+      }
 
+      return Object.values(obj).some(value => hasAnyNonEmptyString(value));
+    }
+  useEffect(() => {
+    console.log('Iz Akcija error promenjen', errors)
+    setContinueDisabled(hasAnyNonEmptyString(errors));
+    
+}, [errors]); 
   return (
     <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 2 }}>
       <Box>
@@ -60,6 +80,7 @@ const StepperActionButtons = ({
         {showContinue && (
           <Button
             variant="contained"
+            disabled={continueDisabled}
             onClick={() => onContinue(nextStep)}
             data-testid="continue-button"
           >

@@ -7,7 +7,9 @@ import { useTheme } from '@mui/material/styles';
 const FurtherInformation = ({ setStep, step, currentBudgetDiscussionData, setBudgetDiscussionData, onClose, setSelectedDraftId, selectedDraftId, handleSaveDraft, errors, setErrors }) => {
     const [allCurrencyList, setAllCurrencyList] = useState([]);
     const costBreakdownMaxLength = 256;
+    
     const handleDataChange = (e, dataName) => {
+        
         setBudgetDiscussionData({
              ...currentBudgetDiscussionData,
              bd_further_information: {
@@ -63,6 +65,7 @@ const FurtherInformation = ({ setStep, step, currentBudgetDiscussionData, setBud
                         </Box>   
                         <StepperActionButtons onClose={onClose} onSaveDraft={handleSaveDraft} onContinue={setStep}
                             onBack={setStep} selectedDraftId={selectedDraftId} nextStep={step+1} backStep={step-1}
+                            errors={errors}
                          /> 
                         </CardContent>
                 </Card>
