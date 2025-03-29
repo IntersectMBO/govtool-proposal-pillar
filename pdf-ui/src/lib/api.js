@@ -34,14 +34,24 @@ export const getBudgetDiscussions = async (query = '') => {
         return error;
     }
 };
-export const getBudgetDiscussion = async (id) => {
+export const getBudgetDiscussion = async ({id, query=''}) => {
     try {
-        const { data } = await axiosInstance.get(`/api/bds/${id}`);
+        const { data } = await axiosInstance.get(`/api/bds/${id}?${query}`);
         return data?.data;
     } catch (error) {
         throw error;
     }
 };
+
+export const deleteBudgetDiscussion = async (id) => {
+    try {
+        const { data } = await axiosInstance.delete(`/api/bds/${id}`);
+        return data?.data;
+    } catch (error) {
+        throw error;
+    }
+};
+
 export const getBudgetDiscussionTypes = async () => {
     try {
         const { data } = await axiosInstance.get(

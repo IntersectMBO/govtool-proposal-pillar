@@ -14,6 +14,7 @@ export { default as DeleteProposalModal } from './DeleteProposalModal';
 export { default as MarkdownTextComponent } from './MarkdownTextComponent';
 export { default as CommentReview } from './CommentReview';
 export { default as CommentReportPopup } from './CommentReportPopup';
+export { default as BudgetDiscussionInfoSegment } from './BudgetDiscussionInfoSegment';
 export { default as CreateBudgetDiscussionDialog } from './CreateBudgetDiscussionDialog';
 export { default as BudgetDiscussionsList } from './BudgetDiscussionsList';
 export { default as BudgetDiscussionsCard } from './BudgetDiscussionCard';
