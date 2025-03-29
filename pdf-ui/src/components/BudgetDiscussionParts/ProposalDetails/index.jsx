@@ -29,8 +29,8 @@ const ProposalDetails = ({ setStep, step, currentBudgetDiscussionData, setBudget
      const handleDataChange = (e, dataName) => {
         setBudgetDiscussionData({
              ...currentBudgetDiscussionData,
-             budget_discussion_proposal_details: {
-                 ...currentBudgetDiscussionData?.budget_discussion_proposal_details,
+             bd_proposal_details: {
+                 ...currentBudgetDiscussionData?.bd_proposal_details,
                  [dataName]: e.target.value
              }})
    };
@@ -74,7 +74,7 @@ return (
                     <TextField
                         name='Name of proposal'
                         label='What is your proposed name to be used to reference this proposal publicly?'
-                        value={currentBudgetDiscussionData?.budget_discussion_proposal_details?.proposal_name || ''}
+                        value={currentBudgetDiscussionData?.bd_proposal_details?.proposal_name || ''}
                         required
                         fullWidth
                         onChange={(e) => handleDataChange(e, 'proposal_name')}
@@ -89,7 +89,7 @@ return (
                         sx={{ mb: 4 }}
                         fullWidth
                         multiline
-                        value={currentBudgetDiscussionData?.budget_discussion_proposal_details?.proposal_description || ''}
+                        value={currentBudgetDiscussionData?.bd_proposal_details?.proposal_description || ''}
                         onChange={(e) => handleDataChange(e, 'proposal_description')}
                         helperText={(
                                 <>
@@ -105,7 +105,7 @@ return (
                                         data-testid='proposal-description-helper-character-count'
                                     >
                                         {`${
-                                            currentBudgetDiscussionData?.budget_discussion_proposal_details?.proposal_description?.length || 0
+                                            currentBudgetDiscussionData?.bd_proposal_details?.proposal_description?.length || 0
                                         }/${proposalDescriptionMaxLength}`}
                                     </Typography>
                                 </>
@@ -117,9 +117,9 @@ return (
                                 'data-testid': 'proposal-description-input',
                             },
                         }}
-                        error={errors?.budget_discussion_proposal_details?.proposal_description}
+                        error={errors?.bd_proposal_details?.proposal_description}
                         FormHelperTextProps={{
-                            'data-testid': errors?.budget_discussion_proposal_details?.proposal_description
+                            'data-testid': errors?.bd_proposal_details?.proposal_description
                                 ? 'proposal-description-helper-error'
                                 : 'proposal-description-helper',
                         }}
@@ -132,7 +132,7 @@ return (
                         sx={{ mb: 4 }}
                         multiline
                         fullWidth
-                        value={currentBudgetDiscussionData?.budget_discussion_proposal_details?.key_dependencies || ''}
+                        value={currentBudgetDiscussionData?.bd_proposal_details?.key_dependencies || ''}
                         onChange={(e) => handleDataChange(e, 'key_dependencies')}
                         helperText={(
                             <>
@@ -148,7 +148,7 @@ return (
                                     data-testid='key-dependencies-helper-character-count'
                                 >
                                     {`${
-                                        currentBudgetDiscussionData?.budget_discussion_proposal_details?.key_dependencies?.length || 0
+                                        currentBudgetDiscussionData?.bd_proposal_details?.key_dependencies?.length || 0
                                     }/${keyDependenciesMaxLength}`}
                                 </Typography>
                             </>
@@ -159,9 +159,9 @@ return (
                                 'data-testid': 'key-dependencies-input',
                             },
                         }}
-                        error={errors?.budget_discussion_proposal_details?.key_dependencies}
+                        error={errors?.bd_proposal_details?.key_dependencies}
                         FormHelperTextProps={{
-                            'data-testid': errors?.budget_discussion_proposal_details?.key_dependencies
+                            'data-testid': errors?.bd_proposal_details?.key_dependencies
                                 ? 'key-dependencies-helper-error'
                                 : 'key-dependencies-helper',
                         }}
@@ -171,7 +171,7 @@ return (
                         label='How will this proposal be maintained and supported after initial development?'
                         rows={4}
                         multiline
-                        value={currentBudgetDiscussionData?.budget_discussion_proposal_details?.maintain_and_support || ''}
+                        value={currentBudgetDiscussionData?.bd_proposal_details?.maintain_and_support || ''}
                         required
                         fullWidth
                         onChange={(e) => handleDataChange(e, 'maintain_and_support')}
@@ -185,7 +185,7 @@ return (
                         sx={{ mb: 4 }}
                         fullWidth
                         multiline
-                        value={currentBudgetDiscussionData?.budget_discussion_proposal_details?.key_proposal_deliverables || ''}
+                        value={currentBudgetDiscussionData?.bd_proposal_details?.key_proposal_deliverables || ''}
                         onChange={(e) => handleDataChange(e, 'key_proposal_deliverables')}
                         helperText={(
                                 <>
@@ -201,7 +201,7 @@ return (
                                         data-testid='key-proposal-deliverables-helper-character-count'
                                     >
                                         {`${
-                                            currentBudgetDiscussionData?.budget_discussion_proposal_details?.key_proposal_deliverables?.length || 0
+                                            currentBudgetDiscussionData?.bd_proposal_details?.key_proposal_deliverables?.length || 0
                                         }/${keyProposalDeliverablesMaxLength}`}
                                     </Typography>
                                 </>
@@ -213,9 +213,9 @@ return (
                                 'data-testid': 'key-proposal-deliverables-input',
                             },
                         }}
-                        error={errors?.budget_discussion_proposal_details?.key_proposal_deliverables}
+                        error={errors?.bd_proposal_details?.key_proposal_deliverables}
                         FormHelperTextProps={{
-                            'data-testid': errors?.budget_discussion_proposal_details?.key_proposal_deliverables
+                            'data-testid': errors?.bd_proposal_details?.key_proposal_deliverables
                                 ? 'key-proposal-deliverables-helper-error'
                                 : 'key-proposal-deliverables-helper',
                         }}
@@ -228,7 +228,7 @@ return (
                         sx={{ mb: 4 }}
                         fullWidth
                         multiline
-                        value={currentBudgetDiscussionData?.budget_discussion_proposal_details?.resourcing_duration_estimates || ''}
+                        value={currentBudgetDiscussionData?.bd_proposal_details?.resourcing_duration_estimates || ''}
                         onChange={(e) => handleDataChange(e, 'resourcing_duration_estimates')}
                         helperText={(
                                 <>
@@ -244,7 +244,7 @@ return (
                                         data-testid='resourcing-duration-estimates-helper-character-count'
                                     >
                                         {`${
-                                            currentBudgetDiscussionData?.budget_discussion_proposal_details?.resourcing_duration_estimates?.length || 0
+                                            currentBudgetDiscussionData?.bd_proposal_details?.resourcing_duration_estimates?.length || 0
                                         }/${resourcingDurationEstimatesMaxLength}`}
                                     </Typography>
                                 </>
@@ -256,9 +256,9 @@ return (
                                 'data-testid': 'resourcing-duration-estimates-input',
                             },
                         }}
-                        error={errors?.budget_discussion_proposal_details?.resourcing_duration_estimates}
+                        error={errors?.bd_proposal_details?.resourcing_duration_estimates}
                         FormHelperTextProps={{
-                            'data-testid': errors?.budget_discussion_proposal_details?.resourcing_duration_estimates
+                            'data-testid': errors?.bd_proposal_details?.resourcing_duration_estimates
                                 ? 'resourcing-duration-estimates-helper-error'
                                 : 'resourcing-duration-estimates-helper',
                         }}
@@ -266,7 +266,7 @@ return (
                     <TextField
                         name='Experience'
                         label='Please provide previous experience relevant to complete this project.'
-                        value={currentBudgetDiscussionData?.budget_discussion_proposal_details?.experience || ''}
+                        value={currentBudgetDiscussionData?.bd_proposal_details?.experience || ''}
                         required
                         multiline
                         rows={4}
@@ -279,7 +279,7 @@ return (
                         name='Contract Types'
                         label='Contracting: Please describe how you expect to be contracted.'
                         //helperText={(<> {'Please click'} <Link href="">here</Link> {'to see details of Intersect Committees.'}</>)}
-                        value={currentBudgetDiscussionData?.budget_discussion_proposal_details?.contract_type_name || ''}
+                        value={currentBudgetDiscussionData?.bd_proposal_details?.contract_type_name || ''}
                         required
                         fullWidth
                         onChange={(e) => handleDataChange(e, 'contract_type_name')}

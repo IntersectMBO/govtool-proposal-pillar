@@ -9,8 +9,8 @@ const Costing = ({ setStep, step, currentBudgetDiscussionData, setBudgetDiscussi
     const handleDataChange = (e, dataName) => {
         setBudgetDiscussionData({
              ...currentBudgetDiscussionData,
-             budget_discussion_costing: {
-                  ...currentBudgetDiscussionData?.budget_discussion_costing,
+             bd_costing: {
+                  ...currentBudgetDiscussionData?.bd_costing,
                   [dataName]: e.target.value
              }})
    };
@@ -69,7 +69,7 @@ const Costing = ({ setStep, step, currentBudgetDiscussionData, setBudgetDiscussi
                                     <TextField
                                         name='ADA Amount'
                                         label='ADA Amount'
-                                        value={currentBudgetDiscussionData?.budget_discussion_costing?.ada_amount || ''}
+                                        value={currentBudgetDiscussionData?.bd_costing?.ada_amount || ''}
                                         required
                                         fullWidth
                                         onChange={(e) => handleDataChange(e, 'ada_amount')}
@@ -80,7 +80,7 @@ const Costing = ({ setStep, step, currentBudgetDiscussionData, setBudgetDiscussi
                                     <TextField
                                         name='USD to ADA Conversion Rate'
                                         label='USD to ADA Conversion Rate'
-                                        value={currentBudgetDiscussionData?.budget_discussion_costing?.usd_to_ada_conversion_rate || ''}
+                                        value={currentBudgetDiscussionData?.bd_costing?.usd_to_ada_conversion_rate || ''}
                                         required
                                         fullWidth
                                         helperText={"The rate you used to budget for this proposal"}
@@ -93,7 +93,7 @@ const Costing = ({ setStep, step, currentBudgetDiscussionData, setBudgetDiscussi
                                         select
                                         name='Preferred currency'
                                         label='Preferred currency'
-                                        value={currentBudgetDiscussionData?.budget_discussion_costing?.preferred_currency || ''}
+                                        value={currentBudgetDiscussionData?.bd_costing?.preferred_currency || ''}
                                         required
                                         fullWidth
                                         onChange={(e) => handleDataChange(e, 'preferred_currency')}
@@ -119,7 +119,7 @@ const Costing = ({ setStep, step, currentBudgetDiscussionData, setBudgetDiscussi
                                     <TextField
                                         name='Amount in preferred currency'
                                         label='Amount in preferred currency'
-                                        value={currentBudgetDiscussionData?.budget_discussion_costing?.amount_in_preferred_currency || ''}
+                                        value={currentBudgetDiscussionData?.bd_costing?.amount_in_preferred_currency || ''}
                                         required
                                         fullWidth
                                         onChange={(e) => handleDataChange(e, 'amount_in_preferred_currency')}
@@ -136,7 +136,7 @@ const Costing = ({ setStep, step, currentBudgetDiscussionData, setBudgetDiscussi
                             sx={{ mb: 4 }}
                             fullWidth
                             multiline
-                            value={currentBudgetDiscussionData?.budget_discussion_costing?.cost_breakdown || ''}
+                            value={currentBudgetDiscussionData?.bd_costing?.cost_breakdown || ''}
                             onChange={(e) => handleDataChange(e, 'cost_breakdown')}
                             helperText={(
                                     <>
@@ -152,7 +152,7 @@ const Costing = ({ setStep, step, currentBudgetDiscussionData, setBudgetDiscussi
                                             data-testid='cost-breakdown-helper-character-count'
                                         >
                                             {`${
-                                                currentBudgetDiscussionData?.budget_discussion_costing?.cost_breakdown?.length || 0
+                                                currentBudgetDiscussionData?.bd_costing?.cost_breakdown?.length || 0
                                             }/${costBreakdownMaxLength}`}
                                         </Typography>
                                     </>
@@ -164,9 +164,9 @@ const Costing = ({ setStep, step, currentBudgetDiscussionData, setBudgetDiscussi
                                     'data-testid': 'cost-breakdown-input',
                                 },
                             }}
-                            error={errors?.budget_discussion_costing?.cost_breakdown}
+                            error={errors?.bd_costing?.cost_breakdown}
                             FormHelperTextProps={{
-                                'data-testid': errors?.budget_discussion_costing?.cost_breakdown
+                                'data-testid': errors?.bd_costing?.cost_breakdown
                                     ? 'cost-breakdown-helper-error'
                                     : 'cost-breakdown-helper',
                             }}

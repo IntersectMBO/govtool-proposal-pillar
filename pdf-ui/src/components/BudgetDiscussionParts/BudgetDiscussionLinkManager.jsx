@@ -10,13 +10,13 @@ const BudgetDiscussionLinkManager = ({maxLinks = 7, budgetDiscussionData, setBud
     const [linksErrors, setLinksErrors] = useState({});
 
     useEffect(() => {   
-        if(budgetDiscussionData.budget_discussion_further_information?.proposal_links === undefined)
+        if(budgetDiscussionData.bd_further_information?.proposal_links === undefined)
         {  
             let links = [{ prop_link: '' },{ prop_link: '' }];
             setBudgetDiscussionData({
                 ...budgetDiscussionData,
-                budget_discussion_further_information: {
-                    ...budgetDiscussionData.budget_discussion_further_information,
+                bd_further_information: {
+                    ...budgetDiscussionData.bd_further_information,
                     proposal_links: links,
                 },
             });
@@ -24,7 +24,7 @@ const BudgetDiscussionLinkManager = ({maxLinks = 7, budgetDiscussionData, setBud
     }, []);
 
     useEffect(() => {
-        //errors.budget_discussion_further_information.['']=[polje, greska ]
+        //errors.bd_further_information.['']=[polje, greska ]
         setErrors((prev) => ({  ...prev, ...linksErrors }));
     }, [linksErrors]); 
 
@@ -32,15 +32,15 @@ const BudgetDiscussionLinkManager = ({maxLinks = 7, budgetDiscussionData, setBud
     const updateProposalLinks = (newLinks) => {
         setBudgetDiscussionData(prev => ({
             ...prev,
-            budget_discussion_further_information: {
-                ...prev.budget_discussion_further_information,
+            bd_further_information: {
+                ...prev.bd_further_information,
                 proposal_links: newLinks,
             },
         }));
     };
     
     const handleLinkChange = (index, field, value) => {
-        const newLinks = budgetDiscussionData.budget_discussion_further_information?.proposal_links?.map((link, i) => 
+        const newLinks = budgetDiscussionData.bd_further_information?.proposal_links?.map((link, i) => 
             i === index ? { ...link, [field]: value } : link
         );
     
@@ -64,7 +64,7 @@ const BudgetDiscussionLinkManager = ({maxLinks = 7, budgetDiscussionData, setBud
         }
     };
     const handleAddLink = () => {
-        const currentLinks = budgetDiscussionData.budget_discussion_further_information?.proposal_links || [];
+        const currentLinks = budgetDiscussionData.bd_further_information?.proposal_links || [];
         if (currentLinks.length < maxLinks) {
             updateProposalLinks([
                 ...currentLinks,
@@ -74,7 +74,7 @@ const BudgetDiscussionLinkManager = ({maxLinks = 7, budgetDiscussionData, setBud
     };
     
     const handleRemoveLink = (index) => {
-        const newLinks = budgetDiscussionData.budget_discussion_further_information?.proposal_links?.filter(
+        const newLinks = budgetDiscussionData.bd_further_information?.proposal_links?.filter(
             (_, i) => i !== index
         );
     
@@ -93,7 +93,7 @@ const BudgetDiscussionLinkManager = ({maxLinks = 7, budgetDiscussionData, setBud
             <Typography variant='body1' mb={2} sx={{  textAlign: 'center', mt: 2 }}>
                 (maximum of 7 entries)
             </Typography>
-            {budgetDiscussionData.budget_discussion_further_information?.proposal_links?.map((link, index) => (
+            {budgetDiscussionData.bd_further_information?.proposal_links?.map((link, index) => (
                 <Box
                     key={index}
                     display='flex'
@@ -180,7 +180,7 @@ const BudgetDiscussionLinkManager = ({maxLinks = 7, budgetDiscussionData, setBud
                     </Box>
                 </Box>
             ))}
-            {budgetDiscussionData.budget_discussion_further_information?.proposal_links?.length < maxLinks && (
+            {budgetDiscussionData.bd_further_information?.proposal_links?.length < maxLinks && (
                 <Box
                     sx={{
                         display: 'flex',

@@ -1,0 +1,40 @@
+{
+  "kind": "collectionType",
+  "collectionName": "bd_psapbs",
+  "info": {
+    "singularName": "bd-psapb",
+    "pluralName": "bd-psapbs",
+    "displayName": "BD PSAPB",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "problem_statement": {
+      "type": "string"
+    },
+    "proposal_benefit": {
+      "type": "string"
+    },
+    "supplementary_endorsement": {
+      "type": "string"
+    },
+    "type_name": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::bd-type.bd-type"
+    },
+    "roadmap_name": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::bd-road-map.bd-road-map"
+    },
+    "committee_name": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::bd-intersect-committee.bd-intersect-committee"
+    }
+  }
+}

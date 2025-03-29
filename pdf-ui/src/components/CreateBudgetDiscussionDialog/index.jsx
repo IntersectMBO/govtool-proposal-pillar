@@ -11,9 +11,9 @@ import {
 import React, { useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { DraftSuccessfulBudgetDiscussionModal, ProblemStatementsAndProposalBenefits, ContractInformation, ProposalOwnership, 
-         ProposalDetails, Costing, FurtherInformation, AdministrationAndAuditing, BudgetDiscussionSubmit,StepperActionButtons, 
+         ProposalDetails, Costing, FurtherInformation, AdministrationAndAuditing, BudgetDiscussionSubmit, 
          BudgetDiscussionReview} from '../BudgetDiscussionParts';
-import { createBudgetDiscussionDraft, updateProposalContent, updateBudgetDiscussionDraft } from '../../lib/api';
+import { createBudgetDiscussionDraft, updateBudgetDiscussionDraft,createBudgetDiscussion } from '../../lib/api';
 import { useAppContext } from '../../context/context';
 import { useLocation } from 'react-router-dom';
 import BudgetDiscussionInfo from '../BudgetDiscussionParts/BudgetDiscussionInfo';
@@ -25,12 +25,12 @@ const CreateBudgetDiscussionDialog = ({ open = false, onClose = false }) => {
     const {user, setLoading } = useAppContext();
     const [step, setStep] = useState(1);
     const [budgetDiscussionData, setBudgetDiscussionData] = useState({
-        budget_discussion_contact_information:{},
-        budget_discussion_proposal_ownership: {},
-        budget_discussion_problem_statements_and_proposal_benefits:{},
-        budget_discussion_proposal_details:{},
-        budget_discussion_costing:{},
-        budget_discussion_further_information:{}
+        bd_contact_information:{},
+        bd_proposal_ownership: {},
+        bd_psapb:{},
+        bd_proposal_details:{},
+        bd_costing:{},
+        bd_further_information:{}
     });
 
     const [isContinueDisabled, setIsContinueDisabled] = useState(true);
@@ -59,7 +59,6 @@ const CreateBudgetDiscussionDialog = ({ open = false, onClose = false }) => {
                 draftId = await createBudgetDiscussionDraft(budgetDiscussionData);
                 setSelectedDraftId(draftId.data.id);
             } else {
-                console.log(budgetDiscussionData);
                 draftId = await updateBudgetDiscussionDraft(budgetDiscussionData, selectedDraftId);
                 alert(`Draft version updated ID: ${draftId.data.id}`);
             }
@@ -67,17 +66,18 @@ const CreateBudgetDiscussionDialog = ({ open = false, onClose = false }) => {
             console.error('Error while saving draft:', error);
         }
     };
+
     useEffect(() => {
-        console.log('budgetDiscussionData changed thrue StateChange');
-        console.table(budgetDiscussionData);
+       // console.log('budgetDiscussionData changed thrue StateChange');
+      //  console.table(budgetDiscussionData);
     }, [budgetDiscussionData]);
 
 
 //     const handleDataChange = (e, dataName) => {
 //         setBudgetDiscussionData({
 //              ...budgetDiscussionData,
-//              budget_discussion_contact_information: {
-//                  ...budgetDiscussionData?.budget_discussion_contact_information,
+//              bd_contact_information: {
+//                  ...budgetDiscussionData?.bd_contact_information,
 //                  [dataName]: e.target.value
 //              }})
 //    };
@@ -100,6 +100,9 @@ const CreateBudgetDiscussionDialog = ({ open = false, onClose = false }) => {
         console.log(handleCreateBudgetDiscussion);
         setLoading(true);
         try {
+                const newBD = await createBudgetDiscussion(budgetDiscussionData);
+                console.log(newId);
+                alert(newid);
               
             // if (
             //     !(

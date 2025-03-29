@@ -46,7 +46,7 @@ export const getBudgetDiscussion = async (id) => {
 export const getBudgetDiscussionTypes = async () => {
     try {
         const { data } = await axiosInstance.get(
-            `/api/budget-discussion-types`
+            `/api/bd-types`
         );
         return data;
     } catch (error) {
@@ -76,7 +76,7 @@ export const getNationalityList = async () => {
 export const getAllCurrencies = async () => {
     try {
         const { data } = await axiosInstance.get(
-            `api/budget-discussion-currency-lists?pagination[pageSize]=1000`
+            `api/bd-currency-lists?pagination[pageSize]=1000`
         );
         return data;
     } catch (error) {
@@ -86,7 +86,7 @@ export const getAllCurrencies = async () => {
 export const getBudgetDiscussionRoadMapList = async () => {
     try {
         const { data } = await axiosInstance.get(
-            `api/budget-discussion-road-maps?pagination[pageSize]=1000`
+            `api/bd-road-maps?pagination[pageSize]=1000`
         );
         return data;
     } catch (error) {
@@ -96,7 +96,7 @@ export const getBudgetDiscussionRoadMapList = async () => {
 export const getBudgetDiscussionIntersectCommittee = async () => {
     try {
         const { data } = await axiosInstance.get(
-            `api/budget-discussion-intersect-committees?pagination[pageSize]=1000`
+            `api/bd-intersect-committees?pagination[pageSize]=1000`
         );
         return data;
     } catch (error) {
@@ -106,17 +106,16 @@ export const getBudgetDiscussionIntersectCommittee = async () => {
 export const getContractTypeList = async () => {
     try {
         const { data } = await axiosInstance.get(
-            `api/budget-discussion-contract-types?pagination[pageSize]=1000`
+            `api/bd-contract-types?pagination[pageSize]=1000`
         );
         return data;
     } catch (error) {
         throw error;
     }
 };
-
 export const createBudgetDiscussionDraft = async (data) => {
     try {
-        const response = await axiosInstance.post(`/api/budget-discussion-drafts`, {
+        const response = await axiosInstance.post(`/api/bd-drafts`, {
             data:{
             draft_data: {
                 ...data,
@@ -124,21 +123,55 @@ export const createBudgetDiscussionDraft = async (data) => {
         });
         return response?.data;
     } catch (error) {
-        console.error('Error in createProposal:', error);
+        console.error('Error in create Budget Discussion Draft:', error);
         throw error;
     }
 };
-
 export const updateBudgetDiscussionDraft = async (data,draftId) => {
     try {
-        const { data } = await axiosInstance.put(
-            `api/budget-discussion-drafts/`+draftId
+        const response = await axiosInstance.put(
+            `api/bd-drafts/`+draftId,{
+                data:{
+                draft_data: {
+                    ...data,
+                }},
+            });
+        return response?.data;
+    } catch (error) {
+        console.error('Error in update Budget Discussion Draft:', error);
+        throw error;
+    }
+};
+export const getBudgetDiscussionDrafts = async () => {
+    try {
+        const { data } = await axiosInstance.get(
+            `api/bd-drafts?pagination[pageSize]=1000&populate=creator`
         );
         return data;
     } catch (error) {
         throw error;
     }
 };
+
+export const createBudgetDiscussion = async (data) => {
+    try {
+        const response = await axiosInstance.post(`/api/bds`, {
+            data:{...data},
+        });
+        return response?.data;
+    } catch (error) {
+        console.error('Error in create Budget Discussion Draft:', error);
+        throw error;
+    }
+};
+
+
+
+
+
+
+
+
 
 export const getSingleProposal = async (id) => {
     try {

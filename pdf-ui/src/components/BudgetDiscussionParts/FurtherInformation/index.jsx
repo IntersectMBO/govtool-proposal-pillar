@@ -10,8 +10,8 @@ const FurtherInformation = ({ setStep, step, currentBudgetDiscussionData, setBud
     const handleDataChange = (e, dataName) => {
         setBudgetDiscussionData({
              ...currentBudgetDiscussionData,
-             budget_discussion_further_information: {
-                  ...currentBudgetDiscussionData?.budget_discussion_further_information,
+             bd_further_information: {
+                  ...currentBudgetDiscussionData?.bd_further_information,
                   [dataName]: e.target.value
              }})
    };

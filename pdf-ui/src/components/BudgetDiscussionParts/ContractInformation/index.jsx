@@ -29,8 +29,8 @@ const ContractInformation = ({ setStep, step, onClose, currentBudgetDiscussionDa
      const handleDataChange = (e, dataName) => {
           setBudgetDiscussionData({
                ...currentBudgetDiscussionData,
-               budget_discussion_contact_information: {
-                    ...currentBudgetDiscussionData?.budget_discussion_contact_information,
+               bd_contact_information: {
+                    ...currentBudgetDiscussionData?.bd_contact_information,
                     [dataName]: e.target.value
                }})
      };
@@ -112,19 +112,19 @@ const ContractInformation = ({ setStep, step, onClose, currentBudgetDiscussionDa
                               <Box>
                                    <TextField
                                         label='*Beneficiary Full Name'
-                                        value={currentBudgetDiscussionData?.budget_discussion_contact_information?.beneficiary_full_name || ''}
+                                        value={currentBudgetDiscussionData?.bd_contact_information?.be_full_name || ''}
                                         helperText='The person responsible for signing the legal contract on behalf of a company / entity (if approved on-chain).'
                                         required
                                         fullWidth
-                                        onChange={(e) => handleDataChange(e, 'beneficiary_full_name')}
+                                        onChange={(e) => handleDataChange(e, 'be_full_name')}
                                         sx={{ mb: 2 }}
                                    />
                                    <TextField
                                         label='*Beneficiary e-mail'
-                                        value={currentBudgetDiscussionData?.budget_discussion_contact_information?.beneficiary_email || ''}
+                                        value={currentBudgetDiscussionData?.bd_contact_information?.be_email || ''}
                                         required
                                         fullWidth
-                                        onChange={(e) => handleDataChange(e, 'beneficiary_email')}
+                                        onChange={(e) => handleDataChange(e, 'be_email')}
                                         sx={{ mb: 2 }}
                                    />
                                    <Box sx={{ display: 'flex', gap: 2}} >
@@ -133,10 +133,10 @@ const ContractInformation = ({ setStep, step, onClose, currentBudgetDiscussionDa
                                                   <TextField
                                                        select
                                                        label='Beneficiary Country of Residence'
-                                                       value={currentBudgetDiscussionData?.budget_discussion_contact_information?.beneficiary_country_of_residence || ''}
+                                                       value={currentBudgetDiscussionData?.bd_contact_information?.be_country_of_res || ''}
                                                        required
                                                        fullWidth
-                                                       onChange={(e) => handleDataChange(e, 'beneficiary_country_of_residence')}
+                                                       onChange={(e) => handleDataChange(e, 'be_country_of_res')}
                                                        SelectProps={{
                                                             SelectDisplayProps: {
                                                                  'data-testid': 'beneficiary-country-of-residence',
@@ -159,10 +159,10 @@ const ContractInformation = ({ setStep, step, onClose, currentBudgetDiscussionDa
                                                   <TextField
                                                        select
                                                        label='Beneficiary Nationality'
-                                                       value={currentBudgetDiscussionData?.budget_discussion_contact_information?.beneficiary_nationality || ''}
+                                                       value={currentBudgetDiscussionData?.bd_contact_information?.be_nationality || ''}
                                                        required
                                                        fullWidth
-                                                       onChange={(e) => handleDataChange(e, 'beneficiary_nationality')}
+                                                       onChange={(e) => handleDataChange(e, 'be_nationality')}
                                                        SelectProps={{
                                                             SelectDisplayProps: {
                                                                  'data-testid': 'beneficiary-nationality',
@@ -185,7 +185,7 @@ const ContractInformation = ({ setStep, step, onClose, currentBudgetDiscussionDa
                                    </Box>
                                    <TextField
                                         label='*Submission Lead Full Name'
-                                        value={currentBudgetDiscussionData?.budget_discussion_contact_information?.submission_lead_full_name || ''}
+                                        value={currentBudgetDiscussionData?.bd_contact_information?.submission_lead_full_name || ''}
                                         required
                                         fullWidth
                                         onChange={(e) => handleDataChange(e, 'submission_lead_full_name')}
@@ -194,7 +194,7 @@ const ContractInformation = ({ setStep, step, onClose, currentBudgetDiscussionDa
                                    />
                                    <TextField
                                         label='*Submission Lead Email'
-                                        value={currentBudgetDiscussionData?.budget_discussion_contact_information?.submission_lead_email || ''}
+                                        value={currentBudgetDiscussionData?.bd_contact_information?.submission_lead_email || ''}
                                         required
                                         fullWidth
                                         onChange={(e) => handleDataChange( e, 'submission_lead_email')}
@@ -204,7 +204,7 @@ const ContractInformation = ({ setStep, step, onClose, currentBudgetDiscussionDa
                               {/* <TextField
                                    select
                                    label='*Is this proposal being submitted on behalf of an individual (the beneficiary), company, or some other group?'
-                                   value={currentBudgetDiscussionData?.budget_discussion_contact_information?.submited_on_behalf || 'Please Choose'}
+                                   value={currentBudgetDiscussionData?.bd_contact_information?.submited_on_behalf || 'Please Choose'}
                                    required
                                    fullWidth
                                    onChange={(e) =>{handleSubmitedOnBehalfChange(e)}}
@@ -220,11 +220,11 @@ const ContractInformation = ({ setStep, step, onClose, currentBudgetDiscussionDa
                                    <MenuItem key={"2"} value={"Company"} >Company</MenuItem>
                                    <MenuItem key={"3"} value={"Group"} >Group</MenuItem>
                               </TextField>
-                              { currentBudgetDiscussionData.budget_discussion_contact_information?.submited_on_behalf === 'Company' ? 
+                              { currentBudgetDiscussionData.bd_contact_information?.submited_on_behalf === 'Company' ? 
                               (<Box>
                                    <TextField
                                         label='Company Name*'
-                                        value={currentBudgetDiscussionData?.budget_discussion_contact_information?.company_name || ''}
+                                        value={currentBudgetDiscussionData?.bd_contact_information?.company_name || ''}
                                         required
                                         fullWidth
                                         onChange={(e) => handleDataChange(e, 'company_name')}
@@ -233,7 +233,7 @@ const ContractInformation = ({ setStep, step, onClose, currentBudgetDiscussionDa
                                    <TextField
                                         label='Company Domain Name'
                                         helperText='Example of domain format to input: intersectmbo.org'
-                                        value={currentBudgetDiscussionData?.budget_discussion_contact_information?.company_domain_name || ''}
+                                        value={currentBudgetDiscussionData?.bd_contact_information?.company_domain_name || ''}
                                         required
                                         fullWidth
                                         onChange={(e) => handleDataChange(e, 'company_domain_name')}
@@ -242,10 +242,10 @@ const ContractInformation = ({ setStep, step, onClose, currentBudgetDiscussionDa
                                    <TextField
                                         select
                                         label='Country of Incorporation'
-                                        value={currentBudgetDiscussionData?.budget_discussion_contact_information?.beneficiary_country_of_incorporation || ''}
+                                        value={currentBudgetDiscussionData?.bd_contact_information?.be_country || ''}
                                         required
                                         fullWidth
-                                        onChange={(e) => handleDataChange(e, 'beneficiary_country_of_incorporation')}
+                                        onChange={(e) => handleDataChange(e, 'be_country')}
                                         SelectProps={{
                                              SelectDisplayProps: {
                                                   'data-testid': 'country-of-incorporation',
@@ -265,11 +265,11 @@ const ContractInformation = ({ setStep, step, onClose, currentBudgetDiscussionDa
                                    </TextField>
                                </Box>) 
                               : "" }
-                              {currentBudgetDiscussionData.budget_discussion_contact_information?.submited_on_behalf === 'Group'? 
+                              {currentBudgetDiscussionData.bd_contact_information?.submited_on_behalf === 'Group'? 
                               (<Box>
                                    <TextField
                                         label='Group Name*'
-                                        value={currentBudgetDiscussionData?.budget_discussion_contact_information?.group_name || ''}
+                                        value={currentBudgetDiscussionData?.bd_contact_information?.group_name || ''}
                                         required
                                         fullWidth
                                         onChange={(e) => handleDataChange(e, 'group_name')}
@@ -277,7 +277,7 @@ const ContractInformation = ({ setStep, step, onClose, currentBudgetDiscussionDa
                                    />
                                    <TextField
                                         label='Type of Group'
-                                        value={currentBudgetDiscussionData?.budget_discussion_contact_information?.type_of_group || ''}
+                                        value={currentBudgetDiscussionData?.bd_contact_information?.type_of_group || ''}
                                         required
                                         fullWidth
                                         onChange={(e) => handleDataChange(e,'type_of_group')}
@@ -285,10 +285,10 @@ const ContractInformation = ({ setStep, step, onClose, currentBudgetDiscussionDa
                                    />
                                    <TextField
                                         label='Key Information to Identify Group'
-                                        value={currentBudgetDiscussionData?.budget_discussion_contact_information?.key_information_to_identify_group || ''}
+                                        value={currentBudgetDiscussionData?.bd_contact_information?.key_info_to_identify_group || ''}
                                         required
                                         fullWidth
-                                        onChange = {(e) => handleDataChange(e, 'key_information_to_identify_group')}
+                                        onChange = {(e) => handleDataChange(e, 'key_info_to_identify_group')}
                                         sx={{ mb: 2 }}
                                    />
                                </Box>) 

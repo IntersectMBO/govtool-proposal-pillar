@@ -13,6 +13,10 @@ const BudgetDiscussionSubmit = ({ setStep, step, currentBudgetDiscussionData, se
                   [dataName]: value
              })
    };
+   const hadleSubmit = () => {
+    console.log(currentBudgetDiscussionData);
+    alert("Submit");
+   }
     useEffect(() => {
         
         if(currentBudgetDiscussionData?.confidentiality === false)
@@ -53,7 +57,7 @@ const BudgetDiscussionSubmit = ({ setStep, step, currentBudgetDiscussionData, se
                                     Submit
                                 </Typography>
                                 <Box color={(theme) => theme.palette.text.grey}>
-                                    <TextField
+                                    {/* <TextField
                                         select
                                         name='Confidentiality'
                                         label='Confidentiality: Is there any reason why your proposal should be kept confidential?'
@@ -82,7 +86,7 @@ const BudgetDiscussionSubmit = ({ setStep, step, currentBudgetDiscussionData, se
                                         disabled={currentBudgetDiscussionData?.confidentiality !== true}
                                         onChange={(e) => handleDataChange(e, 'confidentiality_description')}
                                         sx={{ mb: 2 }}
-                                    />
+                                    /> */}
                                     <FormControlLabel
                                         control={
                                             <Checkbox
@@ -93,17 +97,12 @@ const BudgetDiscussionSubmit = ({ setStep, step, currentBudgetDiscussionData, se
                                         label={
                                             <Typography variant="body2">
                                             <a href="/privacy-policy" target="_blank" rel="noopener noreferrer">
-                                            Privacy policy
+                                                I consent to the public sharing of all information provided in this form, except for Section 1 (Participant Details), in accordance with the Privacy Policy and Terms of Use.
                                             </a>
                                             </Typography>
                                         }
                                         />
-
-                                    
-
-                                    
                                 </Box>
-
                             </Box>
                             <StepperActionButtons onClose={onClose} onSaveDraft={handleSaveDraft} onContinue={setStep}
                                    onBack={setStep} selectedDraftId={selectedDraftId} nextStep={step+1} backStep={step-1}

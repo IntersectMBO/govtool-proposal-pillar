@@ -1,0 +1,33 @@
+{
+  "kind": "collectionType",
+  "collectionName": "bd_costings",
+  "info": {
+    "singularName": "bd-costing",
+    "pluralName": "bd-costings",
+    "displayName": "BD Costing",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "ada_amount": {
+      "type": "decimal"
+    },
+    "amount_in_preferred_currency": {
+      "type": "decimal"
+    },
+    "usd_to_ada_conversion_rate": {
+      "type": "decimal"
+    },
+    "cost_breakdown": {
+      "type": "string"
+    },
+    "preferred_currency": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::bd-currency-list.bd-currency-list"
+    }
+  }
+}

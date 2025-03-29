@@ -35,8 +35,8 @@ const ProblemStatementsAndProposalBenefits = ({ setStep, step, currentBudgetDisc
      const handleDataChange = (e, dataName) => {
         setBudgetDiscussionData({
              ...currentBudgetDiscussionData,
-             budget_discussion_problem_statements_and_proposal_benefits: {
-                 ...currentBudgetDiscussionData?.budget_discussion_problem_statements_and_proposal_benefits,
+             bd_psapb: {
+                 ...currentBudgetDiscussionData?.bd_psapb,
                  [dataName]: e.target.value
              }})
    };
@@ -85,7 +85,7 @@ return (
                             sx={{ mb: 4 }}
                             fullWidth
                             multiline
-                            value={currentBudgetDiscussionData?.budget_discussion_problem_statements_and_proposal_benefits?.problem_statement || ''}
+                            value={currentBudgetDiscussionData?.bd_psapb?.problem_statement || ''}
                             onChange={(e) => handleDataChange(e, 'problem_statement')}
                             helperText={(
                                     <>
@@ -101,7 +101,7 @@ return (
                                             data-testid='problem-statement-helper-character-count'
                                         >
                                             {`${
-                                                currentBudgetDiscussionData?.budget_discussion_problem_statements_and_proposal_benefits?.problem_statement?.length || 0
+                                                currentBudgetDiscussionData?.bd_psapb?.problem_statement?.length || 0
                                             }/${problemStatementMaxLength}`}
                                         </Typography>
                                     </>
@@ -113,9 +113,9 @@ return (
                                     'data-testid': 'problem-statement-input',
                                 },
                             }}
-                            error={errors?.budget_discussion_problem_statements_and_proposal_benefits?.problem_statement}
+                            error={errors?.bd_psapb?.problem_statement}
                             FormHelperTextProps={{
-                                'data-testid': errors?.budget_discussion_problem_statements_and_proposal_benefits?.problem_statement
+                                'data-testid': errors?.bd_psapb?.problem_statement
                                     ? 'problem-statement-helper-error'
                                     : 'problem-statement-helper',
                             }}
@@ -128,7 +128,7 @@ return (
                             sx={{ mb: 4 }}
                             multiline
                             fullWidth
-                            value={currentBudgetDiscussionData?.budget_discussion_problem_statements_and_proposal_benefits?.proposal_benefit || ''}
+                            value={currentBudgetDiscussionData?.bd_psapb?.proposal_benefit || ''}
                             onChange={(e) => handleDataChange(e, 'proposal_benefit')}
                             helperText={(
                                 <>
@@ -144,7 +144,7 @@ return (
                                         data-testid='proposal-benefit-helper-character-count'
                                     >
                                         {`${
-                                            currentBudgetDiscussionData?.budget_discussion_problem_statements_and_proposal_benefits?.proposal_benefit?.length || 0
+                                            currentBudgetDiscussionData?.bd_psapb?.proposal_benefit?.length || 0
                                         }/${proposalBenefitMaxLength}`}
                                     </Typography>
                                 </>
@@ -155,9 +155,9 @@ return (
                                     'data-testid': 'proposal-benefit-input',
                                 },
                             }}
-                            error={errors?.budget_discussion_problem_statements_and_proposal_benefits?.proposal_benefit}
+                            error={errors?.bd_psapb?.proposal_benefit}
                             FormHelperTextProps={{
-                                'data-testid': errors?.budget_discussion_problem_statements_and_proposal_benefits?.proposal_benefit
+                                'data-testid': errors?.bd_psapb?.proposal_benefit
                                     ? 'proposal-benefit-helper-error'
                                     : 'proposal-benefit-helper',
                             }}
@@ -167,7 +167,7 @@ return (
                             name='Product Roadmap'
                             label='Product Roadmap'
                             helperText='Does this proposal align to the Product Roadmap and Roadmap Goals?'
-                            value={currentBudgetDiscussionData?.budget_discussion_problem_statements_and_proposal_benefits?.roadmap_name || ''}
+                            value={currentBudgetDiscussionData?.bd_psapb?.roadmap_name || ''}
                             required
                             fullWidth
                             onChange={(e) => handleDataChange(e, 'roadmap_name')}
@@ -191,13 +191,13 @@ return (
                         </TextField>
                         <TextField
                             select
-                            name='budget_discussion_type'
+                            name='bd_type'
                             label='Budget discussion type'
                             helperText={(<> {'Please click'} <Link href="">here</Link> {'to see details of Intersect Committees.'}</>)}
-                            value={currentBudgetDiscussionData?.budget_discussion_problem_statements_and_proposal_benefits?.budget_discussion_type_name || ''}
+                            value={currentBudgetDiscussionData?.bd_psapb?.type_name || ''}
                             required
                             fullWidth
-                            onChange={(e) => handleDataChange(e, 'budget_discussion_type_name')}
+                            onChange={(e) => handleDataChange(e, 'type_name')}
                             SelectProps={{
                                     SelectDisplayProps: {
                                         'data-testid': 'budget-discussion-type-name', 
@@ -209,9 +209,9 @@ return (
                                 <MenuItem 
                                             key={option?.id} 
                                             value={option?.id} 
-                                            data-testid={`${option?.attributes.budget_discussion_type_name?.toLowerCase()}-button`} 
+                                            data-testid={`${option?.attributes.type_name?.toLowerCase()}-button`} 
                                         >
-                                        {option?.attributes.budget_discussion_type_name}
+                                        {option?.attributes.type_name}
                                 </MenuItem>
                         ))}
                         
@@ -221,7 +221,7 @@ return (
                             name='Committee Alignment'
                             label='Committee Alignment: Which of the Intersect Committees does your proposal align to?'
                             helperText={(<> {'Please click'} <Link href="">here</Link> {'to see details of Intersect Committees.'}</>)}
-                            value={currentBudgetDiscussionData?.budget_discussion_problem_statements_and_proposal_benefits?.committee_name || ''}
+                            value={currentBudgetDiscussionData?.bd_psapb?.committee_name || ''}
                             required
                             fullWidth
                             onChange={(e) => handleDataChange(e, 'committee_name')}
@@ -249,7 +249,7 @@ return (
                             rows={4}
                             fullWidth
                             multiline
-                            value={currentBudgetDiscussionData?.budget_discussion_problem_statements_and_proposal_benefits?.supplementary_endorsement || ''}
+                            value={currentBudgetDiscussionData?.bd_psapb?.supplementary_endorsement || ''}
                             onChange={(e) => handleDataChange(e, 'supplementary_endorsement')}
                             helperText={(
                                     <>
@@ -266,7 +266,7 @@ return (
                                             data-testid='supplementary-endorsement-helper-character-count'
                                         >
                                             {`${
-                                                currentBudgetDiscussionData?.budget_discussion_problem_statements_and_proposal_benefits?.supplementary_endorsement?.length || 0
+                                                currentBudgetDiscussionData?.bd_psapb?.supplementary_endorsement?.length || 0
                                             }/${supplementaryEndorsementMaxLength}`}
                                         </Typography>
                                     </>
@@ -278,9 +278,9 @@ return (
                                     'data-testid': 'supplementary-endorsement-input',
                                 },
                             }}
-                            error={errors?.budget_discussion_problem_statements_and_proposal_benefits?.supplementary_endorsement}
+                            error={errors?.bd_psapb?.supplementary_endorsement}
                             FormHelperTextProps={{
-                                'data-testid': errors?.budget_discussion_problem_statements_and_proposal_benefits?.supplementary_endorsement
+                                'data-testid': errors?.bd_psapb?.supplementary_endorsement
                                     ? 'supplementary-endorsement-helper-error'
                                     : 'supplementary-endorsement-helper',
                             }}

@@ -18,11 +18,12 @@ import {
 } from '@mui/material';
 import { useEffect, useRef, useState } from 'react';
 import Slider from 'react-slick';
-import { ProposalCard } from '..';
 import { useDebounce } from '../..//lib/hooks';
-import { getProposals } from '../../lib/api';
+import { getBudgetDiscussionDrafts } from '../../lib/api';
 import { settings } from '../../lib/carouselSettings';
 import { useTheme } from '@emotion/react';
+import { blue } from '@mui/material/colors';
+import { BudgetDiscussionsCard } from '..';
 
 const BudgetDiscussionsList = ({
     currentBudgetDiscussion=null,
@@ -31,6 +32,7 @@ const BudgetDiscussionsList = ({
     isDraft = false,
     statusList = [],
     startEdittinButtonClick = false,
+    startEdittingDraft,
     setShowAllActivated = false,
     showAllActivated = false,
 }) => {
@@ -67,56 +69,72 @@ const BudgetDiscussionsList = ({
         <Box key={`extra-${index}`} height={'100%'} />
     ));
 
-    const fetchProposals = async (reset = true, page) => {
+    const fetchBudgetDiscussions = async (reset = true, page) => {
         const haveSubmittedFilter = statusList?.some(
             (filter) => filter === 'submitted'
         );
-
         try {
-            let query = '';
-            if (isDraft) {
-                if (statusList?.length === 0 || statusList?.length === 2) {
-         //           query = `filters[$and][2][is_draft]=true&pagination[page]=${page}&pagination[pageSize]=25&sort[createdAt]=${sortType}&populate[0]=proposal_links&populate[1]=proposal_withdrawals&populate[2]=proposal_constitution_content`;
-                } else {
-                    const isSubmitted = haveSubmittedFilter ? 'true' : 'false';
-        //            query = `filters[$and][2][is_draft]=true&filters[$and][3][prop_submitted]=${isSubmitted}&pagination[page]=${page}&pagination[pageSize]=25&sort[createdAt]=${sortType}&populate[0]=proposal_links&populate[1]=proposal_withdrawals&populate[2]=proposal_constitution_content`;
-                }
-            } else {
-                if (statusList?.length === 0 || statusList?.length === 2) {
-        /*            query = `filters[$and][0][budget_discussion_type_id]=${
-                        currentBudgetDiscussion?.id
-                    }&filters[$and][1][prop_name][$containsi]=${
-                        debouncedSearchValue || ''
-                    }&pagination[page]=${page}&pagination[pageSize]=25&sort[createdAt]=${sortType}&populate[0]=proposal_links&populate[1]=proposal_withdrawals&populate[2]=proposal_constitution_content`;
-               */ } else {
-                    const isSubmitted = haveSubmittedFilter ? 'true' : 'false';
-                 //   query = `filters[$and][0][budget_discussion_type_id]=${
-                 //       currentBudgetDiscussion?.id
-                 //   }&filters[$and][1][prop_name][$containsi]=${
-                 //       debouncedSearchValue || ''
-                 //   }&filters[$and][2][prop_submitted]=${isSubmitted}&pagination[page]=${page}&pagination[pageSize]=25&sort[createdAt]=${sortType}&populate[0]=proposal_links&populate[1]=proposal_withdrawals&populate[2]=proposal_constitution_content`;
-                }
+            if (isDraft)
+            {
+                // dohvati sve draft
+                let bdlist = await getBudgetDiscussionDrafts();
+                setBudgetDiscussionList(bdlist.data);
             }
-            const { currentBudgetDiscussion, pgCount } = await getProposals(query);
-            if (!currentBudgetDiscussion) return;
+            else
+            {
+                //dohvati sve prave 
+            }
 
-          //  if (reset) {
-          //      setBudgetDiscussionList(currentBudgetDiscussion);
-          //  } else {
-          //      setBudgetDiscussionList((prev) => [...prev, ...currentBudgetDiscussion]);
-         //   }
-
-            setPageCount(pgCount);
-        } catch (error) {
-            console.error(error);
         }
+        catch
+            {
+                console.error(error);
+            }
+
+        //     let query = '';
+        //     if (isDraft) {
+        //         if (statusList?.length === 0 || statusList?.length === 2) {
+        //  //           query = `filters[$and][2][is_draft]=true&pagination[page]=${page}&pagination[pageSize]=25&sort[createdAt]=${sortType}&populate[0]=proposal_links&populate[1]=proposal_withdrawals&populate[2]=proposal_constitution_content`;
+        //         } else {
+        //             const isSubmitted = haveSubmittedFilter ? 'true' : 'false';
+        // //            query = `filters[$and][2][is_draft]=true&filters[$and][3][prop_submitted]=${isSubmitted}&pagination[page]=${page}&pagination[pageSize]=25&sort[createdAt]=${sortType}&populate[0]=proposal_links&populate[1]=proposal_withdrawals&populate[2]=proposal_constitution_content`;
+        //         }
+        //     } else {
+        //         if (statusList?.length === 0 || statusList?.length === 2) {
+        // /*            query = `filters[$and][0][bd_type_id]=${
+        //                 currentBudgetDiscussion?.id
+        //             }&filters[$and][1][prop_name][$containsi]=${
+        //                 debouncedSearchValue || ''
+        //             }&pagination[page]=${page}&pagination[pageSize]=25&sort[createdAt]=${sortType}&populate[0]=proposal_links&populate[1]=proposal_withdrawals&populate[2]=proposal_constitution_content`;
+        //        */ } else {
+        //             const isSubmitted = haveSubmittedFilter ? 'true' : 'false';
+        //          //   query = `filters[$and][0][bd_type_id]=${
+        //          //       currentBudgetDiscussion?.id
+        //          //   }&filters[$and][1][prop_name][$containsi]=${
+        //          //       debouncedSearchValue || ''
+        //          //   }&filters[$and][2][prop_submitted]=${isSubmitted}&pagination[page]=${page}&pagination[pageSize]=25&sort[createdAt]=${sortType}&populate[0]=proposal_links&populate[1]=proposal_withdrawals&populate[2]=proposal_constitution_content`;
+        //         }
+        //     }
+        //     const { currentBudgetDiscussion, pgCount } = await getProposals(query);
+        //     if (!currentBudgetDiscussion) return;
+
+        //   //  if (reset) {
+        //   //      setBudgetDiscussionList(currentBudgetDiscussion);
+        //   //  } else {
+        //   //      setBudgetDiscussionList((prev) => [...prev, ...currentBudgetDiscussion]);
+        //  //   }
+
+        //     setPageCount(pgCount);
+        // } catch (error) {
+        //     console.error(error);
+        // }
     };
 
     useEffect(() => {
         if (!mounted) {
             setMounted(true);
         } else {
-            fetchProposals(true, 1);
+            fetchBudgetDiscussions(true, 1);
             setCurrentPage(1);
         }
     }, [
@@ -129,7 +147,7 @@ const BudgetDiscussionsList = ({
 
     useEffect(() => {
         if (shouldRefresh) {
-            fetchProposals(true, 1);
+            fetchBudgetDiscussions(true, 1);
             setShouldRefresh(false);
         }
     }, [shouldRefresh]);
@@ -147,11 +165,11 @@ const BudgetDiscussionsList = ({
                         component='h2'
                         color='text.black'
                         marginRight={2}
-                    >{console.log(currentBudgetDiscussion)}
+                    >
                         {isDraft
                             ? 'Unfinished Drafts'
                             : currentBudgetDiscussion?.attributes
-                                  ?.budget_discussion_type_name}
+                                  ?.type_name}
                     </Typography>
                     {budgetDiscussionList?.length > 0 &&
                         (setShowAllActivated
@@ -164,11 +182,11 @@ const BudgetDiscussionsList = ({
                                     if (setShowAllActivated) {
                                         setShowAllActivated(() => ({
                                             is_activated: true,
-                                            budget_discussion_type: budgetDiscussionType,
+                                            bd_type: budgetDiscussionType,
                                         }));
                                     }
                                 }}
-                                data-testid={budgetDiscussion?.attributes?.budget_discussion_type_name.replace(/\s+/g, '-').toLowerCase() +'-show-all-button'}
+                              //  data-testid={budgetDiscussion?.attributes?.type_name.replace(/\s+/g, '-').toLowerCase() +'-show-all-button'}
                             >
                                 {setShowAllActivated
                                     ? setShowAllActivated?.is_activated
@@ -205,14 +223,15 @@ const BudgetDiscussionsList = ({
                 ) ? (
                     <Box>
                         <Grid container spacing={4} paddingY={4}>
-                            {budgetDiscussionList?.map((proposal, index) => (
+                            {budgetDiscussionList?.map((bd, index) => (
                                 <Grid item key={index} xs={12} sm={6} md={4}>
-                                    <ProposalCard
-                                        proposal={proposal}
-                                        startEdittinButtonClick={
-                                            startEdittinButtonClick
-                                        }
-                                        setShouldRefresh={setShouldRefresh}
+                                    <BudgetDiscussionsCard
+                                       // proposal={proposal}
+                                        startEdittingDraft ={startEdittingDraft}
+                                        // startEdittinButtonClick={
+                                        //     startEdittinButtonClick
+                                        // }
+                                       // setShouldRefresh={setShouldRefresh}
                                     />
                                 </Grid>
                             ))}
@@ -226,7 +245,7 @@ const BudgetDiscussionsList = ({
                             >
                                 <Button
                                     onClick={() => {
-                                        fetchProposals(false, currentPage + 1);
+                                        fetchBudgetDiscussions(false, currentPage + 1);
                                         setCurrentPage((prev) => prev + 1);
                                     }}
                                 >
@@ -238,14 +257,14 @@ const BudgetDiscussionsList = ({
                 ) : (
                     <Box py={2}>
                         <Slider ref={sliderRef} {...settings}>
-                            {budgetDiscussionList?.map((proposal, index) => (
+                            {budgetDiscussionList?.map((bd, index) => (
                                 <Box key={index} height={'100%'}>
-                                    <ProposalCard
-                                        proposal={proposal}
-                                        startEdittinButtonClick={
-                                            startEdittinButtonClick
-                                        }
-                                        setShouldRefresh={setShouldRefresh}
+                                    <BudgetDiscussionsCard
+                                        budgetDiscussion={bd}
+                                        isDraft={isDraft}
+                                        startEdittingDraft={startEdittingDraft}
+                                        startEdittinButtonClick={startEdittinButtonClick}
+                                       // setShouldRefresh={setShouldRefresh}
                                     />
                                 </Box>
                             ))}

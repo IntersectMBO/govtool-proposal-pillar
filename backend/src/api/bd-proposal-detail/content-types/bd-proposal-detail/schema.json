@@ -1,0 +1,42 @@
+{
+  "kind": "collectionType",
+  "collectionName": "bd_proposal_details",
+  "info": {
+    "singularName": "bd-proposal-detail",
+    "pluralName": "bd-proposal-details",
+    "displayName": "BD Proposal Detail",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "experience": {
+      "type": "string"
+    },
+    "proposal_name": {
+      "type": "string"
+    },
+    "key_dependencies": {
+      "type": "string"
+    },
+    "contract_type_name": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::bd-contract-type.bd-contract-type"
+    },
+    "maintain_and_support": {
+      "type": "string"
+    },
+    "proposal_description": {
+      "type": "string"
+    },
+    "key_proposal_deliverables": {
+      "type": "string"
+    },
+    "resourcing_duration_estimates": {
+      "type": "string"
+    }
+  }
+}

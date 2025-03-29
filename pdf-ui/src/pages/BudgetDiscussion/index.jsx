@@ -45,7 +45,7 @@ const ProposedBudgetDiscussion = () => {
     const [filtersAnchorEl, setFiltersAnchorEl] = useState(null);
     const [showAllActivated, setShowAllActivated] = useState({
         is_activated: false,
-        budget_discussion_type: null,
+        bd_type: null,
     });
 
     const openFilters = Boolean(filtersAnchorEl);
@@ -117,7 +117,7 @@ const ProposedBudgetDiscussion = () => {
     };
 
     useEffect(() => {
-        console.log(walletAPI);
+        //console.log(walletAPI);
         if(budgetDiscussionTypeList.length == 0)
             fetchBudgetDiscussionTypes();
     }, []);
@@ -332,17 +332,17 @@ const ProposedBudgetDiscussion = () => {
                                                 {budgetDiscussionTypeList?.map(
                                                     (ga, index) => (
                                                         <MenuItem
-                                                            key={`${ga?.attributes?.budget_discussion_type_name}-${index}`}
+                                                            key={`${ga?.attributes?.bd_type_name}-${index}`}
                                                             selected={filteredBudgetDiscussionTypeList?.some(
                                                                 (filter) =>
                                                                     filter?.id ===
                                                                     ga?.id
                                                             )}
-                                                            id={`${ga?.attributes?.budget_discussion_type_name}-radio-wrapper`}
+                                                            id={`${ga?.attributes?.bd_type_name}-radio-wrapper`}
                                                             data-testid={
                                                                 ga?.attributes
-                                                                    ?.budget_discussion_type_name
-                                                                    ? `${ga?.attributes?.budget_discussion_type_name?.toLowerCase()}-radio-wrapper`
+                                                                    ?.bd_type_name
+                                                                    ? `${ga?.attributes?.bd_type_name?.toLowerCase()}-radio-wrapper`
                                                                     : `${index}-radio-wrapper`
                                                             }
                                                         >
@@ -361,12 +361,12 @@ const ProposedBudgetDiscussion = () => {
                                                                                 filter?.id ===
                                                                                 ga?.id
                                                                         )}
-                                                                        id={`${ga?.attributes?.budget_discussion_type_name}-radio`}
+                                                                        id={`${ga?.attributes?.bd_type_name}-radio`}
                                                                         data-testid={
                                                                             ga
                                                                                 ?.attributes
-                                                                                ?.budget_discussion_type_name
-                                                                                ? `${ga?.attributes?.budget_discussion_type_name?.toLowerCase()}-radio`
+                                                                                ?.bd_type_name
+                                                                                ? `${ga?.attributes?.bd_type_name?.toLowerCase()}-radio`
                                                                                 : `${index}-radio`
                                                                         }
                                                                     />
@@ -374,7 +374,7 @@ const ProposedBudgetDiscussion = () => {
                                                                 label={
                                                                     ga
                                                                         ?.attributes
-                                                                        ?.budget_discussion_type_name
+                                                                        ?.bd_type_name
                                                                 }
                                                             />
                                                         </MenuItem>
@@ -506,15 +506,13 @@ const ProposedBudgetDiscussion = () => {
                     </Grid>
                 </Grid>
             </Grid>
-
             <Box>
-                {console.log(filteredBudgetDiscussionTypeList.length)}
                 {(filteredBudgetDiscussionTypeList?.length > 0
                     ? filteredBudgetDiscussionTypeList
                     : budgetDiscussionTypeList
                 )?.map((item, index) => (
                     <Box
-                        key={`${item?.attributes?.budget_discussion_type_name}-${index}`}
+                        key={`${item?.attributes?.bd_type_name}-${index}`}
                         pt={index === 0 && 4}
                     >
                          <BudgetDiscussionsList

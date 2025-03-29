@@ -9,9 +9,9 @@ import {
     List,
     ListItem,
 } from '@mui/material';
-import { ProposalsList } from '..';
-import { getProposals } from '../../lib/api';
+import { getBudgetDiscussionDrafts } from '../../lib/api';
 import { useEffect, useState } from 'react';
+import { BudgetDiscussionsList } from '../';
 import { StepperActionButtons } from '../BudgetDiscussionParts'
 
 const BudgetDiscussionInfo = ({setStep, step, onClose, setBudgetDiscussionData, currentBudgetDiscussionData, selectedDraftId, setSelectedDraftId, handleSaveDraft}) => {
@@ -20,9 +20,7 @@ const BudgetDiscussionInfo = ({setStep, step, onClose, setBudgetDiscussionData, 
 
     const fetchBudgetDiscussionDrafts = async () => {
         try {
-            const query = `filters[$and][0][is_draft]=true&pagination[page]=1&pagination[pageSize]=1`;
-
-            const { total } = await getProposals(query);
+            const { total } = await getBudgetDiscussionDrafts();
             if (total === 0) return;
             setDraftsEnabled(true);
         } catch (error) {
@@ -30,13 +28,13 @@ const BudgetDiscussionInfo = ({setStep, step, onClose, setBudgetDiscussionData, 
         }
     };
 
-    // useEffect(() => {
-    //     if (!mounted) {
-    //         setMounted(true);
-    //     } else {
-    //         fetchProposals();
-    //     }
-    // }, [mounted]);
+    useEffect(() => {
+        if (!mounted) {
+            setMounted(true);
+        } else {
+            fetchBudgetDiscussionDrafts();
+        }
+    }, [mounted]);
 
     return (
         <Box display='flex' flexDirection='column'>
@@ -308,19 +306,16 @@ const BudgetDiscussionInfo = ({setStep, step, onClose, setBudgetDiscussionData, 
                     </Card>
                 )}
             </Box>
-
             <Box mt={4}>
-                <ProposalsList
+                {<BudgetDiscussionsList
                     isDraft={true}
-                    startEdittinButtonClick={(proposal) => {
-                        setStep(2);
-                        setProposalData(
-                            proposal?.attributes?.content?.attributes
-                        );
-                        setSelectedDraftId(proposal?.id);
+                    startEdittingDraft={(budgetDiscussion) => {
+                       setStep(2);
+                       setBudgetDiscussionData(budgetDiscussion?.attributes.draft_data);
+                       setSelectedDraftId(budgetDiscussion?.id);
                     }}
                     statusList={[]}
-                />
+                />}
             </Box>
         </Box>
     );

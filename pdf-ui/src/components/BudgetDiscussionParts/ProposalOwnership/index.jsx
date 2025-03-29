@@ -23,19 +23,19 @@ const ProposalOwnership = ({ setStep, step, currentBudgetDiscussionData, setBudg
           const value = e.target.type === 'checkbox' ? e.target.checked  : e.target.value;
           setBudgetDiscussionData({
              ...currentBudgetDiscussionData,
-             budget_discussion_proposal_ownership: {
-                 ...currentBudgetDiscussionData?.budget_discussion_proposal_ownership,
+             bd_proposal_ownership: {
+                 ...currentBudgetDiscussionData?.bd_proposal_ownership,
                  [dataName]: value
              }})
    };
    const handleSubmitedOnBehalfChange = (e) => {
      setBudgetDiscussionData({
           ...currentBudgetDiscussionData,
-          budget_discussion_proposal_ownership: {
-              ...currentBudgetDiscussionData?.budget_discussion_proposal_ownership,
+          bd_proposal_ownership: {
+              ...currentBudgetDiscussionData?.bd_proposal_ownership,
           submited_on_behalf: e.target.value,
-          company_name: '', company_domain_name: '', beneficiary_country_of_incorporation: '',
-          group_name: '', type_of_group: '', key_information_to_identify_group: '' }});
+          company_name: '', company_domain_name: '', be_country: '',
+          group_name: '', type_of_group: '', key_info_to_identify_group: '' }});
      };
 
      return (
@@ -73,7 +73,7 @@ const ProposalOwnership = ({ setStep, step, currentBudgetDiscussionData, setBudg
                               <TextField
                                    select
                                    label='*Is this proposal being submitted on behalf of an individual (the beneficiary), company, or some other group?'
-                                   value={currentBudgetDiscussionData?.budget_discussion_proposal_ownership?.submited_on_behalf || 'Please Choose'}
+                                   value={currentBudgetDiscussionData?.bd_proposal_ownership?.submited_on_behalf || 'Please Choose'}
                                    required
                                    fullWidth
                                    onChange={(e) =>{handleSubmitedOnBehalfChange(e)}}
@@ -89,11 +89,11 @@ const ProposalOwnership = ({ setStep, step, currentBudgetDiscussionData, setBudg
                                    <MenuItem key={"2"} value={"Company"} >Company</MenuItem>
                                    <MenuItem key={"3"} value={"Group"} >Group</MenuItem>
                               </TextField>
-                              { currentBudgetDiscussionData.budget_discussion_proposal_ownership?.submited_on_behalf === 'Company' ? 
+                              { currentBudgetDiscussionData.bd_proposal_ownership?.submited_on_behalf === 'Company' ? 
                               (<Box>
                                    <TextField
                                         label='Company Name*'
-                                        value={currentBudgetDiscussionData?.budget_discussion_proposal_ownership?.company_name || ''}
+                                        value={currentBudgetDiscussionData?.bd_proposal_ownership?.company_name || ''}
                                         required
                                         fullWidth
                                         onChange={(e) => handleDataChange(e, 'company_name')}
@@ -102,7 +102,7 @@ const ProposalOwnership = ({ setStep, step, currentBudgetDiscussionData, setBudg
                                    <TextField
                                         label='Company Domain Name'
                                         helperText='Example of domain format to input: intersectmbo.org'
-                                        value={currentBudgetDiscussionData?.budget_discussion_proposal_ownership?.company_domain_name || ''}
+                                        value={currentBudgetDiscussionData?.bd_proposal_ownership?.company_domain_name || ''}
                                         required
                                         fullWidth
                                         onChange={(e) => handleDataChange(e, 'company_domain_name')}
@@ -111,10 +111,10 @@ const ProposalOwnership = ({ setStep, step, currentBudgetDiscussionData, setBudg
                                    <TextField
                                         select
                                         label='Country of Incorporation'
-                                        value={currentBudgetDiscussionData?.budget_discussion_proposal_ownership?.beneficiary_country_of_incorporation || ''}
+                                        value={currentBudgetDiscussionData?.bd_proposal_ownership?.be_country || ''}
                                         required
                                         fullWidth
-                                        onChange={(e) => handleDataChange(e, 'beneficiary_country_of_incorporation')}
+                                        onChange={(e) => handleDataChange(e, 'be_country')}
                                         SelectProps={{
                                              SelectDisplayProps: {
                                                   'data-testid': 'country-of-incorporation',
@@ -134,11 +134,11 @@ const ProposalOwnership = ({ setStep, step, currentBudgetDiscussionData, setBudg
                                    </TextField>
                                </Box>) 
                               : "" }
-                              {currentBudgetDiscussionData.budget_discussion_proposal_ownership?.submited_on_behalf === 'Group'? 
+                              {currentBudgetDiscussionData.bd_proposal_ownership?.submited_on_behalf === 'Group'? 
                               (<Box>
                                    <TextField
                                         label='Group Name*'
-                                        value={currentBudgetDiscussionData?.budget_discussion_proposal_ownership?.group_name || ''}
+                                        value={currentBudgetDiscussionData?.bd_proposal_ownership?.group_name || ''}
                                         required
                                         fullWidth
                                         onChange={(e) => handleDataChange(e, 'group_name')}
@@ -146,7 +146,7 @@ const ProposalOwnership = ({ setStep, step, currentBudgetDiscussionData, setBudg
                                    />
                                    <TextField
                                         label='Type of Group'
-                                        value={currentBudgetDiscussionData?.budget_discussion_proposal_ownership?.type_of_group || ''}
+                                        value={currentBudgetDiscussionData?.bd_proposal_ownership?.type_of_group || ''}
                                         required
                                         fullWidth
                                         onChange={(e) => handleDataChange(e,'type_of_group')}
@@ -154,10 +154,10 @@ const ProposalOwnership = ({ setStep, step, currentBudgetDiscussionData, setBudg
                                    />
                                    <TextField
                                         label='Key Information to Identify Group'
-                                        value={currentBudgetDiscussionData?.budget_discussion_proposal_ownership?.key_information_to_identify_group || ''}
+                                        value={currentBudgetDiscussionData?.bd_proposal_ownership?.key_info_to_identify_group || ''}
                                         required
                                         fullWidth
-                                        onChange = {(e) => handleDataChange(e, 'key_information_to_identify_group')}
+                                        onChange = {(e) => handleDataChange(e, 'key_info_to_identify_group')}
                                         sx={{ mb: 2 }}
                                    />
                                </Box>) 
@@ -165,7 +165,7 @@ const ProposalOwnership = ({ setStep, step, currentBudgetDiscussionData, setBudg
                               <TextField
                                         select
                                         label='Proposal Public Champion: Who would you like to be the public proposal champion?'
-                                        value={currentBudgetDiscussionData?.budget_discussion_proposal_ownership?.proposal_public_champion || ''}
+                                        value={currentBudgetDiscussionData?.bd_proposal_ownership?.proposal_public_champion || ''}
                                         required
                                         fullWidth
                                         onChange={(e) => handleDataChange(e, 'proposal_public_champion')}
@@ -182,7 +182,7 @@ const ProposalOwnership = ({ setStep, step, currentBudgetDiscussionData, setBudg
                                    </TextField>
                                    <TextField
                                         label='Please provide your preferred contact details that will be shared publicly (e.g. email address, X handle, Discord handle, Github) ?'
-                                        value={currentBudgetDiscussionData?.budget_discussion_proposal_ownership?.social_handles || ''}
+                                        value={currentBudgetDiscussionData?.bd_proposal_ownership?.social_handles || ''}
                                         required
                                         fullWidth
                                         onChange={(e) => handleDataChange(e, 'social_handles')}
@@ -191,7 +191,7 @@ const ProposalOwnership = ({ setStep, step, currentBudgetDiscussionData, setBudg
                                    <FormControlLabel
                                         control={
                                              <Checkbox
-                                             checked={currentBudgetDiscussionData?.budget_discussion_proposal_ownership?.agreed}
+                                             checked={currentBudgetDiscussionData?.bd_proposal_ownership?.agreed}
                                              onChange={(e) => handleDataChange(e, 'agreed')}
                                              />
                                         }

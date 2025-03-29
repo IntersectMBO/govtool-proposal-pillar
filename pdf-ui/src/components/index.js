@@ -16,3 +16,4 @@ export { default as CommentReview } from './CommentReview';
 export { default as CommentReportPopup } from './CommentReportPopup';
 export { default as CreateBudgetDiscussionDialog } from './CreateBudgetDiscussionDialog';
 export { default as BudgetDiscussionsList } from './BudgetDiscussionsList';
+export { default as BudgetDiscussionsCard } from './BudgetDiscussionCard';
