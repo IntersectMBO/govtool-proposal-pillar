@@ -35,6 +35,9 @@
       "type": "relation",
       "relation": "oneToOne",
       "target": "api::bd-intersect-committee.bd-intersect-committee"
+    },
+    "explain_proposal_roadmap": {
+      "type": "string"
     }
   }
 }

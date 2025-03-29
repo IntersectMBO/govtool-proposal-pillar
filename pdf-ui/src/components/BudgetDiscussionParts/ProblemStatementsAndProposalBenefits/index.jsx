@@ -32,6 +32,7 @@ const ProblemStatementsAndProposalBenefits = ({ setStep, step, currentBudgetDisc
        };
        fetchData();
      }, []);
+
      const handleDataChange = (e, dataName) => {
         setBudgetDiscussionData({
              ...currentBudgetDiscussionData,
@@ -39,7 +40,7 @@ const ProblemStatementsAndProposalBenefits = ({ setStep, step, currentBudgetDisc
                  ...currentBudgetDiscussionData?.bd_psapb,
                  [dataName]: e.target.value
              }})
-   };
+     };
 
 return (
     <Box display='flex' flexDirection='column'>
@@ -192,7 +193,7 @@ return (
                         <TextField
                             select
                             name='bd_type'
-                            label='Budget discussion type'
+                            label='Does your proposal align to any of the budget categories?'
                             helperText={(<> {'Please click'} <Link href="">here</Link> {'to see details of Intersect Committees.'}</>)}
                             value={currentBudgetDiscussionData?.bd_psapb?.type_name || ''}
                             required
@@ -216,10 +217,25 @@ return (
                         ))}
                         
                         </TextField>
+                        {currentBudgetDiscussionData?.bd_psapb?.type_name==11?(
+                            <TextField
+                                name='Propodsl explanation'
+                                label='Please explain how your proposal supports the Product Roadmap.'
+                                rows={4}
+                                multiline
+                                value={currentBudgetDiscussionData?.bd_psapb?.explain_proposal_roadmap || ''}
+                                required
+                                fullWidth
+                                onChange={(e) => handleDataChange(e, 'explain_proposal_roadmap')}
+                                sx={{ mb: 2 }}
+                                /> 
+                        ):null}
+
+
                         <TextField
                             select
                             name='Committee Alignment'
-                            label='Committee Alignment: Which of the Intersect Committees does your proposal align to?'
+                            label='Does your proposal align with any of the Intersect Committees?'
                             helperText={(<> {'Please click'} <Link href="">here</Link> {'to see details of Intersect Committees.'}</>)}
                             value={currentBudgetDiscussionData?.bd_psapb?.committee_name || ''}
                             required

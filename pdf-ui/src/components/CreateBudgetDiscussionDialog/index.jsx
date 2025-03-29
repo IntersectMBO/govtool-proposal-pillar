@@ -154,26 +154,19 @@ const CreateBudgetDiscussionDialog = ({ open = false, onClose = false }) => {
         return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
       };
     const validateField = (e,dataName)=>{
-       
+        setErrors({})
         if(e.target.required)
         {
-            setErrors({ ...errors, [dataName]: ''})
             if (!e.target.value.trim()) {
                 setErrors({ ...errors, [dataName]:  e.target.name +` is required`})
             } 
         }
-        if (e.target.type === 'email' && isValidEmail(e.target.value)) {
-            setErrors({ ...errors, [name]: "Invalid email format" });
+        if (e.target.type === 'email' && !isValidEmail(e.target.value)) {
+            setErrors({ ...errors, [dataName]: "Invalid email format" });
         }
-        if(name === 'nu' && isNaN(Number(value))) {
-            setErrors({ ...errors, [name]: "Must be a number" });
+        if(e.target.type === 'number' && isNaN(Number(value))) {
+            setErrors({ ...errors, [dataName]: "Must be a number" });
         }
-        if(e.target.required)
-        {
-            console.log("validacija",e,dataName);
-        }
-
-
     }
     useEffect(() => {
         console.log('promenjen Error',errors);
@@ -285,6 +278,7 @@ const CreateBudgetDiscussionDialog = ({ open = false, onClose = false }) => {
                                     setErrors={setErrors}                                    
                                     setSelectedDraftId={setSelectedDraftId}
                                     handleSaveDraft={handleSaveDraft}
+                                    validateField={validateField}
                                 />
                             )}
                             {step === 4 && (
@@ -298,6 +292,7 @@ const CreateBudgetDiscussionDialog = ({ open = false, onClose = false }) => {
                                     setErrors={setErrors}                                    
                                     setSelectedDraftId={setSelectedDraftId}
                                     handleSaveDraft={handleSaveDraft}
+                                    validateField={validateField}
                                 />
                             )}
                             {step === 5 && (
@@ -311,6 +306,7 @@ const CreateBudgetDiscussionDialog = ({ open = false, onClose = false }) => {
                                     setErrors={setErrors}                                    
                                     setSelectedDraftId={setSelectedDraftId}
                                     handleSaveDraft={handleSaveDraft}
+                                    validateField={validateField}
                                  />
                             )}
                             {step === 6 && (
@@ -324,6 +320,7 @@ const CreateBudgetDiscussionDialog = ({ open = false, onClose = false }) => {
                                     setErrors={setErrors}                                    
                                     setSelectedDraftId={setSelectedDraftId}
                                     handleSaveDraft={handleSaveDraft}
+                                    validateField={validateField}
                                 />
                             )}
                             {step === 7 && (
@@ -337,6 +334,7 @@ const CreateBudgetDiscussionDialog = ({ open = false, onClose = false }) => {
                                     setErrors={setErrors}                                    
                                     setSelectedDraftId={setSelectedDraftId}
                                     handleSaveDraft={handleSaveDraft}
+                                    validateField={validateField}
                                 />
                             )}
                             {step === 8 && (
@@ -350,6 +348,7 @@ const CreateBudgetDiscussionDialog = ({ open = false, onClose = false }) => {
                                     setErrors={setErrors}                                    
                                     setSelectedDraftId={setSelectedDraftId}
                                     handleSaveDraft={handleSaveDraft}
+                                    validateField={validateField}
                                 />
                             )}
                             {step === 9 && (
@@ -363,6 +362,7 @@ const CreateBudgetDiscussionDialog = ({ open = false, onClose = false }) => {
                                     setErrors={setErrors}                                    
                                     setSelectedDraftId={setSelectedDraftId}
                                     handleSaveDraft={handleSaveDraft}
+                                    validateField={validateField}
                                 />
                             )}
                             {step === 10 && (
@@ -377,6 +377,7 @@ const CreateBudgetDiscussionDialog = ({ open = false, onClose = false }) => {
                                     setErrors={setErrors}                                    
                                     setSelectedDraftId={setSelectedDraftId}
                                     handleSaveDraft={handleSaveDraft}
+                                    validateField={validateField}
                                 />
                             )}  
                         </Grid>

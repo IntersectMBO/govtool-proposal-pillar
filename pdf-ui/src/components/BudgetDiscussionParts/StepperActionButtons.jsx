@@ -23,7 +23,7 @@ const StepperActionButtons = ({
 }) => {
   // Calculate backStep if not provided
   const calculatedBackStep = backStep !== undefined ? backStep : nextStep - 2;
-  const [continueDisabled,setContinueDisabled] = useState(false);
+  const [continueDisabled, setContinueDisabled] = useState(false);
   const  hasAnyNonEmptyString = (obj) => {
     if (typeof obj === 'string') {
            return obj.trim() !== '';
@@ -34,17 +34,14 @@ const StepperActionButtons = ({
     if (Array.isArray(obj)) {
       return obj.some(item => hasAnyNonEmptyString(item));
       }
-
       return Object.values(obj).some(value => hasAnyNonEmptyString(value));
     }
   useEffect(() => {
-    console.log('Iz Akcija error promenjen', errors)
-    setContinueDisabled(hasAnyNonEmptyString(errors));
-    
-}, [errors]); 
+    setContinueDisabled(hasAnyNonEmptyString(errors));  
+}, [errors,continueDisabled]); 
   return (
     <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 2 }}>
-      <Box>
+      <Box>{continueDisabled}
         {showCancel && (
           <Button
             variant="outlined"

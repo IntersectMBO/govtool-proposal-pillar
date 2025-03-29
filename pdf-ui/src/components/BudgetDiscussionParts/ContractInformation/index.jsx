@@ -5,7 +5,7 @@ import { StepperActionButtons } from '../../BudgetDiscussionParts';
 
 const ContractInformation = ({ setStep, step, onClose, currentBudgetDiscussionData, setBudgetDiscussionData,  setSelectedDraftId, selectedDraftId, handleSaveDraft, errors, setErrors, validateField }) => {
      const [allCountries, setAllCountries] = useState([]);
-     const [allNationalities, setAllNationalities] = useState([]);
+     //const [allNationalities, setAllNationalities] = useState([]);
 
      useEffect(() => {
           const fetchData = async () => {
@@ -14,15 +14,14 @@ const ContractInformation = ({ setStep, step, onClose, currentBudgetDiscussionDa
                          const countriesResponse = await getCountryList();
                          setAllCountries(countriesResponse?.data || []);
                     }
-                    if (!allNationalities.length) {
-                         const nationalitiesResponse = await getNationalityList();
-                         setAllNationalities(nationalitiesResponse?.data || []);
-                    }
+                    // if (!allNationalities.length) {
+                    //      const nationalitiesResponse = await getNationalityList();
+                    //      setAllNationalities(nationalitiesResponse?.data || []);
+                    // }
                } catch (error) {
                     console.error("Error fetching data:", error);
                }
           };
-
           fetchData();
      }, []);
      
@@ -178,13 +177,13 @@ const ContractInformation = ({ setStep, step, onClose, currentBudgetDiscussionDa
                                                        }}
                                                        sx={{ mb: 2 }}
                                                   >
-                                                       {allNationalities?.map((option) => (
+                                                       {allCountries?.map((option) => (
                                                             <MenuItem 
                                                                       key={option?.id} 
                                                                       value={option?.id} 
                                                                       data-testid={`${option?.attributes.nationality_name?.toLowerCase()}-button`} 
                                                                  >
-                                                                 {option?.attributes.nationality_name}
+                                                                 {option?.attributes.country_name}
                                                             </MenuItem>
                                                        ))}
                                                   </TextField>
@@ -192,19 +191,24 @@ const ContractInformation = ({ setStep, step, onClose, currentBudgetDiscussionDa
                                         </Grid>     
                                    </Box>
                                    <TextField
+                                        name='*Submission Lead Full Name'
                                         label='*Submission Lead Full Name'
                                         value={currentBudgetDiscussionData?.bd_contact_information?.submission_lead_full_name || ''}
                                         required
                                         fullWidth
+                                        helperText={errors['bd_contact_information.submission_lead_full_name']?.trim() || '*the person submitting the proposal'}
+                                        error={!!errors['bd_contact_information.submission_lead_full_name']?.trim()}
                                         onChange={(e) => handleDataChange(e, 'submission_lead_full_name')}
                                         sx={{ mb: 2 }}
-                                        helperText='*the person submitting the proposal'
                                    />
                                    <TextField
+                                        name='*Submission Lead Email'
                                         label='*Submission Lead Email'
                                         value={currentBudgetDiscussionData?.bd_contact_information?.submission_lead_email || ''}
                                         required
                                         fullWidth
+                                        helperText={errors['bd_contact_information.submission_lead_email']?.trim()}
+                                        error={!!errors['bd_contact_information.submission_lead_email']?.trim()}
                                         onChange={(e) => handleDataChange( e, 'submission_lead_email')}
                                         sx={{ mb: 2 }}
                                    />

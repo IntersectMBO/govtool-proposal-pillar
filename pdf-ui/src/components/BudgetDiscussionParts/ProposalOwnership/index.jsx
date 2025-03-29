@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { StepperActionButtons } from '../../BudgetDiscussionParts';
 import { getCountryList } from '../../../lib/api';
 
-const ProposalOwnership = ({ setStep, step, currentBudgetDiscussionData, setBudgetDiscussionData, onClose, setSelectedDraftId, selectedDraftId, handleSaveDraft }) => {
+const ProposalOwnership = ({ setStep, step, currentBudgetDiscussionData, setBudgetDiscussionData, onClose, errors,setErrors, setSelectedDraftId, selectedDraftId, handleSaveDraft, validateField }) => {
      const [allCountries, setAllCountries] = useState([]);
      useEffect(() => {
                const fetchData = async () => {
@@ -20,6 +20,7 @@ const ProposalOwnership = ({ setStep, step, currentBudgetDiscussionData, setBudg
                fetchData();
           }, []);
      const handleDataChange = (e, dataName) => {
+          validateField(e,'bd_proposal_ownership.'+dataName)
           const value = e.target.type === 'checkbox' ? e.target.checked  : e.target.value;
           setBudgetDiscussionData({
              ...currentBudgetDiscussionData,
@@ -27,8 +28,9 @@ const ProposalOwnership = ({ setStep, step, currentBudgetDiscussionData, setBudg
                  ...currentBudgetDiscussionData?.bd_proposal_ownership,
                  [dataName]: value
              }})
-   };
+     };
    const handleSubmitedOnBehalfChange = (e) => {
+     setErrors({});
      setBudgetDiscussionData({
           ...currentBudgetDiscussionData,
           bd_proposal_ownership: {
@@ -92,19 +94,24 @@ const ProposalOwnership = ({ setStep, step, currentBudgetDiscussionData, setBudg
                               { currentBudgetDiscussionData.bd_proposal_ownership?.submited_on_behalf === 'Company' ? 
                               (<Box>
                                    <TextField
+                                        name='Company Name*'
                                         label='Company Name*'
                                         value={currentBudgetDiscussionData?.bd_proposal_ownership?.company_name || ''}
                                         required
                                         fullWidth
                                         onChange={(e) => handleDataChange(e, 'company_name')}
+                                        helperText={errors['bd_proposal_ownership.company_name']?.trim()}
+                                        error={!!errors['bd_proposal_ownership.company_name']?.trim()}
                                         sx={{ mb: 2 }}
                                    />
                                    <TextField
+                                        name='Company Domain Name'
                                         label='Company Domain Name'
-                                        helperText='Example of domain format to input: intersectmbo.org'
                                         value={currentBudgetDiscussionData?.bd_proposal_ownership?.company_domain_name || ''}
                                         required
                                         fullWidth
+                                        helperText={errors['bd_proposal_ownership.company_domain_name']?.trim() || 'Example of domain format to input: intersectmbo.org' }
+                                        error={!!errors['bd_proposal_ownership.company_domain_name']?.trim()}
                                         onChange={(e) => handleDataChange(e, 'company_domain_name')}
                                         sx={{ mb: 2 }}
                                    />
@@ -137,28 +144,40 @@ const ProposalOwnership = ({ setStep, step, currentBudgetDiscussionData, setBudg
                               {currentBudgetDiscussionData.bd_proposal_ownership?.submited_on_behalf === 'Group'? 
                               (<Box>
                                    <TextField
+                                        name='Group Name*'
                                         label='Group Name*'
                                         value={currentBudgetDiscussionData?.bd_proposal_ownership?.group_name || ''}
                                         required
                                         fullWidth
                                         onChange={(e) => handleDataChange(e, 'group_name')}
+                                        helperText={errors['bd_proposal_ownership.group_name']?.trim()}
+                                        error={!!errors['bd_proposal_ownership.group_name']?.trim()}
                                         sx={{ mb: 2 }}
                                    />
                                    <TextField
+                                        name='Type of Group'
                                         label='Type of Group'
                                         value={currentBudgetDiscussionData?.bd_proposal_ownership?.type_of_group || ''}
                                         required
                                         fullWidth
                                         onChange={(e) => handleDataChange(e,'type_of_group')}
+                                        helperText={errors['bd_proposal_ownership.type_of_group']?.trim()}
+                                        error={!!errors['bd_proposal_ownership.type_of_group']?.trim()}
                                         sx={{ mb: 2 }}
                                    />
                                    <TextField
+                                        name='Key Information to Identify Group'
                                         label='Key Information to Identify Group'
                                         value={currentBudgetDiscussionData?.bd_proposal_ownership?.key_info_to_identify_group || ''}
                                         required
                                         fullWidth
+                                        nultiline
+                                        rows={4}
+                                        size='large'
                                         onChange = {(e) => handleDataChange(e, 'key_info_to_identify_group')}
-                                        sx={{ mb: 2 }}
+                                        helperText={errors['bd_proposal_ownership.key_info_to_identify_group']?.trim()}
+                                        error={!!errors['bd_proposal_ownership.key_info_to_identify_group']?.trim()}
+                                        sx={{ mb: 4 }}
                                    />
                                </Box>) 
                               : ""}
@@ -169,13 +188,15 @@ const ProposalOwnership = ({ setStep, step, currentBudgetDiscussionData, setBudg
                                         required
                                         fullWidth
                                         onChange={(e) => handleDataChange(e, 'proposal_public_champion')}
+                                        helperText={errors['bd_proposal_ownership.proposal_public_champion']?.trim()||'A Proposal Champion is a formal advocate for the proposal. They are responsible for providing information on the proposal, answering queries and generally building support amongst DReps. To facilitate this, the preferred contact details will be shared publicly.'}
+                                        error={!!errors['bd_proposal_ownership.proposal_public_champion']?.trim()}
                                         SelectProps={{
                                              SelectDisplayProps: {
                                                   'data-testid': 'proposal-public-champion', 
                                              },
                                         }}
                                         sx={{ mb: 2 }}
-                                        helperText='A Proposal Champion is a formal advocate for the proposal. They are responsible for providing information on the proposal, answering queries and generally building support amongst DReps. To facilitate this, the preferred contact details will be shared publicly.'
+                                        
                                    >
                                         <MenuItem key={"1"} value={"Beneficiary listed above"} >Beneficiary listed above</MenuItem>
                                         <MenuItem key={"2"} value={"Submission lead listed above"} >Submission lead listed above</MenuItem>
@@ -186,6 +207,8 @@ const ProposalOwnership = ({ setStep, step, currentBudgetDiscussionData, setBudg
                                         required
                                         fullWidth
                                         onChange={(e) => handleDataChange(e, 'social_handles')}
+                                        helperText={errors['bd_proposal_ownership.social_handles']?.trim()}
+                                        error={!!errors['bd_proposal_ownership.social_handles']?.trim()}
                                         sx={{ mb: 2 }}
                                    />
                                    <FormControlLabel
@@ -204,7 +227,7 @@ const ProposalOwnership = ({ setStep, step, currentBudgetDiscussionData, setBudg
                                                                       
                                 </Box>
                               <StepperActionButtons onClose={onClose} onSaveDraft={handleSaveDraft} onContinue={setStep}
-                                   onBack={setStep} selectedDraftId={selectedDraftId} nextStep={step+1} backStep={step-1}
+                                   onBack={setStep} selectedDraftId={selectedDraftId} nextStep={step+1} backStep={step-1} errors={errors} 
                               />
                          </CardContent>
                     </Card>

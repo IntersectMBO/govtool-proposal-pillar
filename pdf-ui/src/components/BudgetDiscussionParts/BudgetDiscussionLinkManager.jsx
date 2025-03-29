@@ -5,7 +5,7 @@ import { useTheme } from '@mui/material/styles';
 
 import { isValidURLFormat } from '../../lib/utils';
 
-const BudgetDiscussionLinkManager = ({maxLinks = 7, budgetDiscussionData, setBudgetDiscussionData, setLinksData, errors, setErrors}) => {
+const BudgetDiscussionLinkManager = ({maxLinks = 20, budgetDiscussionData, setBudgetDiscussionData, setLinksData, errors, setErrors}) => {
     const theme = useTheme();
     const [linksErrors, setLinksErrors] = useState({});
 
@@ -90,7 +90,7 @@ const BudgetDiscussionLinkManager = ({maxLinks = 7, budgetDiscussionData, setBud
 
         <Box sx={{  align: 'center'}}>
             <Typography variant='body1' mb={2} sx={{  textAlign: 'center', mt: 2 }}>
-                (maximum of 7 entries)
+                (maximum of {maxLinks} entries)
             </Typography>
             {budgetDiscussionData.bd_further_information?.proposal_links?.map((link, index) => (
                 <Box
