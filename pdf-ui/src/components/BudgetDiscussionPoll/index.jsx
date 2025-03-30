@@ -18,6 +18,7 @@ import {
     updateBudgetDiscussionPollVote,
 } from '../../lib/api';
 import { formatDateWithOffset } from '../../lib/utils';
+import DrepVotersDialog from '../DrepVotersDialog';
 
 const BudgetDiscussionPoll = ({
     fetchActivePoll = false,
@@ -29,6 +30,7 @@ const BudgetDiscussionPoll = ({
         useAppContext();
     const [userPollVote, setUserPollVote] = useState(null);
     const [showChangeVoteModal, setShowChangeVoteModal] = useState(false);
+    const [showDrepVotersDialog, setShowDrepVotersDialog] = useState(false);
 
     const fetchUserPollVote = async (id) => {
         try {
@@ -246,7 +248,12 @@ const BudgetDiscussionPoll = ({
                                 }%)`}
                             </Typography>
 
-                            <Button variant='text'>See details</Button>
+                            <Button
+                                variant='text'
+                                onClick={() => setShowDrepVotersDialog('YES')}
+                            >
+                                See details
+                            </Button>
                         </Box>
                         <Box
                             display={'flex'}
@@ -267,7 +274,12 @@ const BudgetDiscussionPoll = ({
                                         : 0
                                 }%)`}
                             </Typography>
-                            <Button variant='text'>See details</Button>
+                            <Button
+                                variant='text'
+                                onClick={() => setShowDrepVotersDialog('NO')}
+                            >
+                                See details
+                            </Button>
                         </Box>
 
                         {user &&
@@ -388,6 +400,13 @@ const BudgetDiscussionPoll = ({
                         </Box>
                     </Box>
                 </Modal>
+
+                <DrepVotersDialog
+                    open={showDrepVotersDialog}
+                    handleClose={() => setShowDrepVotersDialog(false)}
+                    drepList={drepList}
+                    pollID={poll?.id}
+                />
             </>
         );
     }

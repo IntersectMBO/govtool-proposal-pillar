@@ -18,4 +18,5 @@ export { default as CommentReportPopup } from './CommentReportPopup';
 export { default as BudgetDiscussionInfoSegment } from './BudgetDiscussionInfoSegment';
 export { default as CreateBudgetDiscussionDialog } from './CreateBudgetDiscussionDialog';
 export { default as BudgetDiscussionsList } from './BudgetDiscussionsList';
+export { default as DrepVotersDialog } from './DrepVotersDialog';
 export { default as BudgetDiscussionsCard } from './BudgetDiscussionCard';
