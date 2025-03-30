@@ -43,7 +43,7 @@ import {
     deleteBudgetDiscussion,
     getComments,
     getBudgetDiscussion,
-    getPolls,
+    getBudgetDiscussionPoll,
 } from '../../../lib/api';
 import { formatIsoDate, openInNewTab } from '../../../lib/utils';
 import ProposalOwnModal from '../../../components/ProposalOwnModal';
@@ -243,8 +243,8 @@ const SingleBudgetDiscussion = ({ id }) => {
 
     const fetchActivePoll = async () => {
         try {
-            const query = `filters[$and][0][proposal_id][$eq]=${proposal?.id}&filters[$and][1][is_poll_active]=true&pagination[page]=1&pagination[pageSize]=1&sort[createdAt]=desc`;
-            const { polls, pgCount, total } = await getPolls({
+            const query = `filters[$and][0][bd_proposal_id][$eq]=${proposal?.id}&filters[$and][1][is_poll_active]=true&pagination[page]=1&pagination[pageSize]=1&sort[createdAt]=desc`;
+            const { polls, pgCount, total } = await getBudgetDiscussionPoll({
                 query: query,
             });
             if (!polls?.length === 0) return;
@@ -277,15 +277,15 @@ const SingleBudgetDiscussion = ({ id }) => {
                     <CreateBudgetDiscussionDialog
                         open={openEditDialog}
                         onClose={() => setOpenEditDialog(false)}
-                        current_bd_id= {proposal.id}                                                
+                        current_bd_id={proposal.id}
                     />
+                ) : (
                     // <EditProposalDialog
                     //     proposal={proposal}
                     //     openEditDialog={openEditDialog}
                     //     handleCloseEditDialog={handleCloseEditDialog}
                     //     setMounted={setMounted}
                     // />
-                ) : (
                     <Box>
                         <Box mt={3}>
                             <Button
@@ -296,7 +296,11 @@ const SingleBudgetDiscussion = ({ id }) => {
                                         fill={theme.palette.primary.main}
                                     />
                                 }
-                                onClick={() => navigate(`/proposal_discussion/budget_discussion`)}
+                                onClick={() =>
+                                    navigate(
+                                        `/proposal_discussion/budget_discussion`
+                                    )
+                                }
                             >
                                 Show all
                             </Button>
