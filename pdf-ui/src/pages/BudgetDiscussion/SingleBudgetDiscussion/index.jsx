@@ -30,9 +30,7 @@ import { useEffect, useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
     CommentCard,
-    EditProposalDialog,
     BudgetDiscussionPoll,
-    ReviewVersions,
     DeleteProposalModal,
     BudgetDiscussionInfoSegment,
     CreateBudgetDiscussionDialog,
@@ -47,20 +45,15 @@ import {
 } from '../../../lib/api';
 import { formatIsoDate, openInNewTab } from '../../../lib/utils';
 import ProposalOwnModal from '../../../components/ProposalOwnModal';
+import BudgetDiscussionReviewVersions from '../../../components/BudgetDiscussionReviewVersions';
 
 const SingleBudgetDiscussion = ({ id }) => {
     const MAX_COMMENT_LENGTH = 2500;
     const navigate = useNavigate();
     const openLink = (link) => openInNewTab(link);
 
-    const {
-        user,
-        setLoading,
-        setOpenUsernameModal,
-        setUser,
-        walletAPI,
-        clearStates,
-    } = useAppContext();
+    const { user, setLoading, setOpenUsernameModal, walletAPI } =
+        useAppContext();
 
     const theme = useTheme();
     const [proposal, setProposal] = useState(null);
@@ -260,18 +253,17 @@ const SingleBudgetDiscussion = ({ id }) => {
         } else {
             fetchProposal(id);
             fetchComments(1);
-            
         }
     }, [id, mounted]);
 
     useEffect(() => {
         if (mounted) {
-            fetchComments(1);            
+            fetchComments(1);
         }
     }, [commentsSortType]);
     useEffect(() => {
-        if(!proposal?.id) return
-        fetchActivePoll()
+        if (!proposal?.id) return;
+        fetchActivePoll();
     }, [proposal]);
 
     return !proposal ? null : proposal?.attributes?.content?.attributes
@@ -285,12 +277,6 @@ const SingleBudgetDiscussion = ({ id }) => {
                         current_bd_id={proposal.id}
                     />
                 ) : (
-                    // <EditProposalDialog
-                    //     proposal={proposal}
-                    //     openEditDialog={openEditDialog}
-                    //     handleCloseEditDialog={handleCloseEditDialog}
-                    //     setMounted={setMounted}
-                    // />
                     <Box>
                         <Box mt={3}>
                             <Button
@@ -735,7 +721,7 @@ const SingleBudgetDiscussion = ({ id }) => {
                                                     Review Versions
                                                 </Button>
 
-                                                <ReviewVersions
+                                                <BudgetDiscussionReviewVersions
                                                     open={reviewVersionsOpen}
                                                     onClose={
                                                         handleCloseReviewVersions

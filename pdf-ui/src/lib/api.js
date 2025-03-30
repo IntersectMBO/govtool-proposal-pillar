@@ -243,6 +243,15 @@ export const createBudgetDiscussion = async (data) => {
     }
 };
 
+export const getBudgetDiscussionVersions = async (id) => {
+    try {
+        const { data } = await axiosInstance.get(`/api/bd/versions/${id}`);
+        return data?.data;
+    } catch (error) {
+        throw error;
+    }
+};
+
 export const getSingleProposal = async (id) => {
     try {
         const { data } = await axiosInstance.get(`/api/proposals/${id}`);
