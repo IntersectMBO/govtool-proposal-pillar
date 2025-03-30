@@ -22,7 +22,7 @@ const CreateBudgetDiscussionDialog = ({ open = false, onClose = false }) => {
     const location = useLocation();
     const navigate = useNavigate();
     const theme = useTheme();
-    const {user, walletAPI, setOpenUsernameModal, setUser, clearStates , getVotingPower  } = useAppContext();
+    const {user, walletAPI, setOpenUsernameModal, setUser, clearStates , getVotingPower ,setLoading } = useAppContext();
     const [step, setStep] = useState(1);
     const [budgetDiscussionData, setBudgetDiscussionData] = useState({
         bd_contact_information:{},
@@ -289,7 +289,7 @@ const CreateBudgetDiscussionDialog = ({ open = false, onClose = false }) => {
             for (const sectionName of sections) {
                 const rules = validationRules[sectionName];
                 if (!rules) continue;         
-                if (!proposal[sectionName] && sectionName !== 'intersect_named_administrator') {
+                if (!proposal[sectionName]) {
                     if (rules.required) {
                         allErrors[sectionName] = 'Required section is missingaaa';
                     }
