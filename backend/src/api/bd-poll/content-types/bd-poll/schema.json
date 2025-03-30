@@ -12,7 +12,7 @@
   },
   "pluginOptions": {},
   "attributes": {
-    "bd_proposal_jd": {
+    "bd_proposal_id": {
       "type": "string"
     },
     "poll_yes": {
