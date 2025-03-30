@@ -15,7 +15,6 @@ import {
 } from '../pages';
 import { loginUserToApp } from '../lib/helpers';
 import { setAxiosBaseURL } from '../lib/axiosInstance'; // Import axiosInstance and setAxiosBaseURL
-import BudgetDiscussion from '../pages/BudgetDiscussion';
 
 const GlobalWrapper = ({ ...props }) => {
     const pathname = props?.pathname;
@@ -29,6 +28,7 @@ const GlobalWrapper = ({ ...props }) => {
         setValidateMetadata,
         user,
         clearStates,
+        setFetchDRepVotingPowerList
     } = useAppContext();
     const [mounted, setMounted] = useState(false);
 
@@ -37,6 +37,7 @@ const GlobalWrapper = ({ ...props }) => {
         locale: GovToolAssemblyLocale,
         validateMetadata: GovToolAssemblyValidateMetadata,
         pdfApiUrl: GovToolAssemblyPdfApiUrl,
+        fetchDRepVotingPowerList: GovToolFetchDRepVotingPowerList
     } = props;
 
     function getProposalID(url) {
@@ -63,6 +64,9 @@ const GlobalWrapper = ({ ...props }) => {
             setWalletAPI(GovToolAssemblyWalletAPI);
             if (GovToolAssemblyValidateMetadata) {
                 setValidateMetadata(() => GovToolAssemblyValidateMetadata);
+            }
+            if(GovToolFetchDRepVotingPowerList){
+                setFetchDRepVotingPowerList(()=>GovToolFetchDRepVotingPowerList)
             }
             await loginUserToApp({
                 wallet: GovToolAssemblyWalletAPI,
