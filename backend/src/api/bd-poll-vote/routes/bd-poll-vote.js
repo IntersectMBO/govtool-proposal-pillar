@@ -11,7 +11,6 @@ module.exports = createCoreRouter("api::bd-poll-vote.bd-poll-vote", {
   config: {
     find: {
       roles: ["authenticated"],
-      middlewares: ["global::is-owner"],
     },
     create: {
       roles: ["authenticated"],
