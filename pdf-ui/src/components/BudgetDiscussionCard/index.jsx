@@ -280,7 +280,7 @@ const BudgetDiscussionCard = ({
                                // data-testid={`budget-discussion-${proposal?.id}-title`}
                             >
                                 {
-                                   budgetDiscussion?.attributes.draft_data.bd_proposal_details?.proposal_name
+                                   budgetDiscussion?.attributes.draft_data.bd_proposal_detail?.proposal_name
                                 }
                             </Typography>
                             <Typography

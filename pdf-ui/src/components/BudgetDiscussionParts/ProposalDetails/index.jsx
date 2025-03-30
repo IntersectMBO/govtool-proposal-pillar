@@ -28,13 +28,13 @@ const ProposalDetails = ({ setStep, step, currentBudgetDiscussionData, setBudget
        fetchData();
      }, []);
     useEffect(() => {
-             validateSection("bd_proposal_details");
-          }, [currentBudgetDiscussionData?.bd_proposal_details]);
+             validateSection("bd_proposal_detail");
+          }, [currentBudgetDiscussionData?.bd_proposal_detail]);
      const handleDataChange = (e, dataName) => {
         setBudgetDiscussionData({
              ...currentBudgetDiscussionData,
-             bd_proposal_details: {
-                 ...currentBudgetDiscussionData?.bd_proposal_details,
+             bd_proposal_detail: {
+                 ...currentBudgetDiscussionData?.bd_proposal_detail,
                  [dataName]: e.target.value
              }})
    };
@@ -78,12 +78,12 @@ return (
                     <TextField
                         name='Name of proposal'
                         label='What is your proposed name to be used to reference this proposal publicly?'
-                        value={currentBudgetDiscussionData?.bd_proposal_details?.proposal_name || ''}
+                        value={currentBudgetDiscussionData?.bd_proposal_detail?.proposal_name || ''}
                         required
                         fullWidth
                         onChange={(e) => handleDataChange(e, 'proposal_name')}
-                        helperText={errors['bd_proposal_details.proposal_name']?.trim() || 'Ideally this should give an indication of the work being done or project goal.'}
-                        error={!!errors['bd_proposal_details.proposal_name']?.trim()}
+                        helperText={errors['bd_proposal_detail.proposal_name']?.trim() || 'Ideally this should give an indication of the work being done or project goal.'}
+                        error={!!errors['bd_proposal_detail.proposal_name']?.trim()}
                         sx={{ mb: 2 }}
                     />
                     <TextField
@@ -94,9 +94,9 @@ return (
                         sx={{ mb: 4 }}
                         fullWidth
                         multiline
-                        value={currentBudgetDiscussionData?.bd_proposal_details?.proposal_description || ''}
+                        value={currentBudgetDiscussionData?.bd_proposal_detail?.proposal_description || ''}
                         onChange={(e) => handleDataChange(e, 'proposal_description')}
-                        helperText={errors['bd_proposal_details.proposal_description']?.trim()||
+                        helperText={errors['bd_proposal_detail.proposal_description']?.trim()||
                             (
                                 <>
                                     <Typography
@@ -111,7 +111,7 @@ return (
                                         data-testid='proposal-description-helper-character-count'
                                     >
                                         {`${
-                                            currentBudgetDiscussionData?.bd_proposal_details?.proposal_description?.length || 0
+                                            currentBudgetDiscussionData?.bd_proposal_detail?.proposal_description?.length || 0
                                         }/${proposalDescriptionMaxLength}`}
                                     </Typography>
                                 </>
@@ -123,9 +123,9 @@ return (
                                 'data-testid': 'proposal-description-input',
                             },
                         }}
-                        error={errors['bd_proposal_details.proposal_description']?.trim()}
+                        error={errors['bd_proposal_detail.proposal_description']?.trim()}
                         FormHelperTextProps={{
-                            'data-testid': errors?.bd_proposal_details?.proposal_description
+                            'data-testid': errors?.bd_proposal_detail?.proposal_description
                                 ? 'proposal-description-helper-error'
                                 : 'proposal-description-helper',
                         }}
@@ -139,9 +139,9 @@ return (
                         multiline
                         fullWidth
                         required
-                        value={currentBudgetDiscussionData?.bd_proposal_details?.key_dependencies || ''}
+                        value={currentBudgetDiscussionData?.bd_proposal_detail?.key_dependencies || ''}
                         onChange={(e) => handleDataChange(e, 'key_dependencies')}
-                        helperText={errors['bd_proposal_details.key_dependencies']?.trim()||(
+                        helperText={errors['bd_proposal_detail.key_dependencies']?.trim()||(
                             <>
                                 <Typography
                                     variant='caption'
@@ -155,7 +155,7 @@ return (
                                     data-testid='key-dependencies-helper-character-count'
                                 >
                                     {`${
-                                        currentBudgetDiscussionData?.bd_proposal_details?.key_dependencies?.length || 0
+                                        currentBudgetDiscussionData?.bd_proposal_detail?.key_dependencies?.length || 0
                                     }/${keyDependenciesMaxLength}`}
                                 </Typography>
                             </>
@@ -166,9 +166,9 @@ return (
                                 'data-testid': 'key-dependencies-input',
                             },
                         }}
-                        error={errors['bd_proposal_details.key_dependencies']?.trim()}
+                        error={errors['bd_proposal_detail.key_dependencies']?.trim()}
                         FormHelperTextProps={{
-                            'data-testid': errors?.bd_proposal_details?.key_dependencies
+                            'data-testid': errors?.bd_proposal_detail?.key_dependencies
                                 ? 'key-dependencies-helper-error'
                                 : 'key-dependencies-helper',
                         }}
@@ -178,11 +178,11 @@ return (
                         label='How will this proposal be maintained and supported after initial development?'
                         rows={4}
                         multiline
-                        value={currentBudgetDiscussionData?.bd_proposal_details?.maintain_and_support || ''}
+                        value={currentBudgetDiscussionData?.bd_proposal_detail?.maintain_and_support || ''}
                         required
                         fullWidth
-                        helperText={errors['bd_proposal_details.maintain_and_support']?.trim()}
-                        error={!!errors['bd_proposal_details.maintain_and_support']?.trim()}
+                        helperText={errors['bd_proposal_detail.maintain_and_support']?.trim()}
+                        error={!!errors['bd_proposal_detail.maintain_and_support']?.trim()}
                         onChange={(e) => handleDataChange(e, 'maintain_and_support')}
                         sx={{ mb: 2 }}
                       />
@@ -195,9 +195,9 @@ return (
                         fullWidth
                         multiline
                         required
-                        value={currentBudgetDiscussionData?.bd_proposal_details?.key_proposal_deliverables || ''}
+                        value={currentBudgetDiscussionData?.bd_proposal_detail?.key_proposal_deliverables || ''}
                         onChange={(e) => handleDataChange(e, 'key_proposal_deliverables')}
-                        helperText={errors['bd_proposal_details.key_proposal_deliverables']?.trim()||(
+                        helperText={errors['bd_proposal_detail.key_proposal_deliverables']?.trim()||(
                                 <>
                                     <Typography
                                         variant='caption'
@@ -211,7 +211,7 @@ return (
                                         data-testid='key-proposal-deliverables-helper-character-count'
                                     >
                                         {`${
-                                            currentBudgetDiscussionData?.bd_proposal_details?.key_proposal_deliverables?.length || 0
+                                            currentBudgetDiscussionData?.bd_proposal_detail?.key_proposal_deliverables?.length || 0
                                         }/${keyProposalDeliverablesMaxLength}`}
                                     </Typography>
                                 </>
@@ -223,9 +223,9 @@ return (
                                 'data-testid': 'key-proposal-deliverables-input',
                             },
                         }}
-                        error={!!errors['bd_proposal_details.key_proposal_deliverables']?.trim()}
+                        error={!!errors['bd_proposal_detail.key_proposal_deliverables']?.trim()}
                         FormHelperTextProps={{
-                            'data-testid': errors?.bd_proposal_details?.key_proposal_deliverables
+                            'data-testid': errors?.bd_proposal_detail?.key_proposal_deliverables
                                 ? 'key-proposal-deliverables-helper-error'
                                 : 'key-proposal-deliverables-helper',
                         }}
@@ -239,9 +239,9 @@ return (
                         fullWidth
                         required
                         multiline
-                        value={currentBudgetDiscussionData?.bd_proposal_details?.resourcing_duration_estimates || ''}
+                        value={currentBudgetDiscussionData?.bd_proposal_detail?.resourcing_duration_estimates || ''}
                         onChange={(e) => handleDataChange(e, 'resourcing_duration_estimates')}
-                        helperText={errors['bd_proposal_details.resourcing_duration_estimates']?.trim()||(
+                        helperText={errors['bd_proposal_detail.resourcing_duration_estimates']?.trim()||(
                                 <>
                                     <Typography
                                         variant='caption'
@@ -255,7 +255,7 @@ return (
                                         data-testid='resourcing-duration-estimates-helper-character-count'
                                     >
                                         {`${
-                                            currentBudgetDiscussionData?.bd_proposal_details?.resourcing_duration_estimates?.length || 0
+                                            currentBudgetDiscussionData?.bd_proposal_detail?.resourcing_duration_estimates?.length || 0
                                         }/${resourcingDurationEstimatesMaxLength}`}
                                     </Typography>
                                 </>
@@ -267,9 +267,9 @@ return (
                                 'data-testid': 'resourcing-duration-estimates-input',
                             },
                         }}
-                        error={!!errors['bd_proposal_details.resourcing_duration_estimates']?.trim()}
+                        error={!!errors['bd_proposal_detail.resourcing_duration_estimates']?.trim()}
                         FormHelperTextProps={{
-                            'data-testid': errors?.bd_proposal_details?.resourcing_duration_estimates
+                            'data-testid': errors?.bd_proposal_detail?.resourcing_duration_estimates
                                 ? 'resourcing-duration-estimates-helper-error'
                                 : 'resourcing-duration-estimates-helper',
                         }}
@@ -277,14 +277,14 @@ return (
                     <TextField
                         name='Experience'
                         label='Please provide previous experience relevant to complete this project.'
-                        value={currentBudgetDiscussionData?.bd_proposal_details?.experience || ''}
+                        value={currentBudgetDiscussionData?.bd_proposal_detail?.experience || ''}
                         required
                         multiline
                         rows={4}
                         fullWidth
                         onChange={(e) => handleDataChange(e, 'experience')}
-                        helperText={errors['bd_proposal_details.experience']?.trim()}
-                        error={!!errors['bd_proposal_details.experience']?.trim()}
+                        helperText={errors['bd_proposal_detail.experience']?.trim()}
+                        error={!!errors['bd_proposal_detail.experience']?.trim()}
                         sx={{ mb: 2 }}
                     />
                     <TextField
@@ -292,12 +292,12 @@ return (
                         name='Contract Types'
                         label='Contracting: Please describe how you expect to be contracted.'
                         //helperText={(<> {'Please click'} <Link href="">here</Link> {'to see details of Intersect Committees.'}</>)}
-                        value={currentBudgetDiscussionData?.bd_proposal_details?.contract_type_name || ''}
+                        value={currentBudgetDiscussionData?.bd_proposal_detail?.contract_type_name || ''}
                         required
                         fullWidth
                         onChange={(e) => handleDataChange(e, 'contract_type_name')}
-                        helperText={errors['bd_proposal_details.contract_type_name']?.trim()}
-                        error={!!errors['bd_proposal_details.contract_type_name']?.trim()}
+                        helperText={errors['bd_proposal_detail.contract_type_name']?.trim()}
+                        error={!!errors['bd_proposal_detail.contract_type_name']?.trim()}
                         SelectProps={{
                                 SelectDisplayProps: {
                                     'data-testid': 'contract-type-name', 
@@ -315,19 +315,19 @@ return (
                             </MenuItem>
                        ))}
                     </TextField>
-                    { currentBudgetDiscussionData?.bd_proposal_details?.contract_type_name === 6 ? 
+                    { currentBudgetDiscussionData?.bd_proposal_detail?.contract_type_name === 6 ? 
                     (
                         <TextField
                             name='Other contract type'
                             label='Please describe what you have in mind.'
-                            value={currentBudgetDiscussionData?.bd_proposal_details?.other_contract_type || ''}
+                            value={currentBudgetDiscussionData?.bd_proposal_detail?.other_contract_type || ''}
                             required
                             multiline
                             rows={4}
                             fullWidth
                             onChange={(e) => handleDataChange(e, 'other_contract_type')}
-                            helperText={errors['bd_proposal_details.other_contract_type']?.trim()}
-                            error={!!errors['bd_proposal_details.other_contract_type']?.trim()}
+                            helperText={errors['bd_proposal_detail.other_contract_type']?.trim()}
+                            error={!!errors['bd_proposal_detail.other_contract_type']?.trim()}
                             sx={{ mb: 2 }}
                         />
                     ):''

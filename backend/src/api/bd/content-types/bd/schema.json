@@ -52,6 +52,11 @@
       "type": "relation",
       "relation": "oneToOne",
       "target": "api::bd-proposal-ownership.bd-proposal-ownership"
+    },
+    "old_ver": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::bd.bd"
     }
   }
 }

@@ -28,7 +28,7 @@ const CreateBudgetDiscussionDialog = ({ open = false, onClose = false }) => {
         bd_contact_information:{},
         bd_proposal_ownership: {},
         bd_psapb:{},
-        bd_proposal_details:{},
+        bd_proposal_detail:{},
         bd_costing:{},
         bd_further_information:{}
     });
@@ -159,7 +159,7 @@ const CreateBudgetDiscussionDialog = ({ open = false, onClose = false }) => {
                     "amount_in_preferred_currency": { required: true, type: 'numberString' }
                 },
                 "privacy_policy": { required: true, type: 'boolean' },
-                "bd_proposal_details": {
+                "bd_proposal_detail": {
                     "experience": { required: true, type: 'string' },
                     "proposal_name": { required: true, type: 'string' },
                     "key_dependencies": { required: true, type: 'string' },
@@ -168,7 +168,7 @@ const CreateBudgetDiscussionDialog = ({ open = false, onClose = false }) => {
                     "proposal_description": { required: true, type: 'string' },
                     "key_proposal_deliverables": { required: true, type: 'string' },
                     "resourcing_duration_estimates": { required: true, type: 'string' },
-                    "other_contract_type":{ required: budgetDiscussionData.bd_proposal_details.contract_type_name === 6, type: 'string' }
+                    "other_contract_type":{ required: budgetDiscussionData.bd_proposal_detail.contract_type_name === 6, type: 'string' }
                 },
                 "bd_proposal_ownership": {
                     "agreed": { required: true, type: 'boolean' },

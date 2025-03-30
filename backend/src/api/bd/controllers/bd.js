@@ -40,11 +40,11 @@ module.exports = createCoreController("api::bd.bd", ({ strapi }) => ({
       }
 
       // BD-Proposal-Details
-      if (data.bd_proposal_details) {
-        savedEntities.bd_proposal_details = await strapi.entityService.create(
+      if (data.bd_proposal_detail) {
+        savedEntities.bd_proposal_detail = await strapi.entityService.create(
           "api::bd-proposal-detail.bd-proposal-detail",
           {
-            data: data.bd_proposal_details,
+            data: data.bd_proposal_detail,
           }
         );
       }
@@ -86,12 +86,12 @@ module.exports = createCoreController("api::bd.bd", ({ strapi }) => ({
 
       const mainEntryData = {
         privacy_policy: data.privacy_policy,
-        itersect_named_administrator:
-          data.itersect_named_administrator || false,
+        intersect_named_administrator:
+          data.intersect_named_administrator || false,
         creator: user.id,
         bd_psapb: savedEntities.bd_psapb?.id || null,
         bd_costing: savedEntities.bd_costing?.id || null,
-        bd_proposal_details: savedEntities.bd_proposal_details?.id || null,
+        bd_proposal_detail: savedEntities.bd_proposal_detail?.id || null,
         bd_proposal_ownership: savedEntities.bd_proposal_ownership?.id || null,
         bd_contact_information:
           savedEntities.bd_contact_information?.id || null,
@@ -103,7 +103,7 @@ module.exports = createCoreController("api::bd.bd", ({ strapi }) => ({
         populate: {
           bd_psapb: true,
           bd_costing: true,
-          bd_proposal_details: true,
+          bd_proposal_detail: true,
           bd_proposal_ownership: true,
           bd_contact_information: true,
           bd_further_information: {

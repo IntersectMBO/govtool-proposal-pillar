@@ -3,7 +3,7 @@ import React from 'react';
 import { Box, Typography } from '@mui/material';
 const BudgetDiscussionInfoSegment = ({ question, answer }) => {
     return (
-        <Box mt={4}>
+        <Box mt={3}>
             <Typography
                 variant='caption'
                 sx={{

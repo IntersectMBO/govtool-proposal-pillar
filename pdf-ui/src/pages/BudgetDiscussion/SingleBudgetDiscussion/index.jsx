@@ -323,7 +323,7 @@ const SingleBudgetDiscussion = ({ id }) => {
                                                 @
                                                 {
                                                     proposal?.attributes
-                                                        ?.user_govtool_username
+                                                        ?.creator?.data?.attributes.govtool_username
                                                 }
                                             </Typography>
                                         </Grid>

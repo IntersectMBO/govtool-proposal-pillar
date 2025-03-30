@@ -247,49 +247,49 @@ const BudgetDiscussionReview = ({ setStep, step, currentBudgetDiscussionData, se
                                              What is your proposed name to be used to reference this proposal publicly?
                                         </Typography>
                                         <Typography variant='h6' gutterBottom>
-                                            {currentBudgetDiscussionData?.bd_proposal_details?.proposal_name || ''}
+                                            {currentBudgetDiscussionData?.bd_proposal_detail?.proposal_name || ''}
                                         </Typography>
                                         <Typography variant='body' gutterBottom>
                                             Proposal Description
                                         </Typography>
                                         <Typography variant='h6' gutterBottom>
-                                            {currentBudgetDiscussionData?.bd_proposal_details?.proposal_description || ''}
+                                            {currentBudgetDiscussionData?.bd_proposal_detail?.proposal_description || ''}
                                         </Typography>
                                         <Typography variant='body' gutterBottom>
                                             Please list any key dependencies (if any) for this proposal?
                                         </Typography>
                                         <Typography variant='h6' gutterBottom>
-                                            {currentBudgetDiscussionData?.bd_proposal_details?.key_dependencies || ''}
+                                            {currentBudgetDiscussionData?.bd_proposal_detail?.key_dependencies || ''}
                                         </Typography>
                                         <Typography variant='body' gutterBottom>
                                             How will this proposal be maintained and supported after initial development?
                                         </Typography>
                                         <Typography variant='h6' gutterBottom>
-                                            {currentBudgetDiscussionData?.bd_proposal_details?.maintain_and_support || ''}
+                                            {currentBudgetDiscussionData?.bd_proposal_detail?.maintain_and_support || ''}
                                         </Typography>
                                         <Typography variant='body' gutterBottom>
                                             Key Proposal Deliverable(s) and Definition of Done: What tangible milestones or outcomes are to be delivered and what will the community ultimately receive?
                                         </Typography>
                                         <Typography variant='h6' gutterBottom>
-                                            {currentBudgetDiscussionData?.bd_proposal_details?.key_proposal_deliverables || ''}
+                                            {currentBudgetDiscussionData?.bd_proposal_detail?.key_proposal_deliverables || ''}
                                         </Typography>
                                         <Typography variant='body' gutterBottom>
                                             Resourcing & Duration Estimates: Please provide estimates of team size and duration to achieve the Key Proposal Deliverables outlined above.                                        
                                         </Typography>
                                         <Typography variant='h6' gutterBottom>
-                                            {currentBudgetDiscussionData?.bd_proposal_details?.resourcing_duration_estimates || ''}
+                                            {currentBudgetDiscussionData?.bd_proposal_detail?.resourcing_duration_estimates || ''}
                                         </Typography>
                                         <Typography variant='body' gutterBottom>
                                             Experience: Please provide previous experience relevant to complete this project.
                                         </Typography>
                                         <Typography variant='h6' gutterBottom>
-                                            {currentBudgetDiscussionData?.bd_proposal_details?.experience || ''}
+                                            {currentBudgetDiscussionData?.bd_proposal_detail?.experience || ''}
                                         </Typography>
                                         <Typography variant='body' gutterBottom>
                                             Contracting: Please describe how you expect to be contracted.
                                         </Typography>
                                         <Typography variant='h6' gutterBottom>
-                                            {allContractTypeList.find(co => co.id === currentBudgetDiscussionData?.bd_proposal_details?.contract_type_name)?.attributes?.contract_type_name || 'Error'}
+                                            {allContractTypeList.find(co => co.id === currentBudgetDiscussionData?.bd_proposal_detail?.contract_type_name)?.attributes?.contract_type_name || 'Error'}
                                         </Typography>
                                     </Box>
                                     <Box sx={{align: "left"}} >
