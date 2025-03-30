@@ -600,15 +600,30 @@ module.exports = {
 					}
 				}
 
-				await strapi.entityService.create('api::bd.bd', {
-					data: {
-						...bdData,
-						...bdRelationIds.reduce(
-							(acc, obj) => ({ ...acc, ...obj }),
-							{}
-						),
-					},
-				});
+				const createdBd = await strapi.entityService.create(
+					'api::bd.bd',
+					{
+						data: {
+							...bdData,
+							...bdRelationIds.reduce(
+								(acc, obj) => ({ ...acc, ...obj }),
+								{}
+							),
+						},
+					}
+				);
+
+				if (createdBd?.id) {
+					//create bd poll
+					await strapi.entityService.create('api::bd-poll.bd-poll', {
+						data: {
+							bd_proposal_id: createdBd?.id?.toString(),
+							poll_yes: 0,
+							poll_no: 0,
+							is_poll_active: true,
+						},
+					});
+				}
 			}
 		} catch (error) {
 			console.log(error?.details?.errors);
