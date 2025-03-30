@@ -13,13 +13,13 @@
   "pluginOptions": {},
   "attributes": {
     "problem_statement": {
-      "type": "string"
+      "type": "text"
     },
     "proposal_benefit": {
-      "type": "string"
+      "type": "text"
     },
     "supplementary_endorsement": {
-      "type": "string"
+      "type": "text"
     },
     "type_name": {
       "type": "relation",
@@ -37,7 +37,7 @@
       "target": "api::bd-intersect-committee.bd-intersect-committee"
     },
     "explain_proposal_roadmap": {
-      "type": "string"
+      "type": "text"
     }
   }
 }

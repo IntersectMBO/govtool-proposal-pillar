@@ -22,7 +22,7 @@
       "type": "decimal"
     },
     "cost_breakdown": {
-      "type": "string"
+      "type": "text"
     },
     "preferred_currency": {
       "type": "relation",
