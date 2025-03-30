@@ -518,14 +518,15 @@ console.log(walletAPI)
                     <Box
                         key={`${item?.attributes?.bd_type_name}-${index}`}
                         pt={index === 0 && 4}
-                    >
-                         <BudgetDiscussionsList
-                            currentBudgetDiscussion={item}
+                    > {}
+                        <BudgetDiscussionsList
+                            currentBudgetDiscussionType={item}
                             searchText={budgetDiscussionSearchText}
                             sortType={sortType}
                             statusList={filteredBudgetDiscussionStatusList}
                             setShowAllActivated={setShowAllActivated}
                             showAllActivated={showAllActivated}
+                            bd_type_name={item.id}
                         /> 
                     </Box>
                 ))}

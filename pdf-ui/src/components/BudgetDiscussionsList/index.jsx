@@ -19,14 +19,14 @@ import {
 import { useEffect, useRef, useState } from 'react';
 import Slider from 'react-slick';
 import { useDebounce } from '../..//lib/hooks';
-import { getBudgetDiscussionDrafts, getBudgetDiscussions } from '../../lib/api';
+import { getBudgetDiscussion, getBudgetDiscussionDrafts, getBudgetDiscussions } from '../../lib/api';
 import { settings } from '../../lib/carouselSettings';
 import { useTheme } from '@emotion/react';
 import { blue } from '@mui/material/colors';
 import { BudgetDiscussionsCard } from '..';
 
 const BudgetDiscussionsList = ({
-    currentBudgetDiscussion=null,
+    currentBudgetDiscussionType=null,
     searchText = '',
     sortType = 'desc',
     isDraft = false,
@@ -69,7 +69,7 @@ const BudgetDiscussionsList = ({
         <Box key={`extra-${index}`} height={'100%'} />
     ));
 
-    const fetchBudgetDiscussions = async (reset = true, bd_type_name= null, page) => {
+    const fetchBudgetDiscussions = async (reset = true,  page, bd_type_name= null,) => {
         const haveSubmittedFilter = statusList?.some(
             (filter) => filter === 'submitted'
         );
@@ -81,22 +81,44 @@ const BudgetDiscussionsList = ({
             }
             else
             {
+                let query = '';
+                if (currentBudgetDiscussionType) {
+                query = `filters[bd_psapb][type_name][id]=${currentBudgetDiscussionType.id}&
+                filters[$and][1][prop_name][$containsi]=${
+                        debouncedSearchValue || ''
+                    }&pagination[page]=${page}&pagination[pageSize]=25&sort[createdAt]=${sortType}`
+                    //&populate[0]=proposal_links&populate[1]=proposal_withdrawals&populate[2]=proposal_constitution_content`;
+                } else {
+                    const isSubmitted = haveSubmittedFilter ? 'true' : 'false';
+                    query = `filters[bd_psapb][type_name][id]=${
+                        currentBudgetDiscussionType.id
+                    }`
+                    //&filters[$and][1][prop_name][$containsi]=${
+                   //     debouncedSearchValue || ''
+                   // }&filters[$and][2][prop_submitted]=${isSubmitted}&pagination[page]=${page}&pagination[pageSize]=25&sort[createdAt]=${sortType}&populate[0]=proposal_links&populate[1]=proposal_withdrawals&populate[2]=proposal_constitution_content`;
+                }
+                const { currentBudgetDiscussion, pgCount } = await getBudgetDiscussions(query);
+                if (!currentBudgetDiscussion) return;
+                if (reset) {
+                    setBudgetDiscussionList(currentBudgetDiscussion);
+                } else {
+                    setBudgetDiscussionList((prev) => [...prev, ...currentBudgetDiscussion]);
+                }
 
-
-
-
-
-
-
-
-
-
-
-                console.log("fataPrave")
-                let bdlist = await getBudgetDiscussions();
-                console.log(bdlist)
-                setBudgetDiscussionList(bdlist.data);
             }
+            // const { currentBudgetDiscussion, pgCount } = await getBudgetDiscussions(query);
+            // if (!currentBudgetDiscussion) return;
+
+            // if (reset) {
+            //     setBudgetDiscussionList(currentBudgetDiscussion);
+            // } else {
+            //     setBudgetDiscussionList((prev) => [...prev, ...currentBudgetDiscussion]);
+            // }
+            //     console.log("fataPrave")
+            //     let bdlist = await getBudgetDiscussions();
+            //     console.log(bdlist)
+            //     setBudgetDiscussionList(bdlist.data);
+            // }
 
         }
         catch(error)
@@ -147,7 +169,7 @@ const BudgetDiscussionsList = ({
         if (!mounted) {
             setMounted(true);
         } else {
-            fetchBudgetDiscussions(true, 1);
+            fetchBudgetDiscussions(true, 1, bd_type_name);
             setCurrentPage(1);
         }
     }, [
@@ -160,7 +182,7 @@ const BudgetDiscussionsList = ({
 
     useEffect(() => {
         if (shouldRefresh) {
-            fetchBudgetDiscussions(true, 1);
+            fetchBudgetDiscussions(true, 1, bd_type_name);
             setShouldRefresh(false);
         }
     }, [shouldRefresh]);

@@ -88,6 +88,7 @@ module.exports = createCoreController("api::bd.bd", ({ strapi }) => ({
         privacy_policy: data.privacy_policy,
         intersect_named_administrator:
           data.intersect_named_administrator || false,
+        old_ver:data.old_ver,
         creator: user.id,
         bd_psapb: savedEntities.bd_psapb?.id || null,
         bd_costing: savedEntities.bd_costing?.id || null,
@@ -112,6 +113,29 @@ module.exports = createCoreController("api::bd.bd", ({ strapi }) => ({
           creator: true,
         },
       });
+
+      if(data?.old_ver)
+      {
+        const old_proposal = await strapi.entityService.update('api::bd.bd',data.old_ver,{data:{is_active :false}})
+        const poll = await strapi.entityService.findMany('api::bd-poll.bd-poll', {filters:{bd_proposal_id:data.old_ver}})
+        if(poll.length>0)
+        {
+          const updatePoll = await strapi.entityService.update('api::bd-poll.bd-poll',poll[0].id,{data:{bd_proposal_id:createdEntry.id.toString()}})
+        }
+        const comments = await strapi.entityService.findMany('api::comment.comment', {filters:{bd_proposal_id:data.old_ver}})
+        if(comments.length>0)
+        {
+          for(const comment of comments)
+          {
+            const updateComment = await strapi.entityService.update('api::comment.comment',comment.id,{data:{bd_proposal_id:createdEntry.id.toString()}})
+          }
+        }
+      }
+
+
+
+
+
 
       return createdEntry;
     } catch (error) {
