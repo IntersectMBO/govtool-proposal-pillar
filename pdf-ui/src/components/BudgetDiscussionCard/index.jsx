@@ -38,18 +38,19 @@ const BudgetDiscussionCard = ({
     setShouldRefresh = false,
     startEdittingDraft,
 }) => {
+    
     const { user } = useAppContext();
     const navigate = useNavigate();
     const theme = useTheme();
 
     const [openEditDialog, setOpenEditDialog] = useState(false);
 
-    const [budgetDiscussionLink, setBudgetDiscussionlLink] = useState('');
+    const [budgetDiscussionLink, setBudgetDiscussionLink] = useState('');
 
     useEffect(() => {
         let domain = new URL(window.location.href);
         let origin = domain.origin;
-        setBudgetDiscussionlLink(`${origin}/proposal_discussion/budget_discussion`);
+        setBudgetDiscussionLink(`${origin}/proposal_discussion/budget_discussion/`);
     }, [budgetDiscussionLink]);
 
     const handleEditProposal = () => {
@@ -222,7 +223,7 @@ const BudgetDiscussionCard = ({
                                             <IconButton
                                                 onClick={() => {
                                                     copyToClipboard(
-                                                        `${budgetDiscussionlLink}${budgetDiscussion?.id}`
+                                                        `${budgetDiscussionLink}${budgetDiscussion?.id}`
                                                     ),
                                                         disableShareClick();
                                                 }}
@@ -279,11 +280,14 @@ const BudgetDiscussionCard = ({
                                 }}
                                // data-testid={`budget-discussion-${proposal?.id}-title`}
                             >
-                                {
+                                
+                                {isDraft?
                                    budgetDiscussion?.attributes.draft_data.bd_proposal_detail?.proposal_name
+                                   :budgetDiscussion?.atributes?.bd_proposal_detail?.data?.attributes?.proposal_name
                                 }
                             </Typography>
-                            <Typography
+                            {budgetDiscussion?.attributes?.creator?.data?.attributes?.govtool_username?
+                                    <Typography
                                 variant='body2'
                                 component={'h5'}
                                 sx={{
@@ -292,8 +296,9 @@ const BudgetDiscussionCard = ({
                                 }}
                                 mt={1}
                             >
+                                {}
                                 @{budgetDiscussion?.attributes?.creator?.data?.attributes?.govtool_username || ''}
-                            </Typography>
+                            </Typography>:null}
                         </>
                     }
                 />
@@ -320,7 +325,11 @@ const BudgetDiscussionCard = ({
                             </Typography>
 
                             <MarkdownTextComponent
-                                markdownText={budgetDiscussion?.attributes?.draft_data?.bd_psapb?.proposal_benefit || ''}
+                                markdownText={
+                                    isDraft? budgetDiscussion?.attributes?.draft_data?.bd_psapb?.proposal_benefit
+                                    :budgetDiscussion?.attributes?.bd_psapb?.data?.attributes?.proposal_benefit
+                                
+                                }
                             /> 
                         </Box>
                         <Box>
@@ -336,7 +345,10 @@ const BudgetDiscussionCard = ({
                                 component='p'
                                 color='text.darkPurple'
                                 data-testid='budget-requested'
-                            >₳ {budgetDiscussion?.attributes?.draft_data?.bd_costing?.ada_amount || ''}
+                            >₳ {
+                                isDraft? budgetDiscussion?.attributes?.draft_data?.bd_costing?.ada_amount
+                                :budgetDiscussion?.attributes?.bd_costing?.data?.attributes?.ada_amount
+                                || ''}
                             </Typography>
                         </Box>
                     </Box>

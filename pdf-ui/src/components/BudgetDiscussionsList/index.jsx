@@ -74,15 +74,15 @@ const BudgetDiscussionsList = ({
             (filter) => filter === 'submitted'
         );
         try {
+            
             if (isDraft)
             {
                 let bdlist = await getBudgetDiscussionDrafts();
                 setBudgetDiscussionList(bdlist.data);
             }
             else
-            { // is_active
-                let query = `filters[$and][0][is_active]=true
-                &filters[$and][1][bd_psapb][type_name][id]=${currentBudgetDiscussionType.id}`
+            { 
+                let query = `filters[$and][0][is_active]=true&filters[$and][1][bd_psapb][type_name][id]=${currentBudgetDiscussionType.id}&populate[0]=bd_costing&populate[1]=bd_psapb&populate[2]=bd_proposal_details&populate[3]=creator`
                 //&filters[$and][2][prop_name][$containsi]=${
                 //        debouncedSearchValue || ''
                 //    }&pagination[page]=${page}&pagination[pageSize]=25&sort[createdAt]=${sortType}`
@@ -94,30 +94,16 @@ const BudgetDiscussionsList = ({
                     //&filters[$and][1][prop_name][$containsi]=${
                    //     debouncedSearchValue || ''
                    // }&filters[$and][2][prop_submitted]=${isSubmitted}&pagination[page]=${page}&pagination[pageSize]=25&sort[createdAt]=${sortType}&populate[0]=proposal_links&populate[1]=proposal_withdrawals&populate[2]=proposal_constitution_content`;
-                }
-                const { currentBudgetDiscussion, pgCount } = await getBudgetDiscussions(query);
-                if (!currentBudgetDiscussion) return;
+                
+                const {budgetDiscussions,pgCount,total} = await getBudgetDiscussions(query);
+                if (!budgetDiscussions) return;
+                setBudgetDiscussionList(budgetDiscussions);
                 if (reset) {
-                    setBudgetDiscussionList(currentBudgetDiscussion);
+                    setBudgetDiscussionList(budgetDiscussions);
                 } else {
-                    setBudgetDiscussionList((prev) => [...prev, ...currentBudgetDiscussion]);
+                    setBudgetDiscussionList((prev) => [...prev, ...budgetDiscussions]);
                 }
-
-           // }
-            // const { currentBudgetDiscussion, pgCount } = await getBudgetDiscussions(query);
-            // if (!currentBudgetDiscussion) return;
-
-            // if (reset) {
-            //     setBudgetDiscussionList(currentBudgetDiscussion);
-            // } else {
-            //     setBudgetDiscussionList((prev) => [...prev, ...currentBudgetDiscussion]);
-            // }
-            //     console.log("fataPrave")
-            //     let bdlist = await getBudgetDiscussions();
-            //     console.log(bdlist)
-            //     setBudgetDiscussionList(bdlist.data);
-            // }
-
+            }
         }
         catch(error)
             {
@@ -185,6 +171,10 @@ const BudgetDiscussionsList = ({
         }
     }, [shouldRefresh]);
 
+    // useEffect(()=>{
+    //     fetchBudgetDiscussions(true,1)
+    // },[])
+
     return isDraft && budgetDiscussionList?.length === 0 ? null : (
         <Box overflow={'visible'}>
             <Box
@@ -202,8 +192,8 @@ const BudgetDiscussionsList = ({
                         {isDraft
                             ? 'Unfinished Drafts'
                             : ""}
-                            {/*currentBudgetDiscussionList?.attributes
-                            ?.type_name*/}
+                            {currentBudgetDiscussionType?.attributes
+                            ?.type_name}
                     </Typography>
                     {budgetDiscussionList?.length > 0 &&
                         (setShowAllActivated
@@ -216,7 +206,7 @@ const BudgetDiscussionsList = ({
                                     if (setShowAllActivated) {
                                         setShowAllActivated(() => ({
                                             is_activated: true,
-                                            bd_type: budgetDiscussionType,
+                                            bd_type: currentBudgetDiscussionType?.id,
                                         }));
                                     }
                                 }}
@@ -260,12 +250,10 @@ const BudgetDiscussionsList = ({
                             {budgetDiscussionList?.map((bd, index) => (
                                 <Grid item key={index} xs={12} sm={6} md={4}>
                                     <BudgetDiscussionsCard
-                                       // proposal={proposal}
-                                        startEdittingDraft ={startEdittingDraft}
-                                        // startEdittinButtonClick={
-                                        //     startEdittinButtonClick
-                                        // }
-                                       // setShouldRefresh={setShouldRefresh}
+                                        budgetDiscussion={bd}
+                                        isDraft={isDraft}
+                                        startEdittingDraft={startEdittingDraft}
+                                        startEdittinButtonClick={startEdittinButtonClick}
                                     />
                                 </Grid>
                             ))}
@@ -293,12 +281,11 @@ const BudgetDiscussionsList = ({
                         <Slider ref={sliderRef} {...settings}>
                             {budgetDiscussionList?.map((bd, index) => (
                                 <Box key={index} height={'100%'}>
-                                    <BudgetDiscussionsCard
+                                     <BudgetDiscussionsCard
                                         budgetDiscussion={bd}
                                         isDraft={isDraft}
                                         startEdittingDraft={startEdittingDraft}
                                         startEdittinButtonClick={startEdittinButtonClick}
-                                       // setShouldRefresh={setShouldRefresh}
                                     />
                                 </Box>
                             ))}

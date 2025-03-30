@@ -73,8 +73,8 @@ const ProposedBudgetDiscussion = () => {
     //         console.error(error);
     //     }
     // };
-console.log(user)
-console.log(walletAPI)
+// console.log(user)
+// console.log(walletAPI)
 //let x = getVotingPower("drep1q6nr96la2nckmnkktzmy3e9ckh2uy5ytr9tz08vau85f5f7plqh")
 //console.log(x)
 
