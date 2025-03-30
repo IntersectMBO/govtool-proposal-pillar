@@ -13,13 +13,13 @@
   "pluginOptions": {},
   "attributes": {
     "experience": {
-      "type": "string"
+      "type": "text"
     },
     "proposal_name": {
-      "type": "string"
+      "type": "text"
     },
     "key_dependencies": {
-      "type": "string"
+      "type": "text"
     },
     "contract_type_name": {
       "type": "relation",
@@ -27,16 +27,16 @@
       "target": "api::bd-contract-type.bd-contract-type"
     },
     "maintain_and_support": {
-      "type": "string"
+      "type": "text"
     },
     "proposal_description": {
-      "type": "string"
+      "type": "text"
     },
     "key_proposal_deliverables": {
-      "type": "string"
+      "type": "text"
     },
     "resourcing_duration_estimates": {
-      "type": "string"
+      "type": "text"
     }
   }
 }

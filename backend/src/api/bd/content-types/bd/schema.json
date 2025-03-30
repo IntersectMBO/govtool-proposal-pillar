@@ -45,7 +45,7 @@
       "relation": "oneToOne",
       "target": "api::bd-psapb.bd-psapb"
     },
-    "itersect_named_administrator": {
+    "intersect_named_administrator": {
       "type": "boolean"
     },
     "bd_proposal_ownership": {

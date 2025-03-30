@@ -13,7 +13,7 @@
       "name": "Apache 2.0",
       "url": "https://www.apache.org/licenses/LICENSE-2.0.html"
     },
-    "x-generation-date": "2025-03-29T17:24:55.885Z"
+    "x-generation-date": "2025-03-30T09:06:19.329Z"
   },
   "x-strapi-config": {
     "plugins": [],
@@ -161,7 +161,7 @@
                 ],
                 "example": "string or id"
               },
-              "itersect_named_administrator": {
+              "intersect_named_administrator": {
                 "type": "boolean"
               },
               "bd_proposal_ownership": {
@@ -1747,7 +1747,7 @@
               }
             }
           },
-          "itersect_named_administrator": {
+          "intersect_named_administrator": {
             "type": "boolean"
           },
           "bd_proposal_ownership": {
