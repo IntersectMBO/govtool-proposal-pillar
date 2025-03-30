@@ -248,7 +248,6 @@ const SingleBudgetDiscussion = ({ id }) => {
                 query: query,
             });
             if (!polls?.length === 0) return;
-            console.log(polls);
             setActivePoll(polls[0]);
         } catch (error) {
             console.error(error);
