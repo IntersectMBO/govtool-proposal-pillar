@@ -1,0 +1,31 @@
+{
+  "kind": "collectionType",
+  "collectionName": "bd_poll_votes",
+  "info": {
+    "singularName": "bd-poll-vote",
+    "pluralName": "bd-poll-votes",
+    "displayName": "BD Poll vote",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "user_id": {
+      "type": "string"
+    },
+    "bd_poll_id": {
+      "type": "string"
+    },
+    "vote_result": {
+      "type": "boolean"
+    },
+    "drep_id": {
+      "type": "string"
+    },
+    "drep_voting_power": {
+      "type": "string"
+    }
+  }
+}
