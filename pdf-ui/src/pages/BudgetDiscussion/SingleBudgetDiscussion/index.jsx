@@ -35,6 +35,7 @@ import {
     ReviewVersions,
     DeleteProposalModal,
     BudgetDiscussionInfoSegment,
+    CreateBudgetDiscussionDialog,
 } from '../../../components';
 import { useAppContext } from '../../../context/context';
 import {
@@ -76,6 +77,7 @@ const SingleBudgetDiscussion = ({ id }) => {
     const [disableShare, setDisableShare] = useState(false);
     const [ownProposalModal, setOwnProposalModal] = useState(false);
     const [activePoll, setActivePoll] = useState(null);
+    const [showCreateBDDialog, setShowCreateBDDialog] = useState(false);
 
     const targetRef = useRef();
     const menuRef = useRef();
@@ -119,6 +121,7 @@ const SingleBudgetDiscussion = ({ id }) => {
 
     const handleEditProposal = () => {
         setOpenEditDialog(true);
+        setAnchorEl(null);
     };
 
     const handleCloseEditDialog = () => {
@@ -271,12 +274,17 @@ const SingleBudgetDiscussion = ({ id }) => {
         <>
             <Typography>
                 {openEditDialog ? (
-                    <EditProposalDialog
-                        proposal={proposal}
-                        openEditDialog={openEditDialog}
-                        handleCloseEditDialog={handleCloseEditDialog}
-                        setMounted={setMounted}
+                    <CreateBudgetDiscussionDialog
+                        open={openEditDialog}
+                        onClose={() => setOpenEditDialog(false)}
+                        current_bd_id= {proposal.id}                                                
                     />
+                    // <EditProposalDialog
+                    //     proposal={proposal}
+                    //     openEditDialog={openEditDialog}
+                    //     handleCloseEditDialog={handleCloseEditDialog}
+                    //     setMounted={setMounted}
+                    // />
                 ) : (
                     <Box>
                         <Box mt={3}>
@@ -691,8 +699,7 @@ const SingleBudgetDiscussion = ({ id }) => {
                                             }}
                                         >
                                             {`Last Edit: ${formatIsoDate(
-                                                proposal?.attributes?.content
-                                                    ?.attributes?.createdAt
+                                                proposal?.attributes?.createdAt
                                             )}`}
                                         </Typography>
                                         {user?.user?.id?.toString() ===
