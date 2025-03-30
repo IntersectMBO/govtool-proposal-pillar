@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { getCountryList, getNationalityList } from '../../../lib/api';
 import { StepperActionButtons } from '../../BudgetDiscussionParts';
 
-const ContractInformation = ({ setStep, step, onClose, currentBudgetDiscussionData, setBudgetDiscussionData,  setSelectedDraftId, selectedDraftId, handleSaveDraft, errors, setErrors, validateField }) => {
+const ContractInformation = ({ setStep, step, onClose, currentBudgetDiscussionData, setBudgetDiscussionData,  setSelectedDraftId, selectedDraftId, handleSaveDraft, errors, setErrors, validateSection }) => {
      const [allCountries, setAllCountries] = useState([]);
      //const [allNationalities, setAllNationalities] = useState([]);
 
@@ -24,9 +24,11 @@ const ContractInformation = ({ setStep, step, onClose, currentBudgetDiscussionDa
           };
           fetchData();
      }, []);
-     
+     useEffect(() => {
+          validateSection("bd_contact_information");
+      }, [currentBudgetDiscussionData?.bd_contact_information]);
+
      const handleDataChange = (e, dataName) => {
-          validateField(e,"bd_contact_information."+dataName);
           setBudgetDiscussionData({
                ...currentBudgetDiscussionData,
                bd_contact_information: {
@@ -141,6 +143,8 @@ const ContractInformation = ({ setStep, step, onClose, currentBudgetDiscussionDa
                                                        select
                                                        label='Beneficiary Country of Residence'
                                                        value={currentBudgetDiscussionData?.bd_contact_information?.be_country_of_res || ''}
+                                                       helperText={errors['bd_contact_information.be_country_of_res']?.trim()}
+                                                       error={!!errors['bd_contact_information.be_country_of_res']?.trim()}
                                                        required
                                                        fullWidth
                                                        onChange={(e) => handleDataChange(e, 'be_country_of_res')}
@@ -169,6 +173,8 @@ const ContractInformation = ({ setStep, step, onClose, currentBudgetDiscussionDa
                                                        value={currentBudgetDiscussionData?.bd_contact_information?.be_nationality || ''}
                                                        required
                                                        fullWidth
+                                                       helperText={errors['bd_contact_information.be_nationality']?.trim()}
+                                                       error={!!errors['bd_contact_information.be_nationality']?.trim()}
                                                        onChange={(e) => handleDataChange(e, 'be_nationality')}
                                                        SelectProps={{
                                                             SelectDisplayProps: {
@@ -213,98 +219,6 @@ const ContractInformation = ({ setStep, step, onClose, currentBudgetDiscussionDa
                                         sx={{ mb: 2 }}
                                    />
                               </Box>
-                              {/* <TextField
-                                   select
-                                   label='*Is this proposal being submitted on behalf of an individual (the beneficiary), company, or some other group?'
-                                   value={currentBudgetDiscussionData?.bd_contact_information?.submited_on_behalf || 'Please Choose'}
-                                   required
-                                   fullWidth
-                                   onChange={(e) =>{handleSubmitedOnBehalfChange(e)}}
-                                   SelectProps={{
-                                        SelectDisplayProps: {
-                                             'data-testid': 'beneficiary-nationality',
-                                        },
-                                   }}
-                                   helperText='If you are submitting on behalf of an Intersect Committee, please select Group. The Group Name would be the “Name of the Committee (e.g. MCC, TSC)”. The Type of Group would be “Intersect Committee”. The Key Information to Identify the Group would be the names of the Voting members of the Committee.'
-                                   sx={{ mb: 2 }}
-                                   >
-                                   <MenuItem key={"1"} value={"Individual"} >Individual</MenuItem>
-                                   <MenuItem key={"2"} value={"Company"} >Company</MenuItem>
-                                   <MenuItem key={"3"} value={"Group"} >Group</MenuItem>
-                              </TextField>
-                              { currentBudgetDiscussionData.bd_contact_information?.submited_on_behalf === 'Company' ? 
-                              (<Box>
-                                   <TextField
-                                        label='Company Name*'
-                                        value={currentBudgetDiscussionData?.bd_contact_information?.company_name || ''}
-                                        required
-                                        fullWidth
-                                        onChange={(e) => handleDataChange(e, 'company_name')}
-                                        sx={{ mb: 2 }}
-                                   />
-                                   <TextField
-                                        label='Company Domain Name'
-                                        helperText='Example of domain format to input: intersectmbo.org'
-                                        value={currentBudgetDiscussionData?.bd_contact_information?.company_domain_name || ''}
-                                        required
-                                        fullWidth
-                                        onChange={(e) => handleDataChange(e, 'company_domain_name')}
-                                        sx={{ mb: 2 }}
-                                   />
-                                   <TextField
-                                        select
-                                        label='Country of Incorporation'
-                                        value={currentBudgetDiscussionData?.bd_contact_information?.be_country || ''}
-                                        required
-                                        fullWidth
-                                        onChange={(e) => handleDataChange(e, 'be_country')}
-                                        SelectProps={{
-                                             SelectDisplayProps: {
-                                                  'data-testid': 'country-of-incorporation',
-                                             },
-                                        }}
-                                        sx={{ mb: 2 }}
-                                   >
-                                        {allCountries.map((option) => (
-                                             <MenuItem
-                                                       key={option?.id}
-                                                       value={option?.id}
-                                                       data-testid={`${option?.attributes.country_name?.toLowerCase()}-country-of-incorporation-button`}
-                                                       >
-                                                  {option?.attributes.country_name}
-                                             </MenuItem>
-                                        ))}
-                                   </TextField>
-                               </Box>) 
-                              : "" }
-                              {currentBudgetDiscussionData.bd_contact_information?.submited_on_behalf === 'Group'? 
-                              (<Box>
-                                   <TextField
-                                        label='Group Name*'
-                                        value={currentBudgetDiscussionData?.bd_contact_information?.group_name || ''}
-                                        required
-                                        fullWidth
-                                        onChange={(e) => handleDataChange(e, 'group_name')}
-                                        sx={{ mb: 2 }}
-                                   />
-                                   <TextField
-                                        label='Type of Group'
-                                        value={currentBudgetDiscussionData?.bd_contact_information?.type_of_group || ''}
-                                        required
-                                        fullWidth
-                                        onChange={(e) => handleDataChange(e,'type_of_group')}
-                                        sx={{ mb: 2 }}
-                                   />
-                                   <TextField
-                                        label='Key Information to Identify Group'
-                                        value={currentBudgetDiscussionData?.bd_contact_information?.key_info_to_identify_group || ''}
-                                        required
-                                        fullWidth
-                                        onChange = {(e) => handleDataChange(e, 'key_info_to_identify_group')}
-                                        sx={{ mb: 2 }}
-                                   />
-                               </Box>) 
-                              : ""} */}
                               <StepperActionButtons onClose={onClose} onSaveDraft={handleSaveDraft} onContinue={setStep}
                                 onBack={setStep} selectedDraftId={selectedDraftId} nextStep={step+1} backStep={step-1} errors={errors} 
                               />

@@ -33,6 +33,9 @@
       "type": "relation",
       "relation": "oneToOne",
       "target": "api::country-list.country-list"
+    },
+    "other_contract_type": {
+      "type": "string"
     }
   }
 }

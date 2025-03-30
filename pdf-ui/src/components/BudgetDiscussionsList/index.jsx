@@ -19,7 +19,7 @@ import {
 import { useEffect, useRef, useState } from 'react';
 import Slider from 'react-slick';
 import { useDebounce } from '../..//lib/hooks';
-import { getBudgetDiscussionDrafts } from '../../lib/api';
+import { getBudgetDiscussionDrafts, getBudgetDiscussions } from '../../lib/api';
 import { settings } from '../../lib/carouselSettings';
 import { useTheme } from '@emotion/react';
 import { blue } from '@mui/material/colors';
@@ -76,17 +76,19 @@ const BudgetDiscussionsList = ({
         try {
             if (isDraft)
             {
-                // dohvati sve draft
                 let bdlist = await getBudgetDiscussionDrafts();
                 setBudgetDiscussionList(bdlist.data);
             }
             else
             {
-                //dohvati sve prave 
+                console.log("fataPrave")
+                let bdlist = await getBudgetDiscussions();
+                console.log(bdlist)
+                setBudgetDiscussionList(bdlist.data);
             }
 
         }
-        catch
+        catch(error)
             {
                 console.error(error);
             }

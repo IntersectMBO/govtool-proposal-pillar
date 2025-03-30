@@ -3,17 +3,18 @@ import { useEffect, useState } from 'react';
 import { getAllCurrencies } from '../../../lib/api';
 import { StepperActionButtons } from '../../BudgetDiscussionParts';
 
-const AdministrationAndAuditing = ({ setStep, step, currentBudgetDiscussionData, setBudgetDiscussionData, onClose, setSelectedDraftId, selectedDraftId, handleSaveDraft, errors, setErrors }) => {
+const AdministrationAndAuditing = ({ setStep, step, currentBudgetDiscussionData, setBudgetDiscussionData, onClose, setSelectedDraftId, selectedDraftId, handleSaveDraft, errors, setErrors,validateSection }) => {
+
     const handleDataChange = (e, dataName) => {
         setBudgetDiscussionData({
              ...currentBudgetDiscussionData,
-            
-                  ...currentBudgetDiscussionData,
                   [dataName]: e.target.value
              })
    };
-    useEffect(() => {}, []);
-    return (
+    useEffect(() => {
+                validateSection("intersect_named_administrator");
+            }, [currentBudgetDiscussionData?.intersect_named_administrator]);
+   return (
         <Box display='flex' flexDirection='column'>
             <Box>
                 <Card>
@@ -102,10 +103,14 @@ const AdministrationAndAuditing = ({ setStep, step, currentBudgetDiscussionData,
                                         select
                                         name='Intersect named Administrator'
                                         label='Would you like Intersect to be your named Administrator, including acting as the auditor, as per the Cardano Constitution?*'
-                                        value={currentBudgetDiscussionData?.itersect_named_administrator || ''}
+                                        value={currentBudgetDiscussionData?.intersect_named_administrator === undefined 
+                                              ? "" : currentBudgetDiscussionData?.intersect_named_administrator
+                                          }
                                         required
                                         fullWidth
-                                        onChange={(e) => handleDataChange(e, 'itersect_named_administrator')}
+                                        onChange={(e) => handleDataChange(e, 'intersect_named_administrator')}
+                                        helperText={errors['intersect_named_administrator']?.trim()}
+                                        error={!!errors['intersect_named_administrator']?.trim()}
                                         SelectProps={{
                                                 SelectDisplayProps: {
                                                     'data-testid': 'itersect-named-administrator', 
@@ -113,6 +118,7 @@ const AdministrationAndAuditing = ({ setStep, step, currentBudgetDiscussionData,
                                         }}
                                         sx={{ mb: 4 }}
                                         >
+                                            <MenuItem value="" disabled data-testid="please-select-option">Please select</MenuItem>
                                             <MenuItem key={1} value={true} data-testid={`true-button`} >Yes</MenuItem>
                                             <MenuItem key={2} value={false} data-testid={`false-button`} >No</MenuItem>
                                     </TextField>
@@ -121,7 +127,7 @@ const AdministrationAndAuditing = ({ setStep, step, currentBudgetDiscussionData,
                         </Box>
 
                         <StepperActionButtons onClose={onClose} onSaveDraft={handleSaveDraft} onContinue={setStep}
-                            onBack={setStep} selectedDraftId={selectedDraftId} nextStep={step+1} backStep={step-1}
+                            onBack={setStep} selectedDraftId={selectedDraftId} nextStep={step+1} backStep={step-1} 
                         />
                         </CardContent>
                 </Card>

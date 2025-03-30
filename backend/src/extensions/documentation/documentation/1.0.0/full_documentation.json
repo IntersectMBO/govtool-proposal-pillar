@@ -1187,6 +1187,9 @@
                       "resourcing_duration_estimates": {
                         "type": "string"
                       },
+                      "other_contract_type": {
+                        "type": "string"
+                      },
                       "createdAt": {
                         "type": "string",
                         "format": "date-time"
@@ -1348,6 +1351,9 @@
                             }
                           }
                         }
+                      },
+                      "other_contract_type": {
+                        "type": "string"
                       },
                       "createdAt": {
                         "type": "string",
@@ -1962,6 +1968,9 @@
                   }
                 ],
                 "example": "string or id"
+              },
+              "other_contract_type": {
+                "type": "string"
               }
             }
           }
@@ -2369,6 +2378,9 @@
                 }
               }
             }
+          },
+          "other_contract_type": {
+            "type": "string"
           },
           "createdAt": {
             "type": "string",
@@ -5413,6 +5425,9 @@
               },
               "resourcing_duration_estimates": {
                 "type": "string"
+              },
+              "other_contract_type": {
+                "type": "string"
               }
             }
           }
@@ -5805,6 +5820,9 @@
             "type": "string"
           },
           "resourcing_duration_estimates": {
+            "type": "string"
+          },
+          "other_contract_type": {
             "type": "string"
           },
           "createdAt": {

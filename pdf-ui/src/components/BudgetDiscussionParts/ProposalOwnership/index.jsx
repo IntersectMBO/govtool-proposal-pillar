@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { StepperActionButtons } from '../../BudgetDiscussionParts';
 import { getCountryList } from '../../../lib/api';
 
-const ProposalOwnership = ({ setStep, step, currentBudgetDiscussionData, setBudgetDiscussionData, onClose, errors,setErrors, setSelectedDraftId, selectedDraftId, handleSaveDraft, validateField }) => {
+const ProposalOwnership = ({ setStep, step, currentBudgetDiscussionData, setBudgetDiscussionData, onClose, errors,setErrors, setSelectedDraftId, selectedDraftId, handleSaveDraft, validateSection }) => {
      const [allCountries, setAllCountries] = useState([]);
      useEffect(() => {
                const fetchData = async () => {
@@ -19,9 +19,12 @@ const ProposalOwnership = ({ setStep, step, currentBudgetDiscussionData, setBudg
      
                fetchData();
           }, []);
+     useEffect(() => {
+          validateSection("bd_proposal_ownership");
+          }, [currentBudgetDiscussionData?.bd_proposal_ownership]);
+     
      const handleDataChange = (e, dataName) => {
-          validateField(e,'bd_proposal_ownership.'+dataName)
-          const value = e.target.type === 'checkbox' ? e.target.checked  : e.target.value;
+     const value = e.target.type === 'checkbox' ? e.target.checked  : e.target.value;
           setBudgetDiscussionData({
              ...currentBudgetDiscussionData,
              bd_proposal_ownership: {
@@ -30,7 +33,6 @@ const ProposalOwnership = ({ setStep, step, currentBudgetDiscussionData, setBudg
              }})
      };
    const handleSubmitedOnBehalfChange = (e) => {
-     setErrors({});
      setBudgetDiscussionData({
           ...currentBudgetDiscussionData,
           bd_proposal_ownership: {
@@ -121,6 +123,8 @@ const ProposalOwnership = ({ setStep, step, currentBudgetDiscussionData, setBudg
                                         value={currentBudgetDiscussionData?.bd_proposal_ownership?.be_country || ''}
                                         required
                                         fullWidth
+                                        helperText={errors['bd_proposal_ownership.be_country']?.trim()}
+                                        error={!!errors['bd_proposal_ownership.be_country']?.trim()}
                                         onChange={(e) => handleDataChange(e, 'be_country')}
                                         SelectProps={{
                                              SelectDisplayProps: {

@@ -5,11 +5,9 @@ import { isValidURLFormat } from '../../../lib/utils';
 import { useTheme } from '@mui/material/styles';
 
 const FurtherInformation = ({ setStep, step, currentBudgetDiscussionData, setBudgetDiscussionData, onClose, setSelectedDraftId, selectedDraftId, handleSaveDraft, errors, setErrors }) => {
-    const [allCurrencyList, setAllCurrencyList] = useState([]);
     const costBreakdownMaxLength = 256;
     
     const handleDataChange = (e, dataName) => {
-        
         setBudgetDiscussionData({
              ...currentBudgetDiscussionData,
              bd_further_information: {
@@ -17,7 +15,6 @@ const FurtherInformation = ({ setStep, step, currentBudgetDiscussionData, setBud
                   [dataName]: e.target.value
              }})
    };
-    useEffect(() => {}, []);
     return (
         <Box display='flex' flexDirection='column'>
             <Box>

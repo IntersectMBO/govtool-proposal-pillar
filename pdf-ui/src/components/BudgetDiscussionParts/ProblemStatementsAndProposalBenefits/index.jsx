@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { getBudgetDiscussionRoadMapList , getBudgetDiscussionTypes, getBudgetDiscussionIntersectCommittee } from '../../../lib/api';
 import { StepperActionButtons } from '../../BudgetDiscussionParts';
 
-const ProblemStatementsAndProposalBenefits = ({ setStep, step, currentBudgetDiscussionData, setBudgetDiscussionData, onClose, setSelectedDraftId, selectedDraftId, handleSaveDraft, errors, setErrors }) => {
+const ProblemStatementsAndProposalBenefits = ({ setStep, step, currentBudgetDiscussionData, setBudgetDiscussionData, onClose, setSelectedDraftId, selectedDraftId, handleSaveDraft, errors, setErrors, validateSection }) => {
 
     const problemStatementMaxLength = 2500;
     const proposalBenefitMaxLength = 2500;
@@ -32,7 +32,9 @@ const ProblemStatementsAndProposalBenefits = ({ setStep, step, currentBudgetDisc
        };
        fetchData();
      }, []);
-
+     useEffect(() => {
+        validateSection("bd_psapb");
+     }, [currentBudgetDiscussionData?.bd_psapb]);
      const handleDataChange = (e, dataName) => {
         setBudgetDiscussionData({
              ...currentBudgetDiscussionData,
@@ -84,11 +86,13 @@ return (
                             label='Problem Statement'
                             rows={4}
                             sx={{ mb: 4 }}
+                            required
                             fullWidth
                             multiline
                             value={currentBudgetDiscussionData?.bd_psapb?.problem_statement || ''}
                             onChange={(e) => handleDataChange(e, 'problem_statement')}
-                            helperText={(
+                            helperText={errors['bd_psapb.problem_statement']?.trim() ||                            
+                                (
                                     <>
                                         <Typography
                                             variant='caption'
@@ -114,7 +118,7 @@ return (
                                     'data-testid': 'problem-statement-input',
                                 },
                             }}
-                            error={errors?.bd_psapb?.problem_statement}
+                            error={!!errors['bd_psapb.problem_statement']?.trim()}
                             FormHelperTextProps={{
                                 'data-testid': errors?.bd_psapb?.problem_statement
                                     ? 'problem-statement-helper-error'
@@ -131,7 +135,8 @@ return (
                             fullWidth
                             value={currentBudgetDiscussionData?.bd_psapb?.proposal_benefit || ''}
                             onChange={(e) => handleDataChange(e, 'proposal_benefit')}
-                            helperText={(
+                            helperText={errors['bd_psapb.proposal_benefit']?.trim() ||
+                                (
                                 <>
                                     <Typography
                                         variant='caption'
@@ -156,7 +161,7 @@ return (
                                     'data-testid': 'proposal-benefit-input',
                                 },
                             }}
-                            error={errors?.bd_psapb?.proposal_benefit}
+                            error={!!errors['bd_psapb.proposal_benefit']?.trim()}
                             FormHelperTextProps={{
                                 'data-testid': errors?.bd_psapb?.proposal_benefit
                                     ? 'proposal-benefit-helper-error'
@@ -167,8 +172,9 @@ return (
                             select
                             name='Product Roadmap'
                             label='Product Roadmap'
-                            helperText='Does this proposal align to the Product Roadmap and Roadmap Goals?'
+                            helperText={errors['bd_psapb.proposal_benefit']?.trim() || 'Does this proposal align to the Product Roadmap and Roadmap Goals?'}
                             value={currentBudgetDiscussionData?.bd_psapb?.roadmap_name || ''}
+                            error={!!errors['bd_psapb.roadmap_name']?.trim()}
                             required
                             fullWidth
                             onChange={(e) => handleDataChange(e, 'roadmap_name')}
@@ -190,11 +196,27 @@ return (
                         ))}
                         
                         </TextField>
+                        {currentBudgetDiscussionData?.bd_psapb?.roadmap_name==11?(
+                            <TextField
+                                name='Propodsl explanation'
+                                label='Please explain how your proposal supports the Product Roadmap.'
+                                helperText={errors['bd_psapb.explain_proposal_roadmap']?.trim() }
+                                error={!!errors['bd_psapb.explain_proposal_roadmap']?.trim()}
+                                rows={4}
+                                multiline
+                                value={currentBudgetDiscussionData?.bd_psapb?.explain_proposal_roadmap || ''}
+                                required
+                                fullWidth
+                                onChange={(e) => handleDataChange(e, 'explain_proposal_roadmap')}
+                                sx={{ mb: 2 }}
+                                /> 
+                        ):null}
                         <TextField
                             select
                             name='bd_type'
                             label='Does your proposal align to any of the budget categories?'
-                            helperText={(<> {'Please click'} <Link href="">here</Link> {'to see details of Intersect Committees.'}</>)}
+                            helperText={errors['bd_psapb.type_name']?.trim() || (<> {'Please click'} <Link href="">here</Link> {'to see details of Intersect Committees.'}</>)}
+                            error={!!errors['bd_psapb.type_name']?.trim()}
                             value={currentBudgetDiscussionData?.bd_psapb?.type_name || ''}
                             required
                             fullWidth
@@ -217,27 +239,13 @@ return (
                         ))}
                         
                         </TextField>
-                        {currentBudgetDiscussionData?.bd_psapb?.type_name==11?(
-                            <TextField
-                                name='Propodsl explanation'
-                                label='Please explain how your proposal supports the Product Roadmap.'
-                                rows={4}
-                                multiline
-                                value={currentBudgetDiscussionData?.bd_psapb?.explain_proposal_roadmap || ''}
-                                required
-                                fullWidth
-                                onChange={(e) => handleDataChange(e, 'explain_proposal_roadmap')}
-                                sx={{ mb: 2 }}
-                                /> 
-                        ):null}
-
-
                         <TextField
                             select
                             name='Committee Alignment'
                             label='Does your proposal align with any of the Intersect Committees?'
-                            helperText={(<> {'Please click'} <Link href="">here</Link> {'to see details of Intersect Committees.'}</>)}
+                            helperText={errors['bd_psapb.committee_name']?.trim() || (<> {'Please click'} <Link href="">here</Link> {'to see details of Intersect Committees.'}</>)}
                             value={currentBudgetDiscussionData?.bd_psapb?.committee_name || ''}
+                            error={!!errors['bd_psapb.committee_name']?.trim()}
                             required
                             fullWidth
                             onChange={(e) => handleDataChange(e, 'committee_name')}
@@ -267,7 +275,7 @@ return (
                             multiline
                             value={currentBudgetDiscussionData?.bd_psapb?.supplementary_endorsement || ''}
                             onChange={(e) => handleDataChange(e, 'supplementary_endorsement')}
-                            helperText={(
+                            helperText={errors['bd_psapb.supplementary_endorsement']?.trim()||(
                                     <>
                                         <Typography
                                             variant='caption'
@@ -294,7 +302,7 @@ return (
                                     'data-testid': 'supplementary-endorsement-input',
                                 },
                             }}
-                            error={errors?.bd_psapb?.supplementary_endorsement}
+                            error={!!errors['bd_psapb.supplementary_endorsement']?.trim()}
                             FormHelperTextProps={{
                                 'data-testid': errors?.bd_psapb?.supplementary_endorsement
                                     ? 'supplementary-endorsement-helper-error'
@@ -302,7 +310,7 @@ return (
                             }}
                         />
                         <StepperActionButtons onClose={onClose} onSaveDraft={handleSaveDraft} onContinue={setStep}
-                            onBack={setStep} selectedDraftId={selectedDraftId} nextStep={step+1} backStep={step-1}
+                            onBack={setStep} selectedDraftId={selectedDraftId} nextStep={step+1} backStep={step-1} errors={errors}
                         />
                     </CardContent>
             </Card>

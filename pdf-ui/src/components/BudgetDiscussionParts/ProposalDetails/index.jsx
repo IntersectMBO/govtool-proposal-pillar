@@ -3,9 +3,10 @@ import { useEffect, useState } from 'react';
 import { getContractTypeList } from '../../../lib/api';
 import { StepperActionButtons } from '../../BudgetDiscussionParts';
 
-const ProposalDetails = ({ setStep, step, currentBudgetDiscussionData, setBudgetDiscussionData, onClose, setSelectedDraftId, selectedDraftId, handleSaveDraft, errors, setErrors }) => {
+const ProposalDetails = ({ setStep, step, currentBudgetDiscussionData, setBudgetDiscussionData, onClose, setSelectedDraftId, selectedDraftId, handleSaveDraft, errors, setErrors, validateSection }) => {
 
     const [allContractTypes, setAllContractTypes] = useState([]);
+    
     const proposalDescriptionMaxLength = 2500;
     const keyDependenciesMaxLength = 2500;
     const resourcingDurationEstimatesMaxLength = 2500;
@@ -26,6 +27,9 @@ const ProposalDetails = ({ setStep, step, currentBudgetDiscussionData, setBudget
        };
        fetchData();
      }, []);
+    useEffect(() => {
+             validateSection("bd_proposal_details");
+          }, [currentBudgetDiscussionData?.bd_proposal_details]);
      const handleDataChange = (e, dataName) => {
         setBudgetDiscussionData({
              ...currentBudgetDiscussionData,
@@ -78,8 +82,9 @@ return (
                         required
                         fullWidth
                         onChange={(e) => handleDataChange(e, 'proposal_name')}
+                        helperText={errors['bd_proposal_details.proposal_name']?.trim() || 'Ideally this should give an indication of the work being done or project goal.'}
+                        error={!!errors['bd_proposal_details.proposal_name']?.trim()}
                         sx={{ mb: 2 }}
-                        helperText='Ideally this should give an indication of the work being done or project goal.'
                     />
                     <TextField
                         size='large'
@@ -91,7 +96,8 @@ return (
                         multiline
                         value={currentBudgetDiscussionData?.bd_proposal_details?.proposal_description || ''}
                         onChange={(e) => handleDataChange(e, 'proposal_description')}
-                        helperText={(
+                        helperText={errors['bd_proposal_details.proposal_description']?.trim()||
+                            (
                                 <>
                                     <Typography
                                         variant='caption'
@@ -117,7 +123,7 @@ return (
                                 'data-testid': 'proposal-description-input',
                             },
                         }}
-                        error={errors?.bd_proposal_details?.proposal_description}
+                        error={errors['bd_proposal_details.proposal_description']?.trim()}
                         FormHelperTextProps={{
                             'data-testid': errors?.bd_proposal_details?.proposal_description
                                 ? 'proposal-description-helper-error'
@@ -132,9 +138,10 @@ return (
                         sx={{ mb: 4 }}
                         multiline
                         fullWidth
+                        required
                         value={currentBudgetDiscussionData?.bd_proposal_details?.key_dependencies || ''}
                         onChange={(e) => handleDataChange(e, 'key_dependencies')}
-                        helperText={(
+                        helperText={errors['bd_proposal_details.key_dependencies']?.trim()||(
                             <>
                                 <Typography
                                     variant='caption'
@@ -159,7 +166,7 @@ return (
                                 'data-testid': 'key-dependencies-input',
                             },
                         }}
-                        error={errors?.bd_proposal_details?.key_dependencies}
+                        error={errors['bd_proposal_details.key_dependencies']?.trim()}
                         FormHelperTextProps={{
                             'data-testid': errors?.bd_proposal_details?.key_dependencies
                                 ? 'key-dependencies-helper-error'
@@ -174,6 +181,8 @@ return (
                         value={currentBudgetDiscussionData?.bd_proposal_details?.maintain_and_support || ''}
                         required
                         fullWidth
+                        helperText={errors['bd_proposal_details.maintain_and_support']?.trim()}
+                        error={!!errors['bd_proposal_details.maintain_and_support']?.trim()}
                         onChange={(e) => handleDataChange(e, 'maintain_and_support')}
                         sx={{ mb: 2 }}
                       />
@@ -185,9 +194,10 @@ return (
                         sx={{ mb: 4 }}
                         fullWidth
                         multiline
+                        required
                         value={currentBudgetDiscussionData?.bd_proposal_details?.key_proposal_deliverables || ''}
                         onChange={(e) => handleDataChange(e, 'key_proposal_deliverables')}
-                        helperText={(
+                        helperText={errors['bd_proposal_details.key_proposal_deliverables']?.trim()||(
                                 <>
                                     <Typography
                                         variant='caption'
@@ -213,7 +223,7 @@ return (
                                 'data-testid': 'key-proposal-deliverables-input',
                             },
                         }}
-                        error={errors?.bd_proposal_details?.key_proposal_deliverables}
+                        error={!!errors['bd_proposal_details.key_proposal_deliverables']?.trim()}
                         FormHelperTextProps={{
                             'data-testid': errors?.bd_proposal_details?.key_proposal_deliverables
                                 ? 'key-proposal-deliverables-helper-error'
@@ -227,10 +237,11 @@ return (
                         rows={4}
                         sx={{ mb: 4 }}
                         fullWidth
+                        required
                         multiline
                         value={currentBudgetDiscussionData?.bd_proposal_details?.resourcing_duration_estimates || ''}
                         onChange={(e) => handleDataChange(e, 'resourcing_duration_estimates')}
-                        helperText={(
+                        helperText={errors['bd_proposal_details.resourcing_duration_estimates']?.trim()||(
                                 <>
                                     <Typography
                                         variant='caption'
@@ -256,7 +267,7 @@ return (
                                 'data-testid': 'resourcing-duration-estimates-input',
                             },
                         }}
-                        error={errors?.bd_proposal_details?.resourcing_duration_estimates}
+                        error={!!errors['bd_proposal_details.resourcing_duration_estimates']?.trim()}
                         FormHelperTextProps={{
                             'data-testid': errors?.bd_proposal_details?.resourcing_duration_estimates
                                 ? 'resourcing-duration-estimates-helper-error'
@@ -272,6 +283,8 @@ return (
                         rows={4}
                         fullWidth
                         onChange={(e) => handleDataChange(e, 'experience')}
+                        helperText={errors['bd_proposal_details.experience']?.trim()}
+                        error={!!errors['bd_proposal_details.experience']?.trim()}
                         sx={{ mb: 2 }}
                     />
                     <TextField
@@ -283,6 +296,8 @@ return (
                         required
                         fullWidth
                         onChange={(e) => handleDataChange(e, 'contract_type_name')}
+                        helperText={errors['bd_proposal_details.contract_type_name']?.trim()}
+                        error={!!errors['bd_proposal_details.contract_type_name']?.trim()}
                         SelectProps={{
                                 SelectDisplayProps: {
                                     'data-testid': 'contract-type-name', 
@@ -300,8 +315,25 @@ return (
                             </MenuItem>
                        ))}
                     </TextField>
+                    { currentBudgetDiscussionData?.bd_proposal_details?.contract_type_name === 6 ? 
+                    (
+                        <TextField
+                            name='Other contract type'
+                            label='Please describe what you have in mind.'
+                            value={currentBudgetDiscussionData?.bd_proposal_details?.other_contract_type || ''}
+                            required
+                            multiline
+                            rows={4}
+                            fullWidth
+                            onChange={(e) => handleDataChange(e, 'other_contract_type')}
+                            helperText={errors['bd_proposal_details.other_contract_type']?.trim()}
+                            error={!!errors['bd_proposal_details.other_contract_type']?.trim()}
+                            sx={{ mb: 2 }}
+                        />
+                    ):''
+                    }
                     <StepperActionButtons onClose={onClose} onSaveDraft={handleSaveDraft} onContinue={setStep}
-                            onBack={setStep} selectedDraftId={selectedDraftId} nextStep={step+1} backStep={step-1}
+                            onBack={setStep} selectedDraftId={selectedDraftId} nextStep={step+1} backStep={step-1} errors={errors}
                      />
                 </CardContent>
             </Card>
