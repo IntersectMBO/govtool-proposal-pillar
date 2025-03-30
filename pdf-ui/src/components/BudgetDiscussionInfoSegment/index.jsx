@@ -12,7 +12,7 @@ const BudgetDiscussionInfoSegment = ({ question, answer }) => {
             >
                 {question}
             </Typography>
-            <Typography variant='body1'>{answer}</Typography>
+            <Typography variant='body1'>{answer || '-'}</Typography>
         </Box>
     );
 };
