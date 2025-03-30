@@ -25,7 +25,8 @@ const BudgetDiscussionPoll = ({
     proposalAuthorUsername,
     poll,
 }) => {
-    const { user, setLoading, setOpenUsernameModal } = useAppContext();
+    const { user, setLoading, setOpenUsernameModal, walletAPI } =
+        useAppContext();
     const [userPollVote, setUserPollVote] = useState(null);
     const [showChangeVoteModal, setShowChangeVoteModal] = useState(false);
 
@@ -64,7 +65,12 @@ const BudgetDiscussionPoll = ({
     const handlePollVote = async ({ vote }) => {
         try {
             const response = await createBudgetDiscussionPollVote({
-                createData: { bd_poll_id: `${poll?.id}`, vote_result: vote },
+                createData: {
+                    bd_poll_id: `${poll?.id}`,
+                    vote_result: vote,
+                    drep_id: walletAPI?.dRepID,
+                    drep_voting_power: walletAPI?.voter?.votingPower || '',
+                },
             });
 
             if (!response) return;
@@ -118,7 +124,11 @@ const BudgetDiscussionPoll = ({
     if (poll) {
         return (
             <>
-                {user && !userPollVote && user?.user?.id !== +proposalUserId ? (
+                {user &&
+                !userPollVote &&
+                user?.user?.id !== +proposalUserId &&
+                walletAPI?.voter?.isRegisteredAsDRep &&
+                walletAPI?.dRepID ? (
                     <Card
                         sx={{
                             mb: 3,
@@ -169,120 +179,119 @@ const BudgetDiscussionPoll = ({
                     </Card>
                 ) : null}
 
-                {userPollVote || user?.user?.id === +proposalUserId ? (
-                    <Card data-testid='poll-result-card'>
-                        <CardContent
-                            sx={{ display: 'flex', flexDirection: 'column' }}
+                <Card data-testid='poll-result-card'>
+                    <CardContent
+                        sx={{ display: 'flex', flexDirection: 'column' }}
+                    >
+                        {proposalAuthorUsername ? (
+                            <Typography variant='body2'>
+                                @{proposalAuthorUsername}
+                            </Typography>
+                        ) : null}
+                        <Typography
+                            variant='caption'
+                            sx={{
+                                color: (theme) => theme.palette.text.grey,
+                            }}
+                            mt={2}
                         >
-                            {proposalAuthorUsername ? (
-                                <Typography variant='body2'>
-                                    @{proposalAuthorUsername}
-                                </Typography>
-                            ) : null}
+                            {formatDateWithOffset(
+                                new Date(poll?.attributes?.createdAt),
+                                0,
+                                'dd/MM/yyyy - p',
+                                'UTC'
+                            )}
+                        </Typography>
+                        <Typography variant='body1' fontWeight={600} mt={2}>
+                            Poll Results
+                        </Typography>
+                        <Typography variant='body2' mt={1}>
+                            Do you support this proposal to be included in the
+                            next Cardano Budget?
+                        </Typography>
+                        <Divider
+                            variant='fullWidth'
+                            sx={{
+                                my: 2,
+                                color: (theme) => theme.palette.divider.primary,
+                            }}
+                        />
+                        <Typography
+                            variant='caption'
+                            sx={{
+                                color: (theme) => theme.palette.text.black,
+                            }}
+                        >
+                            Total votes:{' '}
+                            {+poll?.attributes?.poll_yes +
+                                +poll?.attributes?.poll_no}
+                        </Typography>
+                        <Box
+                            display={'flex'}
+                            width={'100%'}
+                            alignItems={'center'}
+                            justifyContent={'space-between'}
+                            mt={3}
+                            gap={1}
+                        >
                             <Typography
-                                variant='caption'
-                                sx={{
-                                    color: (theme) => theme.palette.text.grey,
-                                }}
-                                mt={2}
+                                variant='body1'
+                                fontWeight={600}
+                                data-testid='poll-yes-count'
                             >
-                                {formatDateWithOffset(
-                                    new Date(poll?.attributes?.createdAt),
-                                    0,
-                                    'dd/MM/yyyy - p',
-                                    'UTC'
-                                )}
+                                {`Yes: (${
+                                    totalVotesGreaterThanZero(poll)
+                                        ? calculatePercentage(poll, true)
+                                        : 0
+                                }%)`}
                             </Typography>
-                            <Typography variant='body1' fontWeight={600} mt={2}>
-                                Poll Results
-                            </Typography>
-                            <Typography variant='body2' mt={1}>
-                                Do you support this proposal to be included in
-                                the next Cardano Budget?
-                            </Typography>
-                            <Divider
-                                variant='fullWidth'
-                                sx={{
-                                    my: 2,
-                                    color: (theme) =>
-                                        theme.palette.divider.primary,
-                                }}
-                            />
+
+                            <Button variant='text'>See details</Button>
+                        </Box>
+                        <Box
+                            display={'flex'}
+                            width={'100%'}
+                            justifyContent={'space-between'}
+                            alignItems={'center'}
+                            mt={3}
+                            gap={1}
+                        >
                             <Typography
-                                variant='caption'
-                                sx={{
-                                    color: (theme) => theme.palette.text.black,
-                                }}
+                                variant='body1'
+                                fontWeight={600}
+                                data-testid='poll-no-count'
                             >
-                                Total votes:{' '}
-                                {+poll?.attributes?.poll_yes +
-                                    +poll?.attributes?.poll_no}
+                                {`No: (${
+                                    totalVotesGreaterThanZero(poll)
+                                        ? calculatePercentage(poll, false)
+                                        : 0
+                                }%)`}
                             </Typography>
-                            <Box
-                                display={'flex'}
-                                width={'100%'}
-                                alignItems={'center'}
-                                justifyContent={'space-between'}
-                                mt={3}
-                                gap={1}
-                            >
-                                <Typography
-                                    variant='body1'
-                                    fontWeight={600}
-                                    data-testid='poll-yes-count'
-                                >
-                                    {`Yes: (${
-                                        totalVotesGreaterThanZero(poll)
-                                            ? calculatePercentage(poll, true)
-                                            : 0
-                                    }%)`}
-                                </Typography>
+                            <Button variant='text'>See details</Button>
+                        </Box>
 
-                                <Button variant='text'>See details</Button>
-                            </Box>
-                            <Box
-                                display={'flex'}
-                                width={'100%'}
-                                justifyContent={'space-between'}
-                                alignItems={'center'}
-                                mt={3}
-                                gap={1}
-                            >
-                                <Typography
-                                    variant='body1'
-                                    fontWeight={600}
-                                    data-testid='poll-no-count'
+                        {user &&
+                            userPollVote &&
+                            user?.user?.id !== +proposalUserId &&
+                            poll?.attributes?.is_poll_active &&
+                            walletAPI?.voter?.isRegisteredAsDRep &&
+                            walletAPI?.dRepID && (
+                                <Box
+                                    mt={2}
+                                    display={'flex'}
+                                    justifyContent={'flex-end'}
                                 >
-                                    {`No: (${
-                                        totalVotesGreaterThanZero(poll)
-                                            ? calculatePercentage(poll, false)
-                                            : 0
-                                    }%)`}
-                                </Typography>
-                                <Button variant='text'>See details</Button>
-                            </Box>
-
-                            {user &&
-                                userPollVote &&
-                                user?.user?.id !== +proposalUserId &&
-                                poll?.attributes?.is_poll_active && (
-                                    <Box
-                                        mt={2}
-                                        display={'flex'}
-                                        justifyContent={'flex-end'}
+                                    <Button
+                                        variant='outlined'
+                                        onClick={toggleChangeVoteModal}
+                                        data-testid='change-vote-button'
                                     >
-                                        <Button
-                                            variant='outlined'
-                                            onClick={toggleChangeVoteModal}
-                                            data-testid='change-vote-button'
-                                        >
-                                            Change Vote
-                                        </Button>
-                                    </Box>
-                                )}
-                        </CardContent>
-                    </Card>
-                ) : null}
+                                        Change Vote
+                                    </Button>
+                                </Box>
+                            )}
+                    </CardContent>
+                </Card>
 
                 <Modal
                     open={showChangeVoteModal}
