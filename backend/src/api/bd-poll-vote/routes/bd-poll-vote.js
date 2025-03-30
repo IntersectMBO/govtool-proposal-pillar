@@ -10,7 +10,7 @@ const { createCoreRouter } = require("@strapi/strapi").factories;
 module.exports = createCoreRouter("api::bd-poll-vote.bd-poll-vote", {
   config: {
     find: {
-      roles: ["authenticated"],
+      roles: ["authenticated", "public"],
     },
     create: {
       roles: ["authenticated"],
