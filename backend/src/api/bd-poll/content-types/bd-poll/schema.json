@@ -1,0 +1,31 @@
+{
+  "kind": "collectionType",
+  "collectionName": "bd_polls",
+  "info": {
+    "singularName": "bd-poll",
+    "pluralName": "bd-polls",
+    "displayName": "BD Poll",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "bd_proposal_id": {
+      "type": "string"
+    },
+    "poll_yes": {
+      "type": "integer",
+      "default": 0
+    },
+    "poll_no": {
+      "type": "integer",
+      "default": 0
+    },
+    "is_poll_active": {
+      "type": "boolean",
+      "default": true
+    }
+  }
+}
