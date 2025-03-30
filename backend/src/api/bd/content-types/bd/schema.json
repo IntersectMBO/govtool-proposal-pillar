@@ -57,6 +57,10 @@
       "type": "relation",
       "relation": "oneToOne",
       "target": "api::bd.bd"
+    },
+    "prop_comments_number": {
+      "type": "integer",
+      "default": 0
     }
   }
 }

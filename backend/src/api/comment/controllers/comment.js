@@ -41,33 +41,66 @@ module.exports = createCoreController("api::comment.comment", ({ strapi }) => ({
 
       let proposal;
 
-      try {
-        proposal = await strapi.entityService.findOne(
-          "api::proposal.proposal",
-          data?.proposal_id
-        );
+      if (data?.proposal_id) {
+        try {
+          proposal = await strapi.entityService.findOne(
+            "api::proposal.proposal",
+            data?.proposal_id
+          );
 
-        if (!proposal) {
-          comment && (await deleteComment());
+          if (!proposal) {
+            comment && (await deleteComment());
+            return ctx.badRequest(null, "Proposal not found");
+          }
+        } catch (error) {
           return ctx.badRequest(null, "Proposal not found");
         }
-      } catch (error) {
-        return ctx.badRequest(null, "Proposal not found");
+      }
+
+      if (data?.bd_proposal_id) {
+        try {
+          proposal = await strapi.entityService.findOne(
+            "api::bd.bd",
+            data?.bd_proposal_id
+          );
+
+          if (!proposal) {
+            comment && (await deleteComment());
+            return ctx.badRequest(null, "Proposal not found");
+          }
+        } catch (error) {
+          return ctx.badRequest(null, "Proposal not found");
+        }
       }
 
       let updatedProposal;
 
       try {
-        updatedProposal = await strapi.entityService.update(
-          "api::proposal.proposal",
-          data?.proposal_id,
-          {
-            data: {
-              prop_comments_number: proposal?.prop_comments_number + 1,
-            },
-          }
-        );
+        if (data?.proposal_id) {
+          updatedProposal = await strapi.entityService.update(
+            "api::proposal.proposal",
+            data?.proposal_id,
+            {
+              data: {
+                prop_comments_number: proposal?.prop_comments_number + 1,
+              },
+            }
+          );
+        }
 
+        if (data?.bd_proposal_id) {
+          updatedProposal = await strapi.entityService.update(
+            "api::bd.bd",
+            data?.bd_proposal_id,
+            {
+              data: {
+                prop_comments_number: proposal?.prop_comments_number
+                  ? 1
+                  : proposal?.prop_comments_number + 1,
+              },
+            }
+          );
+        }
         if (!updatedProposal) {
           comment && (await deleteComment());
           return ctx.badRequest(null, "Proposal not updated");
@@ -87,41 +120,41 @@ module.exports = createCoreController("api::comment.comment", ({ strapi }) => ({
 
   async find(ctx) {
     const sanitizedQueryParams = await this.sanitizeQuery(ctx);
-// ako je moderator status true znaci da je report validan i da komentar ne treba prikazati
-sanitizedQueryParams.filters = {
-  ...sanitizedQueryParams.filters,
-  $and: [
-    ...(sanitizedQueryParams.filters.$and || []),
-    // Isključi komentare sa bar jednim reportom gde je moderation_status true
-    {
-      comment_reports: {
-        $not: {
-          $elemMatch: {
-            moderation_status: true
-          }
-        }
-      }
-    },
-    // Proveri da broj reportova sa moderation_status null je manji od 3
-    {
-      $expr: {
-        $lt: [
-          {
-            $size: {
-              $filter: {
-                input: "$comment_reports",
-                as: "report",
-                cond: { $eq: ["$$report.moderation_status", null] }
-              }
-            }
+    // ako je moderator status true znaci da je report validan i da komentar ne treba prikazati
+    sanitizedQueryParams.filters = {
+      ...sanitizedQueryParams.filters,
+      $and: [
+        ...(sanitizedQueryParams.filters.$and || []),
+        // Isključi komentare sa bar jednim reportom gde je moderation_status true
+        {
+          comment_reports: {
+            $not: {
+              $elemMatch: {
+                moderation_status: true,
+              },
+            },
           },
-          3
-        ]
-      }
-    }
-  ]
-};
-//sanitizedQueryParams.filters["$and"]=[...sanitizedQueryParams.filters["$and"],{comment_reports:{moderation_status:{$ne:true}}}];
+        },
+        // Proveri da broj reportova sa moderation_status null je manji od 3
+        {
+          $expr: {
+            $lt: [
+              {
+                $size: {
+                  $filter: {
+                    input: "$comment_reports",
+                    as: "report",
+                    cond: { $eq: ["$$report.moderation_status", null] },
+                  },
+                },
+              },
+              3,
+            ],
+          },
+        },
+      ],
+    };
+    //sanitizedQueryParams.filters["$and"]=[...sanitizedQueryParams.filters["$and"],{comment_reports:{moderation_status:{$ne:true}}}];
     const { results, pagination } = await strapi
       .service("api::comment.comment")
       .find(sanitizedQueryParams);
@@ -154,5 +187,5 @@ sanitizedQueryParams.filters = {
     }
 
     return this.transformResponse(proposalsList, { pagination });
-  }
+  },
 }));
