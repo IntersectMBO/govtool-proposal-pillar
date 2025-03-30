@@ -4,7 +4,6 @@ import { useTheme } from '@emotion/react';
 import {
     IconFilter,
     IconSearch,
-    IconSort,
     IconPlusCircle,
     IconArrowLeft,
     IconArrowDown,
@@ -15,14 +14,12 @@ import {
     Checkbox,
     FormControlLabel,
     Grid,
-    IconButton,
     InputAdornment,
     Menu,
     MenuItem,
     TextField,
     Typography,
     Button,
-    Tooltip,
     Divider,
 } from '@mui/material';
 import { useEffect, useState } from 'react';
@@ -35,7 +32,7 @@ import { useLocation } from 'react-router-dom';
 const ProposedBudgetDiscussion = () => {
     const location = useLocation();
     const theme = useTheme();
-    const { user, walletAPI, setOpenUsernameModal, setUser, clearStates , getVotingPower } = useAppContext();
+    const { user, walletAPI, setOpenUsernameModal, setUser, clearStates } = useAppContext();
     const [budgetDiscussionSearchText, setBudgetDiscussionSearchText] = useState('');
     const [sortType, setSortType] = useState('desc');
     const [budgetDiscussionTypeList, setBudgetDiscussionTypeList] = useState([]);
@@ -64,19 +61,6 @@ const ProposedBudgetDiscussion = () => {
             console.error(error);
         }
     };
-    // const fetchUserDrepData = async () => {
-    //     try {
-    //         let response = await getDrepInfo();
-    //         if (!response?.data) return;
-    //             setUserDrepData(response?.data);
-    //     } catch (error) {
-    //         console.error(error);
-    //     }
-    // };
-// console.log(user)
-// console.log(walletAPI)
-//let x = getVotingPower("drep1q6nr96la2nckmnkktzmy3e9ckh2uy5ytr9tz08vau85f5f7plqh")
-//console.log(x)
 
     const toggleActionFilter = (action) => {
         let filterExist = filteredBudgetDiscussionTypeList?.some(
@@ -89,7 +73,7 @@ const ProposedBudgetDiscussion = () => {
                 (filter) => filter?.id !== action?.id
             );
         } else {
-            updatedList = [...filteredBudgetDiscussionList, action];
+            updatedList = [...filteredBudgetDiscussionTypeList, action];
         }
 
         updatedList.sort((a, b) => a?.id - b?.id);
@@ -116,17 +100,16 @@ const ProposedBudgetDiscussion = () => {
 
     const resetFilters = () => {
         setFilteredBudgetDiscussionTypeList([]);
-        setFilteredBudgetDiscussionStatusList(['active']);
         handleCloseFilters();
     };
 
     useEffect(() => {
-        //console.log(walletAPI);
         if(budgetDiscussionTypeList.length == 0)
             fetchBudgetDiscussionTypes();
     }, []);
 
     useEffect(() => {
+
         if (showAllActivated?.is_activated) {
             setFilteredBudgetDiscussionTypeList([
                 showAllActivated?.gov_action_type,
@@ -321,7 +304,7 @@ const ProposedBudgetDiscussion = () => {
                                                         mb: 1,
                                                     }}
                                                 >
-                                                    BudgetDiscussion types
+                                                    Budget Discussion types
                                                 </Typography>
                                                 <Divider
                                                     sx={{
@@ -336,17 +319,17 @@ const ProposedBudgetDiscussion = () => {
                                                 {budgetDiscussionTypeList?.map(
                                                     (ga, index) => (
                                                         <MenuItem
-                                                            key={`${ga?.attributes?.bd_type_name}-${index}`}
+                                                            key={`${ga?.attributes?.type_name}-${index}`}
                                                             selected={filteredBudgetDiscussionTypeList?.some(
                                                                 (filter) =>
                                                                     filter?.id ===
                                                                     ga?.id
                                                             )}
-                                                            id={`${ga?.attributes?.bd_type_name}-radio-wrapper`}
+                                                            id={`${ga?.attributes?.type_name}-radio-wrapper`}
                                                             data-testid={
                                                                 ga?.attributes
                                                                     ?.bd_type_name
-                                                                    ? `${ga?.attributes?.bd_type_name?.toLowerCase()}-radio-wrapper`
+                                                                    ? `${ga?.attributes?.type_name?.toLowerCase()}-radio-wrapper`
                                                                     : `${index}-radio-wrapper`
                                                             }
                                                         >
@@ -365,12 +348,12 @@ const ProposedBudgetDiscussion = () => {
                                                                                 filter?.id ===
                                                                                 ga?.id
                                                                         )}
-                                                                        id={`${ga?.attributes?.bd_type_name}-radio`}
+                                                                        id={`${ga?.attributes?.type_name}-radio`}
                                                                         data-testid={
                                                                             ga
                                                                                 ?.attributes
                                                                                 ?.bd_type_name
-                                                                                ? `${ga?.attributes?.bd_type_name?.toLowerCase()}-radio`
+                                                                                ? `${ga?.attributes?.type_name?.toLowerCase()}-radio`
                                                                                 : `${index}-radio`
                                                                         }
                                                                     />
@@ -378,7 +361,7 @@ const ProposedBudgetDiscussion = () => {
                                                                 label={
                                                                     ga
                                                                         ?.attributes
-                                                                        ?.bd_type_name
+                                                                        ?.type_name
                                                                 }
                                                             />
                                                         </MenuItem>
@@ -386,79 +369,7 @@ const ProposedBudgetDiscussion = () => {
                                                 )}
                                             </Box>
                                         )}
-
-                                        <Typography
-                                            variant='body1'
-                                            sx={{ mb: 1, mt: 2 }}
-                                        >
-                                            Budget discussion status
-                                        </Typography>
-                                        <Divider
-                                            sx={{
-                                                color: (theme) => ({
-                                                    borderColor:
-                                                        theme.palette.border
-                                                            .lightGray,
-                                                }),
-                                            }}
-                                        />
-                                        <MenuItem
-                                            selected={filteredBudgetDiscussionStatusList?.some(
-                                                (filter) =>
-                                                    filter === 'submitted'
-                                            )}
-                                            id={`submitted-for-vote-radio-wrapper`}
-                                            data-testid={`submitted-for-vote-radio-wrapper`}
-                                        >
-                                            <FormControlLabel
-                                                control={
-                                                    <Checkbox
-                                                        onChange={() =>
-                                                            toggleStatusFilter(
-                                                                'submitted'
-                                                            )
-                                                        }
-                                                        checked={filteredBudgetDiscussionStatusList?.some(
-                                                            (filter) =>
-                                                                filter ===
-                                                                'submitted'
-                                                        )}
-                                                        id={`submitted-for-vote-radio`}
-                                                        data-testid={`submitted-for-vote-radio`}
-                                                    />
-                                                }
-                                                label={'Submitted for vote'}
-                                            />
-                                        </MenuItem>
-                                        <MenuItem
-                                            selected={filteredBudgetDiscussionStatusList?.some(
-                                                (filter) => filter === 'active'
-                                            )}
-                                            id={`active-budget-discussion-radio-wrapper`}
-                                            data-testid={`active-budget-discussion-radio-wrapper`}
-                                        >
-                                            <FormControlLabel
-                                                control={
-                                                    <Checkbox
-                                                        onChange={() =>
-                                                            toggleStatusFilter(
-                                                                'active'
-                                                            )
-                                                        }
-                                                        checked={filteredBudgetDiscussionStatusList?.some(
-                                                            (filter) =>
-                                                                filter ===
-                                                                'active'
-                                                        )}
-                                                        id={`active-budget-discussion-radio`}
-                                                        data-testid={`active-budget-discussion-radio`}
-                                                    />
-                                                }
-                                                label={'Active budget discussion'}
-                                            />
-                                        </MenuItem>
-                                        
-                                        <MenuItem
+                                       <MenuItem
                                             onClick={() => resetFilters()}
                                             data-testid='reset-filters'
                                         >                                            <Typography color={'primary'}>
@@ -488,7 +399,6 @@ const ProposedBudgetDiscussion = () => {
                                                     .red
                                             }
                                         />
-                                            // <IconArrowDown />
                                         )
                                     }
                                     sx={{
@@ -526,7 +436,6 @@ const ProposedBudgetDiscussion = () => {
                             statusList={filteredBudgetDiscussionStatusList}
                             setShowAllActivated={setShowAllActivated}
                             showAllActivated={showAllActivated}
-                            bd_type_name={item.id}
                         /> 
                     </Box>
                 ))}
