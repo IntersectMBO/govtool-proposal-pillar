@@ -31,7 +31,7 @@ import { useNavigate } from 'react-router-dom';
 import {
     CommentCard,
     EditProposalDialog,
-    Poll,
+    BudgetDiscussionPoll,
     ReviewVersions,
     DeleteProposalModal,
     BudgetDiscussionInfoSegment,
@@ -1220,17 +1220,13 @@ const SingleBudgetDiscussion = ({ id }) => {
 
                         {activePoll && (
                             <Box mt={4}>
-                                <Poll
+                                <BudgetDiscussionPoll
                                     proposalUserId={
                                         proposal?.attributes?.user_id
                                     }
                                     proposalAuthorUsername={
                                         proposal?.attributes
                                             ?.user_govtool_username
-                                    }
-                                    proposalSubmitted={
-                                        proposal?.attributes?.content
-                                            ?.attributes?.prop_submitted
                                     }
                                     poll={activePoll}
                                     fetchActivePoll={fetchActivePoll}
