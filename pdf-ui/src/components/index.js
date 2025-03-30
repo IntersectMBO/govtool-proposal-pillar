@@ -4,6 +4,7 @@ export { default as ProposalCard } from './ProposalCard';
 export { default as ProposalsList } from './ProposalsList';
 export { default as CommentCard } from './CommentCard';
 export { default as Poll } from './Poll';
+export { default as BudgetDiscussionPoll } from './BudgetDiscussionPoll';
 export { default as EditProposalDialog } from './EditProposalDialog';
 export { default as ThemeProviderWrapper } from './ThemeProviderWrapper';
 export { default as ReviewVersions } from './ReviewVersions';

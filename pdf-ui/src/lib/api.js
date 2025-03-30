@@ -175,6 +175,54 @@ export const getBudgetDiscussionPoll = async ({ query = '' }) => {
     }
 };
 
+export const createBudgetDiscussionPollVote = async ({ createData }) => {
+    try {
+        const { data } = await axiosInstance.post(`api/bd-poll-votes`, {
+            data: {
+                ...createData,
+            },
+        });
+        return data?.data;
+    } catch (error) {
+        throw error;
+    }
+};
+
+export const getUserBudgetDiscussionPollVote = async ({ pollID }) => {
+    try {
+        const { data } = await axiosInstance.get(
+            `/api/bd-poll-votes?filters[bd_poll_id][$eq]=${pollID}&pagination[page]=1&pagination[pageSize]=1&sort[createdAt]=desc`
+        );
+
+        if (data?.data && data?.data?.length > 0) {
+            return data.data[0];
+        } else {
+            return null;
+        }
+    } catch (error) {
+        throw error;
+    }
+};
+
+export const updateBudgetDiscussionPollVote = async ({
+    pollVoteID,
+    updateData,
+}) => {
+    try {
+        const { data } = await axiosInstance.put(
+            `api/bd-poll-votes/${pollVoteID}`,
+            {
+                data: {
+                    ...updateData,
+                },
+            }
+        );
+        return data?.data;
+    } catch (error) {
+        throw error;
+    }
+};
+
 export const createBudgetDiscussion = async (data) => {
     try {
         const response = await axiosInstance.post(`/api/bds`, {
