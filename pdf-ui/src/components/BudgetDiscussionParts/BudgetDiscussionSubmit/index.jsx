@@ -1,9 +1,9 @@
-import { Box, Card, CardContent, Button, Typography, List, ListItem, TextField, MenuItem, Grid, Link, FormControlLabel, Checkbox} from "@mui/material"
-import { useEffect, useState } from 'react';
-import { getAllCurrencies } from '../../../lib/api';
+import { Box, Card, CardContent, Typography, FormControlLabel, Checkbox} from "@mui/material"
+import { useEffect } from 'react';
+
 import { StepperActionButtons } from '../../BudgetDiscussionParts';
 
-const BudgetDiscussionSubmit = ({ setStep, step, currentBudgetDiscussionData, setBudgetDiscussionData, onClose, setSelectedDraftId, selectedDraftId, handleSaveDraft, errors, setErrors }) => {
+const BudgetDiscussionSubmit = ({ setStep, step, currentBudgetDiscussionData, setBudgetDiscussionData, onClose,  selectedDraftId, handleSaveDraft }) => {
    
     const handleDataChange = (e, dataName) => {
         const value = e.target.type === 'checkbox' ? e.target.checked : e.target.value;
@@ -13,10 +13,7 @@ const BudgetDiscussionSubmit = ({ setStep, step, currentBudgetDiscussionData, se
                   [dataName]: value
              })
    };
-   const hadleSubmit = () => {
-    console.log(currentBudgetDiscussionData);
-    alert("Submit");
-   }
+
     useEffect(() => {
         
         if(currentBudgetDiscussionData?.confidentiality === false)
@@ -57,36 +54,6 @@ const BudgetDiscussionSubmit = ({ setStep, step, currentBudgetDiscussionData, se
                                     Submit
                                 </Typography>
                                 <Box color={(theme) => theme.palette.text.grey}>
-                                    {/* <TextField
-                                        select
-                                        name='Confidentiality'
-                                        label='Confidentiality: Is there any reason why your proposal should be kept confidential?'
-                                        value={typeof currentBudgetDiscussionData?.confidentiality === 'boolean' ? currentBudgetDiscussionData.confidentiality : ''}
-                                        required
-                                        fullWidth
-                                        onChange={(e) => handleDataChange(e, 'confidentiality')}
-                                        SelectProps={{
-                                                SelectDisplayProps: {
-                                                    'data-testid': 'itersect-named-administrator', 
-                                                },
-                                        }}
-                                        sx={{ mb: 4 }}
-                                        >
-                                            <MenuItem key={1} value={true} data-testid={`true-button`} >Yes</MenuItem>
-                                            <MenuItem key={2} value={false} data-testid={`false-button`} >No</MenuItem>
-                                    </TextField>
-                                    <TextField
-                                        name='Confidential description'
-                                        label='Which aspects of the proposal would you like to keep confidential and why?'
-                                        rows={4}
-                                        multiline
-                                        value={currentBudgetDiscussionData?.confidentiality_description || ''}
-                                        required
-                                        fullWidth
-                                        disabled={currentBudgetDiscussionData?.confidentiality !== true}
-                                        onChange={(e) => handleDataChange(e, 'confidentiality_description')}
-                                        sx={{ mb: 2 }}
-                                    /> */}
                                     <FormControlLabel
                                         control={
                                             <Checkbox

@@ -38,7 +38,7 @@ const ProposalOwnership = ({ setStep, step, currentBudgetDiscussionData, setBudg
           bd_proposal_ownership: {
               ...currentBudgetDiscussionData?.bd_proposal_ownership,
           submited_on_behalf: e.target.value,
-          company_name: '', company_domain_name: '', be_country: '',
+          company_name: '', company_domain_name: '', be_country: null,
           group_name: '', type_of_group: '', key_info_to_identify_group: '' }});
      };
 

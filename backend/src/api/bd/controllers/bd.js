@@ -139,6 +139,7 @@ module.exports = createCoreController("api::bd.bd", ({ strapi }) => ({
 
       return createdEntry;
     } catch (error) {
+      console.log(error)
       strapi.log.error("FULL CREATE ERROR:", {
         message: error.message,
         stack: error.stack,
