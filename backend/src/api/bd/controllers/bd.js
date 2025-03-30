@@ -125,4 +125,46 @@ module.exports = createCoreController("api::bd.bd", ({ strapi }) => ({
       );
     }
   },
+  async bdProposalVersions(ctx) {
+    const { id } = ctx.params;
+    if (!id) {
+      return ctx.badRequest("ID is required");
+    }
+
+    const populate = [
+      "creator",
+      "old_ver",
+      "bd_costing.preferred_currency",
+      "bd_proposal_detail.contract_type_name",
+      "bd_further_information.proposal_links",
+      "bd_psapb.type_name",
+      "bd_psapb.roadmap_name",
+      "bd_psapb.committee_name",
+      "bd_proposal_ownership.be_country",
+    ];
+    let current = await strapi.entityService.findOne("api::bd.bd", id, {
+      populate: populate,
+    });
+    if (!current) {
+      return ctx.notFound("Resource not found");
+    }
+
+    const versions = [current];
+
+    while (current && current.old_ver) {
+      const previous = await strapi.entityService.findOne(
+        "api::bd.bd",
+        current?.old_ver?.id,
+        {
+          populate: populate,
+        }
+      );
+
+      if (!previous) break;
+      versions.push(previous);
+      current = previous;
+    }
+
+    return this.transformResponse(versions);
+  },
 }));
