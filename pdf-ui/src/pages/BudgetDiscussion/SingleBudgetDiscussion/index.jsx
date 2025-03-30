@@ -174,7 +174,7 @@ const SingleBudgetDiscussion = ({ id }) => {
     const fetchComments = async (page = 1) => {
         setLoading(true);
         try {
-            const query = `filters[$and][0][proposal_id]=${id}&filters[$and][1][comment_parent_id][$null]=true&sort[createdAt]=${commentsSortType}&pagination[page]=${page}&pagination[pageSize]=25&populate[comments_reports][populate][reporter][fields][0]=username&populate[comments_reports][populate][maintainer][fields][0]=username`;
+            const query = `filters[$and][0][bd_proposal_id]=${id}&filters[$and][1][comment_parent_id][$null]=true&sort[createdAt]=${commentsSortType}&pagination[page]=${page}&pagination[pageSize]=25&populate[comments_reports][populate][reporter][fields][0]=username&populate[comments_reports][populate][maintainer][fields][0]=username`;
             const { comments, pgCount } = await getComments(query);
             if (!comments) return;
             setCommentsPageCount(pgCount);
@@ -198,7 +198,7 @@ const SingleBudgetDiscussion = ({ id }) => {
         setLoading(true);
         try {
             const newComment = await createComment({
-                proposal_id: id,
+                bd_proposal_id: id,
                 comment_text: newCommentText,
             });
 
@@ -323,7 +323,9 @@ const SingleBudgetDiscussion = ({ id }) => {
                                                 @
                                                 {
                                                     proposal?.attributes
-                                                        ?.creator?.data?.attributes.govtool_username
+                                                        ?.creator?.data
+                                                        ?.attributes
+                                                        .govtool_username
                                                 }
                                             </Typography>
                                         </Grid>

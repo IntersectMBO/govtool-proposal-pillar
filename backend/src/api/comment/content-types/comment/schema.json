@@ -30,6 +30,9 @@
       "relation": "oneToMany",
       "target": "api::comments-report.comments-report",
       "mappedBy": "comment"
+    },
+    "bd_proposal_id": {
+      "type": "string"
     }
   }
 }
