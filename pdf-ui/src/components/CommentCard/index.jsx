@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { getComments, createComment, addCommentReport, removeCommentReport,getCommentReports } from '../../lib/api';
-import { formatPollDateDisplay } from '../../lib/utils';
+import { formatDateWithOffset } from '../../lib/utils';
 import { useAppContext } from '../../context/context';
 import { useTheme } from '@emotion/react';
 import {
@@ -228,7 +228,7 @@ const CommentCard = ({ comment, proposal, fetchComments }) => {
                             justifyContent={'space-between'}
                             >            
                             <Typography variant='overline' float="left" >
-                                {formatPollDateDisplay(comment?.attributes?.createdAt)}
+                                {formatDateWithOffset(new Date(comment?.attributes?.createdAt),0,"dd/MM/yyyy - p","UTC")}
                             </Typography>
                             {/* <Tooltip 
                                 title="Report inappropriate comment" 
@@ -431,8 +431,8 @@ const CommentCard = ({ comment, proposal, fetchComments }) => {
                         <Box width={"100%"} display={"flex"} justifyContent={"space-between"}>
 
                             <Typography variant='overline'>
-                                {formatPollDateDisplay(
-                                    comment?.attributes?.createdAt
+                                {formatDateWithOffset(new Date(
+                                    comment?.attributes?.createdAt),0,"dd/MM/yyyy - p","UTC"
                                 )}
                             </Typography>
                             <Tooltip 

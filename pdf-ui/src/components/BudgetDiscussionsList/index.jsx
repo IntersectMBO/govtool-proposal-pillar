@@ -69,7 +69,7 @@ const BudgetDiscussionsList = ({
         <Box key={`extra-${index}`} height={'100%'} />
     ));
 
-    const fetchBudgetDiscussions = async (reset = true, page) => {
+    const fetchBudgetDiscussions = async (reset = true, bd_type_name= null, page) => {
         const haveSubmittedFilter = statusList?.some(
             (filter) => filter === 'submitted'
         );
@@ -81,6 +81,17 @@ const BudgetDiscussionsList = ({
             }
             else
             {
+
+
+
+
+
+
+
+
+
+
+
                 console.log("fataPrave")
                 let bdlist = await getBudgetDiscussions();
                 console.log(bdlist)
@@ -103,28 +114,28 @@ const BudgetDiscussionsList = ({
         //         }
         //     } else {
         //         if (statusList?.length === 0 || statusList?.length === 2) {
-        // /*            query = `filters[$and][0][bd_type_id]=${
+        //             query = `filters[$and][0][bd_type_id]=${
         //                 currentBudgetDiscussion?.id
         //             }&filters[$and][1][prop_name][$containsi]=${
         //                 debouncedSearchValue || ''
         //             }&pagination[page]=${page}&pagination[pageSize]=25&sort[createdAt]=${sortType}&populate[0]=proposal_links&populate[1]=proposal_withdrawals&populate[2]=proposal_constitution_content`;
-        //        */ } else {
+        //         } else {
         //             const isSubmitted = haveSubmittedFilter ? 'true' : 'false';
-        //          //   query = `filters[$and][0][bd_type_id]=${
-        //          //       currentBudgetDiscussion?.id
-        //          //   }&filters[$and][1][prop_name][$containsi]=${
-        //          //       debouncedSearchValue || ''
-        //          //   }&filters[$and][2][prop_submitted]=${isSubmitted}&pagination[page]=${page}&pagination[pageSize]=25&sort[createdAt]=${sortType}&populate[0]=proposal_links&populate[1]=proposal_withdrawals&populate[2]=proposal_constitution_content`;
+        //            query = `filters[$and][0][bd_type_id]=${
+        //                currentBudgetDiscussion?.id
+        //            }&filters[$and][1][prop_name][$containsi]=${
+        //                debouncedSearchValue || ''
+        //            }&filters[$and][2][prop_submitted]=${isSubmitted}&pagination[page]=${page}&pagination[pageSize]=25&sort[createdAt]=${sortType}&populate[0]=proposal_links&populate[1]=proposal_withdrawals&populate[2]=proposal_constitution_content`;
         //         }
         //     }
         //     const { currentBudgetDiscussion, pgCount } = await getProposals(query);
         //     if (!currentBudgetDiscussion) return;
 
-        //   //  if (reset) {
-        //   //      setBudgetDiscussionList(currentBudgetDiscussion);
-        //   //  } else {
-        //   //      setBudgetDiscussionList((prev) => [...prev, ...currentBudgetDiscussion]);
-        //  //   }
+        //    if (reset) {
+        //        setBudgetDiscussionList(currentBudgetDiscussion);
+        //    } else {
+        //        setBudgetDiscussionList((prev) => [...prev, ...currentBudgetDiscussion]);
+        //    }
 
         //     setPageCount(pgCount);
         // } catch (error) {

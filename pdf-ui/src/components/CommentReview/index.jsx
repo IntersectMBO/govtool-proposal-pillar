@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { getCommentReportByHash, approveCommentReport, removeComment, getComments } from '../../lib/api';
-import { formatPollDateDisplay } from '../../lib/utils';
+import { formatDateWithOffset } from '../../lib/utils';
 import { useAppContext } from '../../context/context';
 import { useTheme } from '@emotion/react';
 import {
@@ -90,7 +90,7 @@ const CommentReview = ({ reportHash }) => {
                         <strong>Reported by:</strong> {commentReport.attributes.reporter.data.attributes.govtool_username}
                     </Typography>
                     <Typography variant="body2">]
-                        <strong>Reported on:</strong> {formatPollDateDisplay(commentReport.attributes.createdAt)}
+                        <strong>Reported on:</strong> {formatDateWithOffset(commentReport.attributes.createdAt)}
                     </Typography> */}
                     { comment.attributes.comments_reports.data.length } Flag{comment.attributes.comments_reports.data.length>1?"s":""} - Latest {new Date(comment.attributes.comments_reports.data[comment.attributes.comments_reports.data.length-1].attributes.createdAt).toLocaleDateString('en-GB', {
                         day: '2-digit',

@@ -155,7 +155,7 @@ console.log(walletAPI)
                         justifyContent={'space-between'}
                         spacing={1}
                     >
-                        {walletAPI?.voter?.isRegisteredAsDRep && (
+                        {(
                             <Grid item xs={12} paddingBottom={2}>
                                 <Typography variant='h4' component='h1'>
                                     Proposed Budget Discussion
@@ -185,7 +185,7 @@ console.log(walletAPI)
                             </Grid>
                         )}
 
-                        {walletAPI?.address && (
+                        {walletAPI?.voter?.isRegisteredAsDRep && (
                             <Grid item xs={12} paddingBottom={2}>
                                 <Button
                                     variant='contained'

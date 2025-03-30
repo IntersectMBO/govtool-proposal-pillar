@@ -23,12 +23,6 @@ export const formatIsoTime = (isoDate) => {
     return format(new Date(isoDate), 'hh:mm aa');
 };
 
-export const formatPollDateDisplay = (dateString) => {
-    if (!dateString) return '';
-
-    return `${format(new Date(dateString), 'dd/MM/yyyy - p')} UTC`;
-};
-
 export const saveDataInSession = (key, value) => {
     const data = { value, timestamp: new Date().getTime() };
     sessionStorage.setItem(key, JSON.stringify(data));
@@ -143,3 +137,14 @@ export function getItemFromLocalStorage(key) {
     const item = window.localStorage.getItem(key);
     return item ? JSON.parse(item) : null;
 }
+
+export const formatDateWithOffset = (date, utcOffsetHrs, formatString, timeZoneString) => {
+	if (!date) {
+		return '';
+	}
+
+	const baseTzOffset = utcOffsetHrs * 60;
+	const tzOffset = date.getTimezoneOffset();
+	const d = new Date(date.valueOf() + (baseTzOffset + tzOffset) * 60 * 1000);
+	return `${format(d, formatString)}${timeZoneString?" "+timeZoneString:""}`;
+};
