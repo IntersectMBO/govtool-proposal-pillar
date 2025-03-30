@@ -238,7 +238,7 @@ const BudgetDiscussionPoll = ({
                                     }%)`}
                                 </Typography>
 
-                                <Button variant='outlined'>See details</Button>
+                                <Button variant='text'>See details</Button>
                             </Box>
                             <Box
                                 display={'flex'}
@@ -259,7 +259,7 @@ const BudgetDiscussionPoll = ({
                                             : 0
                                     }%)`}
                                 </Typography>
-                                <Button variant='outlined'>See details</Button>
+                                <Button variant='text'>See details</Button>
                             </Box>
 
                             {user &&

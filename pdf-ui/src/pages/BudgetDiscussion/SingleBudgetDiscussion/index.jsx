@@ -248,6 +248,7 @@ const SingleBudgetDiscussion = ({ id }) => {
                 query: query,
             });
             if (!polls?.length === 0) return;
+            console.log(polls);
             setActivePoll(polls[0]);
         } catch (error) {
             console.error(error);
@@ -260,14 +261,19 @@ const SingleBudgetDiscussion = ({ id }) => {
         } else {
             fetchProposal(id);
             fetchComments(1);
+            
         }
     }, [id, mounted]);
 
     useEffect(() => {
         if (mounted) {
-            fetchComments(1);
+            fetchComments(1);            
         }
     }, [commentsSortType]);
+    useEffect(() => {
+        if(!proposal?.id) return
+        fetchActivePoll()
+    }, [proposal]);
 
     return !proposal ? null : proposal?.attributes?.content?.attributes
           ?.is_draft ? null : (
@@ -1222,7 +1228,7 @@ const SingleBudgetDiscussion = ({ id }) => {
                             <Box mt={4}>
                                 <BudgetDiscussionPoll
                                     proposalUserId={
-                                        proposal?.attributes?.user_id
+                                        proposal?.attributes?.creator?.data?.id
                                     }
                                     proposalAuthorUsername={
                                         proposal?.attributes
