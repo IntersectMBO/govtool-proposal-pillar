@@ -20,8 +20,8 @@ const BudgetDiscussionInfo = ({setStep, step, onClose, setBudgetDiscussionData, 
 
     const fetchBudgetDiscussionDrafts = async () => {
         try {
-            const { total } = await getBudgetDiscussionDrafts();
-            if (total === 0) return;
+            const res = await getBudgetDiscussionDrafts();
+            if (res?.meta?.pagination?.total === 0) return;
             setDraftsEnabled(true);
         } catch (error) {
             console.error(error);

@@ -4,6 +4,10 @@ import {
     Button,
     Grid,
     Dialog,
+    DialogContent,
+    DialogTitle,
+    DialogActions,
+    DialogContentText,
     Typography,
     Box,
     useMediaQuery,
@@ -34,14 +38,18 @@ const CreateBudgetDiscussionDialog = ({ open = false, onClose = false , current_
         bd_further_information:{}
     });
 
-    // const [isContinueDisabled, setIsContinueDisabled] = useState(true);
     
     const [showDraftSuccessfulBudgetDiscussionModal, setShowDraftSuccessfulBudgetDiscussionModal] = useState(false);
     const [selectedDraftId, setSelectedDraftId] = useState(null);
     const [selectedEditId, setSelectedEditId] = useState(null);
 
+    const [openDraftDialog, setOpenDraftDialog] = useState(false);
+    const [draftDialogMessage, setDraftDialogMessage] = useState(false);
+    const handleCloseDraftDialog = () => {
+        setOpenDraftDialog(false);
+    };
+  
     const [errors, setErrors] = useState({});
-    // const [helperText, setHelperText] = useState({});
     useEffect(() => {
         if(current_bd_id !==null && !budgetDiscussionData.old_ver)
         {
@@ -93,10 +101,12 @@ const CreateBudgetDiscussionDialog = ({ open = false, onClose = false , current_
             if(selectedDraftId == null) {
                 draftId = await createBudgetDiscussionDraft(budgetDiscussionData);
                 setSelectedDraftId(draftId.data.id);
+                setDraftDialogMessage("Draft Budget Discussion is saved")
             } else {
                 draftId = await updateBudgetDiscussionDraft(budgetDiscussionData, selectedDraftId);
-                alert(`Draft version updated ID: ${draftId.data.id}`);
+                setDraftDialogMessage("Draft Budget Discussion is updated")
             }
+            setOpenDraftDialog(true)
         } catch (error) {
             console.error('Error while saving draft:', error);
         }
@@ -560,6 +570,20 @@ const CreateBudgetDiscussionDialog = ({ open = false, onClose = false , current_
                 onClose={() => setShowDraftSuccessfulBudgetDiscussionModal(false)}
                 closeCreateBDDialog={onClose}
             />
+            <Dialog
+                open={openDraftDialog}
+                keepMounted
+                onClose={handleCloseDraftDialog}
+            >
+                 <DialogContent>
+                    <DialogContentText id="alert-dialog-slide-description">
+                    {draftDialogMessage}
+                    </DialogContentText>
+                    </DialogContent>
+                    <DialogActions>
+                    <Button onClick={handleCloseDraftDialog}>Close</Button>
+                    </DialogActions>
+            </Dialog>
         </Dialog>
     );
 };
