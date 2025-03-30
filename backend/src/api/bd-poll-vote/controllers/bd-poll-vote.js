@@ -12,6 +12,7 @@ module.exports = createCoreController(
   ({ strapi }) => ({
     async create(ctx) {
       const { data } = ctx?.request?.body;
+      data.drep_voting_power=data?.drep_voting_power?.toString()||'0';
       const { vote_result: voteResult, bd_poll_id: pollId } = data;
       const user = ctx?.state?.user;
       if (!user) {
@@ -50,10 +51,10 @@ module.exports = createCoreController(
               filters: {
                 $and: [
                   {
-                    user_id: user?.id,
+                    user_id: user?.id?.toString(),
                   },
                   {
-                    bd_poll_id: pollId,
+                    bd_poll_id: pollId?.toString(),
                   },
                 ],
               },

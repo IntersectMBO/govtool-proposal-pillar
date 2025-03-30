@@ -5,26 +5,17 @@ import {
     DialogContent,
     Box,
     IconButton,
+    Link,
 } from '@mui/material';
 import { IconX } from '@intersect.mbo/intersectmbo.org-icons-set';
 import { getBudgetDiscussionPollVotes } from '../../lib/api';
 import { useAppContext } from '../../context/context';
-import { correctAdaFormat } from '../../lib/utils';
-import { formatIsoDate } from '../../lib/utils';
+import { correctAdaFormat, formatDateWithOffset } from '../../lib/utils';
 
 const DrepVotersDialog = ({ open, handleClose, pollID }) => {
     const { fetchDRepVotingPowerList } = useAppContext();
     const [drepList, setDrepList] = useState([]);
     const [totalVotingPower, setTotalVotingPower] = useState(0);
-    // const drepList = [
-    //     {
-    //         view: 'drep1qq5n7k0r0ff6lf4qvndw9t7vmdqa9y3q9qtjq879rrk9vcjcdy8a4xf92mqsajf9u3nrsh3r6zrp29kuydmfq45fz88qpzmjkc',
-    //         hashRaw:
-    //             '9af10e89979e51b8cdc827c963124a1ef4920d1253eef34a1d5cfe76438e3f11',
-    //         votingPower: 1000000,
-    //         givenName: 'John Doe',
-    //     },
-    // ];
 
     const fetchPollVotes = async () => {
         const votes = await getBudgetDiscussionPollVotes({
@@ -33,7 +24,6 @@ const DrepVotersDialog = ({ open, handleClose, pollID }) => {
         });
         if (votes?.length === 0) return;
         const drepIds = votes?.map((vote) => vote?.attributes?.drep_id);
-
         const drepWhoVoted = await fetchDRepVotingPowerList(drepIds);
 
         drepWhoVoted.sort((a, b) => {
@@ -122,7 +112,7 @@ const DrepVotersDialog = ({ open, handleClose, pollID }) => {
                 )}
                 {drepList?.length > 0 && (
                     <>
-                        <Typography variant='body1'>
+                        <Typography variant='body1' sx={{mb:2}}>
                             DReps who voted '{open}' on this proposal:
                         </Typography>
 
@@ -130,15 +120,15 @@ const DrepVotersDialog = ({ open, handleClose, pollID }) => {
                             <Box
                                 key={index}
                                 sx={{
-                                    display: 'flex',
-                                    justifyContent: 'space-between',
-                                    alignItems: 'center',
                                     mb: 2,
                                 }}
                             >
-                                <Typography variant='body1'>
-                                    {drep?.givenName}
-                                </Typography>
+                                <Link href={'/connected/drep_directory/'+ drep?.view} target="_blank"
+                                    rel="noopener noreferrer"  >
+                                    <Typography variant='body1'>
+                                        {drep?.givenName} 
+                                    </Typography>
+                                </Link>
                                 <Typography variant='caption'>
                                     {drep?.view
                                         ? drep?.view?.slice(0, 20) + '...'
@@ -149,7 +139,7 @@ const DrepVotersDialog = ({ open, handleClose, pollID }) => {
                                 </Typography>
                                 <Typography variant='caption'>
                                     Vote submitted on{' '}
-                                    {formatIsoDate(drep?.voted_at)}
+                                    {formatDateWithOffset(new Date(drep?.voted_at),0,'dd/MM/yyyy - p',"UTC")}
                                 </Typography>
                             </Box>
                         ))}

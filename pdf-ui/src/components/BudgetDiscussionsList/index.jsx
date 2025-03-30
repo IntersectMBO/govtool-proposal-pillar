@@ -69,7 +69,7 @@ const BudgetDiscussionsList = ({
         <Box key={`extra-${index}`} height={'100%'} />
     ));
 
-    const fetchBudgetDiscussions = async (reset = true,  page, bd_type_name= null,) => {
+    const fetchBudgetDiscussions = async (reset = true,  page) => {
         const haveSubmittedFilter = statusList?.some(
             (filter) => filter === 'submitted'
         );
@@ -80,19 +80,17 @@ const BudgetDiscussionsList = ({
                 setBudgetDiscussionList(bdlist.data);
             }
             else
-            {
-                let query = '';
-                if (currentBudgetDiscussionType) {
-                query = `filters[bd_psapb][type_name][id]=${currentBudgetDiscussionType.id}&
-                filters[$and][1][prop_name][$containsi]=${
-                        debouncedSearchValue || ''
-                    }&pagination[page]=${page}&pagination[pageSize]=25&sort[createdAt]=${sortType}`
+            { // is_active
+                let query = `filters[$and][0][is_active]=true
+                &filters[$and][1][bd_psapb][type_name][id]=${currentBudgetDiscussionType.id}`
+                //&filters[$and][2][prop_name][$containsi]=${
+                //        debouncedSearchValue || ''
+                //    }&pagination[page]=${page}&pagination[pageSize]=25&sort[createdAt]=${sortType}`
                     //&populate[0]=proposal_links&populate[1]=proposal_withdrawals&populate[2]=proposal_constitution_content`;
-                } else {
-                    const isSubmitted = haveSubmittedFilter ? 'true' : 'false';
-                    query = `filters[bd_psapb][type_name][id]=${
-                        currentBudgetDiscussionType.id
-                    }`
+               // } else {
+                 //   const isSubmitted = haveSubmittedFilter ? 'true' : 'false';
+                 //   query = `filters[$and][0][is_active]=true
+                //&filters[$and][1][bd_psapb][type_name][id]=${currentBudgetDiscussionType.id}&
                     //&filters[$and][1][prop_name][$containsi]=${
                    //     debouncedSearchValue || ''
                    // }&filters[$and][2][prop_submitted]=${isSubmitted}&pagination[page]=${page}&pagination[pageSize]=25&sort[createdAt]=${sortType}&populate[0]=proposal_links&populate[1]=proposal_withdrawals&populate[2]=proposal_constitution_content`;
@@ -105,7 +103,7 @@ const BudgetDiscussionsList = ({
                     setBudgetDiscussionList((prev) => [...prev, ...currentBudgetDiscussion]);
                 }
 
-            }
+           // }
             // const { currentBudgetDiscussion, pgCount } = await getBudgetDiscussions(query);
             // if (!currentBudgetDiscussion) return;
 
@@ -169,7 +167,7 @@ const BudgetDiscussionsList = ({
         if (!mounted) {
             setMounted(true);
         } else {
-            fetchBudgetDiscussions(true, 1, bd_type_name);
+            fetchBudgetDiscussions(true, 1);
             setCurrentPage(1);
         }
     }, [
@@ -182,7 +180,7 @@ const BudgetDiscussionsList = ({
 
     useEffect(() => {
         if (shouldRefresh) {
-            fetchBudgetDiscussions(true, 1, bd_type_name);
+            fetchBudgetDiscussions(true, 1);
             setShouldRefresh(false);
         }
     }, [shouldRefresh]);
@@ -203,8 +201,9 @@ const BudgetDiscussionsList = ({
                     >
                         {isDraft
                             ? 'Unfinished Drafts'
-                            : currentBudgetDiscussion?.attributes
-                                  ?.type_name}
+                            : ""}
+                            {/*currentBudgetDiscussionList?.attributes
+                            ?.type_name*/}
                     </Typography>
                     {budgetDiscussionList?.length > 0 &&
                         (setShowAllActivated
