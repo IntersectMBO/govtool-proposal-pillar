@@ -404,7 +404,6 @@ const BudgetDiscussionPoll = ({
                 <DrepVotersDialog
                     open={showDrepVotersDialog}
                     handleClose={() => setShowDrepVotersDialog(false)}
-                    drepList={drepList}
                     pollID={poll?.id}
                 />
             </>
