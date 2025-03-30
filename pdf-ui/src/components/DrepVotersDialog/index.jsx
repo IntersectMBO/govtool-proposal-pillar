@@ -115,36 +115,46 @@ const DrepVotersDialog = ({ open, handleClose, pollID }) => {
                     ₳ {correctAdaFormat(totalVotingPower)}
                 </Typography>
 
-                <Typography variant='body1'>
-                    DReps who voted '{open}' on this proposal:
-                </Typography>
-
-                {drepList?.map((drep, index) => (
-                    <Box
-                        key={index}
-                        sx={{
-                            display: 'flex',
-                            justifyContent: 'space-between',
-                            alignItems: 'center',
-                            mb: 2,
-                        }}
-                    >
+                {drepList?.length === 0 && (
+                    <Typography variant='body1'>
+                        No DReps voted '{open}' on this proposal
+                    </Typography>
+                )}
+                {drepList?.length > 0 && (
+                    <>
                         <Typography variant='body1'>
-                            {drep?.givenName}
+                            DReps who voted '{open}' on this proposal:
                         </Typography>
-                        <Typography variant='caption'>
-                            {drep?.view
-                                ? drep?.view?.slice(0, 20) + '...'
-                                : '-'}
-                        </Typography>
-                        <Typography variant='h6'>
-                            ₳ {correctAdaFormat(drep?.votingPower)}
-                        </Typography>
-                        <Typography variant='caption'>
-                            Vote submitted on {formatIsoDate(drep?.voted_at)}
-                        </Typography>
-                    </Box>
-                ))}
+
+                        {drepList?.map((drep, index) => (
+                            <Box
+                                key={index}
+                                sx={{
+                                    display: 'flex',
+                                    justifyContent: 'space-between',
+                                    alignItems: 'center',
+                                    mb: 2,
+                                }}
+                            >
+                                <Typography variant='body1'>
+                                    {drep?.givenName}
+                                </Typography>
+                                <Typography variant='caption'>
+                                    {drep?.view
+                                        ? drep?.view?.slice(0, 20) + '...'
+                                        : '-'}
+                                </Typography>
+                                <Typography variant='h6'>
+                                    ₳ {correctAdaFormat(drep?.votingPower)}
+                                </Typography>
+                                <Typography variant='caption'>
+                                    Vote submitted on{' '}
+                                    {formatIsoDate(drep?.voted_at)}
+                                </Typography>
+                            </Box>
+                        ))}
+                    </>
+                )}
             </DialogContent>
         </Dialog>
     );
