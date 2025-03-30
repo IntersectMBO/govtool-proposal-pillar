@@ -74,7 +74,6 @@ module.exports = createCoreController("api::comment.comment", ({ strapi }) => ({
       }
 
       let updatedProposal;
-
       try {
         if (data?.proposal_id) {
           updatedProposal = await strapi.entityService.update(

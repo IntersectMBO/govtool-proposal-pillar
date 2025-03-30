@@ -81,6 +81,7 @@ const CommentCard = ({ comment, proposal, fetchComments }) => {
         try {
             const newComment = await createComment({
                 proposal_id: comment?.attributes?.proposal_id?.toString(),
+                bd_proposal_id: comment?.attributes?.bd_proposal_id?.toString(),
                 comment_parent_id: comment?.id?.toString(),
                 comment_text: subcommentText,
             });
