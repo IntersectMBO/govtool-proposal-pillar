@@ -83,7 +83,7 @@ const SingleBudgetDiscussion = ({ id }) => {
     useEffect(() => {
         let domain = new URL(window.location.href);
         let origin = domain.origin;
-        setProposalLink(`${origin}/proposal_discussion/`);
+        setProposalLink(`${origin}/proposal_discussion/budget_discussion/`);
     }, [proposalLink]);
 
     const disableShareClick = () => {
@@ -288,7 +288,7 @@ const SingleBudgetDiscussion = ({ id }) => {
                                         fill={theme.palette.primary.main}
                                     />
                                 }
-                                onClick={() => navigate(`/proposal_discussion`)}
+                                onClick={() => navigate(`/proposal_discussion/budget_discussion`)}
                             >
                                 Show all
                             </Button>
