@@ -409,6 +409,7 @@ module.exports = {
 				),
 			},
 			'api::bd.bd': {
+				is_active: true,
 				privacy_policy: true,
 				intersect_named_administrator:
 					item?.[
