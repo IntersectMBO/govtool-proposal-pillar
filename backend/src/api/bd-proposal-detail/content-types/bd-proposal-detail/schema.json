@@ -39,7 +39,7 @@
       "type": "text"
     },
     "other_contract_type": {
-      "type": "string"
+      "type": "text"
     }
   }
 }

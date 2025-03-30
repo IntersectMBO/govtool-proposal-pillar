@@ -383,6 +383,9 @@ module.exports = {
 				contract_type_name: item?.[
 					'<strong>Contracting</strong>: Please describe how you expect to be contracted.'
 				]?.replace(/\u200B/g, ''),
+				other_contract_type: item?.[
+					'Please describe what you have in mind.'
+				]?.replace(/\u200B/g, ''),
 			},
 			'api::bd-costing.bd-costing': {
 				preferred_currency: item?.['Preferred Currency']?.replace(
