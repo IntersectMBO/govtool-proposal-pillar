@@ -5,10 +5,10 @@ import { UNSAFE_ErrorResponseImpl } from 'react-router-dom';
 
 const StepperActionButtons = ({
   onClose,
-  onSaveDraft,
+  onSaveDraft = () => {},
   onContinue,
-  onBack,
-  selectedDraftId,
+  onBack = () => {},
+  selectedDraftId = null,
   nextStep = 0,
   backStep,
   showCancel = true,
@@ -24,21 +24,23 @@ const StepperActionButtons = ({
   // Calculate backStep if not provided
   const calculatedBackStep = backStep !== undefined ? backStep : nextStep - 2;
   const [continueDisabled, setContinueDisabled] = useState(false);
-  const  hasAnyNonEmptyString = (obj) => {
+  const hasAnyNonEmptyString = (obj) => {
     if (typeof obj === 'string') {
-           return obj.trim() !== '';
-      }
+      return obj.trim() !== '';
+    }
     if (typeof obj !== 'object' || obj === null) {
       return false;
-      }
+    }
     if (Array.isArray(obj)) {
       return obj.some(item => hasAnyNonEmptyString(item));
-      }
-      return Object.values(obj).some(value => hasAnyNonEmptyString(value));
     }
+    return Object.values(obj).some(value => hasAnyNonEmptyString(value));
+  }
+
   useEffect(() => {
     setContinueDisabled(hasAnyNonEmptyString(errors));  
-}, [errors,continueDisabled]); 
+  }, [errors, continueDisabled]); 
+
   return (
     <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 2 }}>
       <Box>{continueDisabled}
@@ -104,22 +106,8 @@ StepperActionButtons.propTypes = {
   cancelText: PropTypes.string,
   saveDraftText: PropTypes.string,
   continueText: PropTypes.string,
-  backText: PropTypes.string
-};
-
-StepperActionButtons.defaultProps = {
-  onSaveDraft: () => {},
-  onBack: () => {},
-  selectedDraftId: null,
-  nextStep: 0,
-  showCancel: true,
-  showSaveDraft: true,
-  showContinue: true,
-  showBack: true,
-  cancelText: 'Cancel',
-  saveDraftText: 'Save Draft',
-  continueText: 'Continue',
-  backText: 'Back'
+  backText: PropTypes.string,
+  errors: PropTypes.object
 };
 
 export default StepperActionButtons;

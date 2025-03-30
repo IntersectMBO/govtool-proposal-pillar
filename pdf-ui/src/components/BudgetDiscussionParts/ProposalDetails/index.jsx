@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { getContractTypeList } from '../../../lib/api';
 import { StepperActionButtons } from '../../BudgetDiscussionParts';
 
-const ProposalDetails = ({ setStep, step, currentBudgetDiscussionData, setBudgetDiscussionData, onClose, setSelectedDraftId, selectedDraftId, handleSaveDraft, errors, setErrors, validateField }) => {
+const ProposalDetails = ({ setStep, step, currentBudgetDiscussionData, setBudgetDiscussionData, onClose, setSelectedDraftId, selectedDraftId, handleSaveDraft, errors, setErrors, validateSection }) => {
 
     const [allContractTypes, setAllContractTypes] = useState([]);
     
@@ -27,8 +27,10 @@ const ProposalDetails = ({ setStep, step, currentBudgetDiscussionData, setBudget
        };
        fetchData();
      }, []);
+    useEffect(() => {
+             validateSection("bd_proposal_details");
+          }, [currentBudgetDiscussionData?.bd_proposal_details]);
      const handleDataChange = (e, dataName) => {
-        validateField(e,'bd_proposal_details.'+dataName)
         setBudgetDiscussionData({
              ...currentBudgetDiscussionData,
              bd_proposal_details: {

@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { getCountryList, getNationalityList } from '../../../lib/api';
 import { StepperActionButtons } from '../../BudgetDiscussionParts';
 
-const ContractInformation = ({ setStep, step, onClose, currentBudgetDiscussionData, setBudgetDiscussionData,  setSelectedDraftId, selectedDraftId, handleSaveDraft, errors, setErrors, validateField }) => {
+const ContractInformation = ({ setStep, step, onClose, currentBudgetDiscussionData, setBudgetDiscussionData,  setSelectedDraftId, selectedDraftId, handleSaveDraft, errors, setErrors, validateSection }) => {
      const [allCountries, setAllCountries] = useState([]);
      //const [allNationalities, setAllNationalities] = useState([]);
 
@@ -24,9 +24,11 @@ const ContractInformation = ({ setStep, step, onClose, currentBudgetDiscussionDa
           };
           fetchData();
      }, []);
-     
+     useEffect(() => {
+          validateSection("bd_contact_information");
+      }, [currentBudgetDiscussionData?.bd_contact_information]);
+
      const handleDataChange = (e, dataName) => {
-          validateField(e,"bd_contact_information."+dataName);
           setBudgetDiscussionData({
                ...currentBudgetDiscussionData,
                bd_contact_information: {
@@ -141,6 +143,8 @@ const ContractInformation = ({ setStep, step, onClose, currentBudgetDiscussionDa
                                                        select
                                                        label='Beneficiary Country of Residence'
                                                        value={currentBudgetDiscussionData?.bd_contact_information?.be_country_of_res || ''}
+                                                       helperText={errors['bd_contact_information.be_country_of_res']?.trim()}
+                                                       error={!!errors['bd_contact_information.be_country_of_res']?.trim()}
                                                        required
                                                        fullWidth
                                                        onChange={(e) => handleDataChange(e, 'be_country_of_res')}
@@ -169,6 +173,8 @@ const ContractInformation = ({ setStep, step, onClose, currentBudgetDiscussionDa
                                                        value={currentBudgetDiscussionData?.bd_contact_information?.be_nationality || ''}
                                                        required
                                                        fullWidth
+                                                       helperText={errors['bd_contact_information.be_nationality']?.trim()}
+                                                       error={!!errors['bd_contact_information.be_nationality']?.trim()}
                                                        onChange={(e) => handleDataChange(e, 'be_nationality')}
                                                        SelectProps={{
                                                             SelectDisplayProps: {

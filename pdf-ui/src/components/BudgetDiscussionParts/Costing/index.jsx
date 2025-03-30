@@ -3,11 +3,10 @@ import { useEffect, useState } from 'react';
 import { getAllCurrencies } from '../../../lib/api';
 import { StepperActionButtons } from '../../BudgetDiscussionParts';
 
-const Costing = ({ setStep, step, currentBudgetDiscussionData, setBudgetDiscussionData, onClose, setSelectedDraftId, selectedDraftId, handleSaveDraft, errors, setErrors, validateField }) => {
+const Costing = ({ setStep, step, currentBudgetDiscussionData, setBudgetDiscussionData, onClose, setSelectedDraftId, selectedDraftId, handleSaveDraft, errors, setErrors, validateSection }) => {
     const [allCurrencyList, setAllCurrencyList] = useState([]);
     const costBreakdownMaxLength = 256;
     const handleDataChange = (e, dataName) => {
-        validateField(e,'bd_costing.'+dataName);
         setBudgetDiscussionData({
              ...currentBudgetDiscussionData,
              bd_costing: {
@@ -28,6 +27,9 @@ const Costing = ({ setStep, step, currentBudgetDiscussionData, setBudgetDiscussi
        };
        fetchData();
     }, []);
+    useEffect(() => {
+                validateSection("bd_costing");
+            }, [currentBudgetDiscussionData?.bd_costing]);
     return (
         <Box display='flex' flexDirection='column'>
             <Box>

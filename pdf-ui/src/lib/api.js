@@ -164,7 +164,6 @@ export const getBudgetDiscussionDrafts = async () => {
 
 export const createBudgetDiscussion = async (data) => {
     try {
-        console.log("api",data);
         const response = await axiosInstance.post(`/api/bds`, {
             data:{...data},
         });

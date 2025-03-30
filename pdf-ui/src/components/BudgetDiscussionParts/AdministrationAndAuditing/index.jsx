@@ -3,17 +3,18 @@ import { useEffect, useState } from 'react';
 import { getAllCurrencies } from '../../../lib/api';
 import { StepperActionButtons } from '../../BudgetDiscussionParts';
 
-const AdministrationAndAuditing = ({ setStep, step, currentBudgetDiscussionData, setBudgetDiscussionData, onClose, setSelectedDraftId, selectedDraftId, handleSaveDraft, errors, setErrors }) => {
+const AdministrationAndAuditing = ({ setStep, step, currentBudgetDiscussionData, setBudgetDiscussionData, onClose, setSelectedDraftId, selectedDraftId, handleSaveDraft, errors, setErrors,validateSection }) => {
+
     const handleDataChange = (e, dataName) => {
         setBudgetDiscussionData({
              ...currentBudgetDiscussionData,
-            
-                  ...currentBudgetDiscussionData,
                   [dataName]: e.target.value
              })
    };
-    useEffect(() => {}, []);
-    return (
+    useEffect(() => {
+                validateSection("intersect_named_administrator");
+            }, [currentBudgetDiscussionData?.intersect_named_administrator]);
+   return (
         <Box display='flex' flexDirection='column'>
             <Box>
                 <Card>
@@ -126,7 +127,7 @@ const AdministrationAndAuditing = ({ setStep, step, currentBudgetDiscussionData,
                         </Box>
 
                         <StepperActionButtons onClose={onClose} onSaveDraft={handleSaveDraft} onContinue={setStep}
-                            onBack={setStep} selectedDraftId={selectedDraftId} nextStep={step+1} backStep={step-1}
+                            onBack={setStep} selectedDraftId={selectedDraftId} nextStep={step+1} backStep={step-1} 
                         />
                         </CardContent>
                 </Card>

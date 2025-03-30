@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { getBudgetDiscussionRoadMapList , getBudgetDiscussionTypes, getBudgetDiscussionIntersectCommittee } from '../../../lib/api';
 import { StepperActionButtons } from '../../BudgetDiscussionParts';
 
-const ProblemStatementsAndProposalBenefits = ({ setStep, step, currentBudgetDiscussionData, setBudgetDiscussionData, onClose, setSelectedDraftId, selectedDraftId, handleSaveDraft, errors, setErrors, validateField }) => {
+const ProblemStatementsAndProposalBenefits = ({ setStep, step, currentBudgetDiscussionData, setBudgetDiscussionData, onClose, setSelectedDraftId, selectedDraftId, handleSaveDraft, errors, setErrors, validateSection }) => {
 
     const problemStatementMaxLength = 2500;
     const proposalBenefitMaxLength = 2500;
@@ -32,9 +32,10 @@ const ProblemStatementsAndProposalBenefits = ({ setStep, step, currentBudgetDisc
        };
        fetchData();
      }, []);
-
+     useEffect(() => {
+        validateSection("bd_psapb");
+     }, [currentBudgetDiscussionData?.bd_psapb]);
      const handleDataChange = (e, dataName) => {
-        validateField(e,'bd_psapb.'+dataName)
         setBudgetDiscussionData({
              ...currentBudgetDiscussionData,
              bd_psapb: {
@@ -195,6 +196,21 @@ return (
                         ))}
                         
                         </TextField>
+                        {currentBudgetDiscussionData?.bd_psapb?.roadmap_name==11?(
+                            <TextField
+                                name='Propodsl explanation'
+                                label='Please explain how your proposal supports the Product Roadmap.'
+                                helperText={errors['bd_psapb.explain_proposal_roadmap']?.trim() }
+                                error={!!errors['bd_psapb.explain_proposal_roadmap']?.trim()}
+                                rows={4}
+                                multiline
+                                value={currentBudgetDiscussionData?.bd_psapb?.explain_proposal_roadmap || ''}
+                                required
+                                fullWidth
+                                onChange={(e) => handleDataChange(e, 'explain_proposal_roadmap')}
+                                sx={{ mb: 2 }}
+                                /> 
+                        ):null}
                         <TextField
                             select
                             name='bd_type'
@@ -223,23 +239,6 @@ return (
                         ))}
                         
                         </TextField>
-                        {currentBudgetDiscussionData?.bd_psapb?.type_name==11?(
-                            <TextField
-                                name='Propodsl explanation'
-                                label='Please explain how your proposal supports the Product Roadmap.'
-                                helperText={errors['bd_psapb.explain_proposal_roadmap']?.trim() }
-                                error={!!errors['bd_psapb.explain_proposal_roadmap']?.trim()}
-                                rows={4}
-                                multiline
-                                value={currentBudgetDiscussionData?.bd_psapb?.explain_proposal_roadmap || ''}
-                                required
-                                fullWidth
-                                onChange={(e) => handleDataChange(e, 'explain_proposal_roadmap')}
-                                sx={{ mb: 2 }}
-                                /> 
-                        ):null}
-
-
                         <TextField
                             select
                             name='Committee Alignment'
@@ -276,9 +275,7 @@ return (
                             multiline
                             value={currentBudgetDiscussionData?.bd_psapb?.supplementary_endorsement || ''}
                             onChange={(e) => handleDataChange(e, 'supplementary_endorsement')}
-                           // helperText={errors['bd_psapb.explain_proposal_roadmap']?.trim() }
-                           //     error={!!errors['bd_psapb.explain_proposal_roadmap']?.trim()}
-                            helperText={(
+                            helperText={errors['bd_psapb.supplementary_endorsement']?.trim()||(
                                     <>
                                         <Typography
                                             variant='caption'
@@ -305,7 +302,7 @@ return (
                                     'data-testid': 'supplementary-endorsement-input',
                                 },
                             }}
-                            error={errors?.bd_psapb?.supplementary_endorsement}
+                            error={!!errors['bd_psapb.supplementary_endorsement']?.trim()}
                             FormHelperTextProps={{
                                 'data-testid': errors?.bd_psapb?.supplementary_endorsement
                                     ? 'supplementary-endorsement-helper-error'

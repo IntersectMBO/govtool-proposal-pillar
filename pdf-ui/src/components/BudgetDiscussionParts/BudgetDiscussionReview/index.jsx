@@ -6,7 +6,6 @@ import { StepperActionButtons } from '../../BudgetDiscussionParts';
 const BudgetDiscussionReview = ({ setStep, step, currentBudgetDiscussionData, setBudgetDiscussionData, onClose, submitBudgetDiscussion, setSelectedDraftId, selectedDraftId, handleSaveDraft, errors, setErrors }) => {
    
     const [allCountries, setAllCountries] = useState([]);
-    const [allNationalities, setAllNationalities] = useState([]);
     const [allCurrencyList, setAllCurrencyList] = useState([]);
     const [allRoadMaps, setAllRoadMaps] = useState([]);
     const [allBDTypes, setAllBDTypes] = useState([]);
@@ -33,10 +32,6 @@ const BudgetDiscussionReview = ({ setStep, step, currentBudgetDiscussionData, se
                 if (!allCurrencyList.length) {
                         const allCurrenciesResponse = await getAllCurrencies();
                         setAllCurrencyList(allCurrenciesResponse?.data || []);
-                    }
-                if (!allNationalities.length) {
-                        const nationalitiesResponse = await getNationalityList();
-                        setAllNationalities(nationalitiesResponse?.data || []);
                     }
                 if (!allRoadMaps.length) {
                     const allRoadMapsResponse = await getBudgetDiscussionRoadMapList();
@@ -120,7 +115,7 @@ const BudgetDiscussionReview = ({ setStep, step, currentBudgetDiscussionData, se
                                             Beneficiary Nationality
                                         </Typography>
                                         <Typography variant='h6' gutterBottom>
-                                            {allNationalities.find(na => na.id === currentBudgetDiscussionData?.bd_contact_information?.be_nationality)?.attributes?.nationality_name || 'Error'}
+                                            {allCountries.find(country  => country.id === currentBudgetDiscussionData?.bd_contact_information?.be_nationality)?.attributes?.country_name || 'Error'}
                                         </Typography><Typography variant='body' gutterBottom>
                                             Submission Lead Full Name'
                                         </Typography>
@@ -273,7 +268,7 @@ const BudgetDiscussionReview = ({ setStep, step, currentBudgetDiscussionData, se
                                             {currentBudgetDiscussionData?.bd_proposal_details?.maintain_and_support || ''}
                                         </Typography>
                                         <Typography variant='body' gutterBottom>
-                                            Key Proposal Deliverable(s) and Definition of Done: What tangible milestones or outcomes are to be delivered and what will the community ultimately receive?
+                                            Key Proposal Deliverable(s) and Definition of Done: What tangible milestones or outcomes are to be delivered and what will the community ultimately receive?
                                         </Typography>
                                         <Typography variant='h6' gutterBottom>
                                             {currentBudgetDiscussionData?.bd_proposal_details?.key_proposal_deliverables || ''}
