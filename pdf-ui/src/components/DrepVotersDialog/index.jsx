@@ -61,7 +61,7 @@ const DrepVotersDialog = ({ open, handleClose, pollID }) => {
 
     return (
         <Dialog
-            open={open}
+            open={open ? true : false}
             onClose={handleClose}
             aria-labelledby='alert-dialog-title'
             aria-describedby='alert-dialog-description'
