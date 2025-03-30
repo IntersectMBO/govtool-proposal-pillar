@@ -73,7 +73,8 @@ const ProposedBudgetDiscussion = () => {
     //         console.error(error);
     //     }
     // };
-
+// console.log(user)
+// console.log(walletAPI)
     const toggleActionFilter = (action) => {
         let filterExist = filteredBudgetDiscussionTypeList?.some(
             (filter) => filter?.id === action?.id
