@@ -485,6 +485,7 @@ const BudgetDiscussionReviewVersions = ({ open, onClose, id }) => {
                                                                     selectedVersion
                                                                         ?.attributes
                                                                         ?.bd_psapb
+                                                                        ?.data
                                                                         ?.attributes
                                                                         ?.supplementary_endorsement
                                                                 }
@@ -739,52 +740,53 @@ const BudgetDiscussionReviewVersions = ({ open, onClose, id }) => {
                                                                             (
                                                                                 item,
                                                                                 index
-                                                                            ) => (
-                                                                                <Button
-                                                                                    key={
-                                                                                        index
-                                                                                    }
-                                                                                    sx={{
-                                                                                        marginRight: 2,
-                                                                                        marginBottom: 2,
-                                                                                    }}
-                                                                                    startIcon={
-                                                                                        <IconLink
-                                                                                            width='18'
-                                                                                            height='18'
-                                                                                            fill={
-                                                                                                theme
-                                                                                                    .palette
-                                                                                                    .primary
-                                                                                                    .main
-                                                                                            }
-                                                                                        />
-                                                                                    }
-                                                                                    onClick={() =>
-                                                                                        openLink(
-                                                                                            item?.prop_link
-                                                                                        )
-                                                                                    }
-                                                                                    data-testid={
-                                                                                        'link-${index}-text-content'
-                                                                                    }
-                                                                                >
-                                                                                    <Typography
-                                                                                        component={
-                                                                                            'p'
+                                                                            ) =>
+                                                                                item?.prop_link && (
+                                                                                    <Button
+                                                                                        key={
+                                                                                            index
                                                                                         }
-                                                                                        variant='body2'
-                                                                                        style={{
-                                                                                            margin: 0,
+                                                                                        sx={{
+                                                                                            marginRight: 2,
+                                                                                            marginBottom: 2,
                                                                                         }}
-                                                                                        data-testid={`link-${index}-text-content`}
-                                                                                    >
-                                                                                        {
-                                                                                            item?.prop_link_text
+                                                                                        startIcon={
+                                                                                            <IconLink
+                                                                                                width='18'
+                                                                                                height='18'
+                                                                                                fill={
+                                                                                                    theme
+                                                                                                        .palette
+                                                                                                        .primary
+                                                                                                        .main
+                                                                                                }
+                                                                                            />
                                                                                         }
-                                                                                    </Typography>
-                                                                                </Button>
-                                                                            )
+                                                                                        onClick={() =>
+                                                                                            openLink(
+                                                                                                item?.prop_link
+                                                                                            )
+                                                                                        }
+                                                                                        data-testid={
+                                                                                            'link-${index}-text-content'
+                                                                                        }
+                                                                                    >
+                                                                                        <Typography
+                                                                                            component={
+                                                                                                'p'
+                                                                                            }
+                                                                                            variant='body2'
+                                                                                            style={{
+                                                                                                margin: 0,
+                                                                                            }}
+                                                                                            data-testid={`link-${index}-text-content`}
+                                                                                        >
+                                                                                            {
+                                                                                                item?.prop_link_text
+                                                                                            }
+                                                                                        </Typography>
+                                                                                    </Button>
+                                                                                )
                                                                         )}
                                                                     </Box>
                                                                 </Box>

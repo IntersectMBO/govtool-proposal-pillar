@@ -66,7 +66,7 @@
       "type": "boolean",
       "default": true
     },
-    "intersect_admin_futher_text": {
+    "intersect_admin_further_text": {
       "type": "text"
     }
   }

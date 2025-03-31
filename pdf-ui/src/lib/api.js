@@ -71,16 +71,7 @@ export const getCountryList = async () => {
         throw error;
     }
 };
-export const getNationalityList = async () => {
-    try {
-        const { data } = await axiosInstance.get(
-            `api/nationality-lists?pagination[pageSize]=1000`
-        );
-        return data;
-    } catch (error) {
-        throw error;
-    }
-};
+
 export const getAllCurrencies = async () => {
     try {
         const { data } = await axiosInstance.get(
@@ -382,7 +373,6 @@ export const createComment = async (commentData) => {
 
 export const addCommentReport = async (commentId, user) => {
     try {
-        console.log('CID', commentId);
         const { data } = await axiosInstance.post(`api/comments-reports`, {
             data: {
                 comment: commentId,
