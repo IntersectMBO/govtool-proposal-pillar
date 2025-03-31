@@ -1,0 +1,40 @@
+{
+  "kind": "collectionType",
+  "collectionName": "comments_reports",
+  "info": {
+    "singularName": "comments-report",
+    "pluralName": "comments-reports",
+    "displayName": "Comments report",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "moderation_status": {
+      "type": "boolean"
+    },
+    "comment": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::comment.comment",
+      "inversedBy": "comments_reports"
+    },
+    "reporter": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "plugin::users-permissions.user",
+      "inversedBy": "comments_reports"
+    },
+    "moderator": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "plugin::users-permissions.user",
+      "inversedBy": "comments_reports"
+    },
+    "hash": {
+      "type": "string"
+    }
+  }
+}

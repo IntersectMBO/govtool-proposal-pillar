@@ -237,7 +237,7 @@ const SingleGovernanceAction = ({ id }) => {
     const fetchComments = async (page = 1) => {
         setLoading(true);
         try {
-            const query = `filters[$and][0][proposal_id]=${id}&filters[$and][1][comment_parent_id][$null]=true&sort[createdAt]=${commentsSortType}&pagination[page]=${page}&pagination[pageSize]=25`;
+            const query = `filters[$and][0][proposal_id]=${id}&filters[$and][1][comment_parent_id][$null]=true&sort[createdAt]=${commentsSortType}&pagination[page]=${page}&pagination[pageSize]=25&populate[comments_reports][populate][reporter][fields][0]=username&populate[comments_reports][populate][maintainer][fields][0]=username`;
             const { comments, pgCount } = await getComments(query);
             if (!comments) return;
             setCommentsPageCount(pgCount);
@@ -1108,8 +1108,6 @@ const SingleGovernanceAction = ({ id }) => {
                                         </ReactMarkdown>
                                         </div>
                                     </Box>)}
-                                    {console.log("Trnutni at:",proposal?.attributes?.content
-                                                ?.attributes?.gov_action_type_id, "a withdrawals ",proposal.proposal_withdrawals )}
                                 {showFullText &&  proposal?.attributes?.content
                                                 ?.attributes?.gov_action_type_id == 2?
                                                 proposal?.attributes?.content
@@ -1930,6 +1928,7 @@ const SingleGovernanceAction = ({ id }) => {
                             <CommentCard
                                 comment={comment}
                                 proposal={proposal}
+                                fetchComments={fetchComments}
                             />
                         </Box>
                     ))}

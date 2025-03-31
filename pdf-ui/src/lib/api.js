@@ -22,6 +22,236 @@ export const getProposals = async (query = '') => {
         return error;
     }
 };
+export const getBudgetDiscussions = async (query = '') => {
+    try {
+        const { data } = await axiosInstance.get(`/api/bds?${query}`);
+
+        const budgetDiscussions = data?.data;
+        const pgCount = data?.meta?.pagination?.pageCount;
+        const total = data?.meta?.pagination?.total;
+        return { budgetDiscussions, pgCount, total };
+    } catch (error) {
+        return error;
+    }
+};
+
+export const getBudgetDiscussion = async ({ id, query = '' }) => {
+    try {
+        const { data } = await axiosInstance.get(`/api/bds/${id}?${query}`);
+        return data?.data;
+    } catch (error) {
+        throw error;
+    }
+};
+
+export const deleteBudgetDiscussion = async (id) => {
+    try {
+        const { data } = await axiosInstance.delete(`/api/bds/${id}`);
+        return data?.data;
+    } catch (error) {
+        throw error;
+    }
+};
+
+export const getBudgetDiscussionTypes = async () => {
+    try {
+        const { data } = await axiosInstance.get(`/api/bd-types`);
+        return data;
+    } catch (error) {
+        throw error;
+    }
+};
+export const getCountryList = async () => {
+    try {
+        const { data } = await axiosInstance.get(
+            `/api/country-lists?pagination[pageSize]=1000`
+        );
+        return data;
+    } catch (error) {
+        throw error;
+    }
+};
+export const getNationalityList = async () => {
+    try {
+        const { data } = await axiosInstance.get(
+            `api/nationality-lists?pagination[pageSize]=1000`
+        );
+        return data;
+    } catch (error) {
+        throw error;
+    }
+};
+export const getAllCurrencies = async () => {
+    try {
+        const { data } = await axiosInstance.get(
+            `api/bd-currency-lists?pagination[pageSize]=1000`
+        );
+        return data;
+    } catch (error) {
+        throw error;
+    }
+};
+export const getBudgetDiscussionRoadMapList = async () => {
+    try {
+        const { data } = await axiosInstance.get(
+            `api/bd-road-maps?pagination[pageSize]=1000`
+        );
+        return data;
+    } catch (error) {
+        throw error;
+    }
+};
+export const getBudgetDiscussionIntersectCommittee = async () => {
+    try {
+        const { data } = await axiosInstance.get(
+            `api/bd-intersect-committees?pagination[pageSize]=1000`
+        );
+        return data;
+    } catch (error) {
+        throw error;
+    }
+};
+export const getContractTypeList = async () => {
+    try {
+        const { data } = await axiosInstance.get(
+            `api/bd-contract-types?pagination[pageSize]=1000`
+        );
+        return data;
+    } catch (error) {
+        throw error;
+    }
+};
+export const createBudgetDiscussionDraft = async (data) => {
+    try {
+        const response = await axiosInstance.post(`/api/bd-drafts`, {
+            data: {
+                draft_data: {
+                    ...data,
+                },
+            },
+        });
+        return response?.data;
+    } catch (error) {
+        console.error('Error in create Budget Discussion Draft:', error);
+        throw error;
+    }
+};
+export const updateBudgetDiscussionDraft = async (data, draftId) => {
+    try {
+        const response = await axiosInstance.put(`api/bd-drafts/` + draftId, {
+            data: {
+                draft_data: {
+                    ...data,
+                },
+            },
+        });
+        return response?.data;
+    } catch (error) {
+        console.error('Error in update Budget Discussion Draft:', error);
+        throw error;
+    }
+};
+export const getBudgetDiscussionDrafts = async () => {
+    try {
+        const { data } = await axiosInstance.get(
+            `api/bd-drafts?pagination[pageSize]=1000&populate=creator`
+        );
+        return data;
+    } catch (error) {
+        throw error;
+    }
+};
+
+export const getBudgetDiscussionPoll = async ({ query = '' }) => {
+    try {
+        const { data } = await axiosInstance.get(`/api/bd-polls?${query}`);
+
+        const polls = data?.data;
+        const pgCount = data?.meta?.pagination?.pageCount;
+        const total = data?.meta?.pagination?.total;
+        return { polls, pgCount, total };
+    } catch (error) {
+        throw error;
+    }
+};
+
+export const createBudgetDiscussionPollVote = async ({ createData }) => {
+    try {
+        const { data } = await axiosInstance.post(`api/bd-poll-votes`, {
+            data: {
+                ...createData,
+            },
+        });
+        return data?.data;
+    } catch (error) {
+        throw error;
+    }
+};
+
+export const getUserBudgetDiscussionPollVote = async ({ pollID }) => {
+    try {
+        const { data } = await axiosInstance.get(
+            `/api/bd-poll-votes?filters[bd_poll_id][$eq]=${pollID}&pagination[page]=1&pagination[pageSize]=1&sort[createdAt]=desc`
+        );
+
+        if (data?.data && data?.data?.length > 0) {
+            return data.data[0];
+        } else {
+            return null;
+        }
+    } catch (error) {
+        throw error;
+    }
+};
+
+export const updateBudgetDiscussionPollVote = async ({
+    pollVoteID,
+    updateData,
+}) => {
+    try {
+        const { data } = await axiosInstance.put(
+            `api/bd-poll-votes/${pollVoteID}`,
+            {
+                data: {
+                    ...updateData,
+                },
+            }
+        );
+        return data?.data;
+    } catch (error) {
+        throw error;
+    }
+};
+
+export const getBudgetDiscussionPollVotes = async ({ pollID, vote }) => {
+    const { data } = await axiosInstance.get(
+        `/api/bd-poll-votes?fields[0]=drep_id&fields[1]=createdAt&filters[$and][0][vote_result][$eq]=${vote}&filters[$and][1][bd_poll_id][$eq]=${pollID}&pagination[page]=1&pagination[pageSize]=1000`
+    );
+
+    return data?.data;
+};
+
+export const createBudgetDiscussion = async (data) => {
+    try {
+        const response = await axiosInstance.post(`/api/bds`, {
+            data: { ...data },
+        });
+        return response?.data;
+    } catch (error) {
+        console.error('Error in create Budget Discussion Draft:', error);
+        throw error;
+    }
+};
+
+export const getBudgetDiscussionVersions = async (id) => {
+    try {
+        const { data } = await axiosInstance.get(`/api/bd/versions/${id}`);
+        return data?.data;
+    } catch (error) {
+        throw error;
+    }
+};
+
 export const getSingleProposal = async (id) => {
     try {
         const { data } = await axiosInstance.get(`/api/proposals/${id}`);
@@ -53,7 +283,6 @@ export const getGovernanceActionTypes = async () => {
         const { data } = await axiosInstance.get(
             `/api/governance-action-types`
         );
-
         return data;
     } catch (error) {
         throw error;
@@ -145,6 +374,65 @@ export const createComment = async (commentData) => {
                 ...commentData,
             },
         });
+        return data;
+    } catch (error) {
+        console.error(error);
+    }
+};
+
+export const addCommentReport = async (commentId, user) => {
+    try {
+        console.log('CID', commentId);
+        const { data } = await axiosInstance.post(`api/comments-reports`, {
+            data: {
+                comment: commentId,
+                reporter: user,
+                moderator: null,
+            },
+        });
+        return data;
+    } catch (error) {
+        console.error(error);
+    }
+};
+export const removeCommentReport = async (commentReportId) => {
+    try {
+        const { data } = await axiosInstance.delete(
+            `api/comments-reports/${commentReportId}`
+        );
+        return data;
+    } catch (error) {
+        console.error(error);
+    }
+};
+export const getCommentReports = async (query) => {
+    try {
+        const { data } = await axiosInstance.get(`api/comments/${query}`);
+        return data;
+    } catch (error) {
+        console.error(error);
+    }
+};
+
+export const approveCommentReport = async (comment, user) => {
+    try {
+        const { data } = await axiosInstance.put(`api/comments-reports/`);
+        return data;
+    } catch (error) {
+        console.error(error);
+    }
+};
+export const removeComment = async (comment, user) => {
+    try {
+        const { data } = await axiosInstance.put(`api/comments-reports/`);
+        return data;
+    } catch (error) {
+        console.error(error);
+    }
+};
+export const getCommentReportByHash = async (hash) => {
+    try {
+        const { data } = await axiosInstance.get(`api/comments-reports/`);
         return data;
     } catch (error) {
         console.error(error);

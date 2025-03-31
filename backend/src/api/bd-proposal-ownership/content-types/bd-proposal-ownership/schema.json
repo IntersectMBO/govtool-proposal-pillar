@@ -1,0 +1,48 @@
+{
+  "kind": "collectionType",
+  "collectionName": "bd_proposal_ownerships",
+  "info": {
+    "singularName": "bd-proposal-ownership",
+    "pluralName": "bd-proposal-ownerships",
+    "displayName": "BD Proposal Ownership",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "agreed": {
+      "type": "boolean"
+    },
+    "group_name": {
+      "type": "string"
+    },
+    "company_name": {
+      "type": "string"
+    },
+    "type_of_group": {
+      "type": "string"
+    },
+    "social_handles": {
+      "type": "string"
+    },
+    "submited_on_behalf": {
+      "type": "string"
+    },
+    "company_domain_name": {
+      "type": "string"
+    },
+    "proposal_public_champion": {
+      "type": "string"
+    },
+    "key_info_to_identify_group": {
+      "type": "string"
+    },
+    "be_country": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::country-list.country-list"
+    }
+  }
+}

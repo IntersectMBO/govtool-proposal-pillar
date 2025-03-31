@@ -1,0 +1,18 @@
+{
+  "kind": "collectionType",
+  "collectionName": "bd_road_maps",
+  "info": {
+    "singularName": "bd-road-map",
+    "pluralName": "bd-road-maps",
+    "displayName": "BD Road map"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "roadmap_name": {
+      "type": "string"
+    }
+  }
+}
