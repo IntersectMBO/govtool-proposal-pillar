@@ -88,7 +88,7 @@ module.exports = createCoreController("api::bd.bd", ({ strapi }) => ({
         privacy_policy: data.privacy_policy,
         intersect_named_administrator:
           data.intersect_named_administrator || false,
-        old_ver:data.old_ver,
+        old_ver: data.old_ver,
         creator: user.id,
         bd_psapb: savedEntities.bd_psapb?.id || null,
         bd_costing: savedEntities.bd_costing?.id || null,
@@ -96,7 +96,8 @@ module.exports = createCoreController("api::bd.bd", ({ strapi }) => ({
         bd_proposal_ownership: savedEntities.bd_proposal_ownership?.id || null,
         bd_contact_information:
           savedEntities.bd_contact_information?.id || null,
-        bd_further_information: savedEntities.bd_further_information || null,
+        bd_further_information:
+          savedEntities.bd_further_information?.id || null,
       };
 
       const createdEntry = await strapi.entityService.create("api::bd.bd", {
@@ -114,32 +115,41 @@ module.exports = createCoreController("api::bd.bd", ({ strapi }) => ({
         },
       });
 
-      if(data?.old_ver)
-      {
-        const old_proposal = await strapi.entityService.update('api::bd.bd',data.old_ver,{data:{is_active :false}})
-        const poll = await strapi.entityService.findMany('api::bd-poll.bd-poll', {filters:{bd_proposal_id:data.old_ver}})
-        if(poll.length>0)
-        {
-          const updatePoll = await strapi.entityService.update('api::bd-poll.bd-poll',poll[0].id,{data:{bd_proposal_id:createdEntry.id.toString()}})
+      if (data?.old_ver) {
+        const old_proposal = await strapi.entityService.update(
+          "api::bd.bd",
+          data.old_ver,
+          { data: { is_active: false } }
+        );
+        const poll = await strapi.entityService.findMany(
+          "api::bd-poll.bd-poll",
+          { filters: { bd_proposal_id: data.old_ver } }
+        );
+        if (poll.length > 0) {
+          const updatePoll = await strapi.entityService.update(
+            "api::bd-poll.bd-poll",
+            poll[0].id,
+            { data: { bd_proposal_id: createdEntry.id.toString() } }
+          );
         }
-        const comments = await strapi.entityService.findMany('api::comment.comment', {filters:{bd_proposal_id:data.old_ver}})
-        if(comments.length>0)
-        {
-          for(const comment of comments)
-          {
-            const updateComment = await strapi.entityService.update('api::comment.comment',comment.id,{data:{bd_proposal_id:createdEntry.id.toString()}})
+        const comments = await strapi.entityService.findMany(
+          "api::comment.comment",
+          { filters: { bd_proposal_id: data.old_ver } }
+        );
+        if (comments.length > 0) {
+          for (const comment of comments) {
+            const updateComment = await strapi.entityService.update(
+              "api::comment.comment",
+              comment.id,
+              { data: { bd_proposal_id: createdEntry.id.toString() } }
+            );
           }
         }
       }
 
-
-
-
-
-
       return createdEntry;
     } catch (error) {
-      console.log(error)
+      console.log(error);
       strapi.log.error("FULL CREATE ERROR:", {
         message: error.message,
         stack: error.stack,
