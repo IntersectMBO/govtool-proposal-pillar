@@ -4,7 +4,7 @@ import { Box, Typography } from '@mui/material';
 import ReactMarkdown from 'react-markdown';
 const BudgetDiscussionInfoSegment = ({ question, answer }) => {
     return (
-        <Box mt={3}>
+        <Box mb={3}>
             <Typography
                 variant='caption'
                 sx={{

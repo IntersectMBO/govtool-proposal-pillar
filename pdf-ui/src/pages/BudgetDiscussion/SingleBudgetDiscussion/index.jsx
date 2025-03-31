@@ -287,11 +287,7 @@ const SingleBudgetDiscussion = ({ id }) => {
                                         fill={theme.palette.primary.main}
                                     />
                                 }
-                                onClick={() =>
-                                    navigate(
-                                        `/budget_discussion`
-                                    )
-                                }
+                                onClick={() => navigate(`/budget_discussion`)}
                             >
                                 Show all
                             </Button>
@@ -738,9 +734,9 @@ const SingleBudgetDiscussion = ({ id }) => {
                                         }}
                                     >
                                         <Typography
-                                            variant='h4'
+                                            variant='h5'
                                             sx={{
-                                                mb: 4,
+                                                mb: 2,
                                             }}
                                         >
                                             Proposal Ownership
@@ -777,9 +773,9 @@ const SingleBudgetDiscussion = ({ id }) => {
                                         }}
                                     >
                                         <Typography
-                                            variant='h4'
+                                            variant='h5'
                                             sx={{
-                                                mb: 4,
+                                                mb: 2,
                                             }}
                                         >
                                             Problem Statements and Proposal
@@ -858,9 +854,9 @@ const SingleBudgetDiscussion = ({ id }) => {
                                         }}
                                     >
                                         <Typography
-                                            variant='h4'
+                                            variant='h5'
                                             sx={{
-                                                mb: 4,
+                                                mb: 2,
                                             }}
                                         >
                                             Proposal Details
@@ -955,9 +951,9 @@ const SingleBudgetDiscussion = ({ id }) => {
                                         }}
                                     >
                                         <Typography
-                                            variant='h4'
+                                            variant='h5'
                                             sx={{
-                                                mb: 4,
+                                                mb: 2,
                                             }}
                                         >
                                             Costing
@@ -1020,9 +1016,9 @@ const SingleBudgetDiscussion = ({ id }) => {
                                         }}
                                     >
                                         <Typography
-                                            variant='h4'
+                                            variant='h5'
                                             sx={{
-                                                mb: 4,
+                                                mb: 2,
                                             }}
                                         >
                                             Further information
@@ -1101,9 +1097,9 @@ const SingleBudgetDiscussion = ({ id }) => {
                                         }}
                                     >
                                         <Typography
-                                            variant='h4'
+                                            variant='h5'
                                             sx={{
-                                                mb: 4,
+                                                mb: 2,
                                             }}
                                         >
                                             Administration and Auditing

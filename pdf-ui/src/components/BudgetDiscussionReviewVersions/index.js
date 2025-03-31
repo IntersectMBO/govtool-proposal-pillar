@@ -343,9 +343,9 @@ const BudgetDiscussionReviewVersions = ({ open, onClose, id }) => {
                                                             }}
                                                         >
                                                             <Typography
-                                                                variant='h4'
+                                                                variant='h5'
                                                                 sx={{
-                                                                    mb: 4,
+                                                                    mb: 2,
                                                                 }}
                                                             >
                                                                 Proposal
@@ -387,9 +387,9 @@ const BudgetDiscussionReviewVersions = ({ open, onClose, id }) => {
                                                             }}
                                                         >
                                                             <Typography
-                                                                variant='h4'
+                                                                variant='h5'
                                                                 sx={{
-                                                                    mb: 4,
+                                                                    mb: 2,
                                                                 }}
                                                             >
                                                                 Problem
@@ -497,9 +497,9 @@ const BudgetDiscussionReviewVersions = ({ open, onClose, id }) => {
                                                             }}
                                                         >
                                                             <Typography
-                                                                variant='h4'
+                                                                variant='h5'
                                                                 sx={{
-                                                                    mb: 4,
+                                                                    mb: 2,
                                                                 }}
                                                             >
                                                                 Proposal Details
@@ -613,9 +613,9 @@ const BudgetDiscussionReviewVersions = ({ open, onClose, id }) => {
                                                             }}
                                                         >
                                                             <Typography
-                                                                variant='h4'
+                                                                variant='h5'
                                                                 sx={{
-                                                                    mb: 4,
+                                                                    mb: 2,
                                                                 }}
                                                             >
                                                                 Costing
@@ -701,9 +701,9 @@ const BudgetDiscussionReviewVersions = ({ open, onClose, id }) => {
                                                             }}
                                                         >
                                                             <Typography
-                                                                variant='h4'
+                                                                variant='h5'
                                                                 sx={{
-                                                                    mb: 4,
+                                                                    mb: 2,
                                                                 }}
                                                             >
                                                                 Further
@@ -797,9 +797,9 @@ const BudgetDiscussionReviewVersions = ({ open, onClose, id }) => {
                                                             }}
                                                         >
                                                             <Typography
-                                                                variant='h4'
+                                                                variant='h5'
                                                                 sx={{
-                                                                    mb: 4,
+                                                                    mb: 2,
                                                                 }}
                                                             >
                                                                 Administration
