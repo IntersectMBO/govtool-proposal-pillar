@@ -2,7 +2,10 @@ import React from 'react';
 
 import { Box, Typography } from '@mui/material';
 import ReactMarkdown from 'react-markdown';
-const BudgetDiscussionInfoSegment = ({ question, answer }) => {
+const BudgetDiscussionInfoSegment = ({ question, answer, show = true }) => {
+    if (!show) {
+        return null;
+    }
     return (
         <Box mb={3}>
             <Typography

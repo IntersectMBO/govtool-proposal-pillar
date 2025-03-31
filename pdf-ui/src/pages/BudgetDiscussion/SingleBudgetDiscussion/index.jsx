@@ -72,6 +72,9 @@ const SingleBudgetDiscussion = ({ id }) => {
     const [activePoll, setActivePoll] = useState(null);
     const [showCreateBDDialog, setShowCreateBDDialog] = useState(false);
 
+    // Read More / Show Less logic
+    const [showFullText, setShowFullText] = useState(false);
+
     const targetRef = useRef();
     const menuRef = useRef();
 
@@ -652,7 +655,6 @@ const SingleBudgetDiscussion = ({ id }) => {
                                                 )}
                                         </Grid>
                                     </Grid>
-
                                     <Box mt={2}>
                                         <Typography
                                             variant='caption'
@@ -675,7 +677,6 @@ const SingleBudgetDiscussion = ({ id }) => {
                                             }
                                         </Typography>
                                     </Box>
-
                                     <Box
                                         mt={2}
                                         display='flex'
@@ -727,7 +728,6 @@ const SingleBudgetDiscussion = ({ id }) => {
                                             </Box>
                                         )}
                                     </Box>
-
                                     <Box
                                         sx={{
                                             mt: 4,
@@ -766,7 +766,6 @@ const SingleBudgetDiscussion = ({ id }) => {
                                             }
                                         />
                                     </Box>
-
                                     <Box
                                         sx={{
                                             mt: 4,
@@ -798,6 +797,7 @@ const SingleBudgetDiscussion = ({ id }) => {
                                                     ?.data?.attributes
                                                     ?.proposal_benefit
                                             }
+                                            show={showFullText}
                                         />
 
                                         <BudgetDiscussionInfoSegment
@@ -810,6 +810,7 @@ const SingleBudgetDiscussion = ({ id }) => {
                                                     ?.roadmap_name?.data
                                                     ?.attributes?.roadmap_name
                                             }
+                                            show={showFullText}
                                         />
 
                                         <BudgetDiscussionInfoSegment
@@ -822,6 +823,7 @@ const SingleBudgetDiscussion = ({ id }) => {
                                                     ?.type_name?.data
                                                     ?.attributes?.type_name
                                             }
+                                            show={showFullText}
                                         />
 
                                         <BudgetDiscussionInfoSegment
@@ -834,6 +836,7 @@ const SingleBudgetDiscussion = ({ id }) => {
                                                     ?.committee_name?.data
                                                     ?.attributes?.committee_name
                                             }
+                                            show={showFullText}
                                         />
 
                                         <BudgetDiscussionInfoSegment
@@ -845,278 +848,316 @@ const SingleBudgetDiscussion = ({ id }) => {
                                                     ?.attributes
                                                     ?.supplementary_endorsement
                                             }
+                                            show={showFullText}
                                         />
                                     </Box>
 
-                                    <Box
-                                        sx={{
-                                            mt: 4,
-                                        }}
-                                    >
-                                        <Typography
-                                            variant='h5'
+                                    {showFullText && (
+                                        <Box
                                             sx={{
-                                                mb: 2,
+                                                mt: 4,
                                             }}
                                         >
-                                            Proposal Details
-                                        </Typography>
+                                            <Typography
+                                                variant='h5'
+                                                sx={{
+                                                    mb: 2,
+                                                }}
+                                            >
+                                                Proposal Details
+                                            </Typography>
 
-                                        <BudgetDiscussionInfoSegment
-                                            question={
-                                                'What is your proposed name to be used to reference this proposal publicly?'
-                                            }
-                                            answer={
-                                                proposal?.attributes
-                                                    ?.bd_proposal_detail?.data
-                                                    ?.attributes?.proposal_name
-                                            }
-                                        />
+                                            <BudgetDiscussionInfoSegment
+                                                question={
+                                                    'What is your proposed name to be used to reference this proposal publicly?'
+                                                }
+                                                answer={
+                                                    proposal?.attributes
+                                                        ?.bd_proposal_detail
+                                                        ?.data?.attributes
+                                                        ?.proposal_name
+                                                }
+                                            />
 
-                                        <BudgetDiscussionInfoSegment
-                                            question={'Proposal Description'}
-                                            answer={
-                                                proposal?.attributes
-                                                    ?.bd_proposal_detail?.data
-                                                    ?.attributes
-                                                    ?.proposal_description
-                                            }
-                                        />
+                                            <BudgetDiscussionInfoSegment
+                                                question={
+                                                    'Proposal Description'
+                                                }
+                                                answer={
+                                                    proposal?.attributes
+                                                        ?.bd_proposal_detail
+                                                        ?.data?.attributes
+                                                        ?.proposal_description
+                                                }
+                                            />
 
-                                        <BudgetDiscussionInfoSegment
-                                            question={
-                                                'Please list any key dependencies (if any) for this proposal?'
-                                            }
-                                            answer={
-                                                proposal?.attributes
-                                                    ?.bd_proposal_detail?.data
-                                                    ?.attributes
-                                                    ?.key_dependencies
-                                            }
-                                        />
+                                            <BudgetDiscussionInfoSegment
+                                                question={
+                                                    'Please list any key dependencies (if any) for this proposal?'
+                                                }
+                                                answer={
+                                                    proposal?.attributes
+                                                        ?.bd_proposal_detail
+                                                        ?.data?.attributes
+                                                        ?.key_dependencies
+                                                }
+                                            />
 
-                                        <BudgetDiscussionInfoSegment
-                                            question={
-                                                'Key Proposal Deliverable(s) and Definition of Done: What tangible milestones or outcomes are to be delivered and what will the community ultimately receive?'
-                                            }
-                                            answer={
-                                                proposal?.attributes
-                                                    ?.bd_proposal_detail?.data
-                                                    ?.attributes
-                                                    ?.key_proposal_deliverables
-                                            }
-                                        />
+                                            <BudgetDiscussionInfoSegment
+                                                question={
+                                                    'Key Proposal Deliverable(s) and Definition of Done: What tangible milestones or outcomes are to be delivered and what will the community ultimately receive?'
+                                                }
+                                                answer={
+                                                    proposal?.attributes
+                                                        ?.bd_proposal_detail
+                                                        ?.data?.attributes
+                                                        ?.key_proposal_deliverables
+                                                }
+                                            />
 
-                                        <BudgetDiscussionInfoSegment
-                                            question={
-                                                'Resourcing & Duration Estimates: Please provide estimates of team size and duration to achieve the Key Proposal Deliverables outlined above.'
-                                            }
-                                            answer={
-                                                proposal?.attributes
-                                                    ?.bd_proposal_detail?.data
-                                                    ?.attributes
-                                                    ?.resourcing_duration_estimates
-                                            }
-                                        />
+                                            <BudgetDiscussionInfoSegment
+                                                question={
+                                                    'Resourcing & Duration Estimates: Please provide estimates of team size and duration to achieve the Key Proposal Deliverables outlined above.'
+                                                }
+                                                answer={
+                                                    proposal?.attributes
+                                                        ?.bd_proposal_detail
+                                                        ?.data?.attributes
+                                                        ?.resourcing_duration_estimates
+                                                }
+                                            />
 
-                                        <BudgetDiscussionInfoSegment
-                                            question={
-                                                'Experience: Please provide previous experience relevant to complete this project.'
-                                            }
-                                            answer={
-                                                proposal?.attributes
-                                                    ?.bd_proposal_detail?.data
-                                                    ?.attributes?.experience
-                                            }
-                                        />
+                                            <BudgetDiscussionInfoSegment
+                                                question={
+                                                    'Experience: Please provide previous experience relevant to complete this project.'
+                                                }
+                                                answer={
+                                                    proposal?.attributes
+                                                        ?.bd_proposal_detail
+                                                        ?.data?.attributes
+                                                        ?.experience
+                                                }
+                                            />
 
-                                        <BudgetDiscussionInfoSegment
-                                            question={
-                                                'Contracting: Please describe how you expect to be contracted.'
-                                            }
-                                            answer={
-                                                proposal?.attributes
-                                                    ?.bd_proposal_detail?.data
-                                                    ?.attributes
-                                                    ?.contract_type_name?.data
-                                                    ?.attributes
-                                                    ?.contract_type_name
-                                            }
-                                        />
-                                    </Box>
+                                            <BudgetDiscussionInfoSegment
+                                                question={
+                                                    'Contracting: Please describe how you expect to be contracted.'
+                                                }
+                                                answer={
+                                                    proposal?.attributes
+                                                        ?.bd_proposal_detail
+                                                        ?.data?.attributes
+                                                        ?.contract_type_name
+                                                        ?.data?.attributes
+                                                        ?.contract_type_name
+                                                }
+                                            />
+                                        </Box>
+                                    )}
 
-                                    <Box
-                                        sx={{
-                                            mt: 4,
-                                        }}
-                                    >
-                                        <Typography
-                                            variant='h5'
+                                    {showFullText && (
+                                        <Box
                                             sx={{
-                                                mb: 2,
+                                                mt: 4,
                                             }}
                                         >
-                                            Costing
-                                        </Typography>
+                                            <Typography
+                                                variant='h5'
+                                                sx={{
+                                                    mb: 2,
+                                                }}
+                                            >
+                                                Costing
+                                            </Typography>
 
-                                        <BudgetDiscussionInfoSegment
-                                            question={'ADA Amount'}
-                                            answer={
-                                                proposal?.attributes?.bd_costing
-                                                    ?.data?.attributes
-                                                    ?.ada_amount
-                                            }
-                                        />
+                                            <BudgetDiscussionInfoSegment
+                                                question={'ADA Amount'}
+                                                answer={
+                                                    proposal?.attributes
+                                                        ?.bd_costing?.data
+                                                        ?.attributes?.ada_amount
+                                                }
+                                            />
 
-                                        <BudgetDiscussionInfoSegment
-                                            question={
-                                                'ADA to USD Conversion Rate'
-                                            }
-                                            answer={
-                                                proposal?.attributes?.bd_costing
-                                                    ?.data?.attributes
-                                                    ?.usd_to_ada_conversion_rate
-                                            }
-                                        />
+                                            <BudgetDiscussionInfoSegment
+                                                question={
+                                                    'ADA to USD Conversion Rate'
+                                                }
+                                                answer={
+                                                    proposal?.attributes
+                                                        ?.bd_costing?.data
+                                                        ?.attributes
+                                                        ?.usd_to_ada_conversion_rate
+                                                }
+                                            />
 
-                                        <BudgetDiscussionInfoSegment
-                                            question={'Preferred currency'}
-                                            answer={
-                                                proposal?.attributes?.bd_costing
-                                                    ?.data?.attributes
-                                                    ?.preferred_currency?.data
-                                                    ?.attributes?.currency_name
-                                            }
-                                        />
+                                            <BudgetDiscussionInfoSegment
+                                                question={'Preferred currency'}
+                                                answer={
+                                                    proposal?.attributes
+                                                        ?.bd_costing?.data
+                                                        ?.attributes
+                                                        ?.preferred_currency
+                                                        ?.data?.attributes
+                                                        ?.currency_name
+                                                }
+                                            />
 
-                                        <BudgetDiscussionInfoSegment
-                                            question={
-                                                'Amount in preferred currency'
-                                            }
-                                            answer={
-                                                proposal?.attributes?.bd_costing
-                                                    ?.data?.attributes
-                                                    ?.amount_in_preferred_currency
-                                            }
-                                        />
+                                            <BudgetDiscussionInfoSegment
+                                                question={
+                                                    'Amount in preferred currency'
+                                                }
+                                                answer={
+                                                    proposal?.attributes
+                                                        ?.bd_costing?.data
+                                                        ?.attributes
+                                                        ?.amount_in_preferred_currency
+                                                }
+                                            />
 
-                                        <BudgetDiscussionInfoSegment
-                                            question={'Cost breakdown'}
-                                            answer={
-                                                proposal?.attributes?.bd_costing
-                                                    ?.data?.attributes
-                                                    ?.cost_breakdown
-                                            }
-                                        />
-                                    </Box>
+                                            <BudgetDiscussionInfoSegment
+                                                question={'Cost breakdown'}
+                                                answer={
+                                                    proposal?.attributes
+                                                        ?.bd_costing?.data
+                                                        ?.attributes
+                                                        ?.cost_breakdown
+                                                }
+                                            />
+                                        </Box>
+                                    )}
 
-                                    <Box
-                                        sx={{
-                                            mt: 4,
-                                        }}
-                                    >
-                                        <Typography
-                                            variant='h5'
+                                    {showFullText && (
+                                        <Box
                                             sx={{
-                                                mb: 2,
+                                                mt: 4,
                                             }}
                                         >
-                                            Further information
-                                        </Typography>
-                                        {proposal?.attributes
-                                            ?.bd_further_information?.data
-                                            ?.attributes?.proposal_links
-                                            ?.length > 0 && (
-                                            <Box mt={4}>
-                                                <Typography
-                                                    variant='caption'
-                                                    sx={{
-                                                        color: (theme) =>
-                                                            theme?.palette?.text
-                                                                ?.grey,
-                                                    }}
-                                                >
-                                                    Supporting links
-                                                </Typography>
+                                            <Typography
+                                                variant='h5'
+                                                sx={{
+                                                    mb: 2,
+                                                }}
+                                            >
+                                                Further information
+                                            </Typography>
+                                            {proposal?.attributes
+                                                ?.bd_further_information?.data
+                                                ?.attributes?.proposal_links
+                                                ?.length > 0 && (
+                                                <Box mt={4}>
+                                                    <Typography
+                                                        variant='caption'
+                                                        sx={{
+                                                            color: (theme) =>
+                                                                theme?.palette
+                                                                    ?.text
+                                                                    ?.grey,
+                                                        }}
+                                                    >
+                                                        Supporting links
+                                                    </Typography>
 
-                                                <Box>
-                                                    {proposal?.attributes?.bd_further_information?.data?.attributes?.proposal_links?.map(
-                                                        (item, index) => (
-                                                            <Button
-                                                                key={index}
-                                                                sx={{
-                                                                    marginRight: 2,
-                                                                    marginBottom: 2,
-                                                                }}
-                                                                startIcon={
-                                                                    <IconLink
-                                                                        width='18'
-                                                                        height='18'
-                                                                        fill={
-                                                                            theme
-                                                                                .palette
-                                                                                .primary
-                                                                                .main
-                                                                        }
-                                                                    />
-                                                                }
-                                                                onClick={() =>
-                                                                    openLink(
-                                                                        item?.prop_link
-                                                                    )
-                                                                }
-                                                                data-testid={
-                                                                    'link-${index}-text-content'
-                                                                }
-                                                            >
-                                                                <Typography
-                                                                    component={
-                                                                        'p'
-                                                                    }
-                                                                    variant='body2'
-                                                                    style={{
-                                                                        margin: 0,
+                                                    <Box>
+                                                        {proposal?.attributes?.bd_further_information?.data?.attributes?.proposal_links?.map(
+                                                            (item, index) => (
+                                                                <Button
+                                                                    key={index}
+                                                                    sx={{
+                                                                        marginRight: 2,
+                                                                        marginBottom: 2,
                                                                     }}
-                                                                    data-testid={`link-${index}-text-content`}
-                                                                >
-                                                                    {
-                                                                        item?.prop_link_text
+                                                                    startIcon={
+                                                                        <IconLink
+                                                                            width='18'
+                                                                            height='18'
+                                                                            fill={
+                                                                                theme
+                                                                                    .palette
+                                                                                    .primary
+                                                                                    .main
+                                                                            }
+                                                                        />
                                                                     }
-                                                                </Typography>
-                                                            </Button>
-                                                        )
-                                                    )}
+                                                                    onClick={() =>
+                                                                        openLink(
+                                                                            item?.prop_link
+                                                                        )
+                                                                    }
+                                                                    data-testid={
+                                                                        'link-${index}-text-content'
+                                                                    }
+                                                                >
+                                                                    <Typography
+                                                                        component={
+                                                                            'p'
+                                                                        }
+                                                                        variant='body2'
+                                                                        style={{
+                                                                            margin: 0,
+                                                                        }}
+                                                                        data-testid={`link-${index}-text-content`}
+                                                                    >
+                                                                        {
+                                                                            item?.prop_link_text
+                                                                        }
+                                                                    </Typography>
+                                                                </Button>
+                                                            )
+                                                        )}
+                                                    </Box>
                                                 </Box>
-                                            </Box>
-                                        )}
-                                    </Box>
-
-                                    <Box
-                                        sx={{
-                                            mt: 4,
-                                        }}
-                                    >
-                                        <Typography
-                                            variant='h5'
+                                            )}
+                                        </Box>
+                                    )}
+                                    {showFullText && (
+                                        <Box
                                             sx={{
-                                                mb: 2,
+                                                mt: 4,
                                             }}
                                         >
-                                            Administration and Auditing
-                                        </Typography>
+                                            <Typography
+                                                variant='h5'
+                                                sx={{
+                                                    mb: 2,
+                                                }}
+                                            >
+                                                Administration and Auditing
+                                            </Typography>
 
-                                        <BudgetDiscussionInfoSegment
-                                            question={
-                                                'Would you like Intersect to be your named Administrator, including acting as the auditor, as per the Cardano Constitution?*'
-                                            }
-                                            answer={
-                                                proposal?.attributes
-                                                    ?.intersect_named_administrator
-                                                    ? 'Yes'
-                                                    : 'No'
-                                            }
-                                        />
-                                    </Box>
+                                            <BudgetDiscussionInfoSegment
+                                                question={
+                                                    'Would you like Intersect to be your named Administrator, including acting as the auditor, as per the Cardano Constitution?*'
+                                                }
+                                                answer={
+                                                    proposal?.attributes
+                                                        ?.intersect_named_administrator
+                                                        ? 'Yes'
+                                                        : 'No'
+                                                }
+                                            />
+                                        </Box>
+                                    )}
+                                    <Button
+                                        variant='text'
+                                        onClick={() =>
+                                            setShowFullText(!showFullText)
+                                        }
+                                        sx={{
+                                            textTransform: 'none',
+                                            padding: '0',
+                                            marginTop: '8px',
+                                            color: 'primary.main',
+                                            fontWeight: 'bold',
+                                            '&:hover': {
+                                                backgroundColor: 'transparent',
+                                            },
+                                        }}
+                                    >
+                                        {showFullText
+                                            ? 'Show less'
+                                            : 'Read more'}
+                                    </Button>
                                     <Box
                                         mt={4}
                                         display={'flex'}
