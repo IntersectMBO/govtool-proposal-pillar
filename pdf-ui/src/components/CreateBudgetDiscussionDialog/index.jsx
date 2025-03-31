@@ -144,6 +144,10 @@ const CreateBudgetDiscussionDialog = ({ open = false, onClose = false , current_
     const handleCreateBudgetDiscussion = async (isDraft = false) => {
              setLoading(true);
         try {
+                budgetDiscussionData.bd_costing.ada_amount = budgetDiscussionData?.bd_costing?.ada_amount?.toString() || ''
+                budgetDiscussionData.bd_costing.usd_to_ada_conversion_rate = budgetDiscussionData?.bd_costing?.usd_to_ada_conversion_rate?.toString() || ""
+                budgetDiscussionData.bd_costing.amount_in_preferred_currency = budgetDiscussionData?.bd_costing?.amount_in_preferred_currency?.toString() || ""
+
                 const newBD = await createBudgetDiscussion(budgetDiscussionData);
                 onClose()
                 navigate(
@@ -200,11 +204,11 @@ const CreateBudgetDiscussionDialog = ({ open = false, onClose = false , current_
                     "explain_proposal_roadmap": { required: budgetDiscussionData.bd_psapb.roadmap_name === 11, type: 'string' }
                 },
                 "bd_costing": {
-                    "ada_amount": { required: true, type: 'numberString' },
+                    "ada_amount": { required: true, type: 'string' },
                     "cost_breakdown": { required: true, type: 'string' },
                     "preferred_currency": { required: true, type: 'number' },
-                    "usd_to_ada_conversion_rate": { required: true, type: 'numberString' },
-                    "amount_in_preferred_currency": { required: true, type: 'numberString' }
+                    "usd_to_ada_conversion_rate": { required: true, type: 'string' },
+                    "amount_in_preferred_currency": { required: true, type: 'string' }
                 },
                 "privacy_policy": { required: true, type: 'boolean' },
                 "bd_proposal_detail": {
