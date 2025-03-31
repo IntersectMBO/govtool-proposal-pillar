@@ -93,9 +93,7 @@ module.exports = createCoreController("api::comment.comment", ({ strapi }) => ({
             data?.bd_proposal_id,
             {
               data: {
-                prop_comments_number: proposal?.prop_comments_number
-                  ? 1
-                  : proposal?.prop_comments_number + 1,
+                prop_comments_number: proposal?.prop_comments_number + 1,
               },
             }
           );
