@@ -403,6 +403,14 @@ module.exports = {
           ]?.replace(/\u200B/g, "") === "Yes"
             ? true
             : false,
+
+        intersect_admin_further_text: item?.[
+          "Please provide further information to help inform DReps. Who is the vendor and what services are they providing?"
+        ]
+          ? item?.[
+              "Please provide further information to help inform DReps. Who is the vendor and what services are they providing?"
+            ]?.toString()
+          : "",
       },
     }));
 
