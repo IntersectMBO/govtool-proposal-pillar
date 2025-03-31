@@ -24,7 +24,10 @@ import {
 } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { getBudgetDiscussionTypes } from '../../lib/api';
-import { CreateBudgetDiscussionDialog, BudgetDiscussionsList } from '../../components';
+import {
+    CreateBudgetDiscussionDialog,
+    BudgetDiscussionsList,
+} from '../../components';
 import { useAppContext } from '../../context/context';
 import { loginUserToApp } from '../../lib/helpers';
 import { useLocation } from 'react-router-dom';
@@ -32,13 +35,23 @@ import { useLocation } from 'react-router-dom';
 const ProposedBudgetDiscussion = () => {
     const location = useLocation();
     const theme = useTheme();
-    const { user, walletAPI, setOpenUsernameModal, setUser, clearStates } = useAppContext();
-    const [budgetDiscussionSearchText, setBudgetDiscussionSearchText] = useState('');
+    const { user, walletAPI, setOpenUsernameModal, setUser, clearStates } =
+        useAppContext();
+    const [budgetDiscussionSearchText, setBudgetDiscussionSearchText] =
+        useState('');
     const [sortType, setSortType] = useState('desc');
-    const [budgetDiscussionTypeList, setBudgetDiscussionTypeList] = useState([]);
-    const [filteredBudgetDiscussionTypeList,setFilteredBudgetDiscussionTypeList] = useState([]);
+    const [budgetDiscussionTypeList, setBudgetDiscussionTypeList] = useState(
+        []
+    );
+    const [
+        filteredBudgetDiscussionTypeList,
+        setFilteredBudgetDiscussionTypeList,
+    ] = useState([]);
     const [showCreateBDDialog, setShowCreateBDDialog] = useState(false);
-    const [filteredBudgetDiscussionStatusList,setFilteredBudgetDiscussionStatusList] = useState(['active']);
+    const [
+        filteredBudgetDiscussionStatusList,
+        setFilteredBudgetDiscussionStatusList,
+    ] = useState(['active']);
     const [filtersAnchorEl, setFiltersAnchorEl] = useState(null);
     const [showAllActivated, setShowAllActivated] = useState({
         is_activated: false,
@@ -56,7 +69,7 @@ const ProposedBudgetDiscussion = () => {
         try {
             let response = await getBudgetDiscussionTypes();
             if (!response?.data) return;
-                setBudgetDiscussionTypeList(response?.data);
+            setBudgetDiscussionTypeList(response?.data);
         } catch (error) {
             console.error(error);
         }
@@ -81,35 +94,16 @@ const ProposedBudgetDiscussion = () => {
         setFilteredBudgetDiscussionTypeList(updatedList);
     };
 
-    const toggleStatusFilter = (status) => {
-        let filterExist = filteredBudgetDiscussionStatusList?.some(
-            (filter) => filter === status
-        );
-
-        let updatedList;
-        if (filterExist) {
-            updatedList = filteredBudgetDiscussionStatusList.filter(
-                (filter) => filter !== status
-            );
-        } else {
-            updatedList = [...filteredBudgetDiscussionStatusList, status];
-        }
-
-        setFilteredBudgetDiscussionStatusList(updatedList);
-    };
-
     const resetFilters = () => {
         setFilteredBudgetDiscussionTypeList([]);
         handleCloseFilters();
     };
 
     useEffect(() => {
-        if(budgetDiscussionTypeList.length == 0)
-            fetchBudgetDiscussionTypes();
+        if (budgetDiscussionTypeList.length == 0) fetchBudgetDiscussionTypes();
     }, []);
 
     useEffect(() => {
-
         if (showAllActivated?.is_activated) {
             setFilteredBudgetDiscussionTypeList([
                 showAllActivated?.gov_action_type,
@@ -191,7 +185,9 @@ const ProposedBudgetDiscussion = () => {
                                 variant='outlined'
                                 value={budgetDiscussionSearchText || ''}
                                 onChange={(e) =>
-                                    setBudgetDiscussionSearchText(e.target.value)
+                                    setBudgetDiscussionSearchText(
+                                        e.target.value
+                                    )
                                 }
                                 InputProps={{
                                     startAdornment: (
@@ -227,40 +223,39 @@ const ProposedBudgetDiscussion = () => {
                         </Grid>
                         <Grid item>
                             <Box gap={1} display={'flex'}>
-                            <Button
-                                    variant="outlined"
+                                <Button
+                                    variant='outlined'
                                     onClick={handleFiltersClick}
-                                    endIcon={<IconFilter
-                                        color={
-                                            theme.palette.primary.icons
-                                                .black
-                                        }
-                                    />}
+                                    endIcon={
+                                        <IconFilter
+                                            color={
+                                                theme.palette.primary.icons
+                                                    .black
+                                            }
+                                        />
+                                    }
                                     id='filters-button'
                                     data-testid='filter-button'
                                     sx={{
                                         textTransform: 'none',
-                                        borderRadius: '20px', 
-                                        padding: '8px 16px', 
-                                        borderColor: 'primary.main', 
-                                        color: 'text.primary', 
+                                        borderRadius: '20px',
+                                        padding: '8px 16px',
+                                        borderColor: 'primary.main',
+                                        color: 'text.primary',
                                         '&:hover': {
-                                            backgroundColor: 'action.hover', 
+                                            backgroundColor: 'action.hover',
                                         },
                                     }}
-                                        aria-controls={
-                                            openFilters
-                                                ? 'filters-menu'
-                                                : undefined
-                                        }
-                                        aria-haspopup='true'
-                                        aria-expanded={
-                                            openFilters ? 'true' : undefined
-                                        }
-
-
-                                    > Filter:
-                                 </Button>
+                                    aria-controls={
+                                        openFilters ? 'filters-menu' : undefined
+                                    }
+                                    aria-haspopup='true'
+                                    aria-expanded={
+                                        openFilters ? 'true' : undefined
+                                    }
+                                >
+                                    Filter:
+                                </Button>
                                 <Menu
                                     id='filters-menu'
                                     anchorEl={filtersAnchorEl}
@@ -353,7 +348,12 @@ const ProposedBudgetDiscussion = () => {
                                                                 label={
                                                                     ga
                                                                         ?.attributes
-                                                                        ?.type_name
+                                                                        ?.type_name ===
+                                                                    'None of these'
+                                                                        ? 'No category'
+                                                                        : ga
+                                                                              ?.attributes
+                                                                              ?.type_name
                                                                 }
                                                             />
                                                         </MenuItem>
@@ -361,51 +361,56 @@ const ProposedBudgetDiscussion = () => {
                                                 )}
                                             </Box>
                                         )}
-                                       <MenuItem
+                                        <MenuItem
                                             onClick={() => resetFilters()}
                                             data-testid='reset-filters'
-                                        >                                            <Typography color={'primary'}>
+                                        >
+                                            <Typography color={'primary'}>
                                                 Reset filters
                                             </Typography>
                                         </MenuItem>
                                     </Box>
                                 </Menu>
                                 <Button
-                                    variant="outlined"
+                                    variant='outlined'
                                     onClick={() =>
                                         setSortType((prev) =>
                                             prev === 'desc' ? 'asc' : 'desc'
-                                        )}
+                                        )
+                                    }
                                     endIcon={
                                         sortType === 'desc' ? (
                                             <IconArrowDown
-                                            color={
-                                                theme.palette.primary.icons
-                                                    .black
-                                            }
-                                        />
+                                                color={
+                                                    theme.palette.primary.icons
+                                                        .black
+                                                }
+                                            />
                                         ) : (
                                             <IconArrowUp
-                                            color={
-                                                theme.palette.primary.icons
-                                                    .red
-                                            }
-                                        />
+                                                color={
+                                                    theme.palette.primary.icons
+                                                        .red
+                                                }
+                                            />
                                         )
                                     }
                                     sx={{
                                         textTransform: 'none',
-                                        borderRadius: '20px', 
-                                        padding: '8px 16px', 
-                                        borderColor: 'primary.main', 
-                                        color: 'text.primary', 
+                                        borderRadius: '20px',
+                                        padding: '8px 16px',
+                                        borderColor: 'primary.main',
+                                        color: 'text.primary',
                                         '&:hover': {
-                                            backgroundColor: 'action.hover', 
+                                            backgroundColor: 'action.hover',
                                         },
                                     }}
-                                    data-testid="sort-button"
+                                    data-testid='sort-button'
                                 >
-                                  Sort: {sortType === 'desc' ? 'Last modified (desc)' : 'Last modified (asc)'}  
+                                    Sort:{' '}
+                                    {sortType === 'desc'
+                                        ? 'Last modified (desc)'
+                                        : 'Last modified (asc)'}
                                 </Button>
                             </Box>
                         </Grid>
@@ -420,7 +425,7 @@ const ProposedBudgetDiscussion = () => {
                     <Box
                         key={`${item?.attributes?.bd_type_name}-${index}`}
                         pt={index === 0 && 4}
-                    > {}
+                    >
                         <BudgetDiscussionsList
                             currentBudgetDiscussionType={item}
                             searchText={budgetDiscussionSearchText}
@@ -428,7 +433,7 @@ const ProposedBudgetDiscussion = () => {
                             statusList={filteredBudgetDiscussionStatusList}
                             setShowAllActivated={setShowAllActivated}
                             showAllActivated={showAllActivated}
-                        /> 
+                        />
                     </Box>
                 ))}
             </Box>

@@ -22,11 +22,10 @@ import { useDebounce } from '../..//lib/hooks';
 import { getBudgetDiscussionDrafts, getBudgetDiscussions } from '../../lib/api';
 import { settings } from '../../lib/carouselSettings';
 import { useTheme } from '@emotion/react';
-import { blue } from '@mui/material/colors';
 import { BudgetDiscussionsCard } from '..';
 
 const BudgetDiscussionsList = ({
-    currentBudgetDiscussionType=null,
+    currentBudgetDiscussionType = null,
     searchText = '',
     sortType = 'desc',
     isDraft = false,
@@ -69,39 +68,36 @@ const BudgetDiscussionsList = ({
         <Box key={`extra-${index}`} height={'100%'} />
     ));
 
-    const fetchBudgetDiscussions = async (reset = true,  page) => {
-        const haveSubmittedFilter = statusList?.some(
-            (filter) => filter === 'submitted'
-        );
+    const fetchBudgetDiscussions = async (reset = true, page) => {
         try {
-            
-            if (isDraft)
-            {
+            if (isDraft) {
                 let bdlist = await getBudgetDiscussionDrafts();
                 setBudgetDiscussionList(bdlist.data);
-            }
-            else
-            { 
-                let  query = `filters[$and][0][is_active]=true&filters[$and][1][bd_psapb][type_name][id]=${
-                    currentBudgetDiscussionType.id
-                    }&filters[$and][2][bd_proposal_detail][proposal_name][$containsi]=${
+            } else {
+                let query = `filters[$and][0][is_active]=true&filters[$and][1][bd_psapb][type_name][id]=${
+                    currentBudgetDiscussionType?.id
+                }&filters[$and][2][bd_proposal_detail][proposal_name][$containsi]=${
                     debouncedSearchValue || ''
-                    }&pagination[page]=${page}&pagination[pageSize]=25&sort[createdAt]=${sortType
-                    }&populate[0]=bd_costing&populate[1]=bd_psapb&populate[2]=bd_proposal_detail&populate[3]=creator`
-                const {budgetDiscussions,pgCount,total} = await getBudgetDiscussions(query);
+                }&pagination[page]=${page}&pagination[pageSize]=25&sort[createdAt]=${
+                    sortType
+                }&populate[0]=bd_costing&populate[1]=bd_psapb&populate[2]=bd_proposal_detail&populate[3]=creator`;
+                const { budgetDiscussions, pgCount, total } =
+                    await getBudgetDiscussions(query);
+
                 if (!budgetDiscussions) return;
                 if (reset) {
                     setBudgetDiscussionList(budgetDiscussions);
                 } else {
-                    setBudgetDiscussionList((prev) => [...prev, ...budgetDiscussions]);
+                    setBudgetDiscussionList((prev) => [
+                        ...prev,
+                        ...budgetDiscussions,
+                    ]);
                 }
                 setPageCount(pgCount);
             }
+        } catch (error) {
+            console.error(error);
         }
-        catch(error)
-            {
-                console.error(error);
-            }
     };
     useEffect(() => {
         if (!mounted) {
@@ -116,6 +112,7 @@ const BudgetDiscussionsList = ({
         sortType,
         isDraft ? null : statusList,
         showAllActivated,
+        currentBudgetDiscussionType,
     ]);
 
     useEffect(() => {
@@ -139,11 +136,12 @@ const BudgetDiscussionsList = ({
                         color='text.black'
                         marginRight={2}
                     >
-                        {isDraft
-                            ? 'Unfinished Drafts'
-                            : ""}
-                            {currentBudgetDiscussionType?.attributes
-                            ?.type_name}
+                        {isDraft ? 'Unfinished Drafts' : ''}
+                        {currentBudgetDiscussionType?.attributes?.type_name ==
+                        'None of these'
+                            ? 'No category'
+                            : currentBudgetDiscussionType?.attributes
+                                  ?.type_name}
                     </Typography>
                     {budgetDiscussionList?.length > 0 &&
                         (setShowAllActivated
@@ -156,11 +154,12 @@ const BudgetDiscussionsList = ({
                                     if (setShowAllActivated) {
                                         setShowAllActivated(() => ({
                                             is_activated: true,
-                                            bd_type: currentBudgetDiscussionType?.id,
+                                            bd_type:
+                                                currentBudgetDiscussionType?.id,
                                         }));
                                     }
                                 }}
-                              //  data-testid={budgetDiscussion?.attributes?.type_name.replace(/\s+/g, '-').toLowerCase() +'-show-all-button'}
+                                //  data-testid={budgetDiscussion?.attributes?.type_name.replace(/\s+/g, '-').toLowerCase() +'-show-all-button'}
                             >
                                 {setShowAllActivated
                                     ? setShowAllActivated?.is_activated
@@ -203,7 +202,9 @@ const BudgetDiscussionsList = ({
                                         budgetDiscussion={bd}
                                         isDraft={isDraft}
                                         startEdittingDraft={startEdittingDraft}
-                                        startEdittinButtonClick={startEdittinButtonClick}
+                                        startEdittinButtonClick={
+                                            startEdittinButtonClick
+                                        }
                                     />
                                 </Grid>
                             ))}
@@ -217,7 +218,10 @@ const BudgetDiscussionsList = ({
                             >
                                 <Button
                                     onClick={() => {
-                                        fetchBudgetDiscussions(false, currentPage + 1);
+                                        fetchBudgetDiscussions(
+                                            false,
+                                            currentPage + 1
+                                        );
                                         setCurrentPage((prev) => prev + 1);
                                     }}
                                 >
@@ -231,11 +235,13 @@ const BudgetDiscussionsList = ({
                         <Slider ref={sliderRef} {...settings}>
                             {budgetDiscussionList?.map((bd, index) => (
                                 <Box key={index} height={'100%'}>
-                                     <BudgetDiscussionsCard
+                                    <BudgetDiscussionsCard
                                         budgetDiscussion={bd}
                                         isDraft={isDraft}
                                         startEdittingDraft={startEdittingDraft}
-                                        startEdittinButtonClick={startEdittinButtonClick}
+                                        startEdittinButtonClick={
+                                            startEdittinButtonClick
+                                        }
                                     />
                                 </Box>
                             ))}

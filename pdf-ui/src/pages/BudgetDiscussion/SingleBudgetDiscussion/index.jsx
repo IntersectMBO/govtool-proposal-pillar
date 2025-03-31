@@ -1205,7 +1205,7 @@ const SingleBudgetDiscussion = ({ id }) => {
                             </IconButton>
                         </Box>
 
-                        {activePoll && (
+                        {/* {activePoll && (
                             <Box mt={4}>
                                 <BudgetDiscussionPoll
                                     proposalUserId={
@@ -1219,7 +1219,7 @@ const SingleBudgetDiscussion = ({ id }) => {
                                     fetchActivePoll={fetchActivePoll}
                                 />
                             </Box>
-                        )}
+                        )} */}
 
                         {proposal?.attributes?.content?.attributes
                             ?.prop_submitted ? null : (
