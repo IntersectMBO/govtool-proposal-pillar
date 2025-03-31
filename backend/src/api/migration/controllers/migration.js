@@ -378,9 +378,11 @@ module.exports = {
           /\u200B/g,
           ""
         ),
-        amount_in_preferred_currency: item?.["Amount in preferred currency"],
-        usd_to_ada_conversion_rate: item?.["USD to ADA Conversion Rate"],
-        ada_amount: item?.["ADA Amount"],
+        amount_in_preferred_currency:
+          item?.["Amount in preferred currency"]?.toString(),
+        usd_to_ada_conversion_rate:
+          item?.["USD to ADA Conversion Rate"]?.toString(),
+        ada_amount: item?.["ADA Amount"]?.toString(),
         cost_breakdown: item?.[
           "<strong>Cost breakdown</strong>: Based on your preferred contract type and cost estimate, please provide a cost breakdown in ada and in USD."
         ]?.replace(/\u200B/g, ""),
@@ -430,6 +432,8 @@ module.exports = {
 
                   if (!entity?.message) {
                     collectionData["be_country_of_res"] = entity?.id;
+                  } else {
+                    console.log(entity);
                   }
                 }
               }
@@ -448,6 +452,8 @@ module.exports = {
 
                   if (!entity?.message) {
                     collectionData["be_nationality"] = entity?.id;
+                  } else {
+                    console.log(entity);
                   }
                 }
               }
@@ -466,6 +472,8 @@ module.exports = {
 
                   if (!entity?.message) {
                     collectionData["be_country"] = entity?.id;
+                  } else {
+                    console.log(entity);
                   }
                 }
               }
@@ -481,8 +489,11 @@ module.exports = {
                     "roadmap_name",
                     collectionData["roadmap_name"]
                   );
+
                   if (!entity?.message) {
                     collectionData["roadmap_name"] = entity?.id;
+                  } else {
+                    console.log(entity);
                   }
                 }
               }
@@ -501,6 +512,8 @@ module.exports = {
 
                   if (!entity?.message) {
                     collectionData["type_name"] = entity?.id;
+                  } else {
+                    console.log(entity);
                   }
                 }
               }
@@ -519,6 +532,8 @@ module.exports = {
 
                   if (!entity?.message) {
                     collectionData["committee_name"] = entity?.id;
+                  } else {
+                    console.log(entity);
                   }
                 }
               }
@@ -537,6 +552,8 @@ module.exports = {
 
                   if (!entity?.message) {
                     collectionData["contract_type_name"] = entity?.id;
+                  } else {
+                    console.log(entity);
                   }
                 }
               }
@@ -555,6 +572,8 @@ module.exports = {
 
                   if (!entity?.message) {
                     collectionData["preferred_currency"] = entity?.id;
+                  } else {
+                    console.log(entity);
                   }
                 }
               }
