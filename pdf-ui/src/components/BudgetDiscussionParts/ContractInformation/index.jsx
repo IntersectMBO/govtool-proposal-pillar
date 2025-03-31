@@ -68,7 +68,7 @@ const ContractInformation = ({ setStep, step, onClose, currentBudgetDiscussionDa
                                         Section 1: Contact Information
                                    </Typography>
                               </Box>
-                              <Box color={(theme) => theme.palette.text.grey}>
+                              <Box color={(theme) => theme.palette.text.grey} sx={{mb:2}}>
                                    <Typography variant='body1' gutterBottom>
                                         In order to process your proposal, Intersect requires a few contact details.
                                         This section will be kept confidential and will not be publicly shared.

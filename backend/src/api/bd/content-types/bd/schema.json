@@ -65,6 +65,9 @@
     "is_active": {
       "type": "boolean",
       "default": true
+    },
+    "intersect_admin_futher_text": {
+      "type": "text"
     }
   }
 }

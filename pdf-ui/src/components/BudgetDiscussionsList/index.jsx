@@ -88,7 +88,6 @@ const BudgetDiscussionsList = ({
                     debouncedSearchValue || ''
                     }&pagination[page]=${page}&pagination[pageSize]=25&sort[createdAt]=${sortType
                     }&populate[0]=bd_costing&populate[1]=bd_psapb&populate[2]=bd_proposal_detail&populate[3]=creator`
-   
                 const {budgetDiscussions,pgCount,total} = await getBudgetDiscussions(query);
                 if (!budgetDiscussions) return;
                 if (reset) {

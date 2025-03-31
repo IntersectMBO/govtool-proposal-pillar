@@ -315,7 +315,7 @@ return (
                             </MenuItem>
                        ))}
                     </TextField>
-                    { currentBudgetDiscussionData?.bd_proposal_detail?.contract_type_name === 6 ? 
+                    { currentBudgetDiscussionData?.bd_proposal_detail?.contract_type_name === 4 ? 
                     (
                         <TextField
                             name='Other contract type'

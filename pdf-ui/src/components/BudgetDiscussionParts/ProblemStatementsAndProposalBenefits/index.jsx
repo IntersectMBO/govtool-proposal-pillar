@@ -171,8 +171,8 @@ return (
                         <TextField
                             select
                             name='Product Roadmap'
-                            label='Product Roadmap'
-                            helperText={errors['bd_psapb.proposal_benefit']?.trim() || 'Does this proposal align to the Product Roadmap and Roadmap Goals?'}
+                            label='Does this proposal align to the Product Roadmap and Roadmap Goals?'
+                            helperText={errors['bd_psapb.proposal_benefit']?.trim() ||  <> {' Please click '} <Link href="https://productcommittee.docs.intersectmbo.org/committee-outcomes/2025-cardanos-roadmap/2025-proposed-cardano-roadmap#scaling-the-l1-engine" target="_blank">here</Link> {' to see details of the Product Roadmap'}</>}
                             value={currentBudgetDiscussionData?.bd_psapb?.roadmap_name || ''}
                             error={!!errors['bd_psapb.roadmap_name']?.trim()}
                             required
@@ -198,7 +198,7 @@ return (
                         </TextField>
                         {currentBudgetDiscussionData?.bd_psapb?.roadmap_name==11?(
                             <TextField
-                                name='Propodsl explanation'
+                                name='Proposal explanation'
                                 label='Please explain how your proposal supports the Product Roadmap.'
                                 helperText={errors['bd_psapb.explain_proposal_roadmap']?.trim() }
                                 error={!!errors['bd_psapb.explain_proposal_roadmap']?.trim()}
@@ -215,7 +215,7 @@ return (
                             select
                             name='bd_type'
                             label='Does your proposal align to any of the budget categories?'
-                            helperText={errors['bd_psapb.type_name']?.trim() || (<> {'Please click'} <Link href="">here</Link> {'to see details of Intersect Committees.'}</>)}
+                            helperText={errors['bd_psapb.type_name']?.trim() || ''}
                             error={!!errors['bd_psapb.type_name']?.trim()}
                             value={currentBudgetDiscussionData?.bd_psapb?.type_name || ''}
                             required
@@ -243,7 +243,7 @@ return (
                             select
                             name='Committee Alignment'
                             label='Does your proposal align with any of the Intersect Committees?'
-                            helperText={errors['bd_psapb.committee_name']?.trim() || (<> {'Please click'} <Link href="">here</Link> {'to see details of Intersect Committees.'}</>)}
+                            helperText={errors['bd_psapb.committee_name']?.trim() || (<> {'Please click'} <Link href="https://www.intersectmbo.org/committees" target="_blank">here</Link> {'to see details of Intersect Committees.'}</>)}
                             value={currentBudgetDiscussionData?.bd_psapb?.committee_name || ''}
                             error={!!errors['bd_psapb.committee_name']?.trim()}
                             required

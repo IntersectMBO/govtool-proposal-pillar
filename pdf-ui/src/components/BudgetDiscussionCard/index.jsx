@@ -281,8 +281,9 @@ const BudgetDiscussionCard = ({
                                // data-testid={`budget-discussion-${proposal?.id}-title`}
                             >
                                 {isDraft?
-                                   budgetDiscussion?.attributes.draft_data.bd_proposal_detail?.proposal_name
-                                   :budgetDiscussion?.atributes?.bd_proposal_detail?.data?.attributes?.proposal_name
+                                   budgetDiscussion?.attributes?.draft_data?.bd_proposal_detail?.proposal_name
+                                   :budgetDiscussion?.attributes?.bd_proposal_detail?.data?.attributes?.proposal_name
+                                   
                                 }
                             </Typography>
                             {budgetDiscussion?.attributes?.creator?.data?.attributes?.govtool_username?
@@ -421,9 +422,8 @@ const BudgetDiscussionCard = ({
                                             >
                                                 <StyledBadge
                                                     badgeContent={
-                                                       // proposal?.attributes
-                                                       //     ?.prop_comments_number ||
-                                                        0
+                                                        budgetDiscussion?.attributes
+                                                            ?.prop_comments_number || 0                                                       
                                                     }
                                                     aria-label='comments'
                                                     showZero

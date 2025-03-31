@@ -160,7 +160,7 @@ const ProposedBudgetDiscussion = () => {
                             </Grid>
                         )}
 
-                        {walletAPI?.voter?.isRegisteredAsDRep && (
+                        {walletAPI && (
                             <Grid item xs={12} paddingBottom={2}>
                                 <Button
                                     variant='contained'

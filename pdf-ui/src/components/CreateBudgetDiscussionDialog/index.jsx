@@ -252,7 +252,8 @@ const CreateBudgetDiscussionDialog = ({ open = false, onClose = false , current_
                 //         }
                 //     }
                 // },
-                "intersect_named_administrator": { required: true, type: 'boolean' }
+                "intersect_named_administrator": { required: true, type: 'boolean' },
+                "intersect_admin_futher_text":{ required: budgetDiscussionData.intersect_named_administrator === false, type: 'string' }
             };
         
             function isEmail(email) {
@@ -354,7 +355,6 @@ const CreateBudgetDiscussionDialog = ({ open = false, onClose = false , current_
         
             return Object.keys(allErrors).length === 0 ? null : allErrors;
     }
-    console.log(walletAPI) 
     return (
         <Dialog
             fullScreen

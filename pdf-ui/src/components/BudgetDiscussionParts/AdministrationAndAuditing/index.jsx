@@ -6,15 +6,23 @@ import { StepperActionButtons } from '../../BudgetDiscussionParts';
 const AdministrationAndAuditing = ({ setStep, step, currentBudgetDiscussionData, setBudgetDiscussionData, onClose, setSelectedDraftId, selectedDraftId, handleSaveDraft, errors, setErrors,validateSection }) => {
 
     const handleDataChange = (e, dataName) => {
+        const value = e.target.type === 'checkbox' ? e.target.checked : e.target.value;
         setBudgetDiscussionData({
              ...currentBudgetDiscussionData,
-                  [dataName]: e.target.value
+                  [dataName]: value
              })
+        if(dataName === "intersect_named_administrator" && !value)
+            setBudgetDiscussionData({
+                ...currentBudgetDiscussionData,
+                     [intersect_admin_futher_text]: ''
+                })
    };
     useEffect(() => {
-                validateSection("intersect_named_administrator");
-            }, [currentBudgetDiscussionData?.intersect_named_administrator]);
-   return (
+                 validateSection("intersect_named_administrator");
+                 validateSection("intersect_admin_futher_text");
+             }, [currentBudgetDiscussionData]);
+   
+    return (
         <Box display='flex' flexDirection='column'>
             <Box>
                 <Card>
@@ -121,13 +129,30 @@ const AdministrationAndAuditing = ({ setStep, step, currentBudgetDiscussionData,
                                             <MenuItem value="" disabled data-testid="please-select-option">Please select</MenuItem>
                                             <MenuItem key={1} value={true} data-testid={`true-button`} >Yes</MenuItem>
                                             <MenuItem key={2} value={false} data-testid={`false-button`} >No</MenuItem>
-                                    </TextField>
+                                </TextField>
+                                {currentBudgetDiscussionData?.intersect_named_administrator === undefined 
+                                    ? "" : currentBudgetDiscussionData?.intersect_named_administrator?"":
+                                    (
+                                        <TextField
+                                            name='Additional reason'
+                                            label='Please provide further information to help inform DReps. Who is the vendor and what services are they providing?'
+                                            value={currentBudgetDiscussionData?.intersect_admin_futher_text || ''}
+                                            required
+                                            multiline
+                                            rows={4}
+                                            fullWidth
+                                            onChange={(e) => handleDataChange(e, 'intersect_admin_futher_text')}
+                                            helperText={errors['intersect_admin_futher_text']?.trim()}
+                                            error={!!errors['intersect_admin_futher_text']?.trim()}
+                                            sx={{ mb: 2 }}
+                                        />
+                                    )}                             
                             </Box>
 
                         </Box>
 
                         <StepperActionButtons onClose={onClose} onSaveDraft={handleSaveDraft} onContinue={setStep}
-                            onBack={setStep} selectedDraftId={selectedDraftId} nextStep={step+1} backStep={step-1} 
+                            onBack={setStep} selectedDraftId={selectedDraftId} nextStep={step+1} backStep={step-1} errors={errors}
                         />
                         </CardContent>
                 </Card>
