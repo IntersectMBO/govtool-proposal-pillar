@@ -280,7 +280,6 @@ const BudgetDiscussionCard = ({
                                 }}
                                // data-testid={`budget-discussion-${proposal?.id}-title`}
                             >
-                                
                                 {isDraft?
                                    budgetDiscussion?.attributes.draft_data.bd_proposal_detail?.proposal_name
                                    :budgetDiscussion?.atributes?.bd_proposal_detail?.data?.attributes?.proposal_name

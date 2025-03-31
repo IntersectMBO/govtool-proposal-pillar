@@ -138,14 +138,6 @@ const ProposedBudgetDiscussion = () => {
                         justifyContent={'space-between'}
                         spacing={1}
                     >
-                        {(
-                            <Grid item xs={12} paddingBottom={2}>
-                                <Typography variant='h4' component='h1'>
-                                    Proposed Budget Discussion
-                                </Typography>
-                            </Grid>
-                        )}
-
                         {showAllActivated?.is_activated && (
                             <Grid item xs={12} paddingBottom={2}>
                                 <Button
