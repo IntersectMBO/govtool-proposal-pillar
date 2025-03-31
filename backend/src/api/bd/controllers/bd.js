@@ -116,17 +116,15 @@ module.exports = createCoreController("api::bd.bd", ({ strapi }) => ({
       });
 
       if (data?.old_ver) {
-        const old_proposal = await strapi.entityService.update(
-          "api::bd.bd",
-          data.old_ver,
-          { data: { is_active: false } }
-        );
+        await strapi.entityService.update("api::bd.bd", data.old_ver, {
+          data: { is_active: false },
+        });
         const poll = await strapi.entityService.findMany(
           "api::bd-poll.bd-poll",
           { filters: { bd_proposal_id: data.old_ver } }
         );
         if (poll.length > 0) {
-          const updatePoll = await strapi.entityService.update(
+          await strapi.entityService.update(
             "api::bd-poll.bd-poll",
             poll[0].id,
             { data: { bd_proposal_id: createdEntry.id.toString() } }
@@ -138,13 +136,17 @@ module.exports = createCoreController("api::bd.bd", ({ strapi }) => ({
         );
         if (comments.length > 0) {
           for (const comment of comments) {
-            const updateComment = await strapi.entityService.update(
+            await strapi.entityService.update(
               "api::comment.comment",
               comment.id,
               { data: { bd_proposal_id: createdEntry.id.toString() } }
             );
           }
         }
+      } else {
+        await strapi.entityService.create("api::bd-poll.bd-poll", {
+          data: { bd_proposal_id: createdEntry.id.toString() },
+        });
       }
 
       return createdEntry;
