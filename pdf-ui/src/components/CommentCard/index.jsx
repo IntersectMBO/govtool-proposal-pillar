@@ -237,7 +237,7 @@ const CommentCard = ({ comment, proposal, fetchComments }) => {
                             > */}
                                 <Box>
                                 <Typography variant='body2' float="right" >
-                                    <Link onClick={() =>handleReportComment(comment)} >{isUserReporter(comment)?"Comment reported" : "Report comment"}</Link>
+                                    {/* <Link onClick={() =>handleReportComment(comment)} >{isUserReporter(comment)?"Comment reported" : "Report comment"}</Link> */}
                                 {/* <IconFlag
                                     key={comment?.id}
                                     id={"report-flag-"+comment?.id}
@@ -442,7 +442,7 @@ const CommentCard = ({ comment, proposal, fetchComments }) => {
                             >
                                 <Box>
                                 <Typography  variant='body2' float="right" >
-                                <Link onClick={() =>handleReportComment(comment)} >{isUserReporter(comment)?"Comment reported" : "Report comment"}</Link>
+                                {/* <Link onClick={() =>handleReportComment(comment)} >{isUserReporter(comment)?"Comment reported" : "Report comment"}</Link> */}
                                 </Typography>
                                     {/* <IconFlag
                                         id={"report-flag-"+comment?.id}
