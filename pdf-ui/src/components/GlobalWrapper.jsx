@@ -116,9 +116,9 @@ const GlobalWrapper = ({ ...props }) => {
                     return <ProposedGovernanceActions />;
                 } else if (path.includes('proposal_discussion/proposal_comment_review/') && getReviewHash(path)) {
                     return <CommentReviewPage reportHash={getReviewHash(path)} />;    
-                } else if (path.includes('proposal_discussion/budget_discussion/') && getProposalID(path)) {
+                } else if (path.includes('budget_discussion/') && getProposalID(path)) {
                     return <SingleBudgetDiscussion  id={getProposalID(path)} />;  
-                } else if (path.includes('proposal_discussion/budget_discussion')){
+                } else if (path.includes('budget_discussion')){
                     return <ProposedBudgetDiscussion />;  
                 } else if (path.includes('proposal_discussion/') && getProposalID(path)) {
                     return <SingleGovernanceAction id={getProposalID(path)} />;

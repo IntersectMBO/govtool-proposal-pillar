@@ -78,7 +78,7 @@ const SingleBudgetDiscussion = ({ id }) => {
     useEffect(() => {
         let domain = new URL(window.location.href);
         let origin = domain.origin;
-        setProposalLink(`${origin}/proposal_discussion/budget_discussion/`);
+        setProposalLink(`${origin}/budget_discussion/`);
     }, [proposalLink]);
 
     const disableShareClick = () => {
@@ -141,7 +141,7 @@ const SingleBudgetDiscussion = ({ id }) => {
             if (!response) return;
 
             handleCloseDeleteModal();
-            navigate('/proposal_discussion/budget_discussion');
+            navigate('/budget_discussion');
         } catch (error) {
             console.error('Failed to delete proposal:', error);
         } finally {
@@ -289,7 +289,7 @@ const SingleBudgetDiscussion = ({ id }) => {
                                 }
                                 onClick={() =>
                                     navigate(
-                                        `/proposal_discussion/budget_discussion`
+                                        `/budget_discussion`
                                     )
                                 }
                             >

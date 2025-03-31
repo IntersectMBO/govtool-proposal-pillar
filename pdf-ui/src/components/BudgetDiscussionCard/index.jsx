@@ -50,7 +50,7 @@ const BudgetDiscussionCard = ({
     useEffect(() => {
         let domain = new URL(window.location.href);
         let origin = domain.origin;
-        setBudgetDiscussionLink(`${origin}/proposal_discussion/budget_discussion/`);
+        setBudgetDiscussionLink(`${origin}/budget_discussion/`);
     }, [budgetDiscussionLink]);
 
     const handleEditProposal = () => {
@@ -462,7 +462,7 @@ const BudgetDiscussionCard = ({
                             ) : (
                                 <Box flexGrow={1}>
                                     <Link
-                                        to={`/proposal_discussion/budget_discussion/${budgetDiscussion?.id}`}
+                                        to={`/budget_discussion/${budgetDiscussion?.id}`}
                                         //data-testid={`proposal-${proposal?.id}-view-details-link-wrapper`}
                                     >
                                         <Button

@@ -92,7 +92,7 @@ const CreateBudgetDiscussionDialog = ({ open = false, onClose = false , current_
     const closeCreateBDDialog = () => {
         onClose();
         if (location.pathname.includes('propose'))
-            navigate('/proposal_discussion/budget_discussion'); 
+            navigate('/budget_discussion'); 
     }
 
     const handleSaveDraft = async () => {
@@ -147,7 +147,7 @@ const CreateBudgetDiscussionDialog = ({ open = false, onClose = false , current_
                 const newBD = await createBudgetDiscussion(budgetDiscussionData);
                 onClose()
                 navigate(
-                     `/proposal_discussion/budget_discussion/${newBD.id}`
+                     `/budget_discussion/${newBD.id}`
                  );
             // if (
             //     !(
@@ -394,7 +394,7 @@ const CreateBudgetDiscussionDialog = ({ open = false, onClose = false , current_
                             onClick={() => {
                                 onClose();
                                 if (location.pathname.includes('propose')) {
-                                    navigate('/proposal_discussion/budget_discussion');
+                                    navigate('/budget_discussion');
                                 }
                             }}
                             data-testid='show-all-button'
