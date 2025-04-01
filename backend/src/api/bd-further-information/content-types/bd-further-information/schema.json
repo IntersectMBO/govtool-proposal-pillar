@@ -1,0 +1,22 @@
+{
+  "kind": "collectionType",
+  "collectionName": "bd_further_informations",
+  "info": {
+    "singularName": "bd-further-information",
+    "pluralName": "bd-further-informations",
+    "displayName": "BD Further Information",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "proposal_links": {
+      "displayName": "BD Links",
+      "type": "component",
+      "repeatable": true,
+      "component": "bd.bd-links"
+    }
+  }
+}

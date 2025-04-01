@@ -1,0 +1,41 @@
+{
+  "kind": "collectionType",
+  "collectionName": "bd_contact_informations",
+  "info": {
+    "singularName": "bd-contact-information",
+    "pluralName": "bd-contact-informations",
+    "displayName": "BD Contact Information",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "be_full_name": {
+      "type": "string"
+    },
+    "be_email": {
+      "type": "string"
+    },
+    "submission_lead_full_name": {
+      "type": "string"
+    },
+    "submission_lead_email": {
+      "type": "string"
+    },
+    "be_country_of_res": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::country-list.country-list"
+    },
+    "be_nationality": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::country-list.country-list"
+    },
+    "other_contract_type": {
+      "type": "string"
+    }
+  }
+}
