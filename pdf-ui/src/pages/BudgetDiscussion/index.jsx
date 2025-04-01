@@ -172,7 +172,7 @@ const ProposedBudgetDiscussion = () => {
                                     startIcon={<IconPlusCircle fill='white' />}
                                     data-testid='propose-a-budget-discussion-button'
                                 >
-                                    Propose a Budget Discussion
+                                    Submit proposal for Cardano budget
                                 </Button>
                             </Grid>
                         )}

@@ -180,6 +180,7 @@ const ProblemStatementsAndProposalBenefits = ({
                             rows={4}
                             sx={{ mb: 4 }}
                             multiline
+                            required
                             fullWidth
                             value={
                                 currentBudgetDiscussionData?.bd_psapb

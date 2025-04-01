@@ -233,7 +233,7 @@ const CreateBudgetDiscussionDialog = ({
                 committee_name: { required: true, type: 'number' },
                 proposal_benefit: { required: true, type: 'string' },
                 problem_statement: { required: true, type: 'string' },
-                supplementary_endorsement: { required: true, type: 'string' },
+                supplementary_endorsement: { required: false, type: 'string' },
                 explain_proposal_roadmap: {
                     required: false,
                     type: 'string',
@@ -501,7 +501,7 @@ const CreateBudgetDiscussionDialog = ({
                                     component='h1'
                                     gutterBottom
                                 >
-                                    Propose a Budget Discussion
+                                    Submit a Budget Proposal
                                 </Typography>
                             </Grid>
                         ) : (
