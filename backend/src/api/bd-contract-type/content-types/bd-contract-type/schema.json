@@ -1,0 +1,18 @@
+{
+  "kind": "collectionType",
+  "collectionName": "bd_contract_types",
+  "info": {
+    "singularName": "bd-contract-type",
+    "pluralName": "bd-contract-types",
+    "displayName": "BD Contract Type"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "contract_type_name": {
+      "type": "string"
+    }
+  }
+}

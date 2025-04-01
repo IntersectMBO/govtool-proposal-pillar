@@ -12,7 +12,7 @@ export function AppContextProvider({ children }) {
         open: false,
         callBackFn: () => {},
     });
-
+const [fetchDRepVotingPowerList, setFetchDRepVotingPowerList] = useState(null)
     const clearStates = () => {
         setWalletAPI(null);
         setUser(null);
@@ -35,6 +35,8 @@ export function AppContextProvider({ children }) {
                 validateMetadata,
                 setValidateMetadata,
                 clearStates,
+                fetchDRepVotingPowerList, 
+                setFetchDRepVotingPowerList
             }}
         >
             {children}

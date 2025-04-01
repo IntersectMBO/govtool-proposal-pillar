@@ -1,0 +1,73 @@
+{
+  "kind": "collectionType",
+  "collectionName": "bds",
+  "info": {
+    "singularName": "bd",
+    "pluralName": "bds",
+    "displayName": "BD",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "creator": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "plugin::users-permissions.user"
+    },
+    "privacy_policy": {
+      "type": "boolean"
+    },
+    "bd_costing": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::bd-costing.bd-costing"
+    },
+    "bd_proposal_detail": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::bd-proposal-detail.bd-proposal-detail"
+    },
+    "bd_contact_information": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::bd-contact-information.bd-contact-information"
+    },
+    "bd_further_information": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::bd-further-information.bd-further-information"
+    },
+    "bd_psapb": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::bd-psapb.bd-psapb"
+    },
+    "intersect_named_administrator": {
+      "type": "boolean"
+    },
+    "bd_proposal_ownership": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::bd-proposal-ownership.bd-proposal-ownership"
+    },
+    "old_ver": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::bd.bd"
+    },
+    "prop_comments_number": {
+      "type": "integer",
+      "default": 0
+    },
+    "is_active": {
+      "type": "boolean",
+      "default": true
+    },
+    "intersect_admin_further_text": {
+      "type": "text"
+    }
+  }
+}

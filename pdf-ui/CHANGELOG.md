@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 As a minor extension, we also keep a semantic version for the `UNRELEASED`
 changes.
+## [v0.7.0](https://www.npmjs.com/package/@intersect.mbo/pdf-ui/v/0.7.0) 2025-03-31
+### Add Budget Discussion functionality [Proposal discussion expansion for DReps](https://github.com/IntersectMBO/govtool/issues/3196)
+
+
 ## [v0.6.3](https://www.npmjs.com/package/@intersect.mbo/pdf-ui/v/0.6.3) 2025-02-24
 ### Fixed 
  - [Fixed reply on comments #3067](https://github.com/IntersectMBO/govtool/issues/3067)

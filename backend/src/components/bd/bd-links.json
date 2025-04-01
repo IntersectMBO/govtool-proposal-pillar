@@ -1,0 +1,16 @@
+{
+  "collectionName": "components_bd_bd_links",
+  "info": {
+    "displayName": "BD Links",
+    "description": ""
+  },
+  "options": {},
+  "attributes": {
+    "prop_link": {
+      "type": "string"
+    },
+    "prop_link_text": {
+      "type": "string"
+    }
+  }
+}

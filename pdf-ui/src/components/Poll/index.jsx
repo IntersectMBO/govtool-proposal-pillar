@@ -19,7 +19,7 @@ import {
     getUserPollVote,
     updatePollVote,
 } from '../../lib/api';
-import { formatPollDateDisplay } from '../../lib/utils';
+import { formatDateWithOffset } from '../../lib/utils';
 
 const Poll = ({
     fetchActivePoll = false,
@@ -173,8 +173,8 @@ const Poll = ({
                                 }}
                                 mt={2}
                             >
-                                {formatPollDateDisplay(
-                                    poll?.attributes?.poll_start_dt
+                                {formatDateWithOffset(new Date(
+                                    poll?.attributes?.poll_start_dt),0,"dd/MM/yyyy - p","UTC"
                                 )}
                             </Typography>
                             <Typography variant='body1' fontWeight={600} my={2}>
@@ -229,8 +229,8 @@ const Poll = ({
                             }}
                             mt={2}
                         >
-                            {formatPollDateDisplay(
-                                poll?.attributes?.poll_start_dt
+                            {formatDateWithOffset(new Date(
+                                poll?.attributes?.poll_start_dt),0,"dd/MM/yyyy - p","UTC"
                             )}
                         </Typography>
                         <Typography variant='body1' fontWeight={600} mt={2}>

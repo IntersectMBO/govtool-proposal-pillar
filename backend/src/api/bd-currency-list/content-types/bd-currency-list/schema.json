@@ -1,0 +1,24 @@
+{
+  "kind": "collectionType",
+  "collectionName": "bd_currency_lists",
+  "info": {
+    "singularName": "bd-currency-list",
+    "pluralName": "bd-currency-lists",
+    "displayName": "BD Currency List"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "currency_name": {
+      "type": "string"
+    },
+    "currency_letter_code": {
+      "type": "string"
+    },
+    "currency_number_code": {
+      "type": "string"
+    }
+  }
+}
