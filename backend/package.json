@@ -17,6 +17,7 @@
     "@strapi/plugin-i18n": "4.19.1",
     "@strapi/plugin-sentry": "^4.25.20",
     "@strapi/plugin-users-permissions": "4.19.1",
+    "@strapi/provider-email-amazon-ses": "^5.10.4",
     "@strapi/strapi": "4.19.1",
     "pg": "8.8.0",
     "react": "^18.0.0",

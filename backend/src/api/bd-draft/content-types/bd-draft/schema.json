@@ -1,0 +1,27 @@
+{
+  "kind": "collectionType",
+  "collectionName": "bd_drafts",
+  "info": {
+    "singularName": "bd-draft",
+    "pluralName": "bd-drafts",
+    "displayName": "BD Draft",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "draft_data": {
+      "type": "json"
+    },
+    "creator": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "plugin::users-permissions.user"
+    },
+    "test": {
+      "type": "string"
+    }
+  }
+}

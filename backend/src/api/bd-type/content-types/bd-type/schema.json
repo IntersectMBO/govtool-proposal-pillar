@@ -1,0 +1,18 @@
+{
+  "kind": "collectionType",
+  "collectionName": "bd_types",
+  "info": {
+    "singularName": "bd-type",
+    "pluralName": "bd-types",
+    "displayName": "BD Type"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "type_name": {
+      "type": "string"
+    }
+  }
+}

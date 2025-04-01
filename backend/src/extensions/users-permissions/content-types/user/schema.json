@@ -71,6 +71,12 @@
       "maxLength": 30,
       "minLength": 1,
       "regex": "^(?![._])[a-z0-9._]{1,30}$"
+    },
+    "comments_reports": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::comments-report.comments-report",
+      "mappedBy": "moderator"
     }
   }
 }
