@@ -308,8 +308,9 @@ const SingleBudgetDiscussion = ({ id }) => {
                                             >
                                                 {
                                                     proposal?.attributes
-                                                        ?.content?.attributes
-                                                        ?.prop_name
+                                                        ?.bd_proposal_detail
+                                                        ?.data?.attributes
+                                                        ?.proposal_name
                                                 }
                                             </Typography>
                                             <Typography
