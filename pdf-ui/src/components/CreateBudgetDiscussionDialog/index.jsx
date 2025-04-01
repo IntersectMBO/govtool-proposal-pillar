@@ -101,7 +101,7 @@ const CreateBudgetDiscussionDialog = ({
             newData.bd_proposal_detail.contract_type_name =
                 response?.attributes?.bd_proposal_detail?.data?.attributes?.contract_type_name?.data?.id;
             newData.bd_costing.preferred_currency =
-                response?.attributes?.bd_costing?.data.attributes?.preferred_currency?.data.id;
+                response?.attributes?.bd_costing?.data.attributes?.preferred_currency?.data?.id;
 
             setBudgetDiscussionData({ ...newData });
             if (!response) return response;
