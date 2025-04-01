@@ -133,6 +133,7 @@ const ProposalDetails = ({
                             sx={{ mb: 4 }}
                             fullWidth
                             multiline
+                            required
                             value={
                                 currentBudgetDiscussionData?.bd_proposal_detail
                                     ?.proposal_description || ''
