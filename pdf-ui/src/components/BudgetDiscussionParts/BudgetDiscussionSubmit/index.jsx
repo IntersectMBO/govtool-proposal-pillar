@@ -79,18 +79,31 @@ const BudgetDiscussionSubmit = ({
                                     }
                                     label={
                                         <Typography variant='body2'>
-                                            <a
-                                                href='/privacy-policy'
-                                                target='_blank'
-                                                rel='noopener noreferrer'
-                                            >
-                                                I consent to the public sharing
-                                                of all information provided in
-                                                this form, except for Section 1
-                                                (Participant Details), in
-                                                accordance with the Privacy
-                                                Policy and Terms of Use.
-                                            </a>
+                                            I consent to the public sharing of
+                                            all information provided in this
+                                            form, except for Section 1
+                                            (Participant Details), in accordance
+                                            with the{' '}
+                                            <span>
+                                                <a
+                                                    href='https://docs.intersectmbo.org/legal/policies-and-conditions/privacy-policy'
+                                                    target='_blank'
+                                                    rel='noopener noreferrer'
+                                                >
+                                                    Privacy Policy
+                                                </a>
+                                            </span>{' '}
+                                            and{' '}
+                                            <span>
+                                                <a
+                                                    href='https://docs.intersectmbo.org/legal/policies-and-conditions/terms-of-use'
+                                                    target='_blank'
+                                                    rel='noopener noreferrer'
+                                                >
+                                                    Terms of Use
+                                                </a>
+                                            </span>
+                                            .
                                         </Typography>
                                     }
                                 />
