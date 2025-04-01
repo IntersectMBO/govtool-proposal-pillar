@@ -277,7 +277,7 @@ const SingleBudgetDiscussion = ({ id }) => {
                     <CreateBudgetDiscussionDialog
                         open={openEditDialog}
                         onClose={() => setOpenEditDialog(false)}
-                        current_bd_id={proposal.id}
+                        current_bd_id={proposal?.id}
                     />
                 ) : (
                     <Box>
