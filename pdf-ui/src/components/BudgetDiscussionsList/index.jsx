@@ -83,7 +83,7 @@ const BudgetDiscussionsList = ({
                     debouncedSearchValue || ''
                 }&pagination[page]=${page}&pagination[pageSize]=25&sort[createdAt]=${
                     sortType
-                }&populate[0]=bd_costing&populate[1]=bd_psapb&populate[2]=bd_proposal_detail&populate[3]=creator`;
+                }&populate[0]=bd_costing&populate[1]=bd_psapb.type_name&populate[2]=bd_proposal_detail&populate[3]=creator`;
                 const { budgetDiscussions, pgCount, total } =
                     await getBudgetDiscussions(query);
 
@@ -210,7 +210,10 @@ const BudgetDiscussionsList = ({
                                         }));
                                     }
                                 }}
-                                //  data-testid={budgetDiscussion?.attributes?.type_name.replace(/\s+/g, '-').toLowerCase() +'-show-all-button'}
+                                data-testid={(currentBudgetDiscussionType?.attributes?.type_name ==
+                                    'None of these'
+                                        ? 'no-category-show-all-button'
+                                        : currentBudgetDiscussionType?.attributes?.type_name.replace(/\s+/g, '-').toLowerCase() +'-show-all-button')}
                             >
                                 {setShowAllActivated
                                     ? setShowAllActivated?.is_activated

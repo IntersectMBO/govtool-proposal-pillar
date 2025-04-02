@@ -11,7 +11,7 @@ import {
     IdentificationPage,
     CommentReviewPage,
     ProposedBudgetDiscussion,
-    SingleBudgetDiscussion
+    SingleBudgetDiscussion,
 } from '../pages';
 import { loginUserToApp } from '../lib/helpers';
 import { setAxiosBaseURL } from '../lib/axiosInstance'; // Import axiosInstance and setAxiosBaseURL
@@ -28,7 +28,7 @@ const GlobalWrapper = ({ ...props }) => {
         setValidateMetadata,
         user,
         clearStates,
-        setFetchDRepVotingPowerList
+        setFetchDRepVotingPowerList,
     } = useAppContext();
     const [mounted, setMounted] = useState(false);
 
@@ -37,7 +37,7 @@ const GlobalWrapper = ({ ...props }) => {
         locale: GovToolAssemblyLocale,
         validateMetadata: GovToolAssemblyValidateMetadata,
         pdfApiUrl: GovToolAssemblyPdfApiUrl,
-        fetchDRepVotingPowerList: GovToolFetchDRepVotingPowerList
+        fetchDRepVotingPowerList: GovToolFetchDRepVotingPowerList,
     } = props;
 
     function getProposalID(url) {
@@ -65,8 +65,10 @@ const GlobalWrapper = ({ ...props }) => {
             if (GovToolAssemblyValidateMetadata) {
                 setValidateMetadata(() => GovToolAssemblyValidateMetadata);
             }
-            if(GovToolFetchDRepVotingPowerList){
-                setFetchDRepVotingPowerList(()=>GovToolFetchDRepVotingPowerList)
+            if (GovToolFetchDRepVotingPowerList) {
+                setFetchDRepVotingPowerList(
+                    () => GovToolFetchDRepVotingPowerList
+                );
             }
             await loginUserToApp({
                 wallet: GovToolAssemblyWalletAPI,
@@ -92,6 +94,12 @@ const GlobalWrapper = ({ ...props }) => {
     }, [GovToolAssemblyValidateMetadata]);
 
     useEffect(() => {
+        if (GovToolFetchDRepVotingPowerList) {
+            setFetchDRepVotingPowerList(() => GovToolFetchDRepVotingPowerList);
+        }
+    }, [GovToolFetchDRepVotingPowerList]);
+
+    useEffect(() => {
         if (!mounted) {
             setMounted(true);
         } else {
@@ -114,17 +122,30 @@ const GlobalWrapper = ({ ...props }) => {
             } else {
                 if (path.includes('propose')) {
                     return <ProposedGovernanceActions />;
-                } else if (path.includes('proposal_discussion/proposal_comment_review/') && getReviewHash(path)) {
-                    return <CommentReviewPage reportHash={getReviewHash(path)} />;    
-                } else if (path.includes('budget_discussion/') && getProposalID(path)) {
-                    return <SingleBudgetDiscussion  id={getProposalID(path)} />;  
-                } else if (path.includes('budget_discussion')){
-                    return <ProposedBudgetDiscussion />;  
-                } else if (path.includes('proposal_discussion/') && getProposalID(path)) {
+                } else if (
+                    path.includes(
+                        'proposal_discussion/proposal_comment_review/'
+                    ) &&
+                    getReviewHash(path)
+                ) {
+                    return (
+                        <CommentReviewPage reportHash={getReviewHash(path)} />
+                    );
+                } else if (
+                    path.includes('budget_discussion/') &&
+                    getProposalID(path)
+                ) {
+                    return <SingleBudgetDiscussion id={getProposalID(path)} />;
+                } else if (path.includes('budget_discussion')) {
+                    return <ProposedBudgetDiscussion />;
+                } else if (
+                    path.includes('proposal_discussion/') &&
+                    getProposalID(path)
+                ) {
                     return <SingleGovernanceAction id={getProposalID(path)} />;
                 } else if (path.includes('proposal_discussion')) {
                     return <ProposedGovernanceActions />;
-               } else {
+                } else {
                     return <ProposedGovernanceActions />;
                 }
             }

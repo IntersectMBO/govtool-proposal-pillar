@@ -341,11 +341,12 @@ const ProposedBudgetDiscussion = () => {
                                                             )}
                                                             id={`${ga?.attributes?.type_name}-radio-wrapper`}
                                                             data-testid={
-                                                                ga?.attributes
-                                                                    ?.bd_type_name
-                                                                    ? `${ga?.attributes?.type_name?.toLowerCase()}-radio-wrapper`
-                                                                    : `${index}-radio-wrapper`
-                                                            }
+                                                                (ga?.attributes?.type_name ==
+                                                                    'None of these'
+                                                                        ? 'no-category'
+                                                                        : ga?.attributes?.type_name.replace(/\s+/g, '-').toLowerCase()
+                                                                ) +`-radio-wrapper`}
+                                                            
                                                         >
                                                             <FormControlLabel
                                                                 control={
@@ -364,11 +365,11 @@ const ProposedBudgetDiscussion = () => {
                                                                         )}
                                                                         id={`${ga?.attributes?.type_name}-radio`}
                                                                         data-testid={
-                                                                            ga
-                                                                                ?.attributes
-                                                                                ?.bd_type_name
-                                                                                ? `${ga?.attributes?.type_name?.toLowerCase()}-radio`
-                                                                                : `${index}-radio`
+                                                                            (ga?.attributes?.type_name ==
+                                                                                'None of these'
+                                                                                    ? 'no-category'
+                                                                                    : ga?.attributes?.type_name.replace(/\s+/g, '-').toLowerCase()
+                                                                            ) +`-radio`
                                                                         }
                                                                     />
                                                                 }
