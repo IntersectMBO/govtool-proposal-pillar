@@ -21,6 +21,10 @@ import {
     Typography,
     Button,
     Divider,
+    Card,
+    CardContent,
+    Stack,
+    alpha,
 } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { getBudgetDiscussionTypes } from '../../lib/api';
@@ -57,6 +61,8 @@ const ProposedBudgetDiscussion = () => {
         is_activated: false,
         bd_type: null,
     });
+
+    const [isAllProposalsListEmpty, setIsAllProposalsListEmpty] = useState([]);
 
     const openFilters = Boolean(filtersAnchorEl);
     const handleFiltersClick = (event) => {
@@ -105,9 +111,7 @@ const ProposedBudgetDiscussion = () => {
 
     useEffect(() => {
         if (showAllActivated?.is_activated) {
-            setFilteredBudgetDiscussionTypeList([
-                showAllActivated?.gov_action_type,
-            ]);
+            setFilteredBudgetDiscussionTypeList([showAllActivated?.bd_type]);
         } else {
             setFilteredBudgetDiscussionTypeList([]);
         }
@@ -122,6 +126,29 @@ const ProposedBudgetDiscussion = () => {
             }
         }
     }, [location.pathname]);
+
+    const allEmptyMatchBudget =
+        isAllProposalsListEmpty?.length > 0 &&
+        filteredBudgetDiscussionTypeList?.length === 0
+            ? budgetDiscussionTypeList.every((budget) =>
+                  isAllProposalsListEmpty.some(
+                      (empty) => empty?.id === budget?.id
+                  )
+              )
+            : false;
+
+    const allFilteredAreEmpty =
+        isAllProposalsListEmpty?.length > 0 &&
+        filteredBudgetDiscussionTypeList?.length > 0
+            ? filteredBudgetDiscussionTypeList.every((filtered) =>
+                  isAllProposalsListEmpty.some(
+                      (empty) => empty?.id === filtered?.id
+                  )
+              )
+            : false;
+
+    const showNoProposals = allEmptyMatchBudget || allFilteredAreEmpty;
+
     return (
         <Box sx={{ mt: 3 }}>
             <Grid container spacing={3} flexDirection={'column'}>
@@ -144,7 +171,7 @@ const ProposedBudgetDiscussion = () => {
                                     onClick={() => {
                                         setShowAllActivated({
                                             is_activated: false,
-                                            gov_action_type: null,
+                                            bd_type: null,
                                         });
                                     }}
                                     data-testid='back-to-budget-discussion-button'
@@ -424,7 +451,7 @@ const ProposedBudgetDiscussion = () => {
                     : budgetDiscussionTypeList
                 )?.map((item, index) => (
                     <Box
-                        key={`${item?.attributes?.bd_type_name}-${index}`}
+                        key={`${item?.attributes?.type_name}-${index}`}
                         pt={index === 0 && 4}
                     >
                         <BudgetDiscussionsList
@@ -434,10 +461,48 @@ const ProposedBudgetDiscussion = () => {
                             statusList={filteredBudgetDiscussionStatusList}
                             setShowAllActivated={setShowAllActivated}
                             showAllActivated={showAllActivated}
+                            isAllProposalsListEmpty={isAllProposalsListEmpty}
+                            setIsAllProposalsListEmpty={
+                                setIsAllProposalsListEmpty
+                            }
+                            filteredBudgetDiscussionTypeList={
+                                filteredBudgetDiscussionTypeList
+                            }
                         />
                     </Box>
                 ))}
             </Box>
+
+            {showNoProposals ? (
+                <Card
+                    variant='outlined'
+                    sx={{
+                        backgroundColor: alpha('#FFFFFF', 0.3),
+                        my: 3,
+                    }}
+                >
+                    <CardContent>
+                        <Stack
+                            display={'flex'}
+                            direction={'column'}
+                            alignItems={'center'}
+                            justifyContent={'center'}
+                            gap={1}
+                        >
+                            <Typography
+                                variant='h6'
+                                color='text.black'
+                                fontWeight={600}
+                            >
+                                No budget discussions found
+                            </Typography>
+                            <Typography variant='body1' color='text.black'>
+                                Please try a different search
+                            </Typography>
+                        </Stack>
+                    </CardContent>
+                </Card>
+            ) : null}
 
             {showCreateBDDialog && (
                 <CreateBudgetDiscussionDialog
