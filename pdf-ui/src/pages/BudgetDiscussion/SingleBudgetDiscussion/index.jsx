@@ -199,6 +199,9 @@ const SingleBudgetDiscussion = ({ id }) => {
             const newComment = await createComment({
                 bd_proposal_id: id,
                 comment_text: newCommentText,
+                drep_id: walletAPI?.voter?.isRegisteredAsDRep
+                    ? walletAPI?.dRepID || ''
+                    : '',
             });
 
             if (!newComment) return;
