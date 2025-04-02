@@ -107,6 +107,35 @@ const ProposalOwnership = ({
                                 Section 2: Proposal Ownership
                             </Typography>
                         </Box>
+                        <Box
+                            sx={{ mt: 1, mb: 4 }}
+                            display={'flex'}
+                            alignItems={'center'}
+                            justifyContent={'center'}
+                            gap={0.5}
+                        >
+                            <Typography
+                                variant='body1'
+                                fontWeight={500}
+                                color={'text.black'}
+                            >
+                                2
+                            </Typography>
+                            <Typography
+                                variant='body1'
+                                fontWeight={500}
+                                color={'text.black'}
+                            >
+                                /
+                            </Typography>
+                            <Typography
+                                variant='body1'
+                                fontWeight={300}
+                                color={'text.black'}
+                            >
+                                7
+                            </Typography>
+                        </Box>
                         <Box>
                             <TextField
                                 select

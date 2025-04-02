@@ -85,6 +85,35 @@ const Costing = ({
                             <Typography variant='h4' gutterBottom mb={2}>
                                 Section 5: Costing
                             </Typography>
+                            <Box
+                                sx={{ mt: 1, mb: 4 }}
+                                display={'flex'}
+                                alignItems={'center'}
+                                justifyContent={'center'}
+                                gap={0.5}
+                            >
+                                <Typography
+                                    variant='body1'
+                                    fontWeight={500}
+                                    color={'text.black'}
+                                >
+                                    5
+                                </Typography>
+                                <Typography
+                                    variant='body1'
+                                    fontWeight={500}
+                                    color={'text.black'}
+                                >
+                                    /
+                                </Typography>
+                                <Typography
+                                    variant='body1'
+                                    fontWeight={300}
+                                    color={'text.black'}
+                                >
+                                    7
+                                </Typography>
+                            </Box>
                             <Box color={(theme) => theme.palette.text.grey}>
                                 <Typography variant='body1' gutterBottom mb={2}>
                                     Please provide requested cost of this
