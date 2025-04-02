@@ -134,6 +134,7 @@ const Subcomponent = ({ comment }) => {
                 </Box>
                 <Typography
                     variant='body2'
+                    data-testid={`reply-${comment?.id}-content`}
                     sx={{
                         maxWidth: '100%',
                         wordWrap: 'break-word',
