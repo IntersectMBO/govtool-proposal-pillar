@@ -34,6 +34,9 @@ const BudgetDiscussionsList = ({
     startEdittingDraft,
     setShowAllActivated = false,
     showAllActivated = false,
+    isAllProposalsListEmpty,
+    setIsAllProposalsListEmpty,
+    filteredBudgetDiscussionTypeList,
 }) => {
     const theme = useTheme();
     const sliderRef = useRef(null);
@@ -122,7 +125,55 @@ const BudgetDiscussionsList = ({
         }
     }, [shouldRefresh]);
 
-    return isDraft && budgetDiscussionList?.length === 0 ? null : (
+    useEffect(() => {
+        if (!isDraft) {
+            if (budgetDiscussionList?.length === 0) {
+                let emptyProposals =
+                    isAllProposalsListEmpty?.length > 0
+                        ? [...isAllProposalsListEmpty]
+                        : [];
+
+                // check if category id is inside this list
+                const alreadyInList = emptyProposals.some(
+                    (item) => item?.id === currentBudgetDiscussionType?.id
+                );
+                if (!alreadyInList) {
+                    emptyProposals.push({
+                        id: currentBudgetDiscussionType?.id,
+                        name: currentBudgetDiscussionType?.attributes
+                            ?.type_name,
+                    });
+                    setIsAllProposalsListEmpty(emptyProposals);
+                }
+            } else {
+                let emptyProposals =
+                    isAllProposalsListEmpty?.length > 0
+                        ? [...isAllProposalsListEmpty]
+                        : [];
+
+                // check if category id is inside this list
+                const alreadyInList = emptyProposals.some(
+                    (item) => item?.id === currentBudgetDiscussionType?.id
+                );
+
+                // empty it from the list
+                if (alreadyInList) {
+                    emptyProposals = emptyProposals.filter(
+                        (item) => item?.id !== currentBudgetDiscussionType?.id
+                    );
+                    setIsAllProposalsListEmpty(emptyProposals);
+                }
+            }
+        }
+    }, [
+        debouncedSearchValue,
+        budgetDiscussionList?.length,
+        isAllProposalsListEmpty?.length,
+        filteredBudgetDiscussionTypeList?.length,
+        isDraft,
+    ]);
+
+    return budgetDiscussionList?.length === 0 ? null : (
         <Box overflow={'visible'}>
             <Box
                 display={'flex'}
@@ -155,7 +206,7 @@ const BudgetDiscussionsList = ({
                                         setShowAllActivated(() => ({
                                             is_activated: true,
                                             bd_type:
-                                                currentBudgetDiscussionType?.id,
+                                                currentBudgetDiscussionType,
                                         }));
                                     }
                                 }}
@@ -250,36 +301,7 @@ const BudgetDiscussionsList = ({
                         </Slider>
                     </Box>
                 )
-            ) : (
-                <Card
-                    variant='outlined'
-                    sx={{
-                        backgroundColor: alpha('#FFFFFF', 0.3),
-                        my: 3,
-                    }}
-                >
-                    <CardContent>
-                        <Stack
-                            display={'flex'}
-                            direction={'column'}
-                            alignItems={'center'}
-                            justifyContent={'center'}
-                            gap={1}
-                        >
-                            <Typography
-                                variant='h6'
-                                color='text.black'
-                                fontWeight={600}
-                            >
-                                No budget discussions found
-                            </Typography>
-                            <Typography variant='body1' color='text.black'>
-                                Please try a different search
-                            </Typography>
-                        </Stack>
-                    </CardContent>
-                </Card>
-            )}
+            ) : null}
         </Box>
     );
 };
