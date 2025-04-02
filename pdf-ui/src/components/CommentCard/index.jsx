@@ -232,7 +232,7 @@ const CommentCard = ({ comment, proposal, fetchComments }) => {
             }}
             data-testid={`comment-${comment?.id}-card`}
         >
-            <CardContent data-testid={`comment-${comment?.id}-content`}>
+            <CardContent data-testid={`comment-${comment?.id}-content-card`}>
                 <Box
                     display='flex'
                     mt={2}
@@ -372,6 +372,7 @@ const CommentCard = ({ comment, proposal, fetchComments }) => {
                                 maxWidth: '100%',
                                 wordWrap: 'break-word',
                             }}
+                            data-testid={`comment-${comment?.id}-content`}
                             ref={showMoreRef}
                         >
                             {isCommentRestricted(comment) === false
