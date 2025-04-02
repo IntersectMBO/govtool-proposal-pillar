@@ -294,6 +294,7 @@ const CommentCard = ({ comment, proposal, fetchComments }) => {
                         </Box>
                     </Box>
                     <Typography
+                        data-testid={`reply-${comment?.id}-content`}
                         variant='body2'
                         sx={{
                             maxWidth: '100%',
@@ -332,7 +333,7 @@ const CommentCard = ({ comment, proposal, fetchComments }) => {
             }}
             data-testid={`comment-${comment?.id}-card`}
         >
-            <CardContent data-testid={`comment-${comment?.id}-content`}>
+            <CardContent data-testid={`comment-${comment?.id}-content-card`}>
                 <Box
                     display='flex'
                     mt={2}
@@ -465,6 +466,7 @@ const CommentCard = ({ comment, proposal, fetchComments }) => {
                                 maxWidth: '100%',
                                 wordWrap: 'break-word',
                             }}
+                            data-testid={`comment-${comment?.id}-content`}
                             ref={showMoreRef}
                         >
                             {isRestricted(comment) === false?
@@ -474,6 +476,7 @@ const CommentCard = ({ comment, proposal, fetchComments }) => {
                                       comment?.attributes?.comment_text
                                   ) || ''
                                 :"Restricted comment due to reports"}
+                            
                         </Typography>
 
                         {comment?.attributes?.comment_text?.length >

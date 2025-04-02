@@ -668,7 +668,7 @@ const SingleBudgetDiscussion = ({ id }) => {
                                         </Typography>
                                         <Typography
                                             variant='body2'
-                                            data-testid='governance-action-type-content'
+                                            data-testid='budget-discussion-type'
                                         >
                                             {
                                                 proposal?.attributes?.bd_psapb
@@ -750,6 +750,7 @@ const SingleBudgetDiscussion = ({ id }) => {
                                                     ?.data?.attributes
                                                     ?.proposal_public_champion
                                             }
+                                            answerTestId='public-proposal-champion'   
                                         />
 
                                         <BudgetDiscussionInfoSegment
@@ -762,6 +763,7 @@ const SingleBudgetDiscussion = ({ id }) => {
                                                     ?.data?.attributes
                                                     ?.social_handles
                                             }
+                                            answerTestId='social-handles' 
                                         />
                                     </Box>
                                     <Box
@@ -786,6 +788,7 @@ const SingleBudgetDiscussion = ({ id }) => {
                                                     ?.data?.attributes
                                                     ?.problem_statement
                                             }
+                                            answerTestId='problem-statement'
                                         />
 
                                         <BudgetDiscussionInfoSegment
@@ -796,6 +799,7 @@ const SingleBudgetDiscussion = ({ id }) => {
                                                     ?.proposal_benefit
                                             }
                                             show={showFullText}
+                                            answerTestId='problem-benefit'
                                         />
 
                                         <BudgetDiscussionInfoSegment
@@ -809,6 +813,7 @@ const SingleBudgetDiscussion = ({ id }) => {
                                                     ?.attributes?.roadmap_name
                                             }
                                             show={showFullText}
+                                            answerTestId='product-roadmap'
                                         />
 
                                         <BudgetDiscussionInfoSegment
@@ -822,6 +827,7 @@ const SingleBudgetDiscussion = ({ id }) => {
                                                     ?.attributes?.type_name
                                             }
                                             show={showFullText}
+                                            answerTestId='budget-discussion-type'
                                         />
 
                                         <BudgetDiscussionInfoSegment
@@ -835,6 +841,7 @@ const SingleBudgetDiscussion = ({ id }) => {
                                                     ?.attributes?.committee_name
                                             }
                                             show={showFullText}
+                                            answerTestId='align-proposal-committees'
                                         />
 
                                         <BudgetDiscussionInfoSegment
@@ -847,6 +854,7 @@ const SingleBudgetDiscussion = ({ id }) => {
                                                     ?.supplementary_endorsement
                                             }
                                             show={showFullText}
+                                            answerTestId='evidence'
                                         />
                                     </Box>
 
@@ -875,6 +883,7 @@ const SingleBudgetDiscussion = ({ id }) => {
                                                         ?.data?.attributes
                                                         ?.proposal_name
                                                 }
+                                                answerTestId='proposal-name'
                                             />
 
                                             <BudgetDiscussionInfoSegment
@@ -887,6 +896,7 @@ const SingleBudgetDiscussion = ({ id }) => {
                                                         ?.data?.attributes
                                                         ?.proposal_description
                                                 }
+                                                answerTestId='proposal-description'
                                             />
 
                                             <BudgetDiscussionInfoSegment
@@ -899,6 +909,7 @@ const SingleBudgetDiscussion = ({ id }) => {
                                                         ?.data?.attributes
                                                         ?.key_dependencies
                                                 }
+                                                answerTestId={`proposal-key-dependencies`}
                                             />
 
                                             <BudgetDiscussionInfoSegment
@@ -911,6 +922,7 @@ const SingleBudgetDiscussion = ({ id }) => {
                                                         ?.data?.attributes
                                                         ?.key_proposal_deliverables
                                                 }
+                                                answerTestId={`proposal-milestone`}
                                             />
 
                                             <BudgetDiscussionInfoSegment
@@ -923,6 +935,7 @@ const SingleBudgetDiscussion = ({ id }) => {
                                                         ?.data?.attributes
                                                         ?.resourcing_duration_estimates
                                                 }
+                                                answerTestId={`proposal-resources-&-duration-estimates`}
                                             />
 
                                             <BudgetDiscussionInfoSegment
@@ -935,6 +948,7 @@ const SingleBudgetDiscussion = ({ id }) => {
                                                         ?.data?.attributes
                                                         ?.experience
                                                 }
+                                                answerTestId={`project-experience`}
                                             />
 
                                             <BudgetDiscussionInfoSegment
@@ -949,6 +963,7 @@ const SingleBudgetDiscussion = ({ id }) => {
                                                         ?.data?.attributes
                                                         ?.contract_type_name
                                                 }
+                                                answerTestId={`proposal-contracting`}
                                             />
                                         </Box>
                                     )}
@@ -975,6 +990,7 @@ const SingleBudgetDiscussion = ({ id }) => {
                                                         ?.bd_costing?.data
                                                         ?.attributes?.ada_amount
                                                 }
+                                                answerTestId={`consting-amount`}
                                             />
 
                                             <BudgetDiscussionInfoSegment
@@ -987,6 +1003,7 @@ const SingleBudgetDiscussion = ({ id }) => {
                                                         ?.attributes
                                                         ?.usd_to_ada_conversion_rate
                                                 }
+                                                answerTestId={`costing-conversion-rate`}
                                             />
 
                                             <BudgetDiscussionInfoSegment
@@ -999,6 +1016,7 @@ const SingleBudgetDiscussion = ({ id }) => {
                                                         ?.data?.attributes
                                                         ?.currency_name
                                                 }
+                                                answerTestId={`costing-preferred-currency`} 
                                             />
 
                                             <BudgetDiscussionInfoSegment
@@ -1011,6 +1029,7 @@ const SingleBudgetDiscussion = ({ id }) => {
                                                         ?.attributes
                                                         ?.amount_in_preferred_currency
                                                 }
+                                                answerTestId={`costing-prefereed-currency-amount`}
                                             />
 
                                             <BudgetDiscussionInfoSegment
@@ -1021,6 +1040,7 @@ const SingleBudgetDiscussion = ({ id }) => {
                                                         ?.attributes
                                                         ?.cost_breakdown
                                                 }
+                                                answerTestId={`cost-breakdown`}
                                             />
                                         </Box>
                                     )}
@@ -1136,6 +1156,7 @@ const SingleBudgetDiscussion = ({ id }) => {
                                                         ? 'Yes'
                                                         : 'No'
                                                 }
+                                                answerTestId={`include-as-auditor`}
                                             />
                                         </Box>
                                     )}
@@ -1154,6 +1175,9 @@ const SingleBudgetDiscussion = ({ id }) => {
                                                 backgroundColor: 'transparent',
                                             },
                                         }}
+                                        data-testid={showFullText
+                                            ? 'show-less-button'
+                                            : 'read-more-button'}
                                     >
                                         {showFullText
                                             ? 'Show less'
@@ -1176,7 +1200,7 @@ const SingleBudgetDiscussion = ({ id }) => {
                                                             slotProps={{
                                                                 badge: {
                                                                     'data-testid':
-                                                                        'comment-count',
+                                                                        'total-comments',
                                                                 },
                                                             }}
                                                             badgeContent={
