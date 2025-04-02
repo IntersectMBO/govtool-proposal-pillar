@@ -159,6 +159,14 @@ const ProposedBudgetDiscussion = () => {
                         justifyContent={'space-between'}
                         spacing={1}
                     >
+                        {!walletAPI?.address && (
+                            <Grid item xs={12} paddingBottom={2}>
+                                <Typography variant='h4' component='h1'>
+                                    Budget Proposals
+                                </Typography>
+                            </Grid>
+                        )}
+
                         {showAllActivated?.is_activated && (
                             <Grid item xs={12} paddingBottom={2}>
                                 <Button
@@ -341,12 +349,18 @@ const ProposedBudgetDiscussion = () => {
                                                             )}
                                                             id={`${ga?.attributes?.type_name}-radio-wrapper`}
                                                             data-testid={
-                                                                (ga?.attributes?.type_name ==
-                                                                    'None of these'
-                                                                        ? 'no-category'
-                                                                        : ga?.attributes?.type_name.replace(/\s+/g, '-').toLowerCase()
-                                                                ) +`-radio-wrapper`}
-                                                            
+                                                                (ga?.attributes
+                                                                    ?.type_name ==
+                                                                'None of these'
+                                                                    ? 'no-category'
+                                                                    : ga?.attributes?.type_name
+                                                                          .replace(
+                                                                              /\s+/g,
+                                                                              '-'
+                                                                          )
+                                                                          .toLowerCase()) +
+                                                                `-radio-wrapper`
+                                                            }
                                                         >
                                                             <FormControlLabel
                                                                 control={
@@ -365,11 +379,18 @@ const ProposedBudgetDiscussion = () => {
                                                                         )}
                                                                         id={`${ga?.attributes?.type_name}-radio`}
                                                                         data-testid={
-                                                                            (ga?.attributes?.type_name ==
-                                                                                'None of these'
-                                                                                    ? 'no-category'
-                                                                                    : ga?.attributes?.type_name.replace(/\s+/g, '-').toLowerCase()
-                                                                            ) +`-radio`
+                                                                            (ga
+                                                                                ?.attributes
+                                                                                ?.type_name ==
+                                                                            'None of these'
+                                                                                ? 'no-category'
+                                                                                : ga?.attributes?.type_name
+                                                                                      .replace(
+                                                                                          /\s+/g,
+                                                                                          '-'
+                                                                                      )
+                                                                                      .toLowerCase()) +
+                                                                            `-radio`
                                                                         }
                                                                     />
                                                                 }
