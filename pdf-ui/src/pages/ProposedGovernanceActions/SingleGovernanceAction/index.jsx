@@ -1051,39 +1051,36 @@ const SingleGovernanceAction = ({ id }) => {
                                                     ?.attributes?.createdAt
                                             )}`}
                                         </Typography>
-                                        {user?.user?.id?.toString() ===
-                                            proposal?.attributes?.user_id?.toString() && (
-                                            <Box>
-                                                <Button
-                                                    variant='outlined'
-                                                    startIcon={
-                                                        <IconLink
-                                                            fill={
-                                                                theme.palette
-                                                                    .primary
-                                                                    .main
-                                                            }
-                                                            width='18'
-                                                            height='18'
-                                                        />
-                                                    }
-                                                    onClick={() =>
-                                                        handleOpenReviewVersions()
-                                                    }
-                                                    data-testid='review-version'
-                                                >
-                                                    Review Versions
-                                                </Button>
 
-                                                <ReviewVersions
-                                                    open={reviewVersionsOpen}
-                                                    onClose={
-                                                        handleCloseReviewVersions
-                                                    }
-                                                    id={id}
-                                                />
-                                            </Box>
-                                        )}
+                                        <Box>
+                                            <Button
+                                                variant='outlined'
+                                                startIcon={
+                                                    <IconLink
+                                                        fill={
+                                                            theme.palette
+                                                                .primary.main
+                                                        }
+                                                        width='18'
+                                                        height='18'
+                                                    />
+                                                }
+                                                onClick={() =>
+                                                    handleOpenReviewVersions()
+                                                }
+                                                data-testid='review-version'
+                                            >
+                                                Review Versions
+                                            </Button>
+
+                                            <ReviewVersions
+                                                open={reviewVersionsOpen}
+                                                onClose={
+                                                    handleCloseReviewVersions
+                                                }
+                                                id={id}
+                                            />
+                                        </Box>
                                     </Box>
 
                                     <Box mt={4}>
