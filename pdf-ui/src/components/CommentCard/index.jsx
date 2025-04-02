@@ -1,5 +1,10 @@
 import { useEffect, useRef, useState } from 'react';
-import { getComments, createComment, addCommentReport, removeCommentReport,getCommentReports } from '../../lib/api';
+import {
+    getComments,
+    createComment,
+    addCommentReport,
+    removeCommentReport,
+} from '../../lib/api';
 import { formatDateWithOffset } from '../../lib/utils';
 import { useAppContext } from '../../context/context';
 import { useTheme } from '@emotion/react';
@@ -10,7 +15,6 @@ import {
     IconPlus,
     IconReply,
     IconMinus,
-    IconFlag, 
 } from '@intersect.mbo/intersectmbo.org-icons-set';
 import {
     Box,
@@ -21,14 +25,20 @@ import {
     Typography,
     TextField,
     Tooltip,
-    Backdrop,
-    Modal 
+    Chip,
 } from '@mui/material';
-import { CommentReportPopup } from '../../components'
+import Subcomponent from './Subcomponent';
+import { isCommentRestricted } from '../../lib/helpers';
+import UsernameSection from './UsernameSection';
 
 const CommentCard = ({ comment, proposal, fetchComments }) => {
-    const { setLoading, walletAPI, user, setOpenUsernameModal } =
-        useAppContext();
+    const {
+        setLoading,
+        walletAPI,
+        user,
+        setOpenUsernameModal,
+        fetchDRepVotingPowerList,
+    } = useAppContext();
     const theme = useTheme();
     const maxLength = 128;
     const subcommentMaxLength = 2500;
@@ -55,7 +65,23 @@ const CommentCard = ({ comment, proposal, fetchComments }) => {
     const [subcommentText, setSubcommentText] = useState('');
     const [commentHasReplays, setCommentHasReplays] = useState(false);
     const [showReportCommentPopup, setShowReportCommentPopup] = useState(false);
-        
+    const [drepData, setDrepData] = useState(null);
+
+    const handleGetDrepData = async () => {
+        try {
+            const data = await fetchDRepVotingPowerList([
+                comment?.attributes?.drep_id,
+            ]);
+
+            if (!data) return;
+
+            if (data?.length === 0) return;
+            setDrepData(data[0]);
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
     const loadSubComments = async (page = 1) => {
         try {
             let query = `filters[comment_parent_id]=${comment?.id}&pagination[page]=${page}&pagination[pageSize]=3&sort[createdAt]=desc&populate[comments_reports][populate][reporter][fields][0]=username&populate[comments_reports][populate][maintainer][fields][0]=username`;
@@ -84,6 +110,9 @@ const CommentCard = ({ comment, proposal, fetchComments }) => {
                 bd_proposal_id: comment?.attributes?.bd_proposal_id?.toString(),
                 comment_parent_id: comment?.id?.toString(),
                 comment_text: subcommentText,
+                drep_id: walletAPI?.voter?.isRegisteredAsDRep
+                    ? walletAPI?.dRepID || ''
+                    : '',
             });
 
             if (!newComment) return;
@@ -98,78 +127,72 @@ const CommentCard = ({ comment, proposal, fetchComments }) => {
         }
     };
     const handleChange = (event) => {
-        let value = event.target.value || "";
+        let value = event.target.value || '';
         if (value.length <= subcommentMaxLength) {
             setSubcommentText(value);
         }
     };
     const handleBlur = (event) => {
-        const cleanedValue = event.target.value.replace(/[^\S\n]+/g, ' ').trim();
+        const cleanedValue = event.target.value
+            .replace(/[^\S\n]+/g, ' ')
+            .trim();
         setSubcommentText(cleanedValue);
     };
     const isUserReporter = (curComment) => {
-        try{
-            return curComment.attributes.comments_reports.data.some(report => {
-                return report.attributes.moderation_status !== false &&
-                report.attributes.reporter.data.attributes.username === user.user.username;
-            });
-        }
-        catch(e)
-        {
-            return false;
-        }        
-    }
-    const handleReportComment = async (curComment) => {
-     //   setLoading(true);
         try {
-            if (isUserReporter(curComment))
-            { 
-                let x = curComment.attributes.comments_reports.data.filter(report => {
-                    return report.attributes.moderation_status !== false &&
-                    report.attributes.reporter.data.attributes.username === user.user.username;
-                });
+            return curComment.attributes.comments_reports.data.some(
+                (report) => {
+                    return (
+                        report.attributes.moderation_status !== false &&
+                        report.attributes.reporter.data.attributes.username ===
+                            user.user.username
+                    );
+                }
+            );
+        } catch (e) {
+            return false;
+        }
+    };
+    const handleReportComment = async (curComment) => {
+        //   setLoading(true);
+        try {
+            if (isUserReporter(curComment)) {
+                let x = curComment.attributes.comments_reports.data.filter(
+                    (report) => {
+                        return (
+                            report.attributes.moderation_status !== false &&
+                            report.attributes.reporter.data.attributes
+                                .username === user.user.username
+                        );
+                    }
+                );
                 let d = await removeCommentReport(x[0].id);
-            }
-            else
-            {
+            } else {
                 setShowReportCommentPopup(true);
             }
-            if(curComment.id == comment.id)
-            {
+            if (curComment.id == comment.id) {
                 fetchComments(1);
-            }
-            else
-            loadSubComments(currentPageSubcomments);
-            
+            } else loadSubComments(currentPageSubcomments);
         } catch (error) {
-             console.error(error);
+            console.error(error);
         } finally {
-       // setLoading(false);
+            // setLoading(false);
         }
     };
-    const handleCloseReportPopup = () =>{ setShowReportCommentPopup(false);};    
-    const handleCancelReporting = () =>{setShowReportCommentPopup(false)};
-    const handleProceedReport = async (com) =>{ 
-        let x = await addCommentReport(com,user.user.id);
-        if(curComment.id == comment.id)
-            {
-                fetchComments(1);
-            }
-        else
-        loadSubComments(currentPageSubcomments);
+    const handleCloseReportPopup = () => {
         setShowReportCommentPopup(false);
     };
-    const isRestricted = (curComment) => {
-        let banned = curComment.attributes.comments_reports.data.some(report => {
-            return report.attributes.moderation_status === true });
-        let x = curComment.attributes.comments_reports.data.filter(report => {
-            return report.attributes.moderation_status !== false});
-            if(banned || x.length >=3)
-            {
-                return true;
-            }
-            return false;
-    }
+    const handleCancelReporting = () => {
+        setShowReportCommentPopup(false);
+    };
+    const handleProceedReport = async (com) => {
+        let x = await addCommentReport(com, user.user.id);
+        if (curComment.id == comment.id) {
+            fetchComments(1);
+        } else loadSubComments(currentPageSubcomments);
+        setShowReportCommentPopup(false);
+    };
+
     useEffect(() => {
         if (showSubcomments) {
             loadSubComments(1);
@@ -195,135 +218,12 @@ const CommentCard = ({ comment, proposal, fetchComments }) => {
             setCommentCardTopPosition(commentCard.top);
         }
     }, [showMoreRef, windowWidth, isExpanded]);
-    
-    const SubCommentContent = ({ comment }) => {
-        const [isExpanded, setIsExpanded] = useState(false);
-        return (
-            <Box
-                display='flex'
-                mt={2}
-                sx={{
-                    position: 'relative',
-                }}
-                data-testid={`subcomment-${comment?.id}-content`}
-            >
-                <Box
-                    sx={{
-                        width: '100%',
-                    }}
-                >
-                    <Typography variant='h6'>
-                        @{comment?.attributes?.user_govtool_username || ''}
-                    </Typography>
-                    <Box 
-                        display="flex" 
-                        alignItems="center"
-                        sx={{
-                            marginRight: 2, 
-                        }}
-                    >
-                        <Box
-                            display="flex"
-                            width="100%"
-                            justifyContent={'space-between'}
-                            >            
-                            <Typography variant='overline' float="left" >
-                                {formatDateWithOffset(new Date(comment?.attributes?.createdAt),0,"dd/MM/yyyy - p","UTC")}
-                            </Typography>
-                            {/* <Tooltip 
-                                title="Report inappropriate comment" 
-                                arrow 
-                                placement="top" 
-                            > */}
-                                <Box>
-                                <Typography variant='body2' float="right" >
-                                    {/* <Link onClick={() =>handleReportComment(comment)} >{isUserReporter(comment)?"Comment reported" : "Report comment"}</Link> */}
-                                {/* <IconFlag
-                                    key={comment?.id}
-                                    id={"report-flag-"+comment?.id}
-                                    width={24}
-                                    height={24}
-                                    fill={isUserReporter(comment) ? 'red' : 'none'}
-                                    stroke={isUserReporter(comment) ? 'red' : theme.palette.text.secondary}
-                                    onClick={() => handleReportComment(comment)}                                    
-                                    sx={{
-                                        cursor: 'pointer',
-                                        marginLeft: 1,
-                                        float: "right",
-                                    }}
-                                /> */}
-                                </Typography>
-                                {showReportCommentPopup && (
-                                    <Box>
-                                        <Modal
-                                        open={open}
-                                        // aria-labelledby="report-modal-title"
-                                        // aria-describedby="report-modal-description"
-                                        sx={{
-                                            display: 'flex',
-                                            justifyContent: 'center',
-                                            alignItems: 'center',
-                                        }}
-                                    >
-                                        <Box
-                                            // sx={{
-                                            //     width: '400px', // Prilagodi širinu po potrebi
-                                            //     maxWidth: '90%', // Obezbeđuje responzivnost
-                                            // }}
-                                        >
-                                            <CommentReportPopup
-                                                commentId={comment.id}
-                                                onReport={handleProceedReport}
-                                                onCancel={()=>handleCancelReporting()}
-                                            />
-                                        </Box>
-                                    </Modal>
-                                    </Box>
-                                    // <CommentReportPopup onReport={() => handleProceedReport()} onCancel={() => handleCancelReporting()} />
-                                // <Backdrop
-                                //     sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 100 }}
-                                //     open={showReportCommentPopup}                                    
-                                //     onClick={() => handleCloseReportPopup()}
-                                //     >
-                                    
-                                // </Backdrop>
-                            )}
-                             </Box>
-                            {//</Tooltip>
-                            }
-                        </Box>
-                    </Box>
-                    <Typography
-                        variant='body2'
-                        sx={{
-                            maxWidth: '100%',
-                            wordWrap: 'break-word',
-                        }}
-                    >
-                        {!isRestricted(comment)?
-                         (isExpanded
-                            ? comment?.attributes?.comment_text
-                            : sliceString(comment?.attributes?.comment_text) ||
-                              '')
-                            : "Restricted comment due to reports"}
-                    </Typography>
 
-                    {comment?.attributes?.comment_text?.length > maxLength && (
-                        <Box mt={2}>
-                            <Link
-                                onClick={() => setIsExpanded(!isExpanded)}
-                                sx={{
-                                    cursor: 'pointer',
-                                }}
-                            >
-                                {isExpanded ? 'Show less' : 'Read full comment'}
-                            </Link>
-                        </Box>
-                    )}
-                </Box>
-            </Box>
-        );
-    };
+    useEffect(() => {
+        if (!comment?.attributes?.drep_id) return;
+
+        handleGetDrepData();
+    }, [comment]);
 
     return (
         <Card
@@ -362,7 +262,7 @@ const CommentCard = ({ comment, proposal, fetchComments }) => {
                                         : 'hidden',
                             }}
                         ></Box>
-                        
+
                         <Box
                             sx={{
                                 width: '1px',
@@ -417,33 +317,40 @@ const CommentCard = ({ comment, proposal, fetchComments }) => {
                         ) : null}
                     </Box>
                     <Box
-                    
                         sx={{
                             width: '100%',
                             // display: "flex",
-            // width="100%"
+                            // width="100%"
                             // justifyContent:"space-between"
                         }}
                     >
-                        <Typography variant='h6'>
-                            @{comment?.attributes?.user_govtool_username || ''}
-                        </Typography>
-                        <Box width={"100%"} display={"flex"} justifyContent={"space-between"}>
+                        <UsernameSection
+                            drepData={drepData}
+                            comment={comment}
+                        />
 
+                        <Box
+                            width={'100%'}
+                            display={'flex'}
+                            justifyContent={'space-between'}
+                        >
                             <Typography variant='overline'>
-                                {formatDateWithOffset(new Date(
-                                    comment?.attributes?.createdAt),0,"dd/MM/yyyy - p","UTC"
+                                {formatDateWithOffset(
+                                    new Date(comment?.attributes?.createdAt),
+                                    0,
+                                    'dd/MM/yyyy - p',
+                                    'UTC'
                                 )}
                             </Typography>
-                            <Tooltip 
-                                title="Report inappropriate comment" 
-                                arrow 
-                                placement="top" 
+                            <Tooltip
+                                title='Report inappropriate comment'
+                                arrow
+                                placement='top'
                             >
                                 <Box>
-                                <Typography  variant='body2' float="right" >
-                                {/* <Link onClick={() =>handleReportComment(comment)} >{isUserReporter(comment)?"Comment reported" : "Report comment"}</Link> */}
-                                </Typography>
+                                    <Typography variant='body2' float='right'>
+                                        {/* <Link onClick={() =>handleReportComment(comment)} >{isUserReporter(comment)?"Comment reported" : "Report comment"}</Link> */}
+                                    </Typography>
                                     {/* <IconFlag
                                         id={"report-flag-"+comment?.id}
                                         width={24}
@@ -467,13 +374,13 @@ const CommentCard = ({ comment, proposal, fetchComments }) => {
                             }}
                             ref={showMoreRef}
                         >
-                            {isRestricted(comment) === false?
-                            isExpanded
-                                ? comment?.attributes?.comment_text
-                                : sliceString(
-                                      comment?.attributes?.comment_text
-                                  ) || ''
-                                :"Restricted comment due to reports"}
+                            {isCommentRestricted(comment) === false
+                                ? isExpanded
+                                    ? comment?.attributes?.comment_text
+                                    : sliceString(
+                                          comment?.attributes?.comment_text
+                                      ) || ''
+                                : 'Restricted comment due to reports'}
                         </Typography>
 
                         {comment?.attributes?.comment_text?.length >
@@ -637,7 +544,7 @@ const CommentCard = ({ comment, proposal, fetchComments }) => {
 
                         {showSubcomments &&
                             subcommnetsList?.map((subcomment, index) => (
-                                <SubCommentContent
+                                <Subcomponent
                                     key={index}
                                     comment={subcomment}
                                 />
