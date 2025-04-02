@@ -33,6 +33,9 @@
     },
     "bd_proposal_id": {
       "type": "string"
+    },
+    "drep_id": {
+      "type": "string"
     }
   }
 }
