@@ -89,6 +89,35 @@ const ContractInformation = ({
                             </Typography>
                         </Box>
                         <Box
+                            sx={{ mt: 1, mb: 4 }}
+                            display={'flex'}
+                            alignItems={'center'}
+                            justifyContent={'center'}
+                            gap={0.5}
+                        >
+                            <Typography
+                                variant='body1'
+                                fontWeight={500}
+                                color={'text.black'}
+                            >
+                                1
+                            </Typography>
+                            <Typography
+                                variant='body1'
+                                fontWeight={500}
+                                color={'text.black'}
+                            >
+                                /
+                            </Typography>
+                            <Typography
+                                variant='body1'
+                                fontWeight={300}
+                                color={'text.black'}
+                            >
+                                7
+                            </Typography>
+                        </Box>
+                        <Box
                             color={(theme) => theme.palette.text.grey}
                             sx={{ mb: 2 }}
                         >
