@@ -126,7 +126,8 @@ const BudgetDiscussionPoll = ({
             <>
                 {user &&
                 !userPollVote &&
-                walletAPI?.voter?.isRegisteredAsDRep &&
+                (walletAPI?.voter?.isRegisteredAsDRep ||
+                    walletAPI?.voter?.isRegisteredAsSoleVoter) &&
                 walletAPI?.dRepID ? (
                     <Card
                         sx={{
@@ -282,7 +283,8 @@ const BudgetDiscussionPoll = ({
                         {user &&
                             userPollVote &&
                             poll?.attributes?.is_poll_active &&
-                            walletAPI?.voter?.isRegisteredAsDRep &&
+                            (walletAPI?.voter?.isRegisteredAsDRep ||
+                                walletAPI?.voter?.isRegisteredAsSoleVoter) &&
                             walletAPI?.dRepID && (
                                 <Box
                                     mt={2}
