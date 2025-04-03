@@ -1,6 +1,7 @@
 import React from 'react';
 
 import { Box, Chip, Link, Typography } from '@mui/material';
+import ValidationCheckmark from '../../../assets/svg/ValidationCheckmark';
 const UsernameSection = ({ drepData, comment }) => {
     return (
         <Box>
@@ -14,6 +15,9 @@ const UsernameSection = ({ drepData, comment }) => {
                 <Typography variant='h6'>
                     @{comment?.attributes?.user_govtool_username || ''}
                 </Typography>
+                {comment?.attributes?.user_is_validated === true ? (
+                    <ValidationCheckmark />
+                ) : null}
                 {drepData?.view && <Chip label='DRep' />}
             </Box>
 

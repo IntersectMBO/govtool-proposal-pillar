@@ -138,6 +138,7 @@ const Costing = ({
                                             handleDataChange(e, 'ada_amount')
                                         }
                                         sx={{ mb: 2 }}
+                                        data-testid= 'ada-amount-input'
                                         // helperText={errors['bd_costing.ada_amount']?.trim()}
                                         // error={!!errors['bd_costing.ada_amount']?.trim()}
                                     />
@@ -173,6 +174,7 @@ const Costing = ({
                                             )
                                         }
                                         sx={{ mb: 2 }}
+                                        data-testid='usd-ada-conversion-input'
                                     />
                                 </Grid>
                                 <Grid item xs={6}>
@@ -257,6 +259,7 @@ const Costing = ({
                                             )
                                         }
                                         sx={{ mb: 2 }}
+                                        data-testid='preferred-currency-amount-input'
                                     />
                                 </Grid>
                             </Grid>

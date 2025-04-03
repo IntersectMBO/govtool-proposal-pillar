@@ -220,9 +220,11 @@ const CommentCard = ({ comment, proposal, fetchComments }) => {
     }, [showMoreRef, windowWidth, isExpanded]);
 
     useEffect(() => {
-        if (!comment?.attributes?.drep_id) return;
-
-        handleGetDrepData();
+        if (comment?.attributes?.drep_id) {
+            handleGetDrepData();
+        } else {
+            setDrepData(null);
+        }
     }, [comment]);
 
     return (
@@ -371,6 +373,7 @@ const CommentCard = ({ comment, proposal, fetchComments }) => {
                             sx={{
                                 maxWidth: '100%',
                                 wordWrap: 'break-word',
+                                whiteSpace: 'pre-line',
                             }}
                             data-testid={`comment-${comment?.id}-content`}
                             ref={showMoreRef}

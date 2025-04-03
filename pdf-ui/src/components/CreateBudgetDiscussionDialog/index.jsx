@@ -751,7 +751,7 @@ const CreateBudgetDiscussionDialog = ({
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={handleCloseDraftDialog}>Close</Button>
+                    <Button onClick={handleCloseDraftDialog} data-testid={'close-button'} >Close</Button>
                 </DialogActions>
             </Dialog>
         </Dialog>
