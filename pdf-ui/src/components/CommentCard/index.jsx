@@ -373,6 +373,7 @@ const CommentCard = ({ comment, proposal, fetchComments }) => {
                             sx={{
                                 maxWidth: '100%',
                                 wordWrap: 'break-word',
+                                whiteSpace: 'pre-line',
                             }}
                             data-testid={`comment-${comment?.id}-content`}
                             ref={showMoreRef}
