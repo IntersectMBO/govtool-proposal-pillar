@@ -153,6 +153,7 @@ const ProposalDetails = ({
                             //     ]?.trim()
                             // }
                             sx={{ mb: 2 }}
+                            data-testid='proposal-name-input'
                         />
                         <TextField
                             size='large'
@@ -209,6 +210,7 @@ const ProposalDetails = ({
                                     ? 'proposal-description-helper-error'
                                     : 'proposal-description-helper',
                             }}
+
                         />
                         <TextField
                             size='large'
@@ -289,6 +291,7 @@ const ProposalDetails = ({
                                 handleDataChange(e, 'maintain_and_support')
                             }
                             sx={{ mb: 2 }}
+                            data-testid='proposal-maintain-and-support-input'
                         />
                         <TextField
                             size='large'
@@ -433,6 +436,7 @@ const ProposalDetails = ({
                             //     ]?.trim()
                             // }
                             sx={{ mb: 2 }}
+                            data-testid='proposal-previous-experience-input'
                         />
                         <TextField
                             select
@@ -503,6 +507,7 @@ const ProposalDetails = ({
                                     ]?.trim()
                                 }
                                 sx={{ mb: 2 }}
+                                data-testid='other-contract-description'
                             />
                         ) : (
                             ''
