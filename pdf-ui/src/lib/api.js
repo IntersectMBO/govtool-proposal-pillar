@@ -179,10 +179,13 @@ export const createBudgetDiscussionPollVote = async ({ createData }) => {
     }
 };
 
-export const getUserBudgetDiscussionPollVote = async ({ pollID }) => {
+export const getUserBudgetDiscussionPollVote = async ({
+    pollID = '',
+    userID = '',
+}) => {
     try {
         const { data } = await axiosInstance.get(
-            `/api/bd-poll-votes?filters[bd_poll_id][$eq]=${pollID}&pagination[page]=1&pagination[pageSize]=1&sort[createdAt]=desc`
+            `/api/bd-poll-votes?filters[$and][0][bd_poll_id][$eq]=${pollID}&filters[$and][1][user_id][$eq]=${userID}&pagination[page]=1&pagination[pageSize]=1&sort[createdAt]=desc`
         );
 
         if (data?.data && data?.data?.length > 0) {

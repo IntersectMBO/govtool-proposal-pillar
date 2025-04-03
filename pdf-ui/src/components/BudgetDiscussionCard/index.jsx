@@ -130,9 +130,23 @@ const BudgetDiscussionCard = ({
                     backgroundColor: alpha('#FFFFFF', 0.3),
                     minHeight: '400px',
                 }}
+                data-testid={
+                    isDraft
+                        ? `draft-` + budgetDiscussion?.id + `-proposal`
+                        : `budget-discussion-` +
+                          (budgetDiscussion?.attributes?.bd_psapb?.data
+                              ?.attributes?.type_name?.data?.attributes
+                              ?.type_name == 'None of these'
+                              ? 'no-category'
+                              : budgetDiscussion?.attributes?.bd_psapb?.data?.attributes?.type_name?.data?.attributes?.type_name
+                                    .replace(/\s+/g, '-')
+                                    .toLowerCase()) +
+                          `-card`
+                }
             >
                 <CardHeader
-                    action={isDraft ? null : (
+                    action={
+                        isDraft ? null : (
                             <>
                                 <Tooltip title='Share'>
                                     <IconButton
@@ -278,27 +292,40 @@ const BudgetDiscussionCard = ({
                                     overflow: 'hidden',
                                     textOverflow: 'ellipsis',
                                 }}
-                               // data-testid={`budget-discussion-${proposal?.id}-title`}
-                            >
-                                {isDraft?
-                                   budgetDiscussion?.attributes?.draft_data?.bd_proposal_detail?.proposal_name
-                                   :budgetDiscussion?.attributes?.bd_proposal_detail?.data?.attributes?.proposal_name
-                                   
+                                data-testid={
+                                    isDraft
+                                        ? `draft-title`
+                                        : `budget-discussion-title`
                                 }
-                            </Typography>
-                            {budgetDiscussion?.attributes?.creator?.data?.attributes?.govtool_username?
-                                    <Typography
-                                variant='body2'
-                                component={'h5'}
-                                sx={{
-                                    color: (theme) =>
-                                        theme?.palette?.text?.darkPurple,
-                                }}
-                                mt={1}
                             >
-                                {}
-                                @{budgetDiscussion?.attributes?.creator?.data?.attributes?.govtool_username || ''}
-                            </Typography>:null}
+                                {isDraft
+                                    ? budgetDiscussion?.attributes?.draft_data
+                                          ?.bd_proposal_detail?.proposal_name
+                                    : budgetDiscussion?.attributes
+                                          ?.bd_proposal_detail?.data?.attributes
+                                          ?.proposal_name}
+                            </Typography>
+                            {budgetDiscussion?.attributes?.creator?.data
+                                ?.attributes?.govtool_username ? (
+                                <Typography
+                                    variant='body2'
+                                    component={'h5'}
+                                    sx={{
+                                        color: (theme) =>
+                                            theme?.palette?.text?.darkPurple,
+                                    }}
+                                    mt={1}
+                                    data-testid={
+                                        isDraft
+                                            ? `draft-creator`
+                                            : `budget-discussion-creator`
+                                    }
+                                >
+                                    @
+                                    {budgetDiscussion?.attributes?.creator?.data
+                                        ?.attributes?.govtool_username || ''}
+                                </Typography>
+                            ) : null}
                         </>
                     }
                 />
@@ -315,6 +342,26 @@ const BudgetDiscussionCard = ({
                         gap={2}
                         mb={3}
                     >
+                        <Box mt={2}>
+                            <Typography
+                                variant='caption'
+                                sx={{
+                                    color: (theme) =>
+                                        theme?.palette?.text?.grey,
+                                }}
+                                component={'p'}
+                            >
+                                Budget category
+                            </Typography>
+                            <Typography
+                                variant='body2'
+                                data-testid='budget-discussion-type'
+                            >
+                                {budgetDiscussion?.attributes?.bd_psapb?.data
+                                    ?.attributes?.type_name?.data?.attributes
+                                    ?.type_name || ''}
+                            </Typography>
+                        </Box>
                         <Box>
                             <Typography
                                 variant='caption'
@@ -323,14 +370,25 @@ const BudgetDiscussionCard = ({
                             >
                                 Proposal benefit
                             </Typography>
-
-                            <MarkdownTextComponent
-                                markdownText={
-                                    isDraft? budgetDiscussion?.attributes?.draft_data?.bd_psapb?.proposal_benefit
-                                    :budgetDiscussion?.attributes?.bd_psapb?.data?.attributes?.proposal_benefit
-                                
+                            <div
+                                data-testid={
+                                    isDraft
+                                        ? `draft-proposal-benefit`
+                                        : 'proposal-benefit'
                                 }
-                            /> 
+                            >
+                                <MarkdownTextComponent
+                                    markdownText={
+                                        isDraft
+                                            ? budgetDiscussion?.attributes
+                                                  ?.draft_data?.bd_psapb
+                                                  ?.proposal_benefit
+                                            : budgetDiscussion?.attributes
+                                                  ?.bd_psapb?.data?.attributes
+                                                  ?.proposal_benefit
+                                    }
+                                />
+                            </div>
                         </Box>
                         <Box>
                             <Typography
@@ -344,11 +402,18 @@ const BudgetDiscussionCard = ({
                                 variant='body2'
                                 component='p'
                                 color='text.darkPurple'
-                                data-testid='budget-requested'
-                            >₳ {
-                                isDraft? budgetDiscussion?.attributes?.draft_data?.bd_costing?.ada_amount
-                                :budgetDiscussion?.attributes?.bd_costing?.data?.attributes?.ada_amount
-                                || ''}
+                                data-testid={
+                                    isDraft
+                                        ? 'draft-budget-requested'
+                                        : 'budget-requested-amount'
+                                }
+                            >
+                                ₳{' '}
+                                {isDraft
+                                    ? budgetDiscussion?.attributes?.draft_data
+                                          ?.bd_costing?.ada_amount
+                                    : budgetDiscussion?.attributes?.bd_costing
+                                          ?.data?.attributes?.ada_amount || ''}
                             </Typography>
                         </Box>
                     </Box>
@@ -386,18 +451,17 @@ const BudgetDiscussionCard = ({
                                 component='p'
                                 color='text.black'
                                 data-testid={
-                                        isDraft
+                                    isDraft
                                         ? 'not-submitted-text'
                                         : 'proposed-date-wrapper'
                                 }
                             >
-                                {isDraft
-                                    ? 'Not submitted'
-                                    : `Proposed on: `}
-                                {!isDraft && (                                    
+                                {isDraft ? 'Not submitted' : `Proposed on: `}
+                                {!isDraft && (
                                     <span data-testid='proposed-date'>
                                         {formatIsoDate(
-                                            budgetDiscussion?.attributes?.createdAt
+                                            budgetDiscussion?.attributes
+                                                ?.createdAt
                                         )}
                                     </span>
                                 )}
@@ -417,13 +481,15 @@ const BudgetDiscussionCard = ({
                                             alignItems={'center'}
                                         >
                                             <IconButton
-                                               // data-testid={`proposal-${proposal?.id}-comment-count`}
+                                                // data-testid={`proposal-${proposal?.id}-comment-count`}
                                                 disabled={true}
                                             >
                                                 <StyledBadge
                                                     badgeContent={
-                                                        budgetDiscussion?.attributes
-                                                            ?.prop_comments_number || 0                                                       
+                                                        budgetDiscussion
+                                                            ?.attributes
+                                                            ?.prop_comments_number ||
+                                                        0
                                                     }
                                                     aria-label='comments'
                                                     showZero
@@ -434,13 +500,12 @@ const BudgetDiscussionCard = ({
                                     </Tooltip>
                                     {user &&
                                         user?.user?.id?.toString() ===
-                                            budgetDiscussion?.creator?.atributes?.user_id?.toString() &&
-                                          (
+                                            budgetDiscussion?.creator?.atributes?.user_id?.toString() && (
                                             <Tooltip title='Edit'>
                                                 <IconButton
                                                     aria-label='edit'
                                                     onClick={handleEditProposal}
-                                                   // data-testid={`proposal-${proposal?.id}-edit-button`}
+                                                    // data-testid={`proposal-${proposal?.id}-edit-button`}
                                                 >
                                                     <IconPencilAlt />
                                                 </IconButton>
@@ -453,8 +518,11 @@ const BudgetDiscussionCard = ({
                                 <Button
                                     variant='contained'
                                     fullWidth
-                                    onClick={() => startEdittingDraft(budgetDiscussion)}
-                                    //data-testid={`draft-${proposal?.id}-start-editing`}
+                                    onClick={() =>
+                                        startEdittingDraft(budgetDiscussion)
+                                    }
+                                    data-testid={`draft-start-editing`}
+                                    //`draft-`+budgetDiscussion?.id+`-start-editing`
                                 >
                                     Start Editing
                                 </Button>
@@ -462,11 +530,34 @@ const BudgetDiscussionCard = ({
                                 <Box flexGrow={1}>
                                     <Link
                                         to={`/budget_discussion/${budgetDiscussion?.id}`}
-                                        //data-testid={`proposal-${proposal?.id}-view-details-link-wrapper`}
+                                        data-testid={
+                                            `budget-discussion-` +
+                                            (budgetDiscussion?.attributes
+                                                ?.bd_psapb?.data?.attributes
+                                                ?.type_name?.data?.attributes
+                                                ?.type_name == 'None of these'
+                                                ? 'no-category'
+                                                : budgetDiscussion?.attributes?.bd_psapb?.data?.attributes?.type_name?.data?.attributes?.type_name
+                                                      .replace(/\s+/g, '-')
+                                                      .toLowerCase()) +
+                                            `-view-details-link-wrapper`
+                                        }
                                     >
                                         <Button
                                             variant='contained'
-                                           // data-testid={`proposal-${proposal?.id}-view-details`}
+                                            data-testid={
+                                                `budget-discussion-` +
+                                                (budgetDiscussion?.attributes
+                                                    ?.bd_psapb?.data?.attributes
+                                                    ?.type_name?.data
+                                                    ?.attributes?.type_name ==
+                                                'None of these'
+                                                    ? 'no-category'
+                                                    : budgetDiscussion?.attributes?.bd_psapb?.data?.attributes?.type_name?.data?.attributes?.type_name
+                                                          .replace(/\s+/g, '-')
+                                                          .toLowerCase()) +
+                                                `-view-details`
+                                            }
                                             fullWidth
                                         >
                                             View Details

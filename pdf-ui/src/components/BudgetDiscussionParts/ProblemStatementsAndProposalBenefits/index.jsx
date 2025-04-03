@@ -113,6 +113,35 @@ const ProblemStatementsAndProposalBenefits = ({
                                 Section 3: Problem Statements and Proposal
                                 Benefits
                             </Typography>
+                            <Box
+                                sx={{ mt: 1, mb: 4 }}
+                                display={'flex'}
+                                alignItems={'center'}
+                                justifyContent={'center'}
+                                gap={0.5}
+                            >
+                                <Typography
+                                    variant='body1'
+                                    fontWeight={500}
+                                    color={'text.black'}
+                                >
+                                    3
+                                </Typography>
+                                <Typography
+                                    variant='body1'
+                                    fontWeight={500}
+                                    color={'text.black'}
+                                >
+                                    /
+                                </Typography>
+                                <Typography
+                                    variant='body1'
+                                    fontWeight={300}
+                                    color={'text.black'}
+                                >
+                                    7
+                                </Typography>
+                            </Box>
                             <Box color={(theme) => theme.palette.text.grey}>
                                 <Typography variant='body1' gutterBottom mb={2}>
                                     This section focuses on understanding the
@@ -180,6 +209,7 @@ const ProblemStatementsAndProposalBenefits = ({
                             rows={4}
                             sx={{ mb: 4 }}
                             multiline
+                            required
                             fullWidth
                             value={
                                 currentBudgetDiscussionData?.bd_psapb

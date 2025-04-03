@@ -337,9 +337,45 @@ const BudgetDiscussionReviewVersions = ({ open, onClose, id }) => {
                                                         </Box>
                                                     ) : null}
                                                     <Box>
+                                                        <Typography
+                                                            variant='h4'
+                                                            sx={{
+                                                                mb: 2,
+                                                            }}
+                                                        >
+                                                            {
+                                                                selectedVersion
+                                                                    ?.attributes
+                                                                    ?.bd_proposal_detail
+                                                                    ?.data
+                                                                    ?.attributes
+                                                                    ?.proposal_name
+                                                            }
+                                                        </Typography>
+
+                                                        <Box sx={{ mt: 4 }}>
+                                                            <BudgetDiscussionInfoSegment
+                                                                question={
+                                                                    'Budget category'
+                                                                }
+                                                                answer={
+                                                                    selectedVersion
+                                                                        ?.attributes
+                                                                        ?.bd_psapb
+                                                                        ?.data
+                                                                        ?.attributes
+                                                                        ?.type_name
+                                                                        ?.data
+                                                                        ?.attributes
+                                                                        ?.type_name ||
+                                                                    ''
+                                                                }
+                                                            />
+                                                        </Box>
+
                                                         <Box
                                                             sx={{
-                                                                mt: 4,
+                                                                mt: 3,
                                                             }}
                                                         >
                                                             <Typography

@@ -34,6 +34,9 @@ const BudgetDiscussionsList = ({
     startEdittingDraft,
     setShowAllActivated = false,
     showAllActivated = false,
+    isAllProposalsListEmpty,
+    setIsAllProposalsListEmpty,
+    filteredBudgetDiscussionTypeList,
 }) => {
     const theme = useTheme();
     const sliderRef = useRef(null);
@@ -80,7 +83,7 @@ const BudgetDiscussionsList = ({
                     debouncedSearchValue || ''
                 }&pagination[page]=${page}&pagination[pageSize]=25&sort[createdAt]=${
                     sortType
-                }&populate[0]=bd_costing&populate[1]=bd_psapb&populate[2]=bd_proposal_detail&populate[3]=creator`;
+                }&populate[0]=bd_costing&populate[1]=bd_psapb.type_name&populate[2]=bd_proposal_detail&populate[3]=creator`;
                 const { budgetDiscussions, pgCount, total } =
                     await getBudgetDiscussions(query);
 
@@ -122,7 +125,55 @@ const BudgetDiscussionsList = ({
         }
     }, [shouldRefresh]);
 
-    return isDraft && budgetDiscussionList?.length === 0 ? null : (
+    useEffect(() => {
+        if (!isDraft) {
+            if (budgetDiscussionList?.length === 0) {
+                let emptyProposals =
+                    isAllProposalsListEmpty?.length > 0
+                        ? [...isAllProposalsListEmpty]
+                        : [];
+
+                // check if category id is inside this list
+                const alreadyInList = emptyProposals.some(
+                    (item) => item?.id === currentBudgetDiscussionType?.id
+                );
+                if (!alreadyInList) {
+                    emptyProposals.push({
+                        id: currentBudgetDiscussionType?.id,
+                        name: currentBudgetDiscussionType?.attributes
+                            ?.type_name,
+                    });
+                    setIsAllProposalsListEmpty(emptyProposals);
+                }
+            } else {
+                let emptyProposals =
+                    isAllProposalsListEmpty?.length > 0
+                        ? [...isAllProposalsListEmpty]
+                        : [];
+
+                // check if category id is inside this list
+                const alreadyInList = emptyProposals.some(
+                    (item) => item?.id === currentBudgetDiscussionType?.id
+                );
+
+                // empty it from the list
+                if (alreadyInList) {
+                    emptyProposals = emptyProposals.filter(
+                        (item) => item?.id !== currentBudgetDiscussionType?.id
+                    );
+                    setIsAllProposalsListEmpty(emptyProposals);
+                }
+            }
+        }
+    }, [
+        debouncedSearchValue,
+        budgetDiscussionList?.length,
+        isAllProposalsListEmpty?.length,
+        filteredBudgetDiscussionTypeList?.length,
+        isDraft,
+    ]);
+
+    return budgetDiscussionList?.length === 0 ? null : (
         <Box overflow={'visible'}>
             <Box
                 display={'flex'}
@@ -155,11 +206,15 @@ const BudgetDiscussionsList = ({
                                         setShowAllActivated(() => ({
                                             is_activated: true,
                                             bd_type:
-                                                currentBudgetDiscussionType?.id,
+                                                currentBudgetDiscussionType,
                                         }));
                                     }
                                 }}
-                                //  data-testid={budgetDiscussion?.attributes?.type_name.replace(/\s+/g, '-').toLowerCase() +'-show-all-button'}
+                                data-testid={isDraft?'draft-show-all-button':
+                                    (currentBudgetDiscussionType?.attributes?.type_name ==
+                                    'None of these'
+                                        ? 'no-category-show-all-button'
+                                        : currentBudgetDiscussionType?.attributes?.type_name.replace(/\s+/g, '-').toLowerCase() +'-show-all-button')}
                             >
                                 {setShowAllActivated
                                     ? setShowAllActivated?.is_activated
@@ -250,36 +305,7 @@ const BudgetDiscussionsList = ({
                         </Slider>
                     </Box>
                 )
-            ) : (
-                <Card
-                    variant='outlined'
-                    sx={{
-                        backgroundColor: alpha('#FFFFFF', 0.3),
-                        my: 3,
-                    }}
-                >
-                    <CardContent>
-                        <Stack
-                            display={'flex'}
-                            direction={'column'}
-                            alignItems={'center'}
-                            justifyContent={'center'}
-                            gap={1}
-                        >
-                            <Typography
-                                variant='h6'
-                                color='text.black'
-                                fontWeight={600}
-                            >
-                                No budget discussions found
-                            </Typography>
-                            <Typography variant='body1' color='text.black'>
-                                Please try a different search
-                            </Typography>
-                        </Stack>
-                    </CardContent>
-                </Card>
-            )}
+            ) : null}
         </Box>
     );
 };

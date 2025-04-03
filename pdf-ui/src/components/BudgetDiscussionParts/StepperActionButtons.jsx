@@ -82,7 +82,8 @@ const StepperActionButtons = ({
                         variant='contained'
                         disabled={continueDisabled}
                         onClick={() => onContinue(nextStep)}
-                        data-testid='continue-button'
+                        
+                        data-testid={continueText === 'Continue' ? 'continue-button' : 'submit-button'}
                     >
                         {continueText}
                     </Button>

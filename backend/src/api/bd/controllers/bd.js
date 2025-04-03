@@ -204,4 +204,44 @@ module.exports = createCoreController("api::bd.bd", ({ strapi }) => ({
 
     return this.transformResponse(versions);
   },
+
+  async findOne(ctx) {
+    const user = ctx.state.user;
+    const { id } = ctx.params;
+    const query = ctx.request.query;
+
+    const entity = await strapi.entityService.findOne("api::bd.bd", id, query);
+
+    const entitiCreator = await strapi.entityService.findOne("api::bd.bd", id, {
+      populate: ["creator"],
+    });
+
+    if (
+      entity?.bd_contact_information &&
+      user?.id !== entitiCreator?.creator?.id
+    ) {
+      delete entity.bd_contact_information;
+    }
+
+    const sanitizedEntity = await this.sanitizeOutput(entity, ctx);
+    return this.transformResponse(sanitizedEntity);
+  },
+
+  async find(ctx) {
+    const query = ctx.request.query;
+
+    const { results, pagination } = await strapi.service("api::bd.bd").find({
+      ...query,
+    });
+
+    const sanitizedResults = results.map((entity) => {
+      if (entity?.bd_contact_information) {
+        delete entity.bd_contact_information;
+      }
+      return entity;
+    });
+
+    const sanitizedOutput = await this.sanitizeOutput(sanitizedResults, ctx);
+    return this.transformResponse(sanitizedOutput, { pagination });
+  },
 }));

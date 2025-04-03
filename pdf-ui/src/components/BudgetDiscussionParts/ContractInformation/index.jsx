@@ -89,6 +89,35 @@ const ContractInformation = ({
                             </Typography>
                         </Box>
                         <Box
+                            sx={{ mt: 1, mb: 4 }}
+                            display={'flex'}
+                            alignItems={'center'}
+                            justifyContent={'center'}
+                            gap={0.5}
+                        >
+                            <Typography
+                                variant='body1'
+                                fontWeight={500}
+                                color={'text.black'}
+                            >
+                                1
+                            </Typography>
+                            <Typography
+                                variant='body1'
+                                fontWeight={500}
+                                color={'text.black'}
+                            >
+                                /
+                            </Typography>
+                            <Typography
+                                variant='body1'
+                                fontWeight={300}
+                                color={'text.black'}
+                            >
+                                7
+                            </Typography>
+                        </Box>
+                        <Box
                             color={(theme) => theme.palette.text.grey}
                             sx={{ mb: 2 }}
                         >
@@ -177,6 +206,7 @@ const ContractInformation = ({
                                     handleDataChange(e, 'be_full_name')
                                 }
                                 sx={{ mb: 2 }}
+                                data-testid = {`beneficiary-full-name-input`}
                             />
                             <TextField
                                 name='Beneficiary e-mail'
@@ -206,6 +236,13 @@ const ContractInformation = ({
                                     handleDataChange(e, 'be_email')
                                 }
                                 sx={{ mb: 2 }}
+                                data-testid = {`beneficiary-email-input`}
+                                FormHelperTextProps={{
+                                    ...(errors['bd_contact_information.be_email']?.trim() && {
+                                      'data-testid': 'beneficiary-email-error'
+                                    })
+                                  }}
+                                
                             />
                             <Box sx={{ display: 'flex', gap: 2 }}>
                                 <Grid container spacing={2}>
@@ -246,7 +283,7 @@ const ContractInformation = ({
                                                 <MenuItem
                                                     key={option?.id}
                                                     value={option?.id}
-                                                    data-testid={`${option?.attributes.country_name?.toLowerCase()}-button`}
+                                                    data-testid={`${option?.attributes.country_name?.replace(/\s/g, '-').toLowerCase()}-button`}
                                                 >
                                                     {
                                                         option?.attributes
@@ -293,7 +330,7 @@ const ContractInformation = ({
                                                 <MenuItem
                                                     key={option?.id}
                                                     value={option?.id}
-                                                    data-testid={`${option?.attributes.nationality_name?.toLowerCase()}-button`}
+                                                    data-testid={`${option?.attributes.country_name?.replace(/\s/g, '-').toLowerCase()}-button`}
                                                 >
                                                     {
                                                         option?.attributes
@@ -333,6 +370,7 @@ const ContractInformation = ({
                                     )
                                 }
                                 sx={{ mb: 2 }}
+                                data-testid = {`submission-lead-full-name-input`}
                             />
                             <TextField
                                 name='*Submission Lead Email'
@@ -364,6 +402,12 @@ const ContractInformation = ({
                                     handleDataChange(e, 'submission_lead_email')
                                 }
                                 sx={{ mb: 2 }}
+                                data-testid = {`submission-lead-email-input`}
+                                FormHelperTextProps={{
+                                    ...(errors['bd_contact_information.submission_lead_email']?.trim() && {
+                                      'data-testid': 'submission-lead-email-error'
+                                    })
+                                  }}
                             />
                         </Box>
                         <StepperActionButtons

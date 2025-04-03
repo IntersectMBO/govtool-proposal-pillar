@@ -29,7 +29,7 @@ const Costing = ({
     validateSection,
 }) => {
     const [allCurrencyList, setAllCurrencyList] = useState([]);
-    const costBreakdownMaxLength = 256;
+    const costBreakdownMaxLength = 2500;
     const handleDataChange = (e, dataName) => {
         setBudgetDiscussionData({
             ...currentBudgetDiscussionData,
@@ -85,6 +85,35 @@ const Costing = ({
                             <Typography variant='h4' gutterBottom mb={2}>
                                 Section 5: Costing
                             </Typography>
+                            <Box
+                                sx={{ mt: 1, mb: 4 }}
+                                display={'flex'}
+                                alignItems={'center'}
+                                justifyContent={'center'}
+                                gap={0.5}
+                            >
+                                <Typography
+                                    variant='body1'
+                                    fontWeight={500}
+                                    color={'text.black'}
+                                >
+                                    5
+                                </Typography>
+                                <Typography
+                                    variant='body1'
+                                    fontWeight={500}
+                                    color={'text.black'}
+                                >
+                                    /
+                                </Typography>
+                                <Typography
+                                    variant='body1'
+                                    fontWeight={300}
+                                    color={'text.black'}
+                                >
+                                    7
+                                </Typography>
+                            </Box>
                             <Box color={(theme) => theme.palette.text.grey}>
                                 <Typography variant='body1' gutterBottom mb={2}>
                                     Please provide requested cost of this
@@ -109,6 +138,7 @@ const Costing = ({
                                             handleDataChange(e, 'ada_amount')
                                         }
                                         sx={{ mb: 2 }}
+                                        data-testid= 'ada-amount-input'
                                         // helperText={errors['bd_costing.ada_amount']?.trim()}
                                         // error={!!errors['bd_costing.ada_amount']?.trim()}
                                     />
@@ -144,6 +174,7 @@ const Costing = ({
                                             )
                                         }
                                         sx={{ mb: 2 }}
+                                        data-testid='usd-ada-conversion-input'
                                     />
                                 </Grid>
                                 <Grid item xs={6}>
@@ -228,6 +259,7 @@ const Costing = ({
                                             )
                                         }
                                         sx={{ mb: 2 }}
+                                        data-testid='preferred-currency-amount-input'
                                     />
                                 </Grid>
                             </Grid>

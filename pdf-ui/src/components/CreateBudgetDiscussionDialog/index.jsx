@@ -5,7 +5,6 @@ import {
     Grid,
     Dialog,
     DialogContent,
-    DialogTitle,
     DialogActions,
     DialogContentText,
     Typography,
@@ -45,15 +44,7 @@ const CreateBudgetDiscussionDialog = ({
     const location = useLocation();
     const navigate = useNavigate();
     const theme = useTheme();
-    const {
-        user,
-        walletAPI,
-        setOpenUsernameModal,
-        setUser,
-        clearStates,
-        getVotingPower,
-        setLoading,
-    } = useAppContext();
+    const { setLoading } = useAppContext();
     const [step, setStep] = useState(1);
     const [budgetDiscussionData, setBudgetDiscussionData] = useState({
         bd_contact_information: {},
@@ -96,21 +87,22 @@ const CreateBudgetDiscussionDialog = ({
 
             newData.old_ver = id;
             newData.bd_contact_information.be_country_of_res =
-                response.attributes.bd_contact_information.data.attributes.be_country_of_res.data.id;
+                response?.attributes?.bd_contact_information?.data.attributes?.be_country_of_res?.data?.id;
             newData.bd_contact_information.be_nationality =
-                response.attributes.bd_contact_information.data.attributes.be_nationality.data.id;
+                response?.attributes?.bd_contact_information?.data?.attributes?.be_nationality?.data?.id;
             newData.bd_proposal_ownership.be_country =
-                response.attributes.bd_proposal_ownership.data.attributes.be_country.data.id;
+                response?.attributes?.bd_proposal_ownership?.data?.attributes?.be_country?.data?.id;
             newData.bd_psapb.roadmap_name =
-                response.attributes.bd_psapb.data.attributes.roadmap_name.data.id;
+                response?.attributes?.bd_psapb?.data?.attributes?.roadmap_name?.data?.id;
             newData.bd_psapb.type_name =
-                response.attributes.bd_psapb.data.attributes.type_name.data.id;
+                response?.attributes?.bd_psapb?.data?.attributes?.type_name?.data?.id;
             newData.bd_psapb.committee_name =
-                response.attributes.bd_psapb.data.attributes.committee_name.data.id;
+                response?.attributes?.bd_psapb.data?.attributes?.committee_name?.data?.id;
             newData.bd_proposal_detail.contract_type_name =
-                response.attributes.bd_proposal_detail.data.attributes.contract_type_name.data.id;
+                response?.attributes?.bd_proposal_detail?.data?.attributes?.contract_type_name?.data?.id;
             newData.bd_costing.preferred_currency =
-                response.attributes.bd_costing.data.attributes.preferred_currency.data.id;
+                response?.attributes?.bd_costing?.data.attributes?.preferred_currency?.data?.id;
+
             setBudgetDiscussionData({ ...newData });
             if (!response) return response;
         } catch (error) {
@@ -241,7 +233,7 @@ const CreateBudgetDiscussionDialog = ({
                 committee_name: { required: true, type: 'number' },
                 proposal_benefit: { required: true, type: 'string' },
                 problem_statement: { required: true, type: 'string' },
-                supplementary_endorsement: { required: true, type: 'string' },
+                supplementary_endorsement: { required: false, type: 'string' },
                 explain_proposal_roadmap: {
                     required: false,
                     type: 'string',
@@ -509,7 +501,7 @@ const CreateBudgetDiscussionDialog = ({
                                     component='h1'
                                     gutterBottom
                                 >
-                                    Propose a Budget Discussion
+                                    Submit a Budget Proposal
                                 </Typography>
                             </Grid>
                         ) : (
@@ -759,7 +751,7 @@ const CreateBudgetDiscussionDialog = ({
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={handleCloseDraftDialog}>Close</Button>
+                    <Button onClick={handleCloseDraftDialog} data-testid={'close-button'} >Close</Button>
                 </DialogActions>
             </Dialog>
         </Dialog>

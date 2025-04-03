@@ -44,6 +44,30 @@ const BudgetDiscussionReview = ({
     const [allCommittees, setAllCommittees] = useState([]);
     const [allContractTypeList, setAllContractTypeList] = useState([]);
 
+    const InfoSection = ({ question, answer, answerTestId }) => {
+        return (
+            <Box
+                sx={{
+                    mb: 2,
+                }}
+            >
+                <Typography variant='caption' gutterBottom>
+                    {question}
+                </Typography>
+                <Typography
+                    variant='body1'
+                    gutterBottom
+                    data-testid={answerTestId}
+                    sx={{
+                        mb: 2,
+                    }}
+                >
+                    {answer || '-'}
+                </Typography>
+            </Box>
+        );
+    };
+
     useEffect(() => {
         if (currentBudgetDiscussionData?.confidentiality === false)
             setBudgetDiscussionData({
@@ -121,16 +145,17 @@ const BudgetDiscussionReview = ({
                                 variant='h4'
                                 gutterBottom
                                 mb={2}
-                                sx={{ textAlign: 'center' }}
+                                sx={{ textAlign: 'center', mb: 3 }}
                             >
                                 Review Your Submission
                             </Typography>
-                            <Box color={(theme) => theme.palette.text.grey}>
+                            <Box>
                                 <Typography
                                     variant='body1'
                                     mb={2}
                                     vv
                                     sx={{ textAlign: 'center' }}
+                                    color={(theme) => theme.palette.text.grey}
                                 >
                                     Review your proposal data before submitting
                                     it
@@ -139,139 +164,134 @@ const BudgetDiscussionReview = ({
                                     <Typography
                                         variant='h4'
                                         gutterBottom
-                                        sx={{ align: 'left' }}
+                                        sx={{ align: 'left', mb: 3 }}
                                     >
                                         Section 1: Contact Information
                                     </Typography>
-                                    <Typography variant='body' gutterBottom>
-                                        Beneficiary Full Name
-                                    </Typography>
-                                    <Typography variant='h6' gutterBottom>
-                                        {currentBudgetDiscussionData
-                                            ?.bd_contact_information
-                                            ?.be_full_name || ''}
-                                    </Typography>
-                                    <Typography variant='body' gutterBottom>
-                                        Beneficiary e-mail
-                                    </Typography>
-                                    <Typography variant='h6' gutterBottom>
-                                        {currentBudgetDiscussionData
-                                            ?.bd_contact_information
-                                            ?.be_email || ''}
-                                    </Typography>
-                                    <Typography variant='body' gutterBottom>
-                                        Beneficiary Country of Residence
-                                    </Typography>
-                                    <Typography variant='h6' gutterBottom>
-                                        {allCountries.find(
-                                            (country) =>
-                                                country.id ===
-                                                currentBudgetDiscussionData
-                                                    ?.bd_contact_information
-                                                    ?.be_country_of_res
-                                        )?.attributes?.country_name || 'Error'}
-                                    </Typography>
-                                    <Typography variant='body' gutterBottom>
-                                        Beneficiary Nationality
-                                    </Typography>
-                                    <Typography variant='h6' gutterBottom>
-                                        {allCountries.find(
-                                            (country) =>
-                                                country.id ===
-                                                currentBudgetDiscussionData
-                                                    ?.bd_contact_information
-                                                    ?.be_nationality
-                                        )?.attributes?.country_name || 'Error'}
-                                    </Typography>
-                                    <Typography variant='body' gutterBottom>
-                                        Submission Lead Full Name'
-                                    </Typography>
-                                    <Typography variant='h6' gutterBottom>
-                                        {currentBudgetDiscussionData
-                                            ?.bd_contact_information
-                                            ?.submission_lead_full_name || ''}
-                                    </Typography>
-                                    <Typography variant='body' gutterBottom>
-                                        Submission Lead Email
-                                    </Typography>
-                                    <Typography variant='h6' gutterBottom>
-                                        {currentBudgetDiscussionData
-                                            ?.bd_contact_information
-                                            ?.submission_lead_email || ''}
-                                    </Typography>
+
+                                    <InfoSection
+                                        question='Beneficiary Full Name'
+                                        answer={
+                                            currentBudgetDiscussionData
+                                                ?.bd_contact_information
+                                                ?.be_full_name || ''
+                                        }
+                                        answerTestId='beneficiary-full-name-content'
+                                    />
+
+                                    <InfoSection
+                                        question='Beneficiary Country of Residence'
+                                        answer={
+                                            allCountries.find(
+                                                (country) =>
+                                                    country.id ===
+                                                    currentBudgetDiscussionData
+                                                        ?.bd_contact_information
+                                                        ?.be_country_of_res
+                                            )?.attributes?.country_name ||
+                                            'Error'
+                                        }
+                                        answerTestId='beneficiary-country-of-residence-content'
+                                    />
+
+                                    <InfoSection
+                                        question='Beneficiary Nationality'
+                                        answer={
+                                            allCountries.find(
+                                                (country) =>
+                                                    country.id ===
+                                                    currentBudgetDiscussionData
+                                                        ?.bd_contact_information
+                                                        ?.be_nationality
+                                            )?.attributes?.country_name ||
+                                            'Error'
+                                        }
+                                        dataTestId='beneficiary-nationality-content'
+                                    />
+
+                                    <InfoSection
+                                        question='Submission Lead Full Name'
+                                        answer={
+                                            currentBudgetDiscussionData
+                                                ?.bd_contact_information
+                                                ?.submission_lead_full_name ||
+                                            ''
+                                        }
+                                        dataTestId='submission-lead-full-name-content'
+                                    />
+
+                                    <InfoSection
+                                        question='Submission Lead Email'
+                                        answer={
+                                            currentBudgetDiscussionData
+                                                ?.bd_contact_information
+                                                ?.submission_lead_email || ''
+                                        }
+                                        dataTestId='submission-lead-email-content'
+                                    />
                                 </Box>
                                 <Box sx={{ align: 'left' }}>
                                     <Typography
                                         variant='h4'
                                         gutterBottom
-                                        sx={{ align: 'left' }}
+                                        sx={{ align: 'left', mb: 4 }}
                                     >
                                         Section 2: Proposal Ownership
                                     </Typography>
-                                    <Typography variant='body' gutterBottom>
-                                        Is this proposal being submitted on
+
+                                    <InfoSection
+                                        question='Is this proposal being submitted on
                                         behalf of an individual (the
                                         beneficiary), company, or some other
-                                        group?
-                                    </Typography>
-                                    <Typography variant='h6' gutterBottom>
-                                        {
+                                        group?'
+                                        answer={
                                             currentBudgetDiscussionData
                                                 ?.bd_proposal_ownership
-                                                ?.submited_on_behalf
+                                                ?.submited_on_behalf || ''
                                         }
-                                    </Typography>
+                                        answerTestId='submited-on-behalf-content'
+                                    />
+
                                     {currentBudgetDiscussionData
                                         .bd_proposal_ownership
                                         ?.submited_on_behalf === 'Company' ? (
                                         <Box>
-                                            <Typography
-                                                variant='body'
-                                                gutterBottom
-                                            >
-                                                Company Name
-                                            </Typography>
-                                            <Typography
-                                                variant='h6'
-                                                gutterBottom
-                                            >
-                                                {currentBudgetDiscussionData
-                                                    ?.bd_proposal_ownership
-                                                    ?.company_name || ''}
-                                            </Typography>
-                                            <Typography
-                                                variant='body'
-                                                gutterBottom
-                                            >
-                                                Company Domain Name
-                                            </Typography>
-                                            <Typography
-                                                variant='h6'
-                                                gutterBottom
-                                            >
-                                                {currentBudgetDiscussionData
-                                                    ?.bd_proposal_ownership
-                                                    ?.company_domain_name || ''}
-                                            </Typography>
-                                            <Typography
-                                                variant='body'
-                                                gutterBottom
-                                            >
-                                                Country of Incorporation
-                                            </Typography>
-                                            <Typography
-                                                variant='h6'
-                                                gutterBottom
-                                            >
-                                                {allCountries.find(
-                                                    (country) =>
-                                                        country.id ===
-                                                        currentBudgetDiscussionData
-                                                            ?.bd_proposal_ownership
-                                                            ?.be_country
-                                                )?.attributes?.country_name ||
-                                                    'Error'}
-                                            </Typography>
+                                            <InfoSection
+                                                question='Company Name'
+                                                answer={
+                                                    currentBudgetDiscussionData
+                                                        ?.bd_proposal_ownership
+                                                        ?.company_name || ''
+                                                }
+                                                answerTestId='company-name-content'
+                                            />
+
+                                            <InfoSection
+                                                question='Company Domain Name'
+                                                answer={
+                                                    currentBudgetDiscussionData
+                                                        ?.bd_proposal_ownership
+                                                        ?.company_domain_name ||
+                                                    ''
+                                                }
+                                                answerTestId='company-domain-name-content'
+                                            />
+
+                                            <InfoSection
+                                                question='Country of Incorporation'
+                                                answer={
+                                                    allCountries.find(
+                                                        (country) =>
+                                                            country.id ===
+                                                            currentBudgetDiscussionData
+                                                                ?.bd_proposal_ownership
+                                                                ?.be_country
+                                                    )?.attributes
+                                                        ?.country_name ||
+                                                    'Error'
+                                                }
+                                                answerTestId='country-of-incorporation-content'
+                                            />
                                         </Box>
                                     ) : (
                                         ''
@@ -280,294 +300,348 @@ const BudgetDiscussionReview = ({
                                         .bd_proposal_ownership
                                         ?.submited_on_behalf === 'Group' ? (
                                         <Box>
-                                            <Typography
-                                                variant='body'
-                                                gutterBottom
-                                            >
-                                                Group Name
-                                            </Typography>
-                                            <Typography
-                                                variant='h6'
-                                                gutterBottom
-                                            >
-                                                {currentBudgetDiscussionData
-                                                    ?.bd_proposal_ownership
-                                                    ?.group_name || ''}
-                                            </Typography>
-                                            <Typography
-                                                variant='body'
-                                                gutterBottom
-                                            >
-                                                Type of Group
-                                            </Typography>
-                                            <Typography
-                                                variant='h6'
-                                                gutterBottom
-                                            >
-                                                {currentBudgetDiscussionData
-                                                    ?.bd_proposal_ownership
-                                                    ?.type_of_group || ''}
-                                            </Typography>
-                                            <Typography
-                                                variant='body'
-                                                gutterBottom
-                                            >
-                                                Key Information to Identify
-                                                Group
-                                            </Typography>
-                                            <Typography
-                                                variant='h6'
-                                                gutterBottom
-                                            >
-                                                {currentBudgetDiscussionData
-                                                    ?.bd_proposal_ownership
-                                                    ?.key_info_to_identify_group ||
-                                                    ''}
-                                            </Typography>
+                                            <InfoSection
+                                                question='Group Name'
+                                                answer={
+                                                    currentBudgetDiscussionData
+                                                        ?.bd_proposal_ownership
+                                                        ?.group_name || ''
+                                                }
+                                                answerTestId='group-name-content'
+                                            />
+
+                                            <InfoSection
+                                                question='Type of Group'
+                                                answer={
+                                                    currentBudgetDiscussionData
+                                                        ?.bd_proposal_ownership
+                                                        ?.type_of_group || ''
+                                                }
+                                                answerTestId='group-type-content'
+                                            />
+
+                                            <InfoSection
+                                                question='Key Information to Identify
+                                                Group'
+                                                answer={
+                                                    currentBudgetDiscussionData
+                                                        ?.bd_proposal_ownership
+                                                        ?.key_info_to_identify_group ||
+                                                    ''
+                                                }
+                                                answerTestId='group-identity-information-content'
+                                            />
                                         </Box>
                                     ) : (
                                         ''
                                     )}
-                                    <Typography variant='body' gutterBottom>
-                                        Proposal Public Champion: Who would you
-                                        like to be the public proposal champion?
-                                    </Typography>
-                                    <Typography variant='h6' gutterBottom>
-                                        {currentBudgetDiscussionData
-                                            ?.bd_proposal_ownership
-                                            ?.proposal_public_champion || ''}
-                                    </Typography>
-                                    <Typography variant='body' gutterBottom>
-                                        What social handles would you like to be
-                                        used? E.g. Github, X
-                                    </Typography>
-                                    <Typography variant='h6' gutterBottom>
-                                        {currentBudgetDiscussionData
-                                            ?.bd_proposal_ownership
-                                            ?.social_handles || ''}
-                                    </Typography>
+
+                                    <InfoSection
+                                        question='Proposal Public Champion: Who would you
+                                        like to be the public proposal champion?'
+                                        answer={
+                                            currentBudgetDiscussionData
+                                                ?.bd_proposal_ownership
+                                                ?.proposal_public_champion || ''
+                                        }
+                                        answerTestId='provide-preferred-content'
+
+                                    />
+
+                                    <InfoSection
+                                        question='What social handles would you like to be
+                                        used? E.g. Github, X'
+                                        answer={
+                                            currentBudgetDiscussionData
+                                                ?.bd_proposal_ownership
+                                                ?.social_handles || ''
+                                        }
+                                        answerTestId='social-handles-content'
+                                    />
                                 </Box>
                                 <Box sx={{ align: 'left' }}>
                                     <Typography
                                         variant='h4'
                                         gutterBottom
-                                        sx={{ align: 'left' }}
+                                        sx={{ align: 'left', mb: 3 }}
                                     >
                                         Section 3: Problem Statements and
                                         Proposal Benefits
                                     </Typography>
-                                    <Typography variant='body' gutterBottom>
-                                        Problem Statement
-                                    </Typography>
-                                    <Typography variant='h6' gutterBottom>
-                                        {currentBudgetDiscussionData?.bd_psapb
-                                            ?.problem_statement || ''}
-                                    </Typography>
-                                    <Typography variant='body' gutterBottom>
-                                        Proposal Benefit
-                                    </Typography>
-                                    <Typography variant='h6' gutterBottom>
-                                        {currentBudgetDiscussionData?.bd_psapb
-                                            ?.proposal_benefit || ''}
-                                    </Typography>
-                                    <Typography variant='body' gutterBottom>
-                                        Does this proposal align to the Product
-                                        Roadmap and Roadmap Goals?
-                                    </Typography>
-                                    <Typography variant='h6' gutterBottom>
-                                        {allRoadMaps.find(
-                                            (rm) =>
-                                                rm.id ===
-                                                currentBudgetDiscussionData
-                                                    ?.bd_psapb?.roadmap_name
-                                        )?.attributes?.roadmap_name || 'Error'}
-                                    </Typography>
-                                    <Typography variant='body' gutterBottom>
-                                        Does your proposal align to any of the
-                                        budget categories?
-                                    </Typography>
-                                    <Typography variant='h6' gutterBottom>
-                                        {allBDTypes.find(
-                                            (bt) =>
-                                                bt.id ===
-                                                currentBudgetDiscussionData
-                                                    ?.bd_psapb?.type_name
-                                        )?.attributes?.type_name || 'Error'}
-                                    </Typography>
-                                    <Typography variant='body' gutterBottom>
-                                        Does your proposal align with any of the
-                                        Intersect Committees?
-                                    </Typography>
-                                    <Typography variant='h6' gutterBottom>
-                                        {allCommittees.find(
-                                            (co) =>
-                                                co.id ===
-                                                currentBudgetDiscussionData
-                                                    ?.bd_psapb?.committee_name
-                                        )?.attributes?.committee_name ||
-                                            'Error'}
-                                    </Typography>
-                                    <Typography variant='body' gutterBottom>
-                                        If possible provide evidence of wider
-                                        community endorsement for this proposal?
-                                    </Typography>
-                                    <Typography variant='h6' gutterBottom>
-                                        {currentBudgetDiscussionData?.bd_psapb
-                                            ?.supplementary_endorsement || ''}
-                                    </Typography>
+
+                                    <InfoSection
+                                        question='Problem Statement'
+                                        answer={
+                                            currentBudgetDiscussionData
+                                                ?.bd_psapb?.problem_statement ||
+                                            ''
+                                        }
+                                        answerTestId={'problem-statement-content'}
+                                    />
+
+                                    <InfoSection
+                                        question='Proposal Benefit'
+                                        answer={
+                                            currentBudgetDiscussionData
+                                                ?.bd_psapb?.proposal_benefit ||
+                                            ''
+                                        }
+                                        answerTestId={'proposal-benefit-content'}
+                                    />
+
+                                    <InfoSection
+                                        question='Does this proposal align to the Product
+                                        Roadmap and Roadmap Goals?'
+                                        answer={
+                                            allRoadMaps.find(
+                                                (rm) =>
+                                                    rm.id ===
+                                                    currentBudgetDiscussionData
+                                                        ?.bd_psapb?.roadmap_name
+                                            )?.attributes?.roadmap_name ||
+                                            'Error'
+                                        }
+                                        answerTestId={'roadmap-content'}
+                                    />
+
+                                    <InfoSection
+                                        question='Does your proposal align to any of the
+                                        budget categories?'
+                                        answer={
+                                            allBDTypes.find(
+                                                (bt) =>
+                                                    bt.id ===
+                                                    currentBudgetDiscussionData
+                                                        ?.bd_psapb?.type_name
+                                            )?.attributes?.type_name || 'Error'
+                                        }
+                                        answerTestId={'budget-category-content'}
+                                    />
+
+                                    <InfoSection
+                                        question='Does your proposal align with any of the
+                                        Intersect Committees?'
+                                        answer={
+                                            allCommittees.find(
+                                                (co) =>
+                                                    co.id ===
+                                                    currentBudgetDiscussionData
+                                                        ?.bd_psapb
+                                                        ?.committee_name
+                                            )?.attributes?.committee_name ||
+                                            'Error'
+                                        }
+                                        answerTestId={'committee-content'}
+                                    />
+
+                                    <InfoSection
+                                        question='If possible provide evidence of wider
+                                        community endorsement for this proposal?'
+                                        answer={
+                                            currentBudgetDiscussionData
+                                                ?.bd_psapb
+                                                ?.supplementary_endorsement ||
+                                            ''
+                                        }
+                                        answerTestId={'endorsement-content'}
+                                    />
                                 </Box>
                                 <Box sx={{ align: 'left' }}>
                                     <Typography
                                         variant='h4'
                                         gutterBottom
-                                        sx={{ align: 'left' }}
+                                        sx={{ align: 'left', mb: 3 }}
                                     >
                                         Section 4: Proposal Details
                                     </Typography>
-                                    <Typography variant='body' gutterBottom>
-                                         What is your proposed name to be used
-                                        to reference this proposal publicly?
-                                    </Typography>
-                                    <Typography variant='h6' gutterBottom>
-                                        {currentBudgetDiscussionData
-                                            ?.bd_proposal_detail
-                                            ?.proposal_name || ''}
-                                    </Typography>
-                                    <Typography variant='body' gutterBottom>
-                                        Proposal Description
-                                    </Typography>
-                                    <Typography variant='h6' gutterBottom>
-                                        {currentBudgetDiscussionData
-                                            ?.bd_proposal_detail
-                                            ?.proposal_description || ''}
-                                    </Typography>
-                                    <Typography variant='body' gutterBottom>
-                                        Please list any key dependencies (if
-                                        any) for this proposal?
-                                    </Typography>
-                                    <Typography variant='h6' gutterBottom>
-                                        {currentBudgetDiscussionData
-                                            ?.bd_proposal_detail
-                                            ?.key_dependencies || ''}
-                                    </Typography>
-                                    <Typography variant='body' gutterBottom>
-                                        How will this proposal be maintained and
-                                        supported after initial development?
-                                    </Typography>
-                                    <Typography variant='h6' gutterBottom>
-                                        {currentBudgetDiscussionData
-                                            ?.bd_proposal_detail
-                                            ?.maintain_and_support || ''}
-                                    </Typography>
-                                    <Typography variant='body' gutterBottom>
-                                        Key Proposal Deliverable(s) and
+
+                                    <InfoSection
+                                        question='What is your proposed name to be used
+                                        to reference this proposal publicly?'
+                                        answer={
+                                            currentBudgetDiscussionData
+                                                ?.bd_proposal_detail
+                                                ?.proposal_name || ''
+                                        }
+                                        answerTestId={'proposal-name-content'}
+                                    />
+
+                                    <InfoSection
+                                        question='Proposal Description'
+                                        answer={
+                                            currentBudgetDiscussionData
+                                                ?.bd_proposal_detail
+                                                ?.proposal_description || ''
+                                        }
+                                        answerTestId={'proposal-description-content'}
+                                    />
+
+                                    <InfoSection
+                                        question='Please list any key dependencies (if
+                                        any) for this proposal?'
+                                        answer={
+                                            currentBudgetDiscussionData
+                                                ?.bd_proposal_detail
+                                                ?.key_dependencies || ''
+                                        }
+                                        answerTestId={'key-dependencies-content'}
+                                    />
+
+                                    <InfoSection
+                                        question='How will this proposal be maintained and
+                                        supported after initial development?'
+                                        answer={
+                                            currentBudgetDiscussionData
+                                                ?.bd_proposal_detail
+                                                ?.maintain_and_support || ''
+                                        }
+                                        answerTestId={'maintain-and-support-content'}
+                                    />
+
+                                    <InfoSection
+                                        question='Key Proposal Deliverable(s) and
                                         Definition of Done: What tangible
                                         milestones or outcomes are to be
                                         delivered and what will the community
-                                        ultimately receive?
-                                    </Typography>
-                                    <Typography variant='h6' gutterBottom>
-                                        {currentBudgetDiscussionData
-                                            ?.bd_proposal_detail
-                                            ?.key_proposal_deliverables || ''}
-                                    </Typography>
-                                    <Typography variant='body' gutterBottom>
-                                        Resourcing & Duration Estimates: Please
+                                        ultimately receive?'
+                                        answer={
+                                            currentBudgetDiscussionData
+                                                ?.bd_proposal_detail
+                                                ?.key_proposal_deliverables ||
+                                            ''
+                                        }
+                                        answerTestId={
+                                            'key-proposal-deliverables-content'
+                                        }
+                                    />
+
+                                    <InfoSection
+                                        question='Resourcing & Duration Estimates: Please
                                         provide estimates of team size and
                                         duration to achieve the Key Proposal
-                                        Deliverables outlined above.
-                                    </Typography>
-                                    <Typography variant='h6' gutterBottom>
-                                        {currentBudgetDiscussionData
-                                            ?.bd_proposal_detail
-                                            ?.resourcing_duration_estimates ||
-                                            ''}
-                                    </Typography>
-                                    <Typography variant='body' gutterBottom>
-                                        Experience: Please provide previous
+                                        Deliverables outlined above.'
+                                        answer={
+                                            currentBudgetDiscussionData
+                                                ?.bd_proposal_detail
+                                                ?.resourcing_duration_estimates ||
+                                            ''
+                                        }
+                                        answerTestId={
+                                            'resourcing-duration-estimates-content'
+                                        }
+                                    />
+
+                                    <InfoSection
+                                        question='Experience: Please provide previous
                                         experience relevant to complete this
-                                        project.
-                                    </Typography>
-                                    <Typography variant='h6' gutterBottom>
-                                        {currentBudgetDiscussionData
-                                            ?.bd_proposal_detail?.experience ||
-                                            ''}
-                                    </Typography>
-                                    <Typography variant='body' gutterBottom>
-                                        Contracting: Please describe how you
-                                        expect to be contracted.
-                                    </Typography>
-                                    <Typography variant='h6' gutterBottom>
-                                        {allContractTypeList.find(
-                                            (co) =>
-                                                co.id ===
-                                                currentBudgetDiscussionData
-                                                    ?.bd_proposal_detail
-                                                    ?.contract_type_name
-                                        )?.attributes?.contract_type_name ||
-                                            'Error'}
-                                    </Typography>
+                                        project.'
+                                        answer={
+                                            currentBudgetDiscussionData
+                                                ?.bd_proposal_detail
+                                                ?.experience || ''
+                                        }
+                                        answerTestId={'experience-content'}
+                                    />
+
+                                    <InfoSection
+                                        question='Contracting: Please describe how you
+                                        expect to be contracted.'
+                                        answer={
+                                            allContractTypeList.find(
+                                                (co) =>
+                                                    co.id ===
+                                                    currentBudgetDiscussionData
+                                                        ?.bd_proposal_detail
+                                                        ?.contract_type_name
+                                            )?.attributes?.contract_type_name ||
+                                            'Error'
+                                        }
+                                        answerTestId={'contracting-type-name-content'}
+                                    />
                                 </Box>
                                 <Box sx={{ align: 'left' }}>
                                     <Typography
                                         variant='h4'
                                         gutterBottom
-                                        sx={{ align: 'left' }}
+                                        sx={{ align: 'left', mb: 3 }}
                                     >
                                         Section 5: Costing
                                     </Typography>
-                                    <Typography variant='body' gutterBottom>
-                                        ADA Amount
-                                    </Typography>
-                                    <Typography variant='h6' gutterBottom>
-                                        {currentBudgetDiscussionData?.bd_costing
-                                            ?.ada_amount || ''}
-                                    </Typography>
-                                    <Typography variant='body' gutterBottom>
-                                        ADA to USD Conversion Rate
-                                    </Typography>
-                                    <Typography variant='h6' gutterBottom>
-                                        {currentBudgetDiscussionData?.bd_costing
-                                            ?.usd_to_ada_conversion_rate || ''}
-                                    </Typography>
-                                    <Typography variant='body' gutterBottom>
-                                        Preferred currency
-                                    </Typography>
-                                    <Typography variant='h6' gutterBottom>
-                                        {allCurrencyList.find(
-                                            (co) =>
-                                                co.id ===
-                                                currentBudgetDiscussionData
-                                                    ?.bd_costing
-                                                    ?.preferred_currency
-                                        )?.attributes?.currency_letter_code ||
-                                            'Error'}
-                                    </Typography>
-                                    <Typography variant='body' gutterBottom>
-                                        Amount in preferred currency
-                                    </Typography>
-                                    <Typography variant='h6' gutterBottom>
-                                        {currentBudgetDiscussionData?.bd_costing
-                                            ?.amount_in_preferred_currency ||
-                                            ''}
-                                    </Typography>
-                                    <Typography variant='body' gutterBottom>
-                                        Cost breakdown
-                                    </Typography>
-                                    <Typography variant='h6' gutterBottom>
-                                        {currentBudgetDiscussionData?.bd_costing
-                                            ?.cost_breakdown || ''}
-                                    </Typography>
+
+                                    <InfoSection
+                                        question='ADA Amount'
+                                        answer={
+                                            currentBudgetDiscussionData
+                                                ?.bd_costing?.ada_amount || ''
+                                        }
+                                        answerTestId={'ada-amount-content'}
+                                    />
+
+                                    <InfoSection
+                                        question='ADA to USD Conversion Rate'
+                                        answer={
+                                            currentBudgetDiscussionData
+                                                ?.bd_costing
+                                                ?.usd_to_ada_conversion_rate ||
+                                            ''
+                                        }
+                                        answerTestId={
+                                            'usd-to-ada-conversion-rate-content'
+                                        }
+                                    />
+
+                                    <InfoSection
+                                        question='Preferred currency'
+                                        answer={
+                                            allCurrencyList.find(
+                                                (co) =>
+                                                    co.id ===
+                                                    currentBudgetDiscussionData
+                                                        ?.bd_costing
+                                                        ?.preferred_currency
+                                            )?.attributes
+                                                ?.currency_letter_code ||
+                                            'Error'
+                                        }
+                                        answerTestId={
+                                            'preferred-currency-content'
+                                        }
+                                    />
+
+                                    <InfoSection
+                                        question='Amount in preferred currency'
+                                        answer={
+                                            currentBudgetDiscussionData
+                                                ?.bd_costing
+                                                ?.amount_in_preferred_currency ||
+                                            ''
+                                        }
+                                        answerTestId={
+                                            'amount-in-preferred-currency-content'
+                                        }   
+                                    />
+
+                                    <InfoSection
+                                        question='Cost breakdown'
+                                        answer={
+                                            currentBudgetDiscussionData
+                                                ?.bd_costing?.cost_breakdown ||
+                                            ''
+                                        }
+                                        answerTestId={
+                                            'cost-breakdown-content'
+                                        }
+                                    />
                                 </Box>
                                 <Box sx={{ align: 'left' }}>
                                     <Typography
                                         variant='h4'
                                         gutterBottom
-                                        sx={{ align: 'left' }}
+                                        sx={{ align: 'left', mb: 3 }}
                                     >
                                         Section 6: Further information
                                     </Typography>
-                                    <Typography variant='body' gutterBottom>
+                                    <Typography variant='body1' gutterBottom>
                                         Supporting links
                                     </Typography>
                                     <Typography
@@ -591,26 +665,29 @@ const BudgetDiscussionReview = ({
                                         )}
                                     </Typography>
                                 </Box>
-                                <Box sx={{ align: 'left' }}>
+                                <Box sx={{ align: 'left', mb: 5, mt: 2 }}>
                                     <Typography
                                         variant='h4'
                                         gutterBottom
-                                        sx={{ align: 'left' }}
+                                        sx={{ align: 'left', mb: 3 }}
                                     >
                                         Section 7: Administration and Auditing
                                     </Typography>
 
-                                    <Typography variant='body' gutterBottom>
-                                        Would you like Intersect to be your
+                                    <InfoSection
+                                        question='Would you like Intersect to be your
                                         named Administrator, including acting as
                                         the auditor, as per the Cardano
-                                        Constitution?*
-                                    </Typography>
-                                    <Typography variant='h6' gutterBottom>
-                                        {currentBudgetDiscussionData?.itersect_named_administrator
-                                            ? 'Yes'
-                                            : 'No'}
-                                    </Typography>
+                                        Constitution?'
+                                        answer={
+                                            currentBudgetDiscussionData?.itersect_named_administrator
+                                                ? 'Yes'
+                                                : 'No'
+                                        }
+                                        answerTestId={
+                                            'intersect-named-administrator-content'
+                                        }
+                                    />
                                 </Box>
                             </Box>
                         </Box>

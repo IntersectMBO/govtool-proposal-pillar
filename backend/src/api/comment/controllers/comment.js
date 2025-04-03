@@ -178,6 +178,12 @@ module.exports = createCoreController("api::comment.comment", ({ strapi }) => ({
         comment.user_govtool_username = "Anonymous";
       }
 
+      if (user?.is_validated) {
+			comment.user_is_validated = user?.is_validated;
+		} else {
+			comment.user_is_validated = false;
+		}
+
       comment.subcommens_number = subcommentsCount;
 
       proposalsList.push(comment);
