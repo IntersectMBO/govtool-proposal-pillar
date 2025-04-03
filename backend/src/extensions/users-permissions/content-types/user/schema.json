@@ -77,6 +77,10 @@
       "relation": "oneToMany",
       "target": "api::comments-report.comments-report",
       "mappedBy": "moderator"
+    },
+    "is_validated": {
+      "type": "boolean",
+      "default": false
     }
   }
 }
