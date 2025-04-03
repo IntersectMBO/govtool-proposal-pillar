@@ -36,7 +36,7 @@ const BudgetDiscussionPoll = ({
         try {
             const response = await getUserBudgetDiscussionPollVote({
                 pollID: id,
-                userID: user?.id,
+                userID: user?.user?.id,
             });
 
             if (!response) return;
@@ -117,11 +117,7 @@ const BudgetDiscussionPoll = ({
 
     useEffect(() => {
         if (user) {
-            if (poll) {
-                if (!userPollVote) {
-                    fetchUserPollVote(poll?.id);
-                }
-            }
+            fetchUserPollVote(poll?.id);
         }
     }, [user, poll]);
 
@@ -130,7 +126,8 @@ const BudgetDiscussionPoll = ({
             <>
                 {user &&
                 !userPollVote &&
-                walletAPI?.voter?.isRegisteredAsDRep &&
+                (walletAPI?.voter?.isRegisteredAsDRep ||
+                    walletAPI?.voter?.isRegisteredAsSoleVoter) &&
                 walletAPI?.dRepID ? (
                     <Card
                         sx={{
@@ -286,7 +283,8 @@ const BudgetDiscussionPoll = ({
                         {user &&
                             userPollVote &&
                             poll?.attributes?.is_poll_active &&
-                            walletAPI?.voter?.isRegisteredAsDRep &&
+                            (walletAPI?.voter?.isRegisteredAsDRep ||
+                                walletAPI?.voter?.isRegisteredAsSoleVoter) &&
                             walletAPI?.dRepID && (
                                 <Box
                                     mt={2}
