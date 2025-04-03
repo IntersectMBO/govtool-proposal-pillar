@@ -35,8 +35,11 @@ const Subcomponent = ({ comment }) => {
     };
 
     useEffect(() => {
-        if (!comment?.attributes?.drep_id) return;
-        handleGetDrepData();
+        if (comment?.attributes?.drep_id) {
+            handleGetDrepData();
+        } else {
+            setDrepData(null);
+        }
     }, [comment]);
 
     return (

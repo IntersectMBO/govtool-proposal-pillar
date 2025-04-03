@@ -36,7 +36,9 @@ const BudgetDiscussionPoll = ({
         try {
             const response = await getUserBudgetDiscussionPollVote({
                 pollID: id,
+                userID: user?.id,
             });
+
             if (!response) return;
             setUserPollVote(response);
         } catch (error) {
@@ -128,7 +130,6 @@ const BudgetDiscussionPoll = ({
             <>
                 {user &&
                 !userPollVote &&
-                user?.user?.id !== +proposalUserId &&
                 walletAPI?.voter?.isRegisteredAsDRep &&
                 walletAPI?.dRepID ? (
                     <Card
@@ -284,7 +285,6 @@ const BudgetDiscussionPoll = ({
 
                         {user &&
                             userPollVote &&
-                            user?.user?.id !== +proposalUserId &&
                             poll?.attributes?.is_poll_active &&
                             walletAPI?.voter?.isRegisteredAsDRep &&
                             walletAPI?.dRepID && (
