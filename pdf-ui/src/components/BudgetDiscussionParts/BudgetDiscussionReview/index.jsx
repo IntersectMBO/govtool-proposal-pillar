@@ -44,7 +44,7 @@ const BudgetDiscussionReview = ({
     const [allCommittees, setAllCommittees] = useState([]);
     const [allContractTypeList, setAllContractTypeList] = useState([]);
 
-    const InfoSection = ({ question, answer }) => {
+    const InfoSection = ({ question, answer, answerTestId }) => {
         return (
             <Box
                 sx={{
@@ -57,6 +57,7 @@ const BudgetDiscussionReview = ({
                 <Typography
                     variant='body1'
                     gutterBottom
+                    data-testid={answerTestId}
                     sx={{
                         mb: 2,
                     }}
@@ -175,6 +176,7 @@ const BudgetDiscussionReview = ({
                                                 ?.bd_contact_information
                                                 ?.be_full_name || ''
                                         }
+                                        answerTestId='beneficiary-full-name-content'
                                     />
 
                                     <InfoSection
@@ -189,6 +191,7 @@ const BudgetDiscussionReview = ({
                                             )?.attributes?.country_name ||
                                             'Error'
                                         }
+                                        answerTestId='beneficiary-country-of-residence-content'
                                     />
 
                                     <InfoSection
@@ -203,6 +206,7 @@ const BudgetDiscussionReview = ({
                                             )?.attributes?.country_name ||
                                             'Error'
                                         }
+                                        dataTestId='beneficiary-nationality-content'
                                     />
 
                                     <InfoSection
@@ -213,6 +217,7 @@ const BudgetDiscussionReview = ({
                                                 ?.submission_lead_full_name ||
                                             ''
                                         }
+                                        dataTestId='submission-lead-full-name-content'
                                     />
 
                                     <InfoSection
@@ -222,6 +227,7 @@ const BudgetDiscussionReview = ({
                                                 ?.bd_contact_information
                                                 ?.submission_lead_email || ''
                                         }
+                                        dataTestId='submission-lead-email-content'
                                     />
                                 </Box>
                                 <Box sx={{ align: 'left' }}>
@@ -243,6 +249,7 @@ const BudgetDiscussionReview = ({
                                                 ?.bd_proposal_ownership
                                                 ?.submited_on_behalf || ''
                                         }
+                                        answerTestId='submited-on-behalf-content'
                                     />
 
                                     {currentBudgetDiscussionData
@@ -256,6 +263,7 @@ const BudgetDiscussionReview = ({
                                                         ?.bd_proposal_ownership
                                                         ?.company_name || ''
                                                 }
+                                                answerTestId='company-name-content'
                                             />
 
                                             <InfoSection
@@ -266,6 +274,7 @@ const BudgetDiscussionReview = ({
                                                         ?.company_domain_name ||
                                                     ''
                                                 }
+                                                answerTestId='company-domain-name-content'
                                             />
 
                                             <InfoSection
@@ -281,6 +290,7 @@ const BudgetDiscussionReview = ({
                                                         ?.country_name ||
                                                     'Error'
                                                 }
+                                                answerTestId='country-of-incorporation-content'
                                             />
                                         </Box>
                                     ) : (
@@ -297,6 +307,7 @@ const BudgetDiscussionReview = ({
                                                         ?.bd_proposal_ownership
                                                         ?.group_name || ''
                                                 }
+                                                answerTestId='group-name-content'
                                             />
 
                                             <InfoSection
@@ -306,6 +317,7 @@ const BudgetDiscussionReview = ({
                                                         ?.bd_proposal_ownership
                                                         ?.type_of_group || ''
                                                 }
+                                                answerTestId='group-type-content'
                                             />
 
                                             <InfoSection
@@ -317,6 +329,7 @@ const BudgetDiscussionReview = ({
                                                         ?.key_info_to_identify_group ||
                                                     ''
                                                 }
+                                                answerTestId='group-identity-information-content'
                                             />
                                         </Box>
                                     ) : (
@@ -331,6 +344,8 @@ const BudgetDiscussionReview = ({
                                                 ?.bd_proposal_ownership
                                                 ?.proposal_public_champion || ''
                                         }
+                                        answerTestId='provide-preferred-content'
+
                                     />
 
                                     <InfoSection
@@ -341,6 +356,7 @@ const BudgetDiscussionReview = ({
                                                 ?.bd_proposal_ownership
                                                 ?.social_handles || ''
                                         }
+                                        answerTestId='social-handles-content'
                                     />
                                 </Box>
                                 <Box sx={{ align: 'left' }}>
@@ -360,6 +376,7 @@ const BudgetDiscussionReview = ({
                                                 ?.bd_psapb?.problem_statement ||
                                             ''
                                         }
+                                        answerTestId={'problem-statement-content'}
                                     />
 
                                     <InfoSection
@@ -369,6 +386,7 @@ const BudgetDiscussionReview = ({
                                                 ?.bd_psapb?.proposal_benefit ||
                                             ''
                                         }
+                                        answerTestId={'proposal-benefit-content'}
                                     />
 
                                     <InfoSection
@@ -383,6 +401,7 @@ const BudgetDiscussionReview = ({
                                             )?.attributes?.roadmap_name ||
                                             'Error'
                                         }
+                                        answerTestId={'roadmap-content'}
                                     />
 
                                     <InfoSection
@@ -396,6 +415,7 @@ const BudgetDiscussionReview = ({
                                                         ?.bd_psapb?.type_name
                                             )?.attributes?.type_name || 'Error'
                                         }
+                                        answerTestId={'budget-category-content'}
                                     />
 
                                     <InfoSection
@@ -411,6 +431,7 @@ const BudgetDiscussionReview = ({
                                             )?.attributes?.committee_name ||
                                             'Error'
                                         }
+                                        answerTestId={'committee-content'}
                                     />
 
                                     <InfoSection
@@ -422,6 +443,7 @@ const BudgetDiscussionReview = ({
                                                 ?.supplementary_endorsement ||
                                             ''
                                         }
+                                        answerTestId={'endorsement-content'}
                                     />
                                 </Box>
                                 <Box sx={{ align: 'left' }}>
@@ -441,6 +463,7 @@ const BudgetDiscussionReview = ({
                                                 ?.bd_proposal_detail
                                                 ?.proposal_name || ''
                                         }
+                                        answerTestId={'proposal-name-content'}
                                     />
 
                                     <InfoSection
@@ -450,6 +473,7 @@ const BudgetDiscussionReview = ({
                                                 ?.bd_proposal_detail
                                                 ?.proposal_description || ''
                                         }
+                                        answerTestId={'proposal-description-content'}
                                     />
 
                                     <InfoSection
@@ -460,6 +484,7 @@ const BudgetDiscussionReview = ({
                                                 ?.bd_proposal_detail
                                                 ?.key_dependencies || ''
                                         }
+                                        answerTestId={'key-dependencies-content'}
                                     />
 
                                     <InfoSection
@@ -470,6 +495,7 @@ const BudgetDiscussionReview = ({
                                                 ?.bd_proposal_detail
                                                 ?.maintain_and_support || ''
                                         }
+                                        answerTestId={'maintain-and-support-content'}
                                     />
 
                                     <InfoSection
@@ -484,6 +510,9 @@ const BudgetDiscussionReview = ({
                                                 ?.key_proposal_deliverables ||
                                             ''
                                         }
+                                        answerTestId={
+                                            'key-proposal-deliverables-content'
+                                        }
                                     />
 
                                     <InfoSection
@@ -497,6 +526,9 @@ const BudgetDiscussionReview = ({
                                                 ?.resourcing_duration_estimates ||
                                             ''
                                         }
+                                        answerTestId={
+                                            'resourcing-duration-estimates-content'
+                                        }
                                     />
 
                                     <InfoSection
@@ -508,6 +540,7 @@ const BudgetDiscussionReview = ({
                                                 ?.bd_proposal_detail
                                                 ?.experience || ''
                                         }
+                                        answerTestId={'experience-content'}
                                     />
 
                                     <InfoSection
@@ -523,6 +556,7 @@ const BudgetDiscussionReview = ({
                                             )?.attributes?.contract_type_name ||
                                             'Error'
                                         }
+                                        answerTestId={'contracting-type-name-content'}
                                     />
                                 </Box>
                                 <Box sx={{ align: 'left' }}>
@@ -540,6 +574,7 @@ const BudgetDiscussionReview = ({
                                             currentBudgetDiscussionData
                                                 ?.bd_costing?.ada_amount || ''
                                         }
+                                        answerTestId={'ada-amount-content'}
                                     />
 
                                     <InfoSection
@@ -549,6 +584,9 @@ const BudgetDiscussionReview = ({
                                                 ?.bd_costing
                                                 ?.usd_to_ada_conversion_rate ||
                                             ''
+                                        }
+                                        answerTestId={
+                                            'usd-to-ada-conversion-rate-content'
                                         }
                                     />
 
@@ -565,6 +603,9 @@ const BudgetDiscussionReview = ({
                                                 ?.currency_letter_code ||
                                             'Error'
                                         }
+                                        answerTestId={
+                                            'preferred-currency-content'
+                                        }
                                     />
 
                                     <InfoSection
@@ -575,6 +616,9 @@ const BudgetDiscussionReview = ({
                                                 ?.amount_in_preferred_currency ||
                                             ''
                                         }
+                                        answerTestId={
+                                            'amount-in-preferred-currency-content'
+                                        }   
                                     />
 
                                     <InfoSection
@@ -583,6 +627,9 @@ const BudgetDiscussionReview = ({
                                             currentBudgetDiscussionData
                                                 ?.bd_costing?.cost_breakdown ||
                                             ''
+                                        }
+                                        answerTestId={
+                                            'cost-breakdown-content'
                                         }
                                     />
                                 </Box>
@@ -636,6 +683,9 @@ const BudgetDiscussionReview = ({
                                             currentBudgetDiscussionData?.itersect_named_administrator
                                                 ? 'Yes'
                                                 : 'No'
+                                        }
+                                        answerTestId={
+                                            'intersect-named-administrator-content'
                                         }
                                     />
                                 </Box>
