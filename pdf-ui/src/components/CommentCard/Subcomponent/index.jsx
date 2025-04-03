@@ -141,6 +141,7 @@ const Subcomponent = ({ comment }) => {
                     sx={{
                         maxWidth: '100%',
                         wordWrap: 'break-word',
+                        whiteSpace: 'pre-line',
                     }}
                 >
                     {!isCommentRestricted(comment)
