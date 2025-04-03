@@ -46,6 +46,8 @@ const DrepVotersDialog = ({ open, handleClose, pollID }) => {
 
     useEffect(() => {
         if (!open) return;
+        setDrepList([]);
+        setTotalVotingPower(0);
         fetchPollVotes();
     }, [open]);
 
@@ -112,7 +114,7 @@ const DrepVotersDialog = ({ open, handleClose, pollID }) => {
                 )}
                 {drepList?.length > 0 && (
                     <>
-                        <Typography variant='body1' sx={{mb:2}}>
+                        <Typography variant='body1' sx={{ mb: 2 }}>
                             DReps who voted '{open}' on this proposal:
                         </Typography>
 
@@ -120,27 +122,57 @@ const DrepVotersDialog = ({ open, handleClose, pollID }) => {
                             <Box
                                 key={index}
                                 sx={{
-                                    mb: 2,
+                                    display: 'flex',
+                                    gap: 2,
                                 }}
                             >
-                                <Link href={'/connected/drep_directory/'+ drep?.view} target="_blank"
-                                    rel="noopener noreferrer"  >
-                                    <Typography variant='body1'>
-                                        {drep?.givenName} 
+                                <Box>
+                                    <Typography
+                                        variant='h2'
+                                        sx={{
+                                            lineHeight: 0,
+                                        }}
+                                    >
+                                        .
                                     </Typography>
-                                </Link>
-                                <Typography variant='caption'>
-                                    {drep?.view
-                                        ? drep?.view?.slice(0, 20) + '...'
-                                        : '-'}
-                                </Typography>
-                                <Typography variant='h6'>
-                                    ₳ {correctAdaFormat(drep?.votingPower)}
-                                </Typography>
-                                <Typography variant='caption'>
-                                    Vote submitted on{' '}
-                                    {formatDateWithOffset(new Date(drep?.voted_at),0,'dd/MM/yyyy - p',"UTC")}
-                                </Typography>
+                                </Box>
+                                <Box
+                                    sx={{
+                                        mb: 2,
+                                    }}
+                                >
+                                    <Link
+                                        href={
+                                            '/connected/drep_directory/' +
+                                            drep?.view
+                                        }
+                                        target='_blank'
+                                        rel='noopener noreferrer'
+                                    >
+                                        <Typography variant='body1'>
+                                            {drep?.givenName}
+                                        </Typography>
+                                    </Link>
+                                    <Typography variant='caption'>
+                                        {drep?.view
+                                            ? drep?.view?.slice(0, 20) + '...'
+                                            : '-'}
+                                    </Typography>
+                                    <Typography variant='h6'>
+                                        ₳ {correctAdaFormat(drep?.votingPower)}
+                                    </Typography>
+                                    {drep?.voted_at && (
+                                        <Typography variant='caption'>
+                                            Vote submitted on{' '}
+                                            {formatDateWithOffset(
+                                                new Date(drep?.voted_at),
+                                                0,
+                                                'dd/MM/yyyy - p',
+                                                'UTC'
+                                            )}
+                                        </Typography>
+                                    )}
+                                </Box>
                             </Box>
                         ))}
                     </>

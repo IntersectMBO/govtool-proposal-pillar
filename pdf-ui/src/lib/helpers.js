@@ -75,33 +75,50 @@ export const loginUserToApp = async ({
         clearSession();
     }
 };
-export const cleanObject= (obj) => {
+export const cleanObject = (obj) => {
     if (Array.isArray(obj)) {
-      return obj.map(cleanObject);
+        return obj.map(cleanObject);
     }
     if (obj !== null && typeof obj === 'object') {
-      const newObj = {};
-      for (const key in obj) {
-        if (!obj.hasOwnProperty(key)) continue;
-        if (["id", "createdAt", "updatedAt"].includes(key)) {
-          continue;
-        }
-        let value = cleanObject(obj[key]);
-        if (["data", "attributes"].includes(key)) {
-          if (value && typeof value === 'object' && !Array.isArray(value)) {
-            for (const nestedKey in value) {
-              if (value.hasOwnProperty(nestedKey)) {
-                newObj[nestedKey] = value[nestedKey];
-              }
+        const newObj = {};
+        for (const key in obj) {
+            if (!obj.hasOwnProperty(key)) continue;
+            if (['id', 'createdAt', 'updatedAt'].includes(key)) {
+                continue;
             }
-          } else {
-            newObj[key] = value;
-          }
-        } else {
-          newObj[key] = value;
+            let value = cleanObject(obj[key]);
+            if (['data', 'attributes'].includes(key)) {
+                if (
+                    value &&
+                    typeof value === 'object' &&
+                    !Array.isArray(value)
+                ) {
+                    for (const nestedKey in value) {
+                        if (value.hasOwnProperty(nestedKey)) {
+                            newObj[nestedKey] = value[nestedKey];
+                        }
+                    }
+                } else {
+                    newObj[key] = value;
+                }
+            } else {
+                newObj[key] = value;
+            }
         }
-      }
-      return newObj;
+        return newObj;
     }
     return obj;
-  }
+};
+
+export const isCommentRestricted = (curComment) => {
+    let banned = curComment.attributes.comments_reports.data.some((report) => {
+        return report.attributes.moderation_status === true;
+    });
+    let x = curComment.attributes.comments_reports.data.filter((report) => {
+        return report.attributes.moderation_status !== false;
+    });
+    if (banned || x.length >= 3) {
+        return true;
+    }
+    return false;
+};

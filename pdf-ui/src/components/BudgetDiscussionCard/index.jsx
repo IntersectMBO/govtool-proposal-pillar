@@ -130,7 +130,14 @@ const BudgetDiscussionCard = ({
                     backgroundColor: alpha('#FFFFFF', 0.3),
                     minHeight: '400px',
                 }}
-            >
+                
+                data-testid={`budget-discussion-`+
+                        (budgetDiscussion?.attributes?.bd_psapb?.data?.attributes?.type_name?.data?.attributes?.type_name =='None of these'
+                        ? 'no-category'
+                        : budgetDiscussion?.attributes?.bd_psapb?.data?.attributes?.type_name?.data?.attributes?.type_name.replace(/\s+/g, '-').toLowerCase())
+                    +`-card`}
+                  
+            > 
                 <CardHeader
                     action={isDraft ? null : (
                             <>
@@ -278,7 +285,7 @@ const BudgetDiscussionCard = ({
                                     overflow: 'hidden',
                                     textOverflow: 'ellipsis',
                                 }}
-                               // data-testid={`budget-discussion-${proposal?.id}-title`}
+                                data-testid={`budget-discussion-title`}
                             >
                                 {isDraft?
                                    budgetDiscussion?.attributes?.draft_data?.bd_proposal_detail?.proposal_name
@@ -323,7 +330,7 @@ const BudgetDiscussionCard = ({
                             >
                                 Proposal benefit
                             </Typography>
-
+                            <div data-testid='proposal-benefit'>
                             <MarkdownTextComponent
                                 markdownText={
                                     isDraft? budgetDiscussion?.attributes?.draft_data?.bd_psapb?.proposal_benefit
@@ -331,6 +338,7 @@ const BudgetDiscussionCard = ({
                                 
                                 }
                             /> 
+                            </div>
                         </Box>
                         <Box>
                             <Typography
@@ -344,7 +352,7 @@ const BudgetDiscussionCard = ({
                                 variant='body2'
                                 component='p'
                                 color='text.darkPurple'
-                                data-testid='budget-requested'
+                                data-testid='budget-requested-amount'
                             >₳ {
                                 isDraft? budgetDiscussion?.attributes?.draft_data?.bd_costing?.ada_amount
                                 :budgetDiscussion?.attributes?.bd_costing?.data?.attributes?.ada_amount
@@ -454,7 +462,7 @@ const BudgetDiscussionCard = ({
                                     variant='contained'
                                     fullWidth
                                     onClick={() => startEdittingDraft(budgetDiscussion)}
-                                    //data-testid={`draft-${proposal?.id}-start-editing`}
+                                    data-testid={`draft-`+budgetDiscussion?.id+`-start-editing`}
                                 >
                                     Start Editing
                                 </Button>
@@ -462,11 +470,19 @@ const BudgetDiscussionCard = ({
                                 <Box flexGrow={1}>
                                     <Link
                                         to={`/budget_discussion/${budgetDiscussion?.id}`}
-                                        //data-testid={`proposal-${proposal?.id}-view-details-link-wrapper`}
+                                        data-testid={`budget-discussion-`+
+                                            (budgetDiscussion?.attributes?.bd_psapb?.data?.attributes?.type_name?.data?.attributes?.type_name =='None of these'
+                                            ? 'no-category'
+                                            : budgetDiscussion?.attributes?.bd_psapb?.data?.attributes?.type_name?.data?.attributes?.type_name.replace(/\s+/g, '-').toLowerCase())
+                                        +`-view-details-link-wrapper`}
                                     >
                                         <Button
                                             variant='contained'
-                                           // data-testid={`proposal-${proposal?.id}-view-details`}
+                                            data-testid={`budget-discussion-`+
+                                                (budgetDiscussion?.attributes?.bd_psapb?.data?.attributes?.type_name?.data?.attributes?.type_name =='None of these'
+                                                ? 'no-category'
+                                                : budgetDiscussion?.attributes?.bd_psapb?.data?.attributes?.type_name?.data?.attributes?.type_name.replace(/\s+/g, '-').toLowerCase())
+                                            +`-view-details`}
                                             fullWidth
                                         >
                                             View Details
