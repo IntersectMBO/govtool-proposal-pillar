@@ -316,24 +316,28 @@ const SingleBudgetDiscussion = ({ id }) => {
                                                         ?.proposal_name
                                                 }
                                             </Typography>
-                                            <Typography
-                                                variant='body2'
-                                                component={'h5'}
-                                                sx={{
-                                                    color: (theme) =>
-                                                        theme?.palette?.text
-                                                            ?.black,
-                                                    mt: 1,
-                                                }}
-                                            >
-                                                @
-                                                {
-                                                    proposal?.attributes
-                                                        ?.creator?.data
-                                                        ?.attributes
-                                                        .govtool_username
-                                                }
-                                            </Typography>
+                                            {proposal?.attributes?.creator?.data
+                                                ?.attributes
+                                                .govtool_username ? (
+                                                <Typography
+                                                    variant='body2'
+                                                    component={'h5'}
+                                                    sx={{
+                                                        color: (theme) =>
+                                                            theme?.palette?.text
+                                                                ?.black,
+                                                        mt: 1,
+                                                    }}
+                                                >
+                                                    @
+                                                    {
+                                                        proposal?.attributes
+                                                            ?.creator?.data
+                                                            ?.attributes
+                                                            .govtool_username
+                                                    }
+                                                </Typography>
+                                            ) : null}
                                         </Grid>
 
                                         {/* SHARE BUTTON */}
@@ -753,7 +757,7 @@ const SingleBudgetDiscussion = ({ id }) => {
                                                     ?.data?.attributes
                                                     ?.proposal_public_champion
                                             }
-                                            answerTestId='public-proposal-champion'   
+                                            answerTestId='public-proposal-champion'
                                         />
 
                                         <BudgetDiscussionInfoSegment
@@ -766,7 +770,7 @@ const SingleBudgetDiscussion = ({ id }) => {
                                                     ?.data?.attributes
                                                     ?.social_handles
                                             }
-                                            answerTestId='social-handles' 
+                                            answerTestId='social-handles'
                                         />
                                     </Box>
                                     <Box
@@ -1019,7 +1023,7 @@ const SingleBudgetDiscussion = ({ id }) => {
                                                         ?.data?.attributes
                                                         ?.currency_name
                                                 }
-                                                answerTestId={`costing-preferred-currency`} 
+                                                answerTestId={`costing-preferred-currency`}
                                             />
 
                                             <BudgetDiscussionInfoSegment
@@ -1178,9 +1182,11 @@ const SingleBudgetDiscussion = ({ id }) => {
                                                 backgroundColor: 'transparent',
                                             },
                                         }}
-                                        data-testid={showFullText
-                                            ? 'show-less-button'
-                                            : 'read-more-button'}
+                                        data-testid={
+                                            showFullText
+                                                ? 'show-less-button'
+                                                : 'read-more-button'
+                                        }
                                     >
                                         {showFullText
                                             ? 'Show less'
