@@ -210,7 +210,8 @@ const BudgetDiscussionsList = ({
                                         }));
                                     }
                                 }}
-                                data-testid={(currentBudgetDiscussionType?.attributes?.type_name ==
+                                data-testid={isDraft?'draft-show-all-button':
+                                    (currentBudgetDiscussionType?.attributes?.type_name ==
                                     'None of these'
                                         ? 'no-category-show-all-button'
                                         : currentBudgetDiscussionType?.attributes?.type_name.replace(/\s+/g, '-').toLowerCase() +'-show-all-button')}
