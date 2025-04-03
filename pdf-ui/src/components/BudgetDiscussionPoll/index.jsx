@@ -36,7 +36,7 @@ const BudgetDiscussionPoll = ({
         try {
             const response = await getUserBudgetDiscussionPollVote({
                 pollID: id,
-                userID: user?.id,
+                userID: user?.user?.id,
             });
 
             if (!response) return;
@@ -117,11 +117,7 @@ const BudgetDiscussionPoll = ({
 
     useEffect(() => {
         if (user) {
-            if (poll) {
-                if (!userPollVote) {
-                    fetchUserPollVote(poll?.id);
-                }
-            }
+            fetchUserPollVote(poll?.id);
         }
     }, [user, poll]);
 
