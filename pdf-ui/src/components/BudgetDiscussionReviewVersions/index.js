@@ -353,9 +353,29 @@ const BudgetDiscussionReviewVersions = ({ open, onClose, id }) => {
                                                             }
                                                         </Typography>
 
+                                                        <Box sx={{ mt: 4 }}>
+                                                            <BudgetDiscussionInfoSegment
+                                                                question={
+                                                                    'Budget category'
+                                                                }
+                                                                answer={
+                                                                    selectedVersion
+                                                                        ?.attributes
+                                                                        ?.bd_psapb
+                                                                        ?.data
+                                                                        ?.attributes
+                                                                        ?.type_name
+                                                                        ?.data
+                                                                        ?.attributes
+                                                                        ?.type_name ||
+                                                                    ''
+                                                                }
+                                                            />
+                                                        </Box>
+
                                                         <Box
                                                             sx={{
-                                                                mt: 4,
+                                                                mt: 3,
                                                             }}
                                                         >
                                                             <Typography
