@@ -75,6 +75,7 @@ const BudgetDiscussionSubmit = ({
                                                     'privacy_policy'
                                                 )
                                             }
+                                            data-testid='submit-checkbox'
                                         />
                                     }
                                     label={

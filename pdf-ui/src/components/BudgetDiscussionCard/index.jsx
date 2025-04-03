@@ -131,7 +131,8 @@ const BudgetDiscussionCard = ({
                     minHeight: '400px',
                 }}
                 
-                data-testid={`budget-discussion-`+
+                data-testid={isDraft? `draft-`+budgetDiscussion?.id+`-proposal`:
+                    `budget-discussion-`+
                         (budgetDiscussion?.attributes?.bd_psapb?.data?.attributes?.type_name?.data?.attributes?.type_name =='None of these'
                         ? 'no-category'
                         : budgetDiscussion?.attributes?.bd_psapb?.data?.attributes?.type_name?.data?.attributes?.type_name.replace(/\s+/g, '-').toLowerCase())
@@ -285,7 +286,7 @@ const BudgetDiscussionCard = ({
                                     overflow: 'hidden',
                                     textOverflow: 'ellipsis',
                                 }}
-                                data-testid={`budget-discussion-title`}
+                                data-testid={isDraft?`draft-title`:`budget-discussion-title`}
                             >
                                 {isDraft?
                                    budgetDiscussion?.attributes?.draft_data?.bd_proposal_detail?.proposal_name
@@ -302,6 +303,7 @@ const BudgetDiscussionCard = ({
                                         theme?.palette?.text?.darkPurple,
                                 }}
                                 mt={1}
+                                data-testid={isDraft?`draft-creator`:`budget-discussion-creator`}
                             >
                                 {}
                                 @{budgetDiscussion?.attributes?.creator?.data?.attributes?.govtool_username || ''}
@@ -330,7 +332,7 @@ const BudgetDiscussionCard = ({
                             >
                                 Proposal benefit
                             </Typography>
-                            <div data-testid='proposal-benefit'>
+                            <div data-testid={isDraft?`draft-proposal-benefit`:'proposal-benefit'} >
                             <MarkdownTextComponent
                                 markdownText={
                                     isDraft? budgetDiscussion?.attributes?.draft_data?.bd_psapb?.proposal_benefit
@@ -352,7 +354,7 @@ const BudgetDiscussionCard = ({
                                 variant='body2'
                                 component='p'
                                 color='text.darkPurple'
-                                data-testid='budget-requested-amount'
+                                data-testid={isDraft?'draft-budget-requested':'budget-requested-amount'}
                             >₳ {
                                 isDraft? budgetDiscussion?.attributes?.draft_data?.bd_costing?.ada_amount
                                 :budgetDiscussion?.attributes?.bd_costing?.data?.attributes?.ada_amount
@@ -462,7 +464,8 @@ const BudgetDiscussionCard = ({
                                     variant='contained'
                                     fullWidth
                                     onClick={() => startEdittingDraft(budgetDiscussion)}
-                                    data-testid={`draft-`+budgetDiscussion?.id+`-start-editing`}
+                                    data-testid={`draft-start-editing`}
+                                    //`draft-`+budgetDiscussion?.id+`-start-editing`
                                 >
                                     Start Editing
                                 </Button>
