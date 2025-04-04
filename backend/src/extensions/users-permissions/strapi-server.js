@@ -50,7 +50,7 @@ module.exports = (plugin) => {
       }
 
       if (!signedData) {
-        throw new ValidationError('signData object was not provided');
+        throw new ValidationError("signData object was not provided");
       }
 
       const decoded = COSESign1.from_bytes(
@@ -65,11 +65,11 @@ module.exports = (plugin) => {
       const receivedData = decoded.signed_data().to_bytes();
 
       // Remove network id from identifier
-			const rawKeyHash = identifier.slice(2);
+      const rawKeyHash = identifier.slice(2);
 
-			const isVerified =
-				publicKey.verify(receivedData, signature) &&
-				rawKeyHash === publicKey.hash().to_hex();
+      const isVerified =
+        publicKey.verify(receivedData, signature) &&
+        rawKeyHash === publicKey.hash().to_hex();
 
       if (!isVerified) {
         throw new ApplicationError("Verification failed");
@@ -201,6 +201,12 @@ module.exports = (plugin) => {
     } catch (error) {
       ctx.throw(400, "Failed to update user: " + error.message);
     }
+  };
+  plugin.controllers.user.find = async (ctx) => {
+    return {};
+  };
+  plugin.controllers.user.findOne = async (ctx) => {
+    return {};
   };
 
   return plugin;
