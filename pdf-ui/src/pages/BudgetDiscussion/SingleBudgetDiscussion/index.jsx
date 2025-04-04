@@ -729,7 +729,7 @@ const SingleBudgetDiscussion = ({ id }) => {
                                                 onClose={
                                                     handleCloseReviewVersions
                                                 }
-                                                id={id}
+                                                id={proposal?.id}
                                             />
                                         </Box>
                                     </Box>
