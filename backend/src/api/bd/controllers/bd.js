@@ -223,6 +223,18 @@ module.exports = createCoreController("api::bd.bd", ({ strapi }) => ({
       delete entity.bd_contact_information;
     }
 
+    if (entity?.creator) {
+      delete entity?.creator?.username;
+      delete entity?.creator?.email;
+      delete entity?.creator?.provider;
+      delete entity?.creator?.blocked;
+      delete entity?.creator?.createdAt;
+      delete entity?.creator?.updatedAt;
+      delete entity?.creator?.is_validated;
+      delete entity?.creator?.password;
+      delete entity?.creator?.confirmed;
+    }
+
     const sanitizedEntity = await this.sanitizeOutput(entity, ctx);
     return this.transformResponse(sanitizedEntity);
   },
@@ -237,6 +249,18 @@ module.exports = createCoreController("api::bd.bd", ({ strapi }) => ({
     const sanitizedResults = results.map((entity) => {
       if (entity?.bd_contact_information) {
         delete entity.bd_contact_information;
+      }
+
+      if (entity?.creator) {
+        delete entity?.creator?.username;
+        delete entity?.creator?.email;
+        delete entity?.creator?.provider;
+        delete entity?.creator?.blocked;
+        delete entity?.creator?.createdAt;
+        delete entity?.creator?.updatedAt;
+        delete entity?.creator?.is_validated;
+        delete entity?.creator?.password;
+        delete entity?.creator?.confirmed;
       }
       return entity;
     });
