@@ -308,7 +308,7 @@ const AdministrationAndAuditing = ({
                                     SelectProps={{
                                         SelectDisplayProps: {
                                             'data-testid':
-                                                'itersect-named-administrator',
+                                                'intersect-named-administrator',
                                         },
                                     }}
                                     sx={{ mb: 4 }}
