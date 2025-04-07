@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Box, Typography, Modal } from '@mui/material';
+import { Box, Typography, Modal, Link } from '@mui/material';
 import { useAppContext } from '../../../context/context';
 import CommentReportPopup from '../../CommentReportPopup';
 import { isCommentRestricted } from '../../../lib/helpers';

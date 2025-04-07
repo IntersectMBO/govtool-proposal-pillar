@@ -680,7 +680,7 @@ const BudgetDiscussionReview = ({
                                         the auditor, as per the Cardano
                                         Constitution?'
                                         answer={
-                                            currentBudgetDiscussionData?.itersect_named_administrator
+                                            currentBudgetDiscussionData?.intersect_named_administrator
                                                 ? 'Yes'
                                                 : 'No'
                                         }
