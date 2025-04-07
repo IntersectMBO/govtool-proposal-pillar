@@ -26,6 +26,8 @@ changes.
 - [Fixed Cursor Jumping to End & No Soft Line Breaks](https://github.com/IntersectMBO/govtool/issues/3019)
 
 
+- [Sign data is not executed](https://github.com/IntersectMBO/govtool/issues/3392)
+
 ## [v0.6.1](https://www.npmjs.com/package/@intersect.mbo/pdf-ui/v/0.6.1) 2025-02-12
 ### Fixed 
 - [Test ID for Sort Button](https://github.com/IntersectMBO/govtool/issues/2838)

@@ -41,7 +41,7 @@ export const loginUserToApp = async ({
                 const messageUtf = `To proceed, please sign this data to verify your identity. This ensures that the action is secure and confirms your identity.`;
                 const messageHex = utf8ToHex(messageUtf);
 
-                const signedData = await wallet.signData(
+                const signedData = await wallet?.cip95.signData(
                     stakeKeyHash,
                     messageHex
                 );
