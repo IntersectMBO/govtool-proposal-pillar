@@ -747,7 +747,7 @@ const SingleBudgetDiscussion = ({ id }) => {
                                             Proposal Ownership
                                         </Typography>
 
-                                        <BudgetDiscussionInfoSegment
+                                        {/* <BudgetDiscussionInfoSegment
                                             question={
                                                 'Proposal Public Champion: Who would you like to be the public proposal champion?'
                                             }
@@ -758,7 +758,7 @@ const SingleBudgetDiscussion = ({ id }) => {
                                                     ?.proposal_public_champion
                                             }
                                             answerTestId='public-proposal-champion'
-                                        />
+                                        /> */}
 
                                         <BudgetDiscussionInfoSegment
                                             question={
@@ -1177,6 +1177,17 @@ const SingleBudgetDiscussion = ({ id }) => {
                                                 }
                                                 answerTestId={`include-as-auditor`}
                                             />
+                                            {currentBudgetDiscussionData?.intersect_named_administrator?'':
+                                                <BudgetDiscussionInfoSegment
+                                                    question='Please provide further information to help inform DReps. Who is the vendor and what services are they providing?'
+                                                    answer={
+                                                        currentBudgetDiscussionData
+                                                            ?.currentBudgetDiscussionData?.intersect_admin_further_text ||''
+                                                    }
+                                                    answerTestId={
+                                                        'intersect-admin-further-text'
+                                                    }
+                                                />}
                                         </Box>
                                     )}
                                     <Button
