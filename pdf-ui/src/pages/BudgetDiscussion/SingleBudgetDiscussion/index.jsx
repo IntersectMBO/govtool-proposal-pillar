@@ -1014,7 +1014,7 @@ const SingleBudgetDiscussion = ({ id }) => {
 
                                             <BudgetDiscussionInfoSegment
                                                 question={
-                                                    'ADA to USD Conversion Rate'
+                                                    'USD to ADA Conversion Rate'
                                                 }
                                                 answer={
                                                     proposal?.attributes
