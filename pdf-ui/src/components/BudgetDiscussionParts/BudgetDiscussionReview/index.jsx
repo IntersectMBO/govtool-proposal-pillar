@@ -688,6 +688,17 @@ const BudgetDiscussionReview = ({
                                             'intersect-named-administrator-content'
                                         }
                                     />
+                                    {currentBudgetDiscussionData?.intersect_named_administrator?'':
+                                    <InfoSection
+                                        question='Please provide further information to help inform DReps. Who is the vendor and what services are they providing?'
+                                        answer={
+                                            currentBudgetDiscussionData
+                                                ?.currentBudgetDiscussionData?.intersect_admin_further_text ||''
+                                        }
+                                        answerTestId={
+                                            'intersect-admin-further-text'
+                                        }
+                                    />}
                                 </Box>
                             </Box>
                         </Box>
