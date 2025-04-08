@@ -918,7 +918,19 @@ const SingleBudgetDiscussion = ({ id }) => {
                                                 }
                                                 answerTestId={`proposal-key-dependencies`}
                                             />
-
+                                            
+                                            <BudgetDiscussionInfoSegment
+                                                question={
+                                                    'How will this proposal be maintained and supported after initial development?'
+                                                }
+                                                answer={
+                                                    proposal?.attributes
+                                                        ?.bd_proposal_detail
+                                                        ?.data?.attributes
+                                                        ?.maintain_and_support
+                                                }
+                                                answerTestId={`proposal-maintain-and-support`}
+                                            />
                                             <BudgetDiscussionInfoSegment
                                                 question={
                                                     'Key Proposal Deliverable(s) and Definition of Done: What tangible milestones or outcomes are to be delivered and what will the community ultimately receive?'
