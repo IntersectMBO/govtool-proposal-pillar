@@ -403,7 +403,7 @@ const ProposalOwnership = ({
                                 >
                                     Submission lead listed above
                                 </MenuItem>
-                            </TextField>
+                            </TextField> */
                             <TextField
                                 label='Please provide your preferred contact details that will be shared publicly (e.g. email address, X handle, Discord handle, Github) ?'
                                 value={
@@ -426,7 +426,7 @@ const ProposalOwnership = ({
                                 //   }
                                 sx={{ mb: 2 }}
                                 data-testid='provide-preferred-input'
-                            /> */}
+                            />}
                             <FormControlLabel
                                 control={
                                     <Checkbox
