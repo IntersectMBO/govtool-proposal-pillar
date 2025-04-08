@@ -693,7 +693,7 @@ const BudgetDiscussionReview = ({
                                         question='Please provide further information to help inform DReps. Who is the vendor and what services are they providing?'
                                         answer={
                                             currentBudgetDiscussionData
-                                                ?.currentBudgetDiscussionData?.intersect_admin_further_text ||''
+                                                ?.intersect_admin_further_text ||''
                                         }
                                         answerTestId={
                                             'intersect-admin-further-text'
