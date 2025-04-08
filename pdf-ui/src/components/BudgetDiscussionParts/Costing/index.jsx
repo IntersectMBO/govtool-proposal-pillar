@@ -29,7 +29,7 @@ const Costing = ({
     validateSection,
 }) => {
     const [allCurrencyList, setAllCurrencyList] = useState([]);
-    const costBreakdownMaxLength = 2500;
+    const costBreakdownMaxLength = 15000;
     const handleDataChange = (e, dataName) => {
         setBudgetDiscussionData({
             ...currentBudgetDiscussionData,

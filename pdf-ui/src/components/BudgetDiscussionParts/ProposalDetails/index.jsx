@@ -30,12 +30,12 @@ const ProposalDetails = ({
 }) => {
     const [allContractTypes, setAllContractTypes] = useState([]);
 
-    const proposalDescriptionMaxLength = 2500;
-    const keyDependenciesMaxLength = 2500;
-    const resourcingDurationEstimatesMaxLength = 2500;
-    const keyProposalDeliverablesMaxLength = 2500;
+    const proposalDescriptionMaxLength = 15000;
+    const keyDependenciesMaxLength = 15000;
+    const resourcingDurationEstimatesMaxLength = 15000;
+    const keyProposalDeliverablesMaxLength = 15000;
 
-    const supplementaryEndorsementMaxLength = 2500;
+    const supplementaryEndorsementMaxLength = 15000;
     useEffect(() => {
         const fetchData = async () => {
             try {
