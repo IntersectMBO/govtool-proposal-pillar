@@ -32,9 +32,9 @@ const ProblemStatementsAndProposalBenefits = ({
     setErrors,
     validateSection,
 }) => {
-    const problemStatementMaxLength = 2500;
-    const proposalBenefitMaxLength = 2500;
-    const supplementaryEndorsementMaxLength = 2500;
+    const problemStatementMaxLength = 15000;
+    const proposalBenefitMaxLength = 15000;
+    const supplementaryEndorsementMaxLength = 15000;
     const [allRoadMaps, setAllRoadMaps] = useState([]);
     const [allBDTypes, setAllBDTypes] = useState([]);
     const [allCommittees, setAllCommittees] = useState([]);
@@ -110,7 +110,7 @@ const ProblemStatementsAndProposalBenefits = ({
                             }}
                         >
                             <Typography variant='h4' gutterBottom mb={2}>
-                                Section 3: Problem Statements and Proposal
+                                Section 2: Problem Statements and Proposal
                                 Benefits
                             </Typography>
                             <Box
@@ -125,7 +125,7 @@ const ProblemStatementsAndProposalBenefits = ({
                                     fontWeight={500}
                                     color={'text.black'}
                                 >
-                                    3
+                                    2
                                 </Typography>
                                 <Typography
                                     variant='body1'
@@ -139,7 +139,7 @@ const ProblemStatementsAndProposalBenefits = ({
                                     fontWeight={300}
                                     color={'text.black'}
                                 >
-                                    7
+                                    6
                                 </Typography>
                             </Box>
                             <Box color={(theme) => theme.palette.text.grey}>

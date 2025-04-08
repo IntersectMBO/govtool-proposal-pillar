@@ -160,7 +160,7 @@ const BudgetDiscussionReview = ({
                                     Review your proposal data before submitting
                                     it
                                 </Typography>
-                                <Box sx={{ align: 'left' }}>
+                                {/* <Box sx={{ align: 'left' }}>
                                     <Typography
                                         variant='h4'
                                         gutterBottom
@@ -229,14 +229,14 @@ const BudgetDiscussionReview = ({
                                         }
                                         dataTestId='submission-lead-email-content'
                                     />
-                                </Box>
+                                </Box> */}
                                 <Box sx={{ align: 'left' }}>
                                     <Typography
                                         variant='h4'
                                         gutterBottom
                                         sx={{ align: 'left', mb: 4 }}
                                     >
-                                        Section 2: Proposal Ownership
+                                        Section 1: Proposal Ownership
                                     </Typography>
 
                                     <InfoSection
@@ -336,7 +336,7 @@ const BudgetDiscussionReview = ({
                                         ''
                                     )}
 
-                                    <InfoSection
+                                    {/* <InfoSection
                                         question='Proposal Public Champion: Who would you
                                         like to be the public proposal champion?'
                                         answer={
@@ -346,7 +346,7 @@ const BudgetDiscussionReview = ({
                                         }
                                         answerTestId='provide-preferred-content'
 
-                                    />
+                                    /> */}
 
                                     <InfoSection
                                         question='What social handles would you like to be
@@ -365,7 +365,7 @@ const BudgetDiscussionReview = ({
                                         gutterBottom
                                         sx={{ align: 'left', mb: 3 }}
                                     >
-                                        Section 3: Problem Statements and
+                                        Section 2: Problem Statements and
                                         Proposal Benefits
                                     </Typography>
 
@@ -452,7 +452,7 @@ const BudgetDiscussionReview = ({
                                         gutterBottom
                                         sx={{ align: 'left', mb: 3 }}
                                     >
-                                        Section 4: Proposal Details
+                                        Section 3: Proposal Details
                                     </Typography>
 
                                     <InfoSection
@@ -565,7 +565,7 @@ const BudgetDiscussionReview = ({
                                         gutterBottom
                                         sx={{ align: 'left', mb: 3 }}
                                     >
-                                        Section 5: Costing
+                                        Section 4: Costing
                                     </Typography>
 
                                     <InfoSection
@@ -639,7 +639,7 @@ const BudgetDiscussionReview = ({
                                         gutterBottom
                                         sx={{ align: 'left', mb: 3 }}
                                     >
-                                        Section 6: Further information
+                                        Section 5: Further information
                                     </Typography>
                                     <Typography variant='body1' gutterBottom>
                                         Supporting links
@@ -671,7 +671,7 @@ const BudgetDiscussionReview = ({
                                         gutterBottom
                                         sx={{ align: 'left', mb: 3 }}
                                     >
-                                        Section 7: Administration and Auditing
+                                        Section 6: Administration and Auditing
                                     </Typography>
 
                                     <InfoSection
@@ -680,7 +680,7 @@ const BudgetDiscussionReview = ({
                                         the auditor, as per the Cardano
                                         Constitution?'
                                         answer={
-                                            currentBudgetDiscussionData?.itersect_named_administrator
+                                            currentBudgetDiscussionData?.intersect_named_administrator
                                                 ? 'Yes'
                                                 : 'No'
                                         }
@@ -688,6 +688,17 @@ const BudgetDiscussionReview = ({
                                             'intersect-named-administrator-content'
                                         }
                                     />
+                                    {currentBudgetDiscussionData?.intersect_named_administrator?'':
+                                    <InfoSection
+                                        question='Please provide further information to help inform DReps. Who is the vendor and what services are they providing?'
+                                        answer={
+                                            currentBudgetDiscussionData
+                                                ?.intersect_admin_further_text ||''
+                                        }
+                                        answerTestId={
+                                            'intersect-admin-further-text'
+                                        }
+                                    />}
                                 </Box>
                             </Box>
                         </Box>

@@ -119,6 +119,7 @@ module.exports = createCoreController("api::bd.bd", ({ strapi }) => ({
         privacy_policy: data.privacy_policy,
         intersect_named_administrator:
           data.intersect_named_administrator || false,
+        intersect_admin_further_text: data.intersect_admin_further_text || null,
         old_ver: latestVersionId || null,
         creator: user.id,
         bd_psapb: savedEntities.bd_psapb?.id || null,

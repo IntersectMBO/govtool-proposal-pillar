@@ -747,7 +747,7 @@ const SingleBudgetDiscussion = ({ id }) => {
                                             Proposal Ownership
                                         </Typography>
 
-                                        <BudgetDiscussionInfoSegment
+                                        {/* <BudgetDiscussionInfoSegment
                                             question={
                                                 'Proposal Public Champion: Who would you like to be the public proposal champion?'
                                             }
@@ -758,7 +758,7 @@ const SingleBudgetDiscussion = ({ id }) => {
                                                     ?.proposal_public_champion
                                             }
                                             answerTestId='public-proposal-champion'
-                                        />
+                                        /> */}
 
                                         <BudgetDiscussionInfoSegment
                                             question={
@@ -918,7 +918,19 @@ const SingleBudgetDiscussion = ({ id }) => {
                                                 }
                                                 answerTestId={`proposal-key-dependencies`}
                                             />
-
+                                            
+                                            <BudgetDiscussionInfoSegment
+                                                question={
+                                                    'How will this proposal be maintained and supported after initial development?'
+                                                }
+                                                answer={
+                                                    proposal?.attributes
+                                                        ?.bd_proposal_detail
+                                                        ?.data?.attributes
+                                                        ?.maintain_and_support
+                                                }
+                                                answerTestId={`proposal-maintain-and-support`}
+                                            />
                                             <BudgetDiscussionInfoSegment
                                                 question={
                                                     'Key Proposal Deliverable(s) and Definition of Done: What tangible milestones or outcomes are to be delivered and what will the community ultimately receive?'
@@ -1002,7 +1014,7 @@ const SingleBudgetDiscussion = ({ id }) => {
 
                                             <BudgetDiscussionInfoSegment
                                                 question={
-                                                    'ADA to USD Conversion Rate'
+                                                    'USD to ADA Conversion Rate'
                                                 }
                                                 answer={
                                                     proposal?.attributes
@@ -1165,6 +1177,17 @@ const SingleBudgetDiscussion = ({ id }) => {
                                                 }
                                                 answerTestId={`include-as-auditor`}
                                             />
+                                            {proposal?.attributes?.intersect_named_administrator?'':
+                                                <BudgetDiscussionInfoSegment
+                                                    question='Please provide further information to help inform DReps. Who is the vendor and what services are they providing?'
+                                                    answer={
+                                                        proposal?.attributes
+                                                            ?.intersect_admin_further_text ||''
+                                                    }
+                                                    answerTestId={
+                                                        'intersect-admin-further-text'
+                                                    }
+                                                />}
                                         </Box>
                                     )}
                                     <Button
