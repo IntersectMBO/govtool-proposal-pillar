@@ -302,7 +302,7 @@ const CreateBudgetDiscussionDialog = ({
                             .submited_on_behalf === 'Company',
                     type: 'string',
                 },
-                proposal_public_champion: { required: true, type: 'string' },
+               // proposal_public_champion: { required: true, type: 'string' },
                 key_info_to_identify_group: {
                     required:
                         budgetDiscussionData.bd_proposal_ownership

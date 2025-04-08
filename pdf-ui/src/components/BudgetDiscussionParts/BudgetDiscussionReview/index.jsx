@@ -336,7 +336,7 @@ const BudgetDiscussionReview = ({
                                         ''
                                     )}
 
-                                    <InfoSection
+                                    {/* <InfoSection
                                         question='Proposal Public Champion: Who would you
                                         like to be the public proposal champion?'
                                         answer={
@@ -346,7 +346,7 @@ const BudgetDiscussionReview = ({
                                         }
                                         answerTestId='provide-preferred-content'
 
-                                    />
+                                    /> */}
 
                                     <InfoSection
                                         question='What social handles would you like to be
@@ -688,6 +688,17 @@ const BudgetDiscussionReview = ({
                                             'intersect-named-administrator-content'
                                         }
                                     />
+                                    {currentBudgetDiscussionData?.intersect_named_administrator?'':
+                                    <InfoSection
+                                        question='Please provide further information to help inform DReps. Who is the vendor and what services are they providing?'
+                                        answer={
+                                            currentBudgetDiscussionData
+                                                ?.intersect_admin_further_text ||''
+                                        }
+                                        answerTestId={
+                                            'intersect-admin-further-text'
+                                        }
+                                    />}
                                 </Box>
                             </Box>
                         </Box>

@@ -358,7 +358,7 @@ const ProposalOwnership = ({
                             ) : (
                                 ''
                             )}
-                            <TextField
+                            {/* <TextField
                                 select
                                 label='Proposal Public Champion: Who would you like to be the public proposal champion?'
                                 value={
@@ -403,7 +403,7 @@ const ProposalOwnership = ({
                                 >
                                     Submission lead listed above
                                 </MenuItem>
-                            </TextField>
+                            </TextField> */
                             <TextField
                                 label='Please provide your preferred contact details that will be shared publicly (e.g. email address, X handle, Discord handle, Github) ?'
                                 value={
@@ -426,7 +426,7 @@ const ProposalOwnership = ({
                                 //   }
                                 sx={{ mb: 2 }}
                                 data-testid='provide-preferred-input'
-                            />
+                            />}
                             <FormControlLabel
                                 control={
                                     <Checkbox
@@ -442,7 +442,7 @@ const ProposalOwnership = ({
                                 }
                                 label={
                                     <Typography variant='body2'>
-                                        I agree to the information in section 2
+                                        I agree to the information in section 1
                                         to be shared publicly
                                     </Typography>
                                 }

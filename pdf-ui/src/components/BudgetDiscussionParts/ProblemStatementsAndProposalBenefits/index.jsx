@@ -32,9 +32,9 @@ const ProblemStatementsAndProposalBenefits = ({
     setErrors,
     validateSection,
 }) => {
-    const problemStatementMaxLength = 2500;
-    const proposalBenefitMaxLength = 2500;
-    const supplementaryEndorsementMaxLength = 2500;
+    const problemStatementMaxLength = 15000;
+    const proposalBenefitMaxLength = 15000;
+    const supplementaryEndorsementMaxLength = 15000;
     const [allRoadMaps, setAllRoadMaps] = useState([]);
     const [allBDTypes, setAllBDTypes] = useState([]);
     const [allCommittees, setAllCommittees] = useState([]);
