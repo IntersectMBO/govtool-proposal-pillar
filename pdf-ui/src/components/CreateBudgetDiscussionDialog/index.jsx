@@ -294,7 +294,7 @@ const CreateBudgetDiscussionDialog = ({
                             .submited_on_behalf === 'Group',
                     type: 'string',
                 },
-                social_handles: { required: true, type: 'string' },
+                //social_handles: { required: true, type: 'string' },
                 submited_on_behalf: { required: true, type: 'string' },
                 company_domain_name: {
                     required:
