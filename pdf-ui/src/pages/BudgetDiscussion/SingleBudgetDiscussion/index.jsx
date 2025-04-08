@@ -747,7 +747,7 @@ const SingleBudgetDiscussion = ({ id }) => {
                                             Proposal Ownership
                                         </Typography>
 
-                                        <BudgetDiscussionInfoSegment
+                                        {/* <BudgetDiscussionInfoSegment
                                             question={
                                                 'Proposal Public Champion: Who would you like to be the public proposal champion?'
                                             }
@@ -758,7 +758,7 @@ const SingleBudgetDiscussion = ({ id }) => {
                                                     ?.proposal_public_champion
                                             }
                                             answerTestId='public-proposal-champion'
-                                        />
+                                        /> */}
 
                                         <BudgetDiscussionInfoSegment
                                             question={

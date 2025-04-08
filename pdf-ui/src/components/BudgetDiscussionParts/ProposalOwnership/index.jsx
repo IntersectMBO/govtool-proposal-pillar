@@ -358,7 +358,7 @@ const ProposalOwnership = ({
                             ) : (
                                 ''
                             )}
-                            <TextField
+                            {/* <TextField
                                 select
                                 label='Proposal Public Champion: Who would you like to be the public proposal champion?'
                                 value={
@@ -426,7 +426,7 @@ const ProposalOwnership = ({
                                 //   }
                                 sx={{ mb: 2 }}
                                 data-testid='provide-preferred-input'
-                            />
+                            /> */}
                             <FormControlLabel
                                 control={
                                     <Checkbox
@@ -442,7 +442,7 @@ const ProposalOwnership = ({
                                 }
                                 label={
                                     <Typography variant='body2'>
-                                        I agree to the information in section 2
+                                        I agree to the information in section 1
                                         to be shared publicly
                                     </Typography>
                                 }

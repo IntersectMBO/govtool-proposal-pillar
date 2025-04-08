@@ -336,7 +336,7 @@ const BudgetDiscussionReview = ({
                                         ''
                                     )}
 
-                                    <InfoSection
+                                    {/* <InfoSection
                                         question='Proposal Public Champion: Who would you
                                         like to be the public proposal champion?'
                                         answer={
@@ -346,7 +346,7 @@ const BudgetDiscussionReview = ({
                                         }
                                         answerTestId='provide-preferred-content'
 
-                                    />
+                                    /> */}
 
                                     <InfoSection
                                         question='What social handles would you like to be
