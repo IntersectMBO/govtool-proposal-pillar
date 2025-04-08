@@ -80,11 +80,8 @@ const BudgetDiscussionSubmit = ({
                                     }
                                     label={
                                         <Typography variant='body2'>
-                                            I consent to the public sharing of
-                                            all information provided in this
-                                            form, except for Section 1
-                                            (Participant Details), in accordance
-                                            with the{' '}
+                                            I consent to the public sharing of all information 
+                                            provided in this form in accordance with the{' '}
                                             <span>
                                                 <a
                                                     href='https://docs.intersectmbo.org/legal/policies-and-conditions/privacy-policy'

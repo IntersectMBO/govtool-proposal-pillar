@@ -29,7 +29,7 @@ const Costing = ({
     validateSection,
 }) => {
     const [allCurrencyList, setAllCurrencyList] = useState([]);
-    const costBreakdownMaxLength = 2500;
+    const costBreakdownMaxLength = 15000;
     const handleDataChange = (e, dataName) => {
         setBudgetDiscussionData({
             ...currentBudgetDiscussionData,
@@ -83,7 +83,7 @@ const Costing = ({
                             }}
                         >
                             <Typography variant='h4' gutterBottom mb={2}>
-                                Section 5: Costing
+                                Section 4: Costing
                             </Typography>
                             <Box
                                 sx={{ mt: 1, mb: 4 }}
@@ -97,7 +97,7 @@ const Costing = ({
                                     fontWeight={500}
                                     color={'text.black'}
                                 >
-                                    5
+                                    4
                                 </Typography>
                                 <Typography
                                     variant='body1'
@@ -111,7 +111,7 @@ const Costing = ({
                                     fontWeight={300}
                                     color={'text.black'}
                                 >
-                                    7
+                                    6
                                 </Typography>
                             </Box>
                             <Box color={(theme) => theme.palette.text.grey}>

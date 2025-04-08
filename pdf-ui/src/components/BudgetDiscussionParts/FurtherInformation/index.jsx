@@ -43,7 +43,7 @@ const FurtherInformation = ({ setStep, step, currentBudgetDiscussionData, setBud
                             }}
                         >
                             <Typography variant='h4' gutterBottom mb={2}>
-                                Section 6: Further information
+                                Section 5: Further information
                             </Typography>
                             <Box
                                 sx={{ mt: 1, mb: 4 }}
@@ -57,7 +57,7 @@ const FurtherInformation = ({ setStep, step, currentBudgetDiscussionData, setBud
                                     fontWeight={500}
                                     color={'text.black'}
                                 >
-                                    6
+                                    5
                                 </Typography>
                                 <Typography
                                     variant='body1'
@@ -71,7 +71,7 @@ const FurtherInformation = ({ setStep, step, currentBudgetDiscussionData, setBud
                                     fontWeight={300}
                                     color={'text.black'}
                                 >
-                                    7
+                                    6
                                 </Typography>
                             </Box>
                             <Box color={(theme) => theme.palette.text.grey}>

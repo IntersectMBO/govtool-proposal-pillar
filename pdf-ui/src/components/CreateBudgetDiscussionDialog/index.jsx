@@ -47,7 +47,7 @@ const CreateBudgetDiscussionDialog = ({
     const { setLoading } = useAppContext();
     const [step, setStep] = useState(1);
     const [budgetDiscussionData, setBudgetDiscussionData] = useState({
-        bd_contact_information: {},
+       // bd_contact_information: {},
         bd_proposal_ownership: {},
         bd_psapb: {},
         bd_proposal_detail: {},
@@ -77,7 +77,8 @@ const CreateBudgetDiscussionDialog = ({
     }, []);
     const fetchBudgetDiscussion = async (id) => {
         setLoading(true);
-        let query = `populate[0]=creator&populate[1]=bd_costing.preferred_currency&populate[2]=bd_proposal_detail.contract_type_name&populate[3]=bd_further_information.proposal_links&populate[4]=bd_psapb.type_name&populate[5]=bd_psapb.roadmap_name&populate[6]=bd_psapb.committee_name&populate[7]=bd_proposal_ownership.be_country&populate[8]=bd_contact_information.be_nationality&populate[9]=bd_contact_information.be_country_of_res`;
+        //let query = `populate[0]=creator&populate[1]=bd_costing.preferred_currency&populate[2]=bd_proposal_detail.contract_type_name&populate[3]=bd_further_information.proposal_links&populate[4]=bd_psapb.type_name&populate[5]=bd_psapb.roadmap_name&populate[6]=bd_psapb.committee_name&populate[7]=bd_proposal_ownership.be_country&populate[8]=bd_contact_information.be_nationality&populate[9]=bd_contact_information.be_country_of_res`;
+        let query = `populate[0]=creator&populate[1]=bd_costing.preferred_currency&populate[2]=bd_proposal_detail.contract_type_name&populate[3]=bd_further_information.proposal_links&populate[4]=bd_psapb.type_name&populate[5]=bd_psapb.roadmap_name&populate[6]=bd_psapb.committee_name&populate[7]=bd_proposal_ownership.be_country`;
         try {
             const response = await getBudgetDiscussion({
                 id: id,
@@ -86,10 +87,10 @@ const CreateBudgetDiscussionDialog = ({
             let newData = cleanObject(response);
 
             newData.old_ver = id;
-            newData.bd_contact_information.be_country_of_res =
-                response?.attributes?.bd_contact_information?.data.attributes?.be_country_of_res?.data?.id;
-            newData.bd_contact_information.be_nationality =
-                response?.attributes?.bd_contact_information?.data?.attributes?.be_nationality?.data?.id;
+            //newData.bd_contact_information.be_country_of_res =
+            //    response?.attributes?.bd_contact_information?.data.attributes?.be_country_of_res?.data?.id;
+            //newData.bd_contact_information.be_nationality =
+            //    response?.attributes?.bd_contact_information?.data?.attributes?.be_nationality?.data?.id;
             newData.bd_proposal_ownership.be_country =
                 response?.attributes?.bd_proposal_ownership?.data?.attributes?.be_country?.data?.id;
             newData.bd_psapb.roadmap_name =
@@ -301,7 +302,7 @@ const CreateBudgetDiscussionDialog = ({
                             .submited_on_behalf === 'Company',
                     type: 'string',
                 },
-                proposal_public_champion: { required: true, type: 'string' },
+               // proposal_public_champion: { required: true, type: 'string' },
                 key_info_to_identify_group: {
                     required:
                         budgetDiscussionData.bd_proposal_ownership
@@ -309,14 +310,14 @@ const CreateBudgetDiscussionDialog = ({
                     type: 'string',
                 },
             },
-            bd_contact_information: {
-                be_email: { required: true, type: 'email' },
-                be_full_name: { required: true, type: 'string' },
-                be_nationality: { required: true, type: 'number' },
-                be_country_of_res: { required: true, type: 'number' },
-                submission_lead_email: { required: true, type: 'email' },
-                submission_lead_full_name: { required: true, type: 'string' },
-            },
+            // bd_contact_information: {
+            //     be_email: { required: true, type: 'email' },
+            //     be_full_name: { required: true, type: 'string' },
+            //     be_nationality: { required: true, type: 'number' },
+            //     be_country_of_res: { required: true, type: 'number' },
+            //     submission_lead_email: { required: true, type: 'email' },
+            //     submission_lead_full_name: { required: true, type: 'string' },
+            // },
             // "bd_further_information": {
             //     "proposal_links": {
             //         required: true,
@@ -554,7 +555,7 @@ const CreateBudgetDiscussionDialog = ({
                                     handleSaveDraft={handleSaveDraft}
                                 />
                             )}
-                            {step === 2 && (
+                            {/* {step === 2 && (
                                 <ContractInformation
                                     setStep={setStep}
                                     step={step}
@@ -571,8 +572,8 @@ const CreateBudgetDiscussionDialog = ({
                                     handleSaveDraft={handleSaveDraft}
                                     validateSection={validateSection}
                                 />
-                            )}
-                            {step === 3 && (
+                            )} */}
+                            {step === 2 && (
                                 <ProposalOwnership
                                     setStep={setStep}
                                     step={step}
@@ -590,7 +591,7 @@ const CreateBudgetDiscussionDialog = ({
                                     validateSection={validateSection}
                                 />
                             )}
-                            {step === 4 && (
+                            {step === 3 && (
                                 <ProblemStatementsAndProposalBenefits
                                     setStep={setStep}
                                     step={step}
@@ -608,7 +609,7 @@ const CreateBudgetDiscussionDialog = ({
                                     validateSection={validateSection}
                                 />
                             )}
-                            {step === 5 && (
+                            {step === 4 && (
                                 <ProposalDetails
                                     setStep={setStep}
                                     step={step}
@@ -626,7 +627,7 @@ const CreateBudgetDiscussionDialog = ({
                                     validateSection={validateSection}
                                 />
                             )}
-                            {step === 6 && (
+                            {step === 5 && (
                                 <Costing
                                     setStep={setStep}
                                     step={step}
@@ -644,7 +645,7 @@ const CreateBudgetDiscussionDialog = ({
                                     validateSection={validateSection}
                                 />
                             )}
-                            {step === 7 && (
+                            {step === 6 && (
                                 <FurtherInformation
                                     setStep={setStep}
                                     step={step}
@@ -662,7 +663,7 @@ const CreateBudgetDiscussionDialog = ({
                                     validateSection={validateSection}
                                 />
                             )}
-                            {step === 8 && (
+                            {step === 7 && (
                                 <AdministrationAndAuditing
                                     setStep={setStep}
                                     step={step}
@@ -680,7 +681,7 @@ const CreateBudgetDiscussionDialog = ({
                                     validateSection={validateSection}
                                 />
                             )}
-                            {step === 9 && (
+                            {step === 8 && (
                                 <BudgetDiscussionSubmit
                                     setStep={setStep}
                                     step={step}
@@ -698,7 +699,7 @@ const CreateBudgetDiscussionDialog = ({
                                     validateSection={validateSection}
                                 />
                             )}
-                            {step === 10 && (
+                            {step === 9 && (
                                 <BudgetDiscussionReview
                                     setStep={setStep}
                                     step={step}

@@ -103,7 +103,7 @@ const AdministrationAndAuditing = ({
                             }}
                         >
                             <Typography variant='h4' gutterBottom mb={2}>
-                                Section 7: Administration and Auditing
+                                Section 6: Administration and Auditing
                             </Typography>
                             <Box
                                 sx={{ mt: 1, mb: 4 }}
@@ -117,7 +117,7 @@ const AdministrationAndAuditing = ({
                                     fontWeight={500}
                                     color={'text.black'}
                                 >
-                                    7
+                                    6
                                 </Typography>
                                 <Typography
                                     variant='body1'
@@ -131,7 +131,7 @@ const AdministrationAndAuditing = ({
                                     fontWeight={300}
                                     color={'text.black'}
                                 >
-                                    7
+                                    6
                                 </Typography>
                             </Box>
                             <Box color={(theme) => theme.palette.text.grey}>
@@ -308,7 +308,7 @@ const AdministrationAndAuditing = ({
                                     SelectProps={{
                                         SelectDisplayProps: {
                                             'data-testid':
-                                                'itersect-named-administrator',
+                                                'intersect-named-administrator',
                                         },
                                     }}
                                     sx={{ mb: 4 }}

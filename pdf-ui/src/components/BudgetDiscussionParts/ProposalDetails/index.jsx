@@ -30,12 +30,12 @@ const ProposalDetails = ({
 }) => {
     const [allContractTypes, setAllContractTypes] = useState([]);
 
-    const proposalDescriptionMaxLength = 2500;
-    const keyDependenciesMaxLength = 2500;
-    const resourcingDurationEstimatesMaxLength = 2500;
-    const keyProposalDeliverablesMaxLength = 2500;
+    const proposalDescriptionMaxLength = 15000;
+    const keyDependenciesMaxLength = 15000;
+    const resourcingDurationEstimatesMaxLength = 15000;
+    const keyProposalDeliverablesMaxLength = 15000;
 
-    const supplementaryEndorsementMaxLength = 2500;
+    const supplementaryEndorsementMaxLength = 15000;
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -91,7 +91,7 @@ const ProposalDetails = ({
                             }}
                         >
                             <Typography variant='h4' gutterBottom mb={2}>
-                                Section 4: Proposal Details
+                                Section 3: Proposal Details
                             </Typography>
                             <Box
                                 sx={{ mt: 1, mb: 4 }}
@@ -105,7 +105,7 @@ const ProposalDetails = ({
                                     fontWeight={500}
                                     color={'text.black'}
                                 >
-                                    4
+                                    3
                                 </Typography>
                                 <Typography
                                     variant='body1'
@@ -119,7 +119,7 @@ const ProposalDetails = ({
                                     fontWeight={300}
                                     color={'text.black'}
                                 >
-                                    7
+                                    6
                                 </Typography>
                             </Box>
                             <Box color={(theme) => theme.palette.text.grey}>

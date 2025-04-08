@@ -104,7 +104,7 @@ const ProposalOwnership = ({
                                 gutterBottom
                                 sx={{ mb: 2 }}
                             >
-                                Section 2: Proposal Ownership
+                                Section 1: Proposal Ownership
                             </Typography>
                         </Box>
                         <Box
@@ -119,7 +119,7 @@ const ProposalOwnership = ({
                                 fontWeight={500}
                                 color={'text.black'}
                             >
-                                2
+                                1
                             </Typography>
                             <Typography
                                 variant='body1'
@@ -133,7 +133,7 @@ const ProposalOwnership = ({
                                 fontWeight={300}
                                 color={'text.black'}
                             >
-                                7
+                                6
                             </Typography>
                         </Box>
                         <Box>
@@ -358,7 +358,7 @@ const ProposalOwnership = ({
                             ) : (
                                 ''
                             )}
-                            <TextField
+                            {/* <TextField
                                 select
                                 label='Proposal Public Champion: Who would you like to be the public proposal champion?'
                                 value={
@@ -426,7 +426,7 @@ const ProposalOwnership = ({
                                 //   }
                                 sx={{ mb: 2 }}
                                 data-testid='provide-preferred-input'
-                            />
+                            /> */}
                             <FormControlLabel
                                 control={
                                     <Checkbox
@@ -442,7 +442,7 @@ const ProposalOwnership = ({
                                 }
                                 label={
                                     <Typography variant='body2'>
-                                        I agree to the information in section 2
+                                        I agree to the information in section 1
                                         to be shared publicly
                                     </Typography>
                                 }

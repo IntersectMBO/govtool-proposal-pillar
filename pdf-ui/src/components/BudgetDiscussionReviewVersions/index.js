@@ -388,7 +388,7 @@ const BudgetDiscussionReviewVersions = ({ open, onClose, id }) => {
                                                                 Ownership
                                                             </Typography>
 
-                                                            <BudgetDiscussionInfoSegment
+                                                            {/* <BudgetDiscussionInfoSegment
                                                                 question={
                                                                     'Proposal Public Champion: Who would you like to be the public proposal champion?'
                                                                 }
@@ -400,7 +400,7 @@ const BudgetDiscussionReviewVersions = ({ open, onClose, id }) => {
                                                                         ?.attributes
                                                                         ?.proposal_public_champion
                                                                 }
-                                                            />
+                                                            /> */}
 
                                                             <BudgetDiscussionInfoSegment
                                                                 question={
