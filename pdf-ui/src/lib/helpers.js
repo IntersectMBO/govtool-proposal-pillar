@@ -44,7 +44,7 @@ export const loginUserToApp = async ({
             } else {
                 if (trigerSignData) {
                     const keyToSign = wallet?.stakeKey;
-                    const messageUtf = `To proceed, please sign this data to verify your identity. This ensures that the action is secure and confirms your identity.`;
+                    const messageUtf = `To proceed, please sign this data to verify your identity. This ensures that the action is secure and confirms your identity. Timestamp: ${new Date()?.getTime()}`;
                     const messageHex = utf8ToHex(messageUtf);
 
                     const signedData = await wallet?.cip95.signData(
@@ -84,7 +84,7 @@ export const loginUserToApp = async ({
         } else {
             if (trigerSignData) {
                 const keyToSign = wallet?.dRepID;
-                const messageUtf = `To proceed, please sign this data to verify your dRep identity. This ensures that the action is secure and confirms your identity.`;
+                const messageUtf = `To proceed, please sign this data to verify your dRep identity. This ensures that the action is secure and confirms your identity. Timestamp: ${new Date()?.getTime()}`;
                 const messageHex = utf8ToHex(messageUtf);
 
                 const signedData = await wallet?.cip95.signData(
