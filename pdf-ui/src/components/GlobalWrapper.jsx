@@ -4,7 +4,12 @@ import { Box } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { UsernameModal } from '../components';
 import { useAppContext } from '../context/context';
-import { clearSession, getDataFromSession } from '../lib/utils';
+import {
+    clearSession,
+    decodeJWT,
+    getDataFromSession,
+    saveDataInSession,
+} from '../lib/utils';
 import {
     ProposedGovernanceActions,
     SingleGovernanceAction,
@@ -15,6 +20,7 @@ import {
 } from '../pages';
 import { loginUserToApp } from '../lib/helpers';
 import { setAxiosBaseURL } from '../lib/axiosInstance'; // Import axiosInstance and setAxiosBaseURL
+import { getRefreshToken } from '../lib/api';
 
 const GlobalWrapper = ({ ...props }) => {
     const pathname = props?.pathname;
@@ -38,6 +44,8 @@ const GlobalWrapper = ({ ...props }) => {
         validateMetadata: GovToolAssemblyValidateMetadata,
         pdfApiUrl: GovToolAssemblyPdfApiUrl,
         fetchDRepVotingPowerList: GovToolFetchDRepVotingPowerList,
+        username: GovToolAssemblyUsername,
+        setUsername: GovToolAssemblySetUsername,
     } = props;
 
     function getProposalID(url) {
@@ -59,7 +67,7 @@ const GlobalWrapper = ({ ...props }) => {
         return lastSegment;
     }
 
-    const handleLogin = async (trigerSignData) => {
+    const handleLogin = async (trigerSignData, useDRepKey = false) => {
         if (GovToolAssemblyWalletAPI?.address) {
             setWalletAPI(GovToolAssemblyWalletAPI);
             if (GovToolAssemblyValidateMetadata) {
@@ -76,6 +84,8 @@ const GlobalWrapper = ({ ...props }) => {
                 setOpenUsernameModal: setOpenUsernameModal,
                 trigerSignData: trigerSignData ? true : false,
                 clearStates: clearStates,
+                setPDFUsername: GovToolAssemblySetUsername,
+                isDRep: useDRepKey,
             });
         } else {
             if (
@@ -113,6 +123,44 @@ const GlobalWrapper = ({ ...props }) => {
         }
     }, [GovToolAssemblyLocale]);
 
+    useEffect(() => {
+        if (user && user?.user?.govtool_username) {
+            const interval = setInterval(async () => {
+                const jwt = decodeJWT(); // Get JWT from session
+                if (jwt) {
+                    const expDate = new Date(jwt?.exp * 1000); // Transfer exp from ms to date
+                    const now = new Date();
+
+                    // Check if token is still valid
+                    if (expDate <= now) {
+                        setUser(null);
+                        clearSession();
+                        clearInterval(interval); // Clear because user do not exist
+                    } else if (expDate - now <= 600000) {
+                        try {
+                            const refreshedTokens = await getRefreshToken(); // Call refreshToken function
+                            // Set new JWT in Session
+                            saveDataInSession(
+                                'pdfUserJwt',
+                                refreshedTokens.jwt
+                            );
+                        } catch (error) {
+                            console.error('Error refreshing token:', error);
+                            setUser(null); // Logout user if refresh token fails
+                            clearSession();
+                        }
+                    }
+                } else {
+                    console.log('No token found');
+                    setUser(null);
+                    clearInterval(interval); // Clear interval if there is no token
+                }
+            }, 60 * 1000); // Every minute
+
+            return () => clearInterval(interval); // Clear interval on component unmount
+        }
+    }, [user]);
+
     setAxiosBaseURL(GovToolAssemblyPdfApiUrl);
 
     const renderComponentBasedOnPath = (path) => {
@@ -120,6 +168,35 @@ const GlobalWrapper = ({ ...props }) => {
             if (!user && GovToolAssemblyWalletAPI?.address) {
                 return <IdentificationPage handleLogin={handleLogin} />;
             } else {
+                if (
+                    GovToolAssemblyWalletAPI?.dRepID &&
+                    (GovToolAssemblyWalletAPI?.voter?.isRegisteredAsDRep ||
+                        GovToolAssemblyWalletAPI?.voter
+                            ?.isRegisteredAsSoleVoter)
+                ) {
+                    const jwtData = decodeJWT();
+
+                    if (jwtData) {
+                        let jwtDrepId = jwtData?.dRepID;
+                        if (!jwtDrepId) {
+                            return (
+                                <IdentificationPage
+                                    handleLogin={handleLogin}
+                                    isDRep={
+                                        (GovToolAssemblyWalletAPI?.dRepID &&
+                                            (GovToolAssemblyWalletAPI?.voter
+                                                ?.isRegisteredAsDRep ||
+                                                GovToolAssemblyWalletAPI?.voter
+                                                    ?.isRegisteredAsSoleVoter)) ||
+                                        false
+                                    }
+                                />
+                            );
+                        }
+                    } else {
+                        return null;
+                    }
+                }
                 if (path.includes('propose')) {
                     return <ProposedGovernanceActions />;
                 } else if (
@@ -171,6 +248,7 @@ const GlobalWrapper = ({ ...props }) => {
                             callBackFn: () => {},
                         }) // Reset open and callbackFn state
                 }
+                setPDFUsername={GovToolAssemblySetUsername}
             />
         </Box>
     );
