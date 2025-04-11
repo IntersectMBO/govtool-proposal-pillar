@@ -110,9 +110,6 @@ const CommentCard = ({ comment, proposal, fetchComments }) => {
                 bd_proposal_id: comment?.attributes?.bd_proposal_id?.toString(),
                 comment_parent_id: comment?.id?.toString(),
                 comment_text: subcommentText,
-                drep_id: walletAPI?.voter?.isRegisteredAsDRep
-                    ? walletAPI?.dRepID || ''
-                    : '',
             });
 
             if (!newComment) return;

@@ -1,10 +1,15 @@
-import axiosInstance from './axiosInstance';
+import axios from 'axios';
+import axiosInstance, { axiosWithCookies } from './axiosInstance';
 
 export const loginUser = async (loginData) => {
     try {
-        const { data } = await axiosInstance.post(`/api/auth/local`, {
-            ...loginData,
-        });
+        const { data } = await axiosInstance.post(
+            `/api/auth/local`,
+            {
+                ...loginData,
+            },
+            { withCredentials: true }
+        );
         return data;
     } catch (error) {
         console.error(error);
@@ -506,7 +511,9 @@ export const createPollVote = async ({ createData }) => {
 
 export const getLoggedInUserInfo = async () => {
     try {
-        const { data } = await axiosInstance.get(`api/users/me`);
+        const { data } = await axiosInstance.get(`api/users/me`, {
+            withCredentials: true,
+        });
         return data;
     } catch (error) {
         console.error(error);
@@ -549,5 +556,14 @@ export const updateUser = async (updateData) => {
     } catch (error) {
         console.error(error);
         throw error?.response?.data?.error;
+    }
+};
+
+export const getRefreshToken = async () => {
+    try {
+        const data = await axiosWithCookies.post(`/api/token/refresh`, {});
+        return data.data;
+    } catch (error) {
+        throw error;
     }
 };
