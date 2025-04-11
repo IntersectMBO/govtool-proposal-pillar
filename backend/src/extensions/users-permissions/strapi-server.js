@@ -210,7 +210,7 @@ module.exports = (plugin) => {
 					}),
 					{
 						httpOnly: true,
-						secure: process.env.NODE_ENV === 'production',
+						secure: false, //process.env.NODE_ENV === 'production',
 						signed: true,
 						overwrite: true,
 						sameSite: 'Lax',
@@ -253,7 +253,8 @@ module.exports = (plugin) => {
 					}),
 					{
 						httpOnly: true,
-						secure: process.env.NODE_ENV === 'production',
+						// secure: process.env.NODE_ENV === 'production',
+						secure: false, //process.env.NODE_ENV === 'production',
 						signed: true,
 						overwrite: true,
 						sameSite: 'Lax',
@@ -331,7 +332,8 @@ module.exports = (plugin) => {
 			});
 			ctx.cookies.set('refreshToken', refreshToken, {
 				httpOnly: true,
-				secure: process.env.NODE_ENV === 'production',
+				// secure: process.env.NODE_ENV === 'production',
+				secure: false, //process.env.NODE_ENV === 'production',
 				signed: true,
 				overwrite: true,
 				sameSite: 'Lax',
