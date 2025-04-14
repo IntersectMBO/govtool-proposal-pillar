@@ -136,7 +136,8 @@ const GlobalWrapper = ({ ...props }) => {
                         setUser(null);
                         clearSession();
                         clearInterval(interval); // Clear because user do not exist
-                    } else if (expDate - now <= 600000) {
+                    } else if (expDate - now <= 300000) {
+                        // If difference is less then 5 minutes, get new refresh token
                         try {
                             const refreshedTokens = await getRefreshToken(); // Call refreshToken function
                             // Set new JWT in Session
