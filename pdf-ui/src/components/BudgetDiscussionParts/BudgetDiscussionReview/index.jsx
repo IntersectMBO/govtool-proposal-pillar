@@ -23,6 +23,8 @@ import {
     getBudgetDiscussionTypes,
 } from '../../../lib/api';
 import { StepperActionButtons } from '../../BudgetDiscussionParts';
+import ReactMarkdown from 'react-markdown';
+import { correctVoteAdaFormat } from '../../../lib/utils';
 
 const BudgetDiscussionReview = ({
     setStep,
@@ -54,7 +56,61 @@ const BudgetDiscussionReview = ({
                 <Typography variant='caption' gutterBottom>
                     {question}
                 </Typography>
-                <Typography
+                <div data-testid={answerTestId}>
+                    <ReactMarkdown
+                        components={{
+                            p(props) {
+                                const { children } = props;
+                                return (
+                                    <Typography
+                                        variant='body1'
+                                        style={{
+                                            wordWrap: 'break-word',
+                                        }}
+                                    >
+                                        {children}
+                                    </Typography>
+                                );
+                            },
+                            ul(props) {
+                                const { children } = props;
+                                return (
+                                    <ul
+                                        style={{
+                                            display: 'block',
+                                            'list-style-type': 'disc',
+                                            'margin-block-start': '1em',
+                                            'margin-block-end': '1em',
+                                            'margin-inline-start': '0px',
+                                            'margin-inline-end': '0px',
+                                            'padding-inline-start': '40px',
+                                            'unicode-bidi': 'isolate',
+                                        }}
+                                    >
+                                        {children}
+                                    </ul>
+                                );
+                            },
+                            li(props) {
+                                const { children } = props;
+                                return (
+                                    <li>
+                                        <Typography
+                                            variant='body1'
+                                            component='span'
+                                            style={{ wordWrap: 'break-word' }}
+                                        >
+                                            {children}
+                                        </Typography>
+                                    </li>
+                                );
+                            },
+                        }}
+                    >
+                        {answer?.toString() || '-'}
+                    </ReactMarkdown>
+                </div>
+                {/* <Typography
                     variant='body1'
                     gutterBottom
                     data-testid={answerTestId}
@@ -63,7 +119,7 @@ const BudgetDiscussionReview = ({
                     }}
                 >
                     {answer || '-'}
-                </Typography>
+                </Typography> */}
             </Box>
         );
     };
@@ -582,10 +638,10 @@ const BudgetDiscussionReview = ({
 
                                     <InfoSection
                                         question='ADA Amount'
-                                        answer={
+                                        answer={`₳ ${correctVoteAdaFormat(
                                             currentBudgetDiscussionData
-                                                ?.bd_costing?.ada_amount || ''
-                                        }
+                                                ?.bd_costing?.ada_amount || 0
+                                        )}`}
                                         answerTestId={'ada-amount-content'}
                                     />
 
@@ -622,12 +678,12 @@ const BudgetDiscussionReview = ({
 
                                     <InfoSection
                                         question='Amount in preferred currency'
-                                        answer={
+                                        answer={correctVoteAdaFormat(
                                             currentBudgetDiscussionData
                                                 ?.bd_costing
                                                 ?.amount_in_preferred_currency ||
-                                            ''
-                                        }
+                                                0
+                                        )}
                                         answerTestId={
                                             'amount-in-preferred-currency-content'
                                         }

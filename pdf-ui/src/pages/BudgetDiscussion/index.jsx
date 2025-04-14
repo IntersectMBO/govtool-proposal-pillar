@@ -35,6 +35,7 @@ import {
 import { useAppContext } from '../../context/context';
 import { loginUserToApp } from '../../lib/helpers';
 import { useLocation } from 'react-router-dom';
+import { ScrollToTop } from '../../lib/hooks';
 
 const ProposedBudgetDiscussion = () => {
     const location = useLocation();
@@ -151,6 +152,7 @@ const ProposedBudgetDiscussion = () => {
 
     return (
         <Box sx={{ mt: 3 }}>
+            <ScrollToTop step={showAllActivated?.is_activated} />
             <Grid container spacing={3} flexDirection={'column'}>
                 <Grid item display={'flex'} flexDirection={'row'} xs={12}>
                     <Grid

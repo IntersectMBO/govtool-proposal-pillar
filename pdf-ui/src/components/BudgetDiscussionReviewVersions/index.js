@@ -21,7 +21,12 @@ import {
     IconArchive,
     IconLink,
 } from '@intersect.mbo/intersectmbo.org-icons-set';
-import { formatIsoDate, formatIsoTime, openInNewTab } from '../../lib/utils';
+import {
+    correctVoteAdaFormat,
+    formatIsoDate,
+    formatIsoTime,
+    openInNewTab,
+} from '../../lib/utils';
 import { useEffect, useState } from 'react';
 import { getBudgetDiscussionVersions } from '../../lib/api';
 import BudgetDiscussionInfoSegment from '../BudgetDiscussionInfoSegment';
@@ -662,14 +667,15 @@ const BudgetDiscussionReviewVersions = ({ open, onClose, id }) => {
                                                                 question={
                                                                     'ADA Amount'
                                                                 }
-                                                                answer={
+                                                                answer={`₳ ${correctVoteAdaFormat(
                                                                     selectedVersion
                                                                         ?.attributes
                                                                         ?.bd_costing
                                                                         ?.data
                                                                         ?.attributes
-                                                                        ?.ada_amount
-                                                                }
+                                                                        ?.ada_amount ||
+                                                                        0
+                                                                )}`}
                                                             />
 
                                                             <BudgetDiscussionInfoSegment
@@ -707,14 +713,15 @@ const BudgetDiscussionReviewVersions = ({ open, onClose, id }) => {
                                                                 question={
                                                                     'Amount in preferred currency'
                                                                 }
-                                                                answer={
+                                                                answer={correctVoteAdaFormat(
                                                                     selectedVersion
                                                                         ?.attributes
                                                                         ?.bd_costing
                                                                         ?.data
                                                                         ?.attributes
-                                                                        ?.amount_in_preferred_currency
-                                                                }
+                                                                        ?.amount_in_preferred_currency ||
+                                                                        0
+                                                                )}
                                                             />
 
                                                             <BudgetDiscussionInfoSegment

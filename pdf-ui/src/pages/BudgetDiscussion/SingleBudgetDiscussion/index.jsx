@@ -43,7 +43,11 @@ import {
     getBudgetDiscussion,
     getBudgetDiscussionPoll,
 } from '../../../lib/api';
-import { formatIsoDate, openInNewTab } from '../../../lib/utils';
+import {
+    correctVoteAdaFormat,
+    formatIsoDate,
+    openInNewTab,
+} from '../../../lib/utils';
 import ProposalOwnModal from '../../../components/ProposalOwnModal';
 import BudgetDiscussionReviewVersions from '../../../components/BudgetDiscussionReviewVersions';
 
@@ -1012,11 +1016,12 @@ const SingleBudgetDiscussion = ({ id }) => {
 
                                             <BudgetDiscussionInfoSegment
                                                 question={'ADA Amount'}
-                                                answer={
+                                                answer={`₳ ${correctVoteAdaFormat(
                                                     proposal?.attributes
                                                         ?.bd_costing?.data
-                                                        ?.attributes?.ada_amount
-                                                }
+                                                        ?.attributes
+                                                        ?.ada_amount || 0
+                                                )}`}
                                                 answerTestId={`consting-amount`}
                                             />
 
@@ -1050,12 +1055,13 @@ const SingleBudgetDiscussion = ({ id }) => {
                                                 question={
                                                     'Amount in preferred currency'
                                                 }
-                                                answer={
+                                                answer={correctVoteAdaFormat(
                                                     proposal?.attributes
                                                         ?.bd_costing?.data
                                                         ?.attributes
-                                                        ?.amount_in_preferred_currency
-                                                }
+                                                        ?.amount_in_preferred_currency ||
+                                                        0
+                                                )}
                                                 answerTestId={`costing-prefereed-currency-amount`}
                                             />
 

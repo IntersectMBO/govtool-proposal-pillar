@@ -27,7 +27,7 @@ import { useEffect, useState } from 'react';
 import { useTheme } from '@emotion/react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAppContext } from '../../context/context';
-import { formatIsoDate } from '../../lib/utils';
+import { correctVoteAdaFormat, formatIsoDate } from '../../lib/utils';
 import EditProposalDialog from '../EditProposalDialog';
 import MarkdownTextComponent from '../MarkdownTextComponent';
 
@@ -38,7 +38,6 @@ const BudgetDiscussionCard = ({
     setShouldRefresh = false,
     startEdittingDraft,
 }) => {
-    
     const { user } = useAppContext();
     const navigate = useNavigate();
     const theme = useTheme();
@@ -54,13 +53,13 @@ const BudgetDiscussionCard = ({
     }, [budgetDiscussionLink]);
 
     const handleEditProposal = () => {
-        // pokrenuti popunjavanje sa predefinisam podacime ... ne edit 
+        // pokrenuti popunjavanje sa predefinisam podacime ... ne edit
         // setOpenEditDialog(true);
     };
 
     const handleCloseEditDialog = () => {
         // zatvori stepper za edit
-      //  setOpenEditDialog(false);
+        //  setOpenEditDialog(false);
     };
 
     const filterProps = ({ draft, submitted, ...rest }) => rest;
@@ -409,11 +408,15 @@ const BudgetDiscussionCard = ({
                                 }
                             >
                                 ₳{' '}
-                                {isDraft
-                                    ? budgetDiscussion?.attributes?.draft_data
-                                          ?.bd_costing?.ada_amount
-                                    : budgetDiscussion?.attributes?.bd_costing
-                                          ?.data?.attributes?.ada_amount || ''}
+                                {correctVoteAdaFormat(
+                                    isDraft
+                                        ? budgetDiscussion?.attributes
+                                              ?.draft_data?.bd_costing
+                                              ?.ada_amount
+                                        : budgetDiscussion?.attributes
+                                              ?.bd_costing?.data?.attributes
+                                              ?.ada_amount || 0
+                                )}
                             </Typography>
                         </Box>
                     </Box>
@@ -596,7 +599,7 @@ const BudgetDiscussionCard = ({
                 draft={true}
                 slotProps={{
                     badge: {
-                       // 'data-testid': `proposal-${proposal?.id}-status`,
+                        // 'data-testid': `proposal-${proposal?.id}-status`,
                     },
                 }}
             >
@@ -628,10 +631,10 @@ const BudgetDiscussionCard = ({
                 // }
                 aria-label='status-badge'
                 submitted={
-                 //   proposal?.attributes?.content?.attributes?.prop_submitted
-                 //</div>       ? true
-                   //     : false
-                   false
+                    //   proposal?.attributes?.content?.attributes?.prop_submitted
+                    //</div>       ? true
+                    //     : false
+                    false
                 }
                 showZero
                 // slotProps={{
