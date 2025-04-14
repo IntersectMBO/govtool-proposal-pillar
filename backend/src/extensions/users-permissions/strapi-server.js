@@ -108,7 +108,7 @@ module.exports = (plugin) => {
 				.as_bytes();
 			const receivedPublicKey = PublicKey.from_bytes(receivedPublicKeyBytes);
 			const receivedSignature = Ed25519Signature.from_bytes(receivedCOSESig.signature());
-			const receivedDataBytes = receivedCOSESig.signed_data().to_bytes();
+			const receivedMessageBytes = receivedCOSESig.signed_data().to_bytes();
 
 			// Remove network id from identifier, if included
 			const expectedKeyHash = userInfo ? identifier : identifier.slice(2);
@@ -116,7 +116,7 @@ module.exports = (plugin) => {
 			// Check the received key hash matches the received signature
 			// and check that the received key hash matches the expected key hash
 			const isVerified =
-				receivedPublicKey.verify(receivedDataBytes, signature) &&
+				receivedPublicKey.verify(receivedMessageBytes, signature) &&
 				expectedKeyHash === receivedPublicKey.hash().to_hex();
 
 			if (!isVerified) {
