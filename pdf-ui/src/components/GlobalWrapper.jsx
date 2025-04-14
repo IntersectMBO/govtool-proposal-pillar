@@ -21,6 +21,7 @@ import {
 import { loginUserToApp } from '../lib/helpers';
 import { setAxiosBaseURL } from '../lib/axiosInstance'; // Import axiosInstance and setAxiosBaseURL
 import { getRefreshToken } from '../lib/api';
+import { ScrollToTop } from '../lib/hooks';
 
 const GlobalWrapper = ({ ...props }) => {
     const pathname = props?.pathname;
@@ -239,6 +240,7 @@ const GlobalWrapper = ({ ...props }) => {
             flexDirection={'column'}
             flexGrow={1}
         >
+            <ScrollToTop />
             {renderComponentBasedOnPath(pathname)}
             <UsernameModal
                 open={openUsernameModal}

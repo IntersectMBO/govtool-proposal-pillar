@@ -10,7 +10,7 @@ import {
     Typography,
     Box,
 } from '@mui/material';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
     DraftSuccessfulBudgetDiscussionModal,
@@ -469,6 +469,17 @@ const CreateBudgetDiscussionDialog = ({
         return Object.keys(allErrors).length === 0 ? null : allErrors;
     }
 
+    const contentRef = useRef(null);
+
+    useEffect(() => {
+        if (contentRef?.current) {
+            contentRef?.current.scrollIntoView({
+                behavior: 'smooth',
+                block: 'start',
+            });
+        }
+    }, [step]);
+
     return (
         <Dialog
             fullScreen
@@ -481,6 +492,7 @@ const CreateBudgetDiscussionDialog = ({
                     position: 'relative',
                     height: '100%',
                 }}
+                ref={contentRef}
             >
                 <Grid container pb={4}>
                     {
