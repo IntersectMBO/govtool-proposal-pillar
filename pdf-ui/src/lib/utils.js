@@ -123,7 +123,7 @@ export const maxLengthCheck = (str, limit) => {
     return str?.length < limit ? true : `Max ${limit} characters.`;
 };
 
-const LOVELACE = 1000000;
+export const LOVELACE = 1000000;
 const DECIMALS = 6;
 
 export const correctAdaFormat = (lovelace) => {
@@ -165,3 +165,16 @@ export function decodeJWT() {
     const decoded = atob(payload.replace(/-/g, '+').replace(/_/g, '/'));
     return JSON.parse(decoded);
 }
+
+export const correctVoteAdaFormat = (
+    adaAmount = undefined,
+    locale = undefined
+) => {
+    if (adaAmount) {
+        const adaNumber = +adaAmount;
+        return adaNumber?.toLocaleString(locale, {
+            maximumFractionDigits: 3,
+        });
+    }
+    return '0';
+};
