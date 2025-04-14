@@ -152,8 +152,7 @@ const ProposalOwnership = ({
                                 }}
                                 SelectProps={{
                                     SelectDisplayProps: {
-                                        'data-testid':
-                                            'beneficiary-type',
+                                        'data-testid': 'beneficiary-type',
                                     },
                                 }}
                                 helperText='If you are submitting on behalf of an Intersect Committee, please select Group. The Group Name would be the “Name of the Committee (e.g. MCC, TSC)”. The Type of Group would be “Intersect Committee”. The Key Information to Identify the Group would be the names of the Voting members of the Committee.'
@@ -358,7 +357,8 @@ const ProposalOwnership = ({
                             ) : (
                                 ''
                             )}
-                            {/* <TextField
+                            {
+                                /* <TextField
                                 select
                                 label='Proposal Public Champion: Who would you like to be the public proposal champion?'
                                 value={
@@ -404,29 +404,30 @@ const ProposalOwnership = ({
                                     Submission lead listed above
                                 </MenuItem>
                             </TextField> */
-                            <TextField
-                                label='Please provide your preferred contact details that will be shared publicly (e.g. email address, X handle, Discord handle, Github) ?'
-                                value={
-                                    currentBudgetDiscussionData
-                                        ?.bd_proposal_ownership
-                                        ?.social_handles || ''
-                                }
-                                required
-                                fullWidth
-                                onChange={(e) =>
-                                    handleDataChange(e, 'social_handles')
-                                }
-                                //   helperText={errors[
-                                //       'bd_proposal_ownership.social_handles'
-                                //   ]?.trim()}
-                                //   error={
-                                //       !!errors[
-                                //           'bd_proposal_ownership.social_handles'
-                                //       ]?.trim()
-                                //   }
-                                sx={{ mb: 2 }}
-                                data-testid='provide-preferred-input'
-                            />}
+                                <TextField
+                                    label='Please provide your preferred contact details that will be shared publicly (e.g. email address, X handle, Discord handle, Github) ?'
+                                    value={
+                                        currentBudgetDiscussionData
+                                            ?.bd_proposal_ownership
+                                            ?.social_handles || ''
+                                    }
+                                    required
+                                    fullWidth
+                                    onChange={(e) =>
+                                        handleDataChange(e, 'social_handles')
+                                    }
+                                    //   helperText={errors[
+                                    //       'bd_proposal_ownership.social_handles'
+                                    //   ]?.trim()}
+                                    //   error={
+                                    //       !!errors[
+                                    //           'bd_proposal_ownership.social_handles'
+                                    //       ]?.trim()
+                                    //   }
+                                    sx={{ mb: 2 }}
+                                    data-testid='provide-preferred-input'
+                                />
+                            }
                             <FormControlLabel
                                 control={
                                     <Checkbox
@@ -457,6 +458,10 @@ const ProposalOwnership = ({
                             nextStep={step + 1}
                             backStep={step - 1}
                             errors={errors}
+                            showBack={!currentBudgetDiscussionData?.old_ver}
+                            showSaveDraft={
+                                !currentBudgetDiscussionData?.old_ver
+                            }
                         />
                     </CardContent>
                 </Card>

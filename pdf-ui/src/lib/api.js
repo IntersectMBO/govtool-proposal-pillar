@@ -1,4 +1,3 @@
-import axios from 'axios';
 import axiosInstance, { axiosWithCookies } from './axiosInstance';
 
 export const loginUser = async (loginData) => {
@@ -117,6 +116,17 @@ export const getContractTypeList = async () => {
         throw error;
     }
 };
+
+export const deleteBudgetDiscussionDraft = async (ID) => {
+    try {
+        const response = await axiosInstance.delete(`/api/bd-drafts/${ID}`);
+        return response?.data;
+    } catch (error) {
+        console.error('Error in delete Budget Discussion Draft:', error);
+        throw error;
+    }
+};
+
 export const createBudgetDiscussionDraft = async (data) => {
     try {
         const response = await axiosInstance.post(`/api/bd-drafts`, {

@@ -376,7 +376,9 @@ const BudgetDiscussionReview = ({
                                                 ?.bd_psapb?.problem_statement ||
                                             ''
                                         }
-                                        answerTestId={'problem-statement-content'}
+                                        answerTestId={
+                                            'problem-statement-content'
+                                        }
                                     />
 
                                     <InfoSection
@@ -386,7 +388,9 @@ const BudgetDiscussionReview = ({
                                                 ?.bd_psapb?.proposal_benefit ||
                                             ''
                                         }
-                                        answerTestId={'proposal-benefit-content'}
+                                        answerTestId={
+                                            'proposal-benefit-content'
+                                        }
                                     />
 
                                     <InfoSection
@@ -473,7 +477,9 @@ const BudgetDiscussionReview = ({
                                                 ?.bd_proposal_detail
                                                 ?.proposal_description || ''
                                         }
-                                        answerTestId={'proposal-description-content'}
+                                        answerTestId={
+                                            'proposal-description-content'
+                                        }
                                     />
 
                                     <InfoSection
@@ -484,7 +490,9 @@ const BudgetDiscussionReview = ({
                                                 ?.bd_proposal_detail
                                                 ?.key_dependencies || ''
                                         }
-                                        answerTestId={'key-dependencies-content'}
+                                        answerTestId={
+                                            'key-dependencies-content'
+                                        }
                                     />
 
                                     <InfoSection
@@ -495,7 +503,9 @@ const BudgetDiscussionReview = ({
                                                 ?.bd_proposal_detail
                                                 ?.maintain_and_support || ''
                                         }
-                                        answerTestId={'maintain-and-support-content'}
+                                        answerTestId={
+                                            'maintain-and-support-content'
+                                        }
                                     />
 
                                     <InfoSection
@@ -556,7 +566,9 @@ const BudgetDiscussionReview = ({
                                             )?.attributes?.contract_type_name ||
                                             'Error'
                                         }
-                                        answerTestId={'contracting-type-name-content'}
+                                        answerTestId={
+                                            'contracting-type-name-content'
+                                        }
                                     />
                                 </Box>
                                 <Box sx={{ align: 'left' }}>
@@ -618,7 +630,7 @@ const BudgetDiscussionReview = ({
                                         }
                                         answerTestId={
                                             'amount-in-preferred-currency-content'
-                                        }   
+                                        }
                                     />
 
                                     <InfoSection
@@ -628,9 +640,7 @@ const BudgetDiscussionReview = ({
                                                 ?.bd_costing?.cost_breakdown ||
                                             ''
                                         }
-                                        answerTestId={
-                                            'cost-breakdown-content'
-                                        }
+                                        answerTestId={'cost-breakdown-content'}
                                     />
                                 </Box>
                                 <Box sx={{ align: 'left' }}>
@@ -688,17 +698,20 @@ const BudgetDiscussionReview = ({
                                             'intersect-named-administrator-content'
                                         }
                                     />
-                                    {currentBudgetDiscussionData?.intersect_named_administrator?'':
-                                    <InfoSection
-                                        question='Please provide further information to help inform DReps. Who is the vendor and what services are they providing?'
-                                        answer={
-                                            currentBudgetDiscussionData
-                                                ?.intersect_admin_further_text ||''
-                                        }
-                                        answerTestId={
-                                            'intersect-admin-further-text'
-                                        }
-                                    />}
+                                    {currentBudgetDiscussionData?.intersect_named_administrator ? (
+                                        ''
+                                    ) : (
+                                        <InfoSection
+                                            question='Please provide further information to help inform DReps. Who is the vendor and what services are they providing?'
+                                            answer={
+                                                currentBudgetDiscussionData?.intersect_admin_further_text ||
+                                                ''
+                                            }
+                                            answerTestId={
+                                                'intersect-admin-further-text'
+                                            }
+                                        />
+                                    )}
                                 </Box>
                             </Box>
                         </Box>
@@ -711,6 +724,9 @@ const BudgetDiscussionReview = ({
                             selectedDraftId={selectedDraftId}
                             nextStep={step + 1}
                             backStep={step - 1}
+                            showSaveDraft={
+                                !currentBudgetDiscussionData?.old_ver
+                            }
                         />
                     </CardContent>
                 </Card>

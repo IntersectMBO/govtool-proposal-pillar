@@ -1,20 +1,47 @@
-import { Box, Card, CardContent, Button, Typography, List, ListItem, TextField, MenuItem, Grid, Link } from "@mui/material"
+import {
+    Box,
+    Card,
+    CardContent,
+    Button,
+    Typography,
+    List,
+    ListItem,
+    TextField,
+    MenuItem,
+    Grid,
+    Link,
+} from '@mui/material';
 import { useEffect, useState } from 'react';
-import { BudgetDiscussionLinkManager, StepperActionButtons } from '../../BudgetDiscussionParts';
+import {
+    BudgetDiscussionLinkManager,
+    StepperActionButtons,
+} from '../../BudgetDiscussionParts';
 import { isValidURLFormat } from '../../../lib/utils';
 import { useTheme } from '@mui/material/styles';
 
-const FurtherInformation = ({ setStep, step, currentBudgetDiscussionData, setBudgetDiscussionData, onClose, setSelectedDraftId, selectedDraftId, handleSaveDraft, errors, setErrors }) => {
+const FurtherInformation = ({
+    setStep,
+    step,
+    currentBudgetDiscussionData,
+    setBudgetDiscussionData,
+    onClose,
+    setSelectedDraftId,
+    selectedDraftId,
+    handleSaveDraft,
+    errors,
+    setErrors,
+}) => {
     const costBreakdownMaxLength = 256;
-    
+
     const handleDataChange = (e, dataName) => {
         setBudgetDiscussionData({
-             ...currentBudgetDiscussionData,
-             bd_further_information: {
-                  ...currentBudgetDiscussionData?.bd_further_information,
-                  [dataName]: e.target.value
-             }})
-   };
+            ...currentBudgetDiscussionData,
+            bd_further_information: {
+                ...currentBudgetDiscussionData?.bd_further_information,
+                [dataName]: e.target.value,
+            },
+        });
+    };
     return (
         <Box display='flex' flexDirection='column'>
             <Box>
@@ -108,11 +135,14 @@ const FurtherInformation = ({ setStep, step, currentBudgetDiscussionData, setBud
                             nextStep={step + 1}
                             backStep={step - 1}
                             errors={errors}
+                            showSaveDraft={
+                                !currentBudgetDiscussionData?.old_ver
+                            }
                         />
                     </CardContent>
                 </Card>
             </Box>
         </Box>
     );
-}
+};
 export default FurtherInformation;

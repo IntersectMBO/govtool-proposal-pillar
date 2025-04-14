@@ -9,14 +9,12 @@ import {
     DialogContentText,
     Typography,
     Box,
-    useMediaQuery,
 } from '@mui/material';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
     DraftSuccessfulBudgetDiscussionModal,
     ProblemStatementsAndProposalBenefits,
-    ContractInformation,
     ProposalOwnership,
     ProposalDetails,
     Costing,
@@ -30,6 +28,7 @@ import {
     updateBudgetDiscussionDraft,
     createBudgetDiscussion,
     getBudgetDiscussion,
+    deleteBudgetDiscussionDraft,
 } from '../../lib/api';
 import { cleanObject } from '../../lib/helpers';
 import { useAppContext } from '../../context/context';
@@ -47,7 +46,7 @@ const CreateBudgetDiscussionDialog = ({
     const { setLoading } = useAppContext();
     const [step, setStep] = useState(1);
     const [budgetDiscussionData, setBudgetDiscussionData] = useState({
-       // bd_contact_information: {},
+        // bd_contact_information: {},
         bd_proposal_ownership: {},
         bd_psapb: {},
         bd_proposal_detail: {},
@@ -60,7 +59,6 @@ const CreateBudgetDiscussionDialog = ({
         setShowDraftSuccessfulBudgetDiscussionModal,
     ] = useState(false);
     const [selectedDraftId, setSelectedDraftId] = useState(null);
-    const [selectedEditId, setSelectedEditId] = useState(null);
 
     const [openDraftDialog, setOpenDraftDialog] = useState(false);
     const [draftDialogMessage, setDraftDialogMessage] = useState(false);
@@ -70,7 +68,7 @@ const CreateBudgetDiscussionDialog = ({
 
     const [errors, setErrors] = useState({});
     useEffect(() => {
-        if (current_bd_id !== null && !budgetDiscussionData.old_ver) {
+        if (current_bd_id !== null && !budgetDiscussionData?.old_ver) {
             fetchBudgetDiscussion(current_bd_id);
             setStep(2);
         }
@@ -112,10 +110,6 @@ const CreateBudgetDiscussionDialog = ({
             setLoading(false);
         }
     };
-
-    const isSmallScreen = useMediaQuery((theme) =>
-        theme.breakpoints.down('sm')
-    );
 
     const closeCreateBDDialog = () => {
         onClose();
@@ -168,8 +162,6 @@ const CreateBudgetDiscussionDialog = ({
         return Object.values(obj).some((value) => hasAnyNonEmptyString(value));
     };
 
-    const handleIsContinueDisabled = useCallback(() => {}, [errors]);
-
     const handleCreateBudgetDiscussion = async (isDraft = false) => {
         setLoading(true);
         try {
@@ -182,7 +174,12 @@ const CreateBudgetDiscussionDialog = ({
                 budgetDiscussionData?.bd_costing?.amount_in_preferred_currency?.toString() ||
                 '';
 
+            if (selectedDraftId) {
+                await deleteBudgetDiscussionDraft(selectedDraftId);
+            }
+
             const newBD = await createBudgetDiscussion(budgetDiscussionData);
+
             onClose();
             navigate(`/budget_discussion/${newBD.id}`);
             // if (
@@ -302,7 +299,7 @@ const CreateBudgetDiscussionDialog = ({
                             .submited_on_behalf === 'Company',
                     type: 'string',
                 },
-               // proposal_public_champion: { required: true, type: 'string' },
+                // proposal_public_champion: { required: true, type: 'string' },
                 key_info_to_identify_group: {
                     required:
                         budgetDiscussionData.bd_proposal_ownership
@@ -471,6 +468,7 @@ const CreateBudgetDiscussionDialog = ({
 
         return Object.keys(allErrors).length === 0 ? null : allErrors;
     }
+
     return (
         <Dialog
             fullScreen
@@ -752,7 +750,12 @@ const CreateBudgetDiscussionDialog = ({
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={handleCloseDraftDialog} data-testid={'close-button'} >Close</Button>
+                    <Button
+                        onClick={handleCloseDraftDialog}
+                        data-testid={'close-button'}
+                    >
+                        Close
+                    </Button>
                 </DialogActions>
             </Dialog>
         </Dialog>

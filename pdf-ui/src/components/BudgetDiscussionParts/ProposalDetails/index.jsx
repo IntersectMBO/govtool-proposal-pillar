@@ -210,7 +210,6 @@ const ProposalDetails = ({
                                     ? 'proposal-description-helper-error'
                                     : 'proposal-description-helper',
                             }}
-
                         />
                         <TextField
                             size='large'
@@ -540,6 +539,9 @@ const ProposalDetails = ({
                                                   'Field should be a valid string',
                                           }
                                     : { ...errors }
+                            }
+                            showSaveDraft={
+                                !currentBudgetDiscussionData?.old_ver
                             }
                         />
                     </CardContent>
