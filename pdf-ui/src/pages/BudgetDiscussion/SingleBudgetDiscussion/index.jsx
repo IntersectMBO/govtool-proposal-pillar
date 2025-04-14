@@ -71,6 +71,7 @@ const SingleBudgetDiscussion = ({ id }) => {
     const [ownProposalModal, setOwnProposalModal] = useState(false);
     const [activePoll, setActivePoll] = useState(null);
     const [showCreateBDDialog, setShowCreateBDDialog] = useState(false);
+    const [refetchProposal, setRefetchProposal] = useState(false);
 
     // Read More / Show Less logic
     const [showFullText, setShowFullText] = useState(false);
@@ -261,6 +262,13 @@ const SingleBudgetDiscussion = ({ id }) => {
             fetchComments(1);
         }
     }, [id, mounted]);
+
+    useEffect(() => {
+        if (mounted && refetchProposal) {
+            fetchProposal(id);
+            setRefetchProposal(false);
+        }
+    }, [mounted, refetchProposal, id]);
 
     useEffect(() => {
         if (mounted) {
@@ -918,7 +926,7 @@ const SingleBudgetDiscussion = ({ id }) => {
                                                 }
                                                 answerTestId={`proposal-key-dependencies`}
                                             />
-                                            
+
                                             <BudgetDiscussionInfoSegment
                                                 question={
                                                     'How will this proposal be maintained and supported after initial development?'
@@ -1177,17 +1185,22 @@ const SingleBudgetDiscussion = ({ id }) => {
                                                 }
                                                 answerTestId={`include-as-auditor`}
                                             />
-                                            {proposal?.attributes?.intersect_named_administrator?'':
+                                            {proposal?.attributes
+                                                ?.intersect_named_administrator ? (
+                                                ''
+                                            ) : (
                                                 <BudgetDiscussionInfoSegment
                                                     question='Please provide further information to help inform DReps. Who is the vendor and what services are they providing?'
                                                     answer={
                                                         proposal?.attributes
-                                                            ?.intersect_admin_further_text ||''
+                                                            ?.intersect_admin_further_text ||
+                                                        ''
                                                     }
                                                     answerTestId={
                                                         'intersect-admin-further-text'
                                                     }
-                                                />}
+                                                />
+                                            )}
                                         </Box>
                                     )}
                                     <Button
@@ -1455,6 +1468,7 @@ const SingleBudgetDiscussion = ({ id }) => {
                                     comment={comment}
                                     proposal={proposal}
                                     fetchComments={fetchComments}
+                                    setRefetchProposal={setRefetchProposal}
                                 />
                             </Box>
                         ))}

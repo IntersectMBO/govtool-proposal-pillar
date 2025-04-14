@@ -148,42 +148,55 @@ module.exports = createCoreController("api::bd.bd", ({ strapi }) => ({
       });
 
       if (latestVersionId) {
-        await strapi.entityService.update("api::bd.bd", latestVersionId, {
-          data: { is_active: false },
-        });
-        const poll = await strapi.entityService.findMany(
-          "api::bd-poll.bd-poll",
-          { filters: { bd_proposal_id: latestVersionId } }
-        );
-        if (poll.length > 0) {
-          await strapi.entityService.update(
-            "api::bd-poll.bd-poll",
-            poll[0].id,
-            { data: { bd_proposal_id: createdEntry.id.toString() } }
-          );
-        }
-        const comments = await strapi.entityService.findMany(
-          "api::comment.comment",
-          { filters: { bd_proposal_id: latestVersionId } }
-        );
-        if (comments.length > 0) {
-          for (const comment of comments) {
-            await strapi.entityService.update(
-              "api::comment.comment",
-              comment.id,
-              {
-                data: {
-                  bd_proposal_id: createdEntry.id.toString(),
-                },
-              }
-            );
-          }
-        }
-      } else {
-        await strapi.entityService.create("api::bd-poll.bd-poll", {
-          data: { bd_proposal_id: createdEntry.id.toString() },
-        });
-      }
+			await strapi.entityService.update('api::bd.bd', latestVersionId, {
+				data: { is_active: false },
+			});
+
+			const latestVersionProposalData =
+				await strapi.entityService.findOne(
+					'api::bd.bd',
+					latestVersionId
+				);
+			await strapi.entityService.update('api::bd.bd', createdEntry?.id, {
+				data: {
+					prop_comments_number:
+						latestVersionProposalData?.prop_comments_number || 0,
+				},
+			});
+
+			const poll = await strapi.entityService.findMany(
+				'api::bd-poll.bd-poll',
+				{ filters: { bd_proposal_id: latestVersionId } }
+			);
+			if (poll.length > 0) {
+				await strapi.entityService.update(
+					'api::bd-poll.bd-poll',
+					poll[0].id,
+					{ data: { bd_proposal_id: createdEntry.id.toString() } }
+				);
+			}
+			const comments = await strapi.entityService.findMany(
+				'api::comment.comment',
+				{ filters: { bd_proposal_id: latestVersionId } }
+			);
+			if (comments.length > 0) {
+				for (const comment of comments) {
+					await strapi.entityService.update(
+						'api::comment.comment',
+						comment.id,
+						{
+							data: {
+								bd_proposal_id: createdEntry.id.toString(),
+							},
+						}
+					);
+				}
+			}
+		} else {
+			await strapi.entityService.create('api::bd-poll.bd-poll', {
+				data: { bd_proposal_id: createdEntry.id.toString() },
+			});
+		}
 
       return createdEntry;
     } catch (error) {

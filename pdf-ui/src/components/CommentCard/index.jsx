@@ -31,7 +31,12 @@ import Subcomponent from './Subcomponent';
 import { isCommentRestricted } from '../../lib/helpers';
 import UsernameSection from './UsernameSection';
 
-const CommentCard = ({ comment, proposal, fetchComments }) => {
+const CommentCard = ({
+    comment,
+    proposal,
+    fetchComments,
+    setRefetchProposal,
+}) => {
     const {
         setLoading,
         walletAPI,
@@ -117,6 +122,7 @@ const CommentCard = ({ comment, proposal, fetchComments }) => {
             loadSubComments(1);
             setCommentHasReplays(true);
             setShowReply(false);
+            setRefetchProposal(true);
         } catch (error) {
             console.error(error);
         } finally {
