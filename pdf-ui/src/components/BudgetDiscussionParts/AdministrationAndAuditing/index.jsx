@@ -375,6 +375,9 @@ const AdministrationAndAuditing = ({
                             nextStep={step + 1}
                             backStep={step - 1}
                             errors={{ ...errorObj }}
+                            showSaveDraft={
+                                !currentBudgetDiscussionData?.old_ver
+                            }
                         />
                     </CardContent>
                 </Card>

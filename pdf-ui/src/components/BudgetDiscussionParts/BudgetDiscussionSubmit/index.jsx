@@ -80,8 +80,9 @@ const BudgetDiscussionSubmit = ({
                                     }
                                     label={
                                         <Typography variant='body2'>
-                                            I consent to the public sharing of all information 
-                                            provided in this form in accordance with the{' '}
+                                            I consent to the public sharing of
+                                            all information provided in this
+                                            form in accordance with the{' '}
                                             <span>
                                                 <a
                                                     href='https://docs.intersectmbo.org/legal/policies-and-conditions/privacy-policy'
@@ -119,6 +120,9 @@ const BudgetDiscussionSubmit = ({
                                 currentBudgetDiscussionData?.privacy_policy
                                     ? {}
                                     : { privacy_policy: 'Required' }
+                            }
+                            showSaveDraft={
+                                !currentBudgetDiscussionData?.old_ver
                             }
                         />
                     </CardContent>
