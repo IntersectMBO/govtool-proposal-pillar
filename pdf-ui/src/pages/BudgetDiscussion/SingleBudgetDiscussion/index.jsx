@@ -42,6 +42,7 @@ import {
     getComments,
     getBudgetDiscussion,
     getBudgetDiscussionPoll,
+    getCountryList,
 } from '../../../lib/api';
 import {
     correctVoteAdaFormat,
@@ -76,6 +77,7 @@ const SingleBudgetDiscussion = ({ id }) => {
     const [activePoll, setActivePoll] = useState(null);
     const [showCreateBDDialog, setShowCreateBDDialog] = useState(false);
     const [refetchProposal, setRefetchProposal] = useState(false);
+    const [allCountries, setAllCountries] = useState([]);
 
     // Read More / Show Less logic
     const [showFullText, setShowFullText] = useState(false);
@@ -88,7 +90,20 @@ const SingleBudgetDiscussion = ({ id }) => {
         let origin = domain.origin;
         setProposalLink(`${origin}/budget_discussion/`);
     }, [proposalLink]);
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                if (!allCountries.length) {
+                    const countriesResponse = await getCountryList();
+                    setAllCountries(countriesResponse?.data || []);
+                }
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        };
 
+        fetchData();
+    }, []);
     const disableShareClick = () => {
         setDisableShare(true);
         setTimeout(() => {
@@ -771,7 +786,88 @@ const SingleBudgetDiscussion = ({ id }) => {
                                             }
                                             answerTestId='public-proposal-champion'
                                         /> */}
+                                    {proposal?.attributes
+                                        ?.bd_proposal_ownership?.data?.attributes
+                                        ?.submited_on_behalf === 'Company' ? (
+                                        <Box>
+                                            <BudgetDiscussionInfoSegment
+                                                question='Company Name'
+                                                answer={
+                                                    proposal?.attributes
+                                                        ?.bd_proposal_ownership?.data?.attributes
+                                                        ?.company_name || ''
+                                                }
+                                                answerTestId='company-name-content'
+                                            />
 
+                                            <BudgetDiscussionInfoSegment
+                                                question='Company Domain Name'
+                                                answer={
+                                                    proposal?.attributes
+                                                        ?.bd_proposal_ownership?.data?.attributes
+                                                        ?.company_domain_name ||
+                                                    ''
+                                                }
+                                                answerTestId='company-domain-name-content'
+                                            />
+                                            <BudgetDiscussionInfoSegment
+                                                question='Country of Incorporation'
+                                                answer={
+                                                    allCountries.find(
+                                                        (country) =>
+                                                            country.id ===
+                                                        proposal?.attributes.bd_proposal_ownership.data.attributes.be_country.data.id
+                                                    )?.attributes
+                                                        ?.country_name ||
+                                                    'Error'
+                                                }
+                                                answerTestId='country-of-incorporation-content'
+                                            />
+                                        </Box>
+                                    ) : (
+                                        ''
+                                    )}
+                                    {proposal?.attributes
+                                        ?.bd_proposal_ownership?.data?.attributes
+                                        ?.submited_on_behalf === 'Group' ? 
+                                        
+                                        
+                                        (
+                                        <Box>
+                                            <BudgetDiscussionInfoSegment
+                                                question='Group Name'
+                                                answer={proposal?.attributes
+                                                        ?.bd_proposal_ownership?.data?.attributes
+                                                        ?.group_name || ''
+                                                }
+                                                answerTestId='group-name-content'
+                                            />
+
+                                            <BudgetDiscussionInfoSegment
+                                                question='Type of Group'
+                                                answer={
+                                                    proposal?.attributes
+                                                        ?.bd_proposal_ownership?.data?.attributes
+                                                        ?.type_of_group || ''
+                                                }
+                                                answerTestId='group-type-content'
+                                            />
+
+                                            <BudgetDiscussionInfoSegment
+                                                question='Key Information to Identify
+                                                Group'
+                                                answer={
+                                                    proposal?.attributes
+                                                        ?.bd_proposal_ownership?.data?.attributes
+                                                        ?.key_info_to_identify_group ||
+                                                    ''
+                                                }
+                                                answerTestId='group-identity-information-content'
+                                            />
+                                        </Box>
+                                    ) : (
+                                        ''
+                                    )}
                                         <BudgetDiscussionInfoSegment
                                             question={
                                                 'What social handles would you like to be used? E.g. Github, X'
