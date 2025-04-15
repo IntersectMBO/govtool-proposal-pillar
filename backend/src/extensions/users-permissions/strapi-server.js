@@ -84,7 +84,10 @@ module.exports = (plugin) => {
 		}
 
 		if (provider === 'local') {
-			const { identifier, signedData } = params;
+
+			// todo also add the message that was signed over by the wallet
+			// const { expectedIdentifier, signedMessage, expectedSignedMessage } = params;
+			const { identifier, signedMessage } = params;
 
 			let userInfo = ctx?.state?.user;
 
@@ -92,27 +95,29 @@ module.exports = (plugin) => {
 				throw new ValidationError('identifier was not provided');
 			}
 
-			if (!signedData) {
+			if (!signedMessage) {
 				throw new ValidationError('signData object was not provided');
 			}
 
-			const decoded = COSESign1.from_bytes(
-				Buffer.from(signedData.signature, 'hex')
+			const receivedCOSESig = COSESign1.from_bytes(
+				Buffer.from(signedMessage.signature, 'hex')
 			);
-			const key = COSEKey.from_bytes(Buffer.from(signedData.key, 'hex'));
-			const pubKeyBytes = key
+			const receivedCOSEKey = COSEKey.from_bytes(Buffer.from(signedMessage.key, 'hex'));
+			const receivedPublicKeyBytes = receivedCOSEKey
 				.header(Label.new_int(Int.new_negative(BigNum.from_str('2'))))
 				.as_bytes();
-			const publicKey = PublicKey.from_bytes(pubKeyBytes);
-			const signature = Ed25519Signature.from_bytes(decoded.signature());
-			const receivedData = decoded.signed_data().to_bytes();
+			const receivedPublicKey = PublicKey.from_bytes(receivedPublicKeyBytes);
+			const receivedSignature = Ed25519Signature.from_bytes(receivedCOSESig.signature());
+			const receivedMessageBytes = receivedCOSESig.signed_data().to_bytes();
 
-			// Remove network id from identifier
-			const rawKeyHash = userInfo ? identifier : identifier.slice(2);
-
+			// Remove network id from identifier, if included
+			const expectedKeyHash = userInfo ? identifier : identifier.slice(2);
+			
+			// Check the received key hash matches the received signature
+			// and check that the received key hash matches the expected key hash
 			const isVerified =
-				publicKey.verify(receivedData, signature) &&
-				rawKeyHash === publicKey.hash().to_hex();
+				receivedPublicKey.verify(receivedMessageBytes, signature) &&
+				expectedKeyHash === receivedPublicKey.hash().to_hex();
 
 			if (!isVerified) {
 				throw new ApplicationError('Verification failed');
