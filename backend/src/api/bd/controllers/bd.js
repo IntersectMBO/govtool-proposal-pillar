@@ -7,27 +7,14 @@
 const { createCoreController } = require("@strapi/strapi").factories;
 
 async function getLastOldVersion(oldVerId) {
-  let currentId = oldVerId;
-  let chainContinues = true;
-  while (chainContinues) {
-    const entries = await strapi.entityService.findMany("api::bd.bd", {
-      filters: {
-        old_ver: currentId,
-      },
-      populate: ["old_ver"],
-    });
-    if (entries?.length > 0) {
-      const entry = entries[0];
-      if (entry && entry?.id) {
-        currentId = entry?.id;
-      } else {
-        chainContinues = false;
-      }
-    } else {
-      chainContinues = false;
-    }
-  }
-  return currentId;
+  const entries = await strapi.entityService.findMany("api::bd.bd", {
+    filters: {
+      master_id: oldVerId,
+    },
+    sort: "createdAt:desc",
+  });
+
+  return entries[0]?.id;
 }
 
 module.exports = createCoreController("api::bd.bd", ({ strapi }) => ({
@@ -109,10 +96,9 @@ module.exports = createCoreController("api::bd.bd", ({ strapi }) => ({
       }
 
       let latestVersionId = null;
-
-      if (data?.old_ver) {
-        // find me this bd and check if is_active, if no - find bd where that old_ver is placed as old_ver in some other bd, and if that is not active, find a bd where parent id is old_ver and recursively get  to the version where that is the latest version of that bd
-        latestVersionId = await getLastOldVersion(data?.old_ver);
+      console.log(data);
+      if (data?.master_id) {
+        latestVersionId = await getLastOldVersion(data?.master_id);
       }
 
       const mainEntryData = {
@@ -120,7 +106,6 @@ module.exports = createCoreController("api::bd.bd", ({ strapi }) => ({
         intersect_named_administrator:
           data.intersect_named_administrator || false,
         intersect_admin_further_text: data.intersect_admin_further_text || null,
-        old_ver: latestVersionId || null,
         creator: user.id,
         bd_psapb: savedEntities.bd_psapb?.id || null,
         bd_costing: savedEntities.bd_costing?.id || null,
@@ -148,55 +133,31 @@ module.exports = createCoreController("api::bd.bd", ({ strapi }) => ({
       });
 
       if (latestVersionId) {
-			await strapi.entityService.update('api::bd.bd', latestVersionId, {
-				data: { is_active: false },
-			});
+        await strapi.entityService.update("api::bd.bd", latestVersionId, {
+          data: { is_active: false },
+        });
 
-			const latestVersionProposalData =
-				await strapi.entityService.findOne(
-					'api::bd.bd',
-					latestVersionId
-				);
-			await strapi.entityService.update('api::bd.bd', createdEntry?.id, {
-				data: {
-					prop_comments_number:
-						latestVersionProposalData?.prop_comments_number || 0,
-				},
-			});
-
-			const poll = await strapi.entityService.findMany(
-				'api::bd-poll.bd-poll',
-				{ filters: { bd_proposal_id: latestVersionId } }
-			);
-			if (poll.length > 0) {
-				await strapi.entityService.update(
-					'api::bd-poll.bd-poll',
-					poll[0].id,
-					{ data: { bd_proposal_id: createdEntry.id.toString() } }
-				);
-			}
-			const comments = await strapi.entityService.findMany(
-				'api::comment.comment',
-				{ filters: { bd_proposal_id: latestVersionId } }
-			);
-			if (comments.length > 0) {
-				for (const comment of comments) {
-					await strapi.entityService.update(
-						'api::comment.comment',
-						comment.id,
-						{
-							data: {
-								bd_proposal_id: createdEntry.id.toString(),
-							},
-						}
-					);
-				}
-			}
-		} else {
-			await strapi.entityService.create('api::bd-poll.bd-poll', {
-				data: { bd_proposal_id: createdEntry.id.toString() },
-			});
-		}
+        const latestVersionProposalData = await strapi.entityService.findOne(
+          "api::bd.bd",
+          latestVersionId
+        );
+        await strapi.entityService.update("api::bd.bd", createdEntry?.id, {
+          data: {
+            prop_comments_number:
+              latestVersionProposalData?.prop_comments_number || 0,
+            master_id: latestVersionProposalData?.master_id || "",
+          },
+        });
+      } else {
+        await strapi.entityService.update("api::bd.bd", createdEntry?.id, {
+          data: {
+            master_id: createdEntry?.id?.toString(),
+          },
+        });
+        await strapi.entityService.create("api::bd-poll.bd-poll", {
+          data: { bd_proposal_id: createdEntry.id.toString() },
+        });
+      }
 
       return createdEntry;
     } catch (error) {
@@ -219,7 +180,6 @@ module.exports = createCoreController("api::bd.bd", ({ strapi }) => ({
 
     const populate = [
       "creator",
-      "old_ver",
       "bd_costing.preferred_currency",
       "bd_proposal_detail.contract_type_name",
       "bd_further_information.proposal_links",
@@ -228,30 +188,15 @@ module.exports = createCoreController("api::bd.bd", ({ strapi }) => ({
       "bd_psapb.committee_name",
       "bd_proposal_ownership.be_country",
     ];
-    let current = await strapi.entityService.findOne("api::bd.bd", id, {
+    const allVersions = await strapi.entityService.findMany("api::bd.bd", {
+      filters: {
+        master_id: id,
+      },
+      sort: "createdAt:desc",
       populate: populate,
     });
-    if (!current) {
-      return ctx.notFound("Resource not found");
-    }
 
-    const versions = [current];
-
-    while (current && current.old_ver) {
-      const previous = await strapi.entityService.findOne(
-        "api::bd.bd",
-        current?.old_ver?.id,
-        {
-          populate: populate,
-        }
-      );
-
-      if (!previous) break;
-      versions.push(previous);
-      current = previous;
-    }
-
-    return this.transformResponse(versions);
+    return this.transformResponse(allVersions);
   },
 
   async findOne(ctx) {

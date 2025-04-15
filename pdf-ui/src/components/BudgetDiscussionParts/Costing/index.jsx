@@ -329,7 +329,7 @@ const Costing = ({
                             backStep={step - 1}
                             errors={errors}
                             showSaveDraft={
-                                !currentBudgetDiscussionData?.old_ver
+                                !currentBudgetDiscussionData?.master_id
                             }
                         />
                     </CardContent>

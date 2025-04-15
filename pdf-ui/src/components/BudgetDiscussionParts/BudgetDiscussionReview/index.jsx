@@ -781,7 +781,7 @@ const BudgetDiscussionReview = ({
                             nextStep={step + 1}
                             backStep={step - 1}
                             showSaveDraft={
-                                !currentBudgetDiscussionData?.old_ver
+                                !currentBudgetDiscussionData?.master_id
                             }
                         />
                     </CardContent>
