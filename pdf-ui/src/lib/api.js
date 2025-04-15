@@ -1,10 +1,14 @@
-import axiosInstance from './axiosInstance';
+import axiosInstance, { axiosWithCookies } from './axiosInstance';
 
 export const loginUser = async (loginData) => {
     try {
-        const { data } = await axiosInstance.post(`/api/auth/local`, {
-            ...loginData,
-        });
+        const { data } = await axiosInstance.post(
+            `/api/auth/local`,
+            {
+                ...loginData,
+            },
+            { withCredentials: true }
+        );
         return data;
     } catch (error) {
         console.error(error);
@@ -112,6 +116,17 @@ export const getContractTypeList = async () => {
         throw error;
     }
 };
+
+export const deleteBudgetDiscussionDraft = async (ID) => {
+    try {
+        const response = await axiosInstance.delete(`/api/bd-drafts/${ID}`);
+        return response?.data;
+    } catch (error) {
+        console.error('Error in delete Budget Discussion Draft:', error);
+        throw error;
+    }
+};
+
 export const createBudgetDiscussionDraft = async (data) => {
     try {
         const response = await axiosInstance.post(`/api/bd-drafts`, {
@@ -506,7 +521,9 @@ export const createPollVote = async ({ createData }) => {
 
 export const getLoggedInUserInfo = async () => {
     try {
-        const { data } = await axiosInstance.get(`api/users/me`);
+        const { data } = await axiosInstance.get(`api/users/me`, {
+            withCredentials: true,
+        });
         return data;
     } catch (error) {
         console.error(error);
@@ -549,5 +566,14 @@ export const updateUser = async (updateData) => {
     } catch (error) {
         console.error(error);
         throw error?.response?.data?.error;
+    }
+};
+
+export const getRefreshToken = async () => {
+    try {
+        const data = await axiosWithCookies.post(`/api/token/refresh`, {});
+        return data.data;
+    } catch (error) {
+        throw error;
     }
 };

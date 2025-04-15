@@ -10,7 +10,11 @@ import {
 import { IconX } from '@intersect.mbo/intersectmbo.org-icons-set';
 import { getBudgetDiscussionPollVotes } from '../../lib/api';
 import { useAppContext } from '../../context/context';
-import { correctAdaFormat, formatDateWithOffset } from '../../lib/utils';
+import {
+    correctVoteAdaFormat,
+    formatDateWithOffset,
+    LOVELACE,
+} from '../../lib/utils';
 
 const DrepVotersDialog = ({ open, handleClose, pollID }) => {
     const { fetchDRepVotingPowerList } = useAppContext();
@@ -104,7 +108,7 @@ const DrepVotersDialog = ({ open, handleClose, pollID }) => {
                         mb: 2,
                     }}
                 >
-                    ₳ {correctAdaFormat(totalVotingPower)}
+                    ₳ {correctVoteAdaFormat(totalVotingPower / LOVELACE)}
                 </Typography>
 
                 {drepList?.length === 0 && (
@@ -159,7 +163,10 @@ const DrepVotersDialog = ({ open, handleClose, pollID }) => {
                                             : '-'}
                                     </Typography>
                                     <Typography variant='h6'>
-                                        ₳ {correctAdaFormat(drep?.votingPower)}
+                                        ₳{' '}
+                                        {correctVoteAdaFormat(
+                                            drep?.votingPower / LOVELACE
+                                        )}
                                     </Typography>
                                     {drep?.voted_at && (
                                         <Typography variant='caption'>

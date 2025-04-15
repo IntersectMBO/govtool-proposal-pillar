@@ -23,6 +23,8 @@ import {
     getBudgetDiscussionTypes,
 } from '../../../lib/api';
 import { StepperActionButtons } from '../../BudgetDiscussionParts';
+import ReactMarkdown from 'react-markdown';
+import { correctVoteAdaFormat } from '../../../lib/utils';
 
 const BudgetDiscussionReview = ({
     setStep,
@@ -54,7 +56,61 @@ const BudgetDiscussionReview = ({
                 <Typography variant='caption' gutterBottom>
                     {question}
                 </Typography>
-                <Typography
+                <div data-testid={answerTestId}>
+                    <ReactMarkdown
+                        components={{
+                            p(props) {
+                                const { children } = props;
+                                return (
+                                    <Typography
+                                        variant='body1'
+                                        style={{
+                                            wordWrap: 'break-word',
+                                        }}
+                                    >
+                                        {children}
+                                    </Typography>
+                                );
+                            },
+                            ul(props) {
+                                const { children } = props;
+                                return (
+                                    <ul
+                                        style={{
+                                            display: 'block',
+                                            'list-style-type': 'disc',
+                                            'margin-block-start': '1em',
+                                            'margin-block-end': '1em',
+                                            'margin-inline-start': '0px',
+                                            'margin-inline-end': '0px',
+                                            'padding-inline-start': '40px',
+                                            'unicode-bidi': 'isolate',
+                                        }}
+                                    >
+                                        {children}
+                                    </ul>
+                                );
+                            },
+                            li(props) {
+                                const { children } = props;
+                                return (
+                                    <li>
+                                        <Typography
+                                            variant='body1'
+                                            component='span'
+                                            style={{ wordWrap: 'break-word' }}
+                                        >
+                                            {children}
+                                        </Typography>
+                                    </li>
+                                );
+                            },
+                        }}
+                    >
+                        {answer?.toString() || '-'}
+                    </ReactMarkdown>
+                </div>
+                {/* <Typography
                     variant='body1'
                     gutterBottom
                     data-testid={answerTestId}
@@ -63,7 +119,7 @@ const BudgetDiscussionReview = ({
                     }}
                 >
                     {answer || '-'}
-                </Typography>
+                </Typography> */}
             </Box>
         );
     };
@@ -376,7 +432,9 @@ const BudgetDiscussionReview = ({
                                                 ?.bd_psapb?.problem_statement ||
                                             ''
                                         }
-                                        answerTestId={'problem-statement-content'}
+                                        answerTestId={
+                                            'problem-statement-content'
+                                        }
                                     />
 
                                     <InfoSection
@@ -386,7 +444,9 @@ const BudgetDiscussionReview = ({
                                                 ?.bd_psapb?.proposal_benefit ||
                                             ''
                                         }
-                                        answerTestId={'proposal-benefit-content'}
+                                        answerTestId={
+                                            'proposal-benefit-content'
+                                        }
                                     />
 
                                     <InfoSection
@@ -473,7 +533,9 @@ const BudgetDiscussionReview = ({
                                                 ?.bd_proposal_detail
                                                 ?.proposal_description || ''
                                         }
-                                        answerTestId={'proposal-description-content'}
+                                        answerTestId={
+                                            'proposal-description-content'
+                                        }
                                     />
 
                                     <InfoSection
@@ -484,7 +546,9 @@ const BudgetDiscussionReview = ({
                                                 ?.bd_proposal_detail
                                                 ?.key_dependencies || ''
                                         }
-                                        answerTestId={'key-dependencies-content'}
+                                        answerTestId={
+                                            'key-dependencies-content'
+                                        }
                                     />
 
                                     <InfoSection
@@ -495,7 +559,9 @@ const BudgetDiscussionReview = ({
                                                 ?.bd_proposal_detail
                                                 ?.maintain_and_support || ''
                                         }
-                                        answerTestId={'maintain-and-support-content'}
+                                        answerTestId={
+                                            'maintain-and-support-content'
+                                        }
                                     />
 
                                     <InfoSection
@@ -556,7 +622,9 @@ const BudgetDiscussionReview = ({
                                             )?.attributes?.contract_type_name ||
                                             'Error'
                                         }
-                                        answerTestId={'contracting-type-name-content'}
+                                        answerTestId={
+                                            'contracting-type-name-content'
+                                        }
                                     />
                                 </Box>
                                 <Box sx={{ align: 'left' }}>
@@ -570,10 +638,10 @@ const BudgetDiscussionReview = ({
 
                                     <InfoSection
                                         question='ADA Amount'
-                                        answer={
+                                        answer={`₳ ${correctVoteAdaFormat(
                                             currentBudgetDiscussionData
-                                                ?.bd_costing?.ada_amount || ''
-                                        }
+                                                ?.bd_costing?.ada_amount || 0
+                                        )}`}
                                         answerTestId={'ada-amount-content'}
                                     />
 
@@ -610,15 +678,15 @@ const BudgetDiscussionReview = ({
 
                                     <InfoSection
                                         question='Amount in preferred currency'
-                                        answer={
+                                        answer={correctVoteAdaFormat(
                                             currentBudgetDiscussionData
                                                 ?.bd_costing
                                                 ?.amount_in_preferred_currency ||
-                                            ''
-                                        }
+                                                0
+                                        )}
                                         answerTestId={
                                             'amount-in-preferred-currency-content'
-                                        }   
+                                        }
                                     />
 
                                     <InfoSection
@@ -628,9 +696,7 @@ const BudgetDiscussionReview = ({
                                                 ?.bd_costing?.cost_breakdown ||
                                             ''
                                         }
-                                        answerTestId={
-                                            'cost-breakdown-content'
-                                        }
+                                        answerTestId={'cost-breakdown-content'}
                                     />
                                 </Box>
                                 <Box sx={{ align: 'left' }}>
@@ -688,17 +754,20 @@ const BudgetDiscussionReview = ({
                                             'intersect-named-administrator-content'
                                         }
                                     />
-                                    {currentBudgetDiscussionData?.intersect_named_administrator?'':
-                                    <InfoSection
-                                        question='Please provide further information to help inform DReps. Who is the vendor and what services are they providing?'
-                                        answer={
-                                            currentBudgetDiscussionData
-                                                ?.intersect_admin_further_text ||''
-                                        }
-                                        answerTestId={
-                                            'intersect-admin-further-text'
-                                        }
-                                    />}
+                                    {currentBudgetDiscussionData?.intersect_named_administrator ? (
+                                        ''
+                                    ) : (
+                                        <InfoSection
+                                            question='Please provide further information to help inform DReps. Who is the vendor and what services are they providing?'
+                                            answer={
+                                                currentBudgetDiscussionData?.intersect_admin_further_text ||
+                                                ''
+                                            }
+                                            answerTestId={
+                                                'intersect-admin-further-text'
+                                            }
+                                        />
+                                    )}
                                 </Box>
                             </Box>
                         </Box>
@@ -711,6 +780,9 @@ const BudgetDiscussionReview = ({
                             selectedDraftId={selectedDraftId}
                             nextStep={step + 1}
                             backStep={step - 1}
+                            showSaveDraft={
+                                !currentBudgetDiscussionData?.old_ver
+                            }
                         />
                     </CardContent>
                 </Card>

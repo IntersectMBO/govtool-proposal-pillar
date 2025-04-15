@@ -138,7 +138,7 @@ const Costing = ({
                                             handleDataChange(e, 'ada_amount')
                                         }
                                         sx={{ mb: 2 }}
-                                        data-testid= 'ada-amount-input'
+                                        data-testid='ada-amount-input'
                                         // helperText={errors['bd_costing.ada_amount']?.trim()}
                                         // error={!!errors['bd_costing.ada_amount']?.trim()}
                                     />
@@ -328,6 +328,9 @@ const Costing = ({
                             nextStep={step + 1}
                             backStep={step - 1}
                             errors={errors}
+                            showSaveDraft={
+                                !currentBudgetDiscussionData?.old_ver
+                            }
                         />
                     </CardContent>
                 </Card>

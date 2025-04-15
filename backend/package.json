@@ -19,6 +19,7 @@
     "@strapi/plugin-users-permissions": "4.19.1",
     "@strapi/provider-email-amazon-ses": "^5.10.4",
     "@strapi/strapi": "4.19.1",
+    "jsonwebtoken": "^9.0.2",
     "pg": "8.8.0",
     "react": "^18.0.0",
     "react-dom": "^18.0.0",

@@ -13,41 +13,87 @@ export const loginUserToApp = async ({
     callBackFn,
     trigerSignData = true,
     clearStates,
+    setPDFUsername,
+    isDRep = false,
 }) => {
     try {
-        if (getDataFromSession('pdfUserJwt')) {
-            const loggedInUser = await getLoggedInUserInfo();
-            setUser({
-                user: {
-                    ...loggedInUser,
-                },
-            });
-
-            if (loggedInUser && !loggedInUser?.govtool_username) {
-                setOpenUsernameModal({
-                    open: true,
-                    callBackFn: callBackFn
-                        ? () => callBackFn(loggedInUser)
-                        : () => {},
+        if (!isDRep) {
+            if (getDataFromSession('pdfUserJwt')) {
+                const loggedInUser = await getLoggedInUserInfo();
+                setUser({
+                    user: {
+                        ...loggedInUser,
+                    },
                 });
+
+                if (loggedInUser && !loggedInUser?.govtool_username) {
+                    setOpenUsernameModal({
+                        open: true,
+                        callBackFn: callBackFn
+                            ? () => callBackFn(loggedInUser)
+                            : () => {},
+                    });
+                } else {
+                    if (setPDFUsername) {
+                        setPDFUsername(loggedInUser?.govtool_username);
+                    }
+                    if (callBackFn) {
+                        callBackFn(loggedInUser);
+                    }
+                }
             } else {
-                if (callBackFn) {
-                    callBackFn(loggedInUser);
+                if (trigerSignData) {
+                    const keyToSign = wallet?.stakeKey;
+                    const messageUtf = `To proceed, please sign this data to verify your identity. This ensures that the action is secure and confirms your identity. Timestamp: ${new Date()?.getTime()}`;
+                    const messageHex = utf8ToHex(messageUtf);
+
+                    const signedData = await wallet?.cip95.signData(
+                        keyToSign,
+                        messageHex
+                    );
+
+                    const userResponse = await loginUser({
+                        identifier: keyToSign,
+                        signedData: signedData,
+                    });
+
+                    if (!userResponse) return;
+                    saveDataInSession('pdfUserJwt', userResponse?.jwt);
+                    setUser(userResponse);
+
+                    if (userResponse && !userResponse?.user?.govtool_username) {
+                        setOpenUsernameModal({
+                            open: true,
+                            callBackFn: callBackFn
+                                ? () => callBackFn(userResponse?.user)
+                                : () => {},
+                        });
+                    } else {
+                        if (setPDFUsername) {
+                            setPDFUsername(
+                                userResponse?.user?.govtool_username
+                            );
+                        }
+
+                        if (callBackFn) {
+                            callBackFn(userResponse?.user);
+                        }
+                    }
                 }
             }
         } else {
             if (trigerSignData) {
-                const stakeKeyHash = await wallet?.stakeKey;
-                const messageUtf = `To proceed, please sign this data to verify your identity. This ensures that the action is secure and confirms your identity.`;
+                const keyToSign = wallet?.dRepID;
+                const messageUtf = `To proceed, please sign this data to verify your dRep identity. This ensures that the action is secure and confirms your identity. Timestamp: ${new Date()?.getTime()}`;
                 const messageHex = utf8ToHex(messageUtf);
 
                 const signedData = await wallet?.cip95.signData(
-                    stakeKeyHash,
+                    keyToSign,
                     messageHex
                 );
 
                 const userResponse = await loginUser({
-                    identifier: stakeKeyHash,
+                    identifier: keyToSign,
                     signedData: signedData,
                 });
 
@@ -63,6 +109,10 @@ export const loginUserToApp = async ({
                             : () => {},
                     });
                 } else {
+                    if (setPDFUsername) {
+                        setPDFUsername(userResponse?.user?.govtool_username);
+                    }
+
                     if (callBackFn) {
                         callBackFn(userResponse?.user);
                     }

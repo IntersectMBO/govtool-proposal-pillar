@@ -1,255 +1,294 @@
 // @ts-nocheck
 "use strict";
+const jwt = require('jsonwebtoken');
 
 /**
  * bd-poll-vote controller
  */
 
-const { createCoreController } = require("@strapi/strapi").factories;
+const { createCoreController } = require('@strapi/strapi').factories;
+
+const verifyJWT = (token) => {
+	return new Promise(function (resolve, reject) {
+		jwt.verify(
+			token,
+			process.env.JWT_SECRET,
+			{},
+			function (err, tokenPayload = {}) {
+				if (err) {
+					return reject(new Error('Invalid token.'));
+				}
+				resolve(tokenPayload);
+			}
+		);
+	});
+};
 
 module.exports = createCoreController(
-  "api::bd-poll-vote.bd-poll-vote",
-  ({ strapi }) => ({
-    async create(ctx) {
-      const { data } = ctx?.request?.body;
-      data.drep_voting_power=data?.drep_voting_power?.toString()||'0';
-      const { vote_result: voteResult, bd_poll_id: pollId } = data;
-      const user = ctx?.state?.user;
-      if (!user) {
-        return ctx.badRequest("User is required");
-      }
+	'api::bd-poll-vote.bd-poll-vote',
+	({ strapi }) => ({
+		async create(ctx) {
+			const { data } = ctx?.request?.body;
+			data.drep_voting_power = data?.drep_voting_power?.toString() || '0';
+			const { vote_result: voteResult, bd_poll_id: pollId } = data;
+			const user = ctx?.state?.user;
+			if (!user) {
+				return ctx.badRequest('User is required');
+			}
 
-      if (voteResult !== true && voteResult !== false) {
-        return ctx.badRequest("Vote result is required");
-      }
+			let token = await verifyJWT(
+				ctx?.request?.header?.authorization?.split(' ')[1]
+			);
 
-      if (!pollId) {
-        return ctx.badRequest("Poll ID is required");
-      }
+			if (!token?.dRepID) {
+				return ctx.badRequest('Missing dRepID');
+			}
 
-      let pollVote;
-      let poll;
+			if (voteResult !== true && voteResult !== false) {
+				return ctx.badRequest('Vote result is required');
+			}
 
-      // Delete the Poll Vote
-      const deletePollVote = async () => {
-        let deletedPollVote = await strapi.entityService.delete(
-          "api::bd-poll-vote.bd-poll-vote",
-          pollVote?.id
-        );
+			if (!pollId) {
+				return ctx.badRequest('Poll ID is required');
+			}
 
-        if (!deletedPollVote) {
-          return ctx.badRequest("Poll vote not deleted");
-        }
-      };
+			let pollVote;
+			let poll;
 
-      try {
-        // Check if vote already exist
-        try {
-          const findVote = await strapi.entityService.findMany(
-            "api::bd-poll-vote.bd-poll-vote",
-            {
-              filters: {
-                $and: [
-                  {
-                    user_id: user?.id?.toString(),
-                  },
-                  {
-                    bd_poll_id: pollId?.toString(),
-                  },
-                ],
-              },
-            }
-          );
-          if (findVote?.length > 0) {
-            return ctx.badRequest("Poll vote for this user already exist");
-          }
-        } catch (error) {
-          ctx.status = 500;
-          ctx.body = { error: error, message: error.message };
-        }
-        // Create the Poll Vote
-        try {
-          pollVote = await strapi.entityService.create(
-            "api::bd-poll-vote.bd-poll-vote",
-            { data: { ...data, user_id: `${user.id}` } }
-          );
-          if (!pollVote) {
-            return ctx.badRequest("Poll vote not created");
-          }
-        } catch (error) {
-          return ctx.badRequest("Poll vote not created");
-        }
+			// Delete the Poll Vote
+			const deletePollVote = async () => {
+				let deletedPollVote = await strapi.entityService.delete(
+					'api::bd-poll-vote.bd-poll-vote',
+					pollVote?.id
+				);
 
-        // Get the Poll
-        try {
-          poll = await strapi.entityService.findOne(
-            "api::bd-poll.bd-poll",
-            pollVote?.bd_poll_id
-          );
+				if (!deletedPollVote) {
+					return ctx.badRequest('Poll vote not deleted');
+				}
+			};
 
-          if (!poll) {
-            // Delete the Poll Vote because the Poll was not found
-            await deletePollVote();
+			try {
+				// Check if vote already exist
+				try {
+					const findVote = await strapi.entityService.findMany(
+						'api::bd-poll-vote.bd-poll-vote',
+						{
+							filters: {
+								$and: [
+									{
+										user_id: user?.id?.toString(),
+									},
+									{
+										bd_poll_id: pollId?.toString(),
+									},
+								],
+							},
+						}
+					);
+					if (findVote?.length > 0) {
+						return ctx.badRequest(
+							'Poll vote for this user already exist'
+						);
+					}
+				} catch (error) {
+					ctx.status = 500;
+					ctx.body = { error: error, message: error.message };
+				}
+				// Create the Poll Vote
+				try {
+					pollVote = await strapi.entityService.create(
+						'api::bd-poll-vote.bd-poll-vote',
+						{
+							data: {
+								...data,
+								drep_id: token?.dRepID,
+								user_id: `${user.id}`,
+							},
+						}
+					);
+					if (!pollVote) {
+						return ctx.badRequest('Poll vote not created');
+					}
+				} catch (error) {
+					return ctx.badRequest('Poll vote not created');
+				}
 
-            return ctx.badRequest("Poll not found");
-          }
-        } catch (error) {
-          // Delete the Poll Vote because the Poll was not found
-          await deletePollVote();
+				// Get the Poll
+				try {
+					poll = await strapi.entityService.findOne(
+						'api::bd-poll.bd-poll',
+						pollVote?.bd_poll_id
+					);
 
-          return ctx.badRequest("Poll not found");
-        }
+					if (!poll) {
+						// Delete the Poll Vote because the Poll was not found
+						await deletePollVote();
 
-        const fieldToUpdate = data?.vote_result ? "poll_yes" : "poll_no";
-        let updatedPoll;
+						return ctx.badRequest('Poll not found');
+					}
+				} catch (error) {
+					// Delete the Poll Vote because the Poll was not found
+					await deletePollVote();
 
-        // Update the Poll
-        try {
-          updatedPoll = await strapi.entityService.update(
-            "api::bd-poll.bd-poll",
-            poll?.id,
-            {
-              data: {
-                [fieldToUpdate]: poll[fieldToUpdate] + 1,
-              },
-            }
-          );
+					return ctx.badRequest('Poll not found');
+				}
 
-          if (!updatedPoll) {
-            // Delete the Poll Vote because the Poll was not updated
-            await deletePollVote();
+				const fieldToUpdate = data?.vote_result
+					? 'poll_yes'
+					: 'poll_no';
+				let updatedPoll;
 
-            return ctx.badRequest("Poll not updated");
-          }
-        } catch (error) {
-          // Delete the Poll Vote because the Poll was not updated
-          await deletePollVote();
+				// Update the Poll
+				try {
+					updatedPoll = await strapi.entityService.update(
+						'api::bd-poll.bd-poll',
+						poll?.id,
+						{
+							data: {
+								[fieldToUpdate]: poll[fieldToUpdate] + 1,
+							},
+						}
+					);
 
-          return ctx.badRequest("Poll not updated");
-        }
+					if (!updatedPoll) {
+						// Delete the Poll Vote because the Poll was not updated
+						await deletePollVote();
 
-        return this.transformResponse(pollVote);
-        // Global error catch
-      } catch (error) {
-        pollVote && (await deletePollVote());
-        ctx.status = 500;
-        ctx.body = { error: error, message: error.message };
-      }
-    },
-    async update(ctx) {
-      const { id } = ctx.params;
-      const { data } = ctx?.request?.body;
-      const { vote_result: voteResult } = data;
+						return ctx.badRequest('Poll not updated');
+					}
+				} catch (error) {
+					// Delete the Poll Vote because the Poll was not updated
+					await deletePollVote();
 
-      const user = ctx?.state?.user;
+					return ctx.badRequest('Poll not updated');
+				}
 
-      if (!user) {
-        return ctx.badRequest("User is required");
-      }
+				return this.transformResponse(pollVote);
+				// Global error catch
+			} catch (error) {
+				pollVote && (await deletePollVote());
+				ctx.status = 500;
+				ctx.body = { error: error, message: error.message };
+			}
+		},
+		async update(ctx) {
+			const { id } = ctx.params;
+			const { data } = ctx?.request?.body;
+			const { vote_result: voteResult } = data;
 
-      if (voteResult !== true && voteResult !== false) {
-        return ctx.badRequest("Vote result is required");
-      }
+			const user = ctx?.state?.user;
 
-      let pollVote;
-      let updatedPollVote;
-      let poll;
+			if (!user) {
+				return ctx.badRequest('User is required');
+			}
 
-      const rollbackPollVote = async () => {
-        const rollbackedPollVote = await strapi.entityService.update(
-          "api::bd-poll-vote.bd-poll-vote",
-          pollVote?.id,
-          { data: { vote_result: pollVote.vote_result } }
-        );
-        if (!rollbackedPollVote) {
-          return ctx.badRequest("Poll vote not updated to initial state");
-        }
+			if (voteResult !== true && voteResult !== false) {
+				return ctx.badRequest('Vote result is required');
+			}
 
-        return ctx.badRequest("Poll vote not updated");
-      };
-      const rollbackPoll = async () => {
-        const rollbackedPoll = await strapi.entityService.update(
-          "api::bd-poll.bd-poll",
-          poll.id,
-          { data: { poll_yes: poll.poll_yes, poll_no: poll.poll_no } }
-        );
-        if (!rollbackedPoll) {
-          return ctx.badRequest("Poll not updated to initial state");
-        }
+			let pollVote;
+			let updatedPollVote;
+			let poll;
 
-        return ctx.badRequest("Poll vote not updated");
-      };
+			const rollbackPollVote = async () => {
+				const rollbackedPollVote = await strapi.entityService.update(
+					'api::bd-poll-vote.bd-poll-vote',
+					pollVote?.id,
+					{ data: { vote_result: pollVote.vote_result } }
+				);
+				if (!rollbackedPollVote) {
+					return ctx.badRequest(
+						'Poll vote not updated to initial state'
+					);
+				}
 
-      try {
-        try {
-          pollVote = await strapi.entityService.findOne(
-            "api::bd-poll-vote.bd-poll-vote",
-            id
-          );
+				return ctx.badRequest('Poll vote not updated');
+			};
+			const rollbackPoll = async () => {
+				const rollbackedPoll = await strapi.entityService.update(
+					'api::bd-poll.bd-poll',
+					poll.id,
+					{ data: { poll_yes: poll.poll_yes, poll_no: poll.poll_no } }
+				);
+				if (!rollbackedPoll) {
+					return ctx.badRequest('Poll not updated to initial state');
+				}
 
-          if (!pollVote) {
-            return ctx.badRequest("Poll vote not found");
-          }
+				return ctx.badRequest('Poll vote not updated');
+			};
 
-          if (pollVote?.vote_result === voteResult) {
-            return ctx.badRequest("Poll vote already updated");
-          }
+			try {
+				try {
+					pollVote = await strapi.entityService.findOne(
+						'api::bd-poll-vote.bd-poll-vote',
+						id
+					);
 
-          updatedPollVote = await strapi.entityService.update(
-            "api::bd-poll-vote.bd-poll-vote",
-            id,
-            { data: { ...pollVote, vote_result: voteResult } }
-          );
+					if (!pollVote) {
+						return ctx.badRequest('Poll vote not found');
+					}
 
-          if (!updatedPollVote) {
-            return ctx.badRequest("Poll vote not updated");
-          }
-        } catch (error) {
-          return ctx.badRequest("Poll vote not updated");
-        }
+					if (pollVote?.vote_result === voteResult) {
+						return ctx.badRequest('Poll vote already updated');
+					}
 
-        try {
-          poll = await strapi.entityService.findOne(
-            "api::bd-poll.bd-poll",
-            pollVote?.bd_poll_id
-          );
-          if (!poll) {
-            return ctx.badRequest("Poll not found");
-          }
-        } catch (error) {
-          return ctx.badRequest("Poll not found");
-        }
+					updatedPollVote = await strapi.entityService.update(
+						'api::bd-poll-vote.bd-poll-vote',
+						id,
+						{ data: { ...pollVote, vote_result: voteResult } }
+					);
 
-        // Update the Poll
-        try {
-          const updatedPoll = await strapi.entityService.update(
-            "api::bd-poll.bd-poll",
-            poll?.id,
-            {
-              data: {
-                ...poll,
-                [voteResult ? "poll_yes" : "poll_no"]:
-                  poll[voteResult ? "poll_yes" : "poll_no"] + 1,
-                [voteResult ? "poll_no" : "poll_yes"]:
-                  poll[voteResult ? "poll_no" : "poll_yes"] - 1,
-              },
-            }
-          );
-          if (!updatedPoll) {
-            await rollbackPollVote();
-            return ctx.badRequest("Poll not updated");
-          }
+					if (!updatedPollVote) {
+						return ctx.badRequest('Poll vote not updated');
+					}
+				} catch (error) {
+					return ctx.badRequest('Poll vote not updated');
+				}
 
-          return this.transformResponse(updatedPollVote);
-        } catch (error) {
-          return ctx.badRequest("Poll not updated");
-        }
-      } catch (error) {
-        pollVote && (await rollbackPollVote());
-        poll && (await rollbackPoll());
-        ctx.status = 500;
-        ctx.body = { error: error, message: error.message };
-      }
-    },
-  })
+				try {
+					poll = await strapi.entityService.findOne(
+						'api::bd-poll.bd-poll',
+						pollVote?.bd_poll_id
+					);
+					if (!poll) {
+						return ctx.badRequest('Poll not found');
+					}
+				} catch (error) {
+					return ctx.badRequest('Poll not found');
+				}
+
+				// Update the Poll
+				try {
+					const updatedPoll = await strapi.entityService.update(
+						'api::bd-poll.bd-poll',
+						poll?.id,
+						{
+							data: {
+								...poll,
+								[voteResult ? 'poll_yes' : 'poll_no']:
+									poll[voteResult ? 'poll_yes' : 'poll_no'] +
+									1,
+								[voteResult ? 'poll_no' : 'poll_yes']:
+									poll[voteResult ? 'poll_no' : 'poll_yes'] -
+									1,
+							},
+						}
+					);
+					if (!updatedPoll) {
+						await rollbackPollVote();
+						return ctx.badRequest('Poll not updated');
+					}
+
+					return this.transformResponse(updatedPollVote);
+				} catch (error) {
+					return ctx.badRequest('Poll not updated');
+				}
+			} catch (error) {
+				pollVote && (await rollbackPollVote());
+				poll && (await rollbackPoll());
+				ctx.status = 500;
+				ctx.body = { error: error, message: error.message };
+			}
+		},
+	})
 );
