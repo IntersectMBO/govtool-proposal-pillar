@@ -122,7 +122,7 @@ const BudgetDiscussionSubmit = ({
                                     : { privacy_policy: 'Required' }
                             }
                             showSaveDraft={
-                                !currentBudgetDiscussionData?.old_ver
+                                !currentBudgetDiscussionData?.master_id
                             }
                         />
                     </CardContent>

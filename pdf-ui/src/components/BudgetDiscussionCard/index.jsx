@@ -131,7 +131,9 @@ const BudgetDiscussionCard = ({
                 }}
                 data-testid={
                     isDraft
-                        ? `draft-` + budgetDiscussion?.id + `-proposal`
+                        ? `draft-` +
+                          `${budgetDiscussion?.attributes?.master_id}` +
+                          `-proposal`
                         : `budget-discussion-` +
                           (budgetDiscussion?.attributes?.bd_psapb?.data
                               ?.attributes?.type_name?.data?.attributes
@@ -236,7 +238,7 @@ const BudgetDiscussionCard = ({
                                             <IconButton
                                                 onClick={() => {
                                                     copyToClipboard(
-                                                        `${budgetDiscussionLink}${budgetDiscussion?.id}`
+                                                        `${budgetDiscussionLink}${budgetDiscussion?.attributes?.master_id}`
                                                     ),
                                                         disableShareClick();
                                                 }}
@@ -532,7 +534,7 @@ const BudgetDiscussionCard = ({
                             ) : (
                                 <Box flexGrow={1}>
                                     <Link
-                                        to={`/budget_discussion/${budgetDiscussion?.id}`}
+                                        to={`/budget_discussion/${budgetDiscussion?.attributes?.master_id}`}
                                         data-testid={
                                             `budget-discussion-` +
                                             (budgetDiscussion?.attributes

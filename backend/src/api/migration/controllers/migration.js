@@ -647,4 +647,139 @@ module.exports = {
       error: errorList,
     };
   },
+
+  async migrateBDProposalsMasterId(ctx) {
+    const coreProposals = await strapi.entityService.findMany("api::bd.bd", {
+      filters: {
+        old_ver: null,
+      },
+      fields: ["id", "master_id"],
+      limit: 100000,
+    });
+
+    async function propagateMasterId(parentId, coreId) {
+      const children = await strapi.entityService.findMany("api::bd.bd", {
+        filters: {
+          old_ver: parentId,
+        },
+        fields: ["id", "master_id"],
+        limit: 100000,
+      });
+
+      for (const child of children) {
+        try {
+          if (!child.master_id || child.master_id !== coreId.toString()) {
+            await strapi.entityService.update("api::bd.bd", child?.id, {
+              data: {
+                master_id: coreId?.toString(),
+              },
+            });
+          }
+
+          await propagateMasterId(child?.id, coreId);
+        } catch (error) {
+          console.log(`Error while processing child id ${child?.id}:`, error);
+        }
+      }
+    }
+
+    for (const proposal of coreProposals) {
+      try {
+        if (!proposal?.master_id) {
+          await strapi.entityService.update("api::bd.bd", proposal?.id, {
+            data: {
+              master_id: proposal?.id?.toString(),
+            },
+          });
+        }
+
+        await propagateMasterId(proposal?.id, proposal?.id);
+      } catch (error) {
+        console.log(`Error while processing proposal ${proposal?.id}:`, error);
+      }
+    }
+
+    return {
+      success: true,
+    };
+  },
+  async migrateCommentsAndPollMasterId(ctx) {
+    const coreProposals = await strapi.entityService.findMany("api::bd.bd", {
+      filters: {
+        old_ver: null,
+      },
+      fields: ["id", "master_id"],
+      limit: 100000,
+    });
+
+    for (const proposal of coreProposals) {
+      try {
+        const masterID = proposal?.master_id;
+        const allProposalsWithSameMasterId =
+          await strapi.entityService.findMany("api::bd.bd", {
+            filters: {
+              master_id: masterID,
+            },
+            fields: ["id", "master_id"],
+            limit: 100000,
+          });
+
+        const proposalsIDs = allProposalsWithSameMasterId.map((proposal) =>
+          proposal?.id?.toString()
+        );
+
+        const comments = await strapi.entityService.findMany(
+          "api::comment.comment",
+          {
+            filters: {
+              bd_proposal_id: {
+                $in: proposalsIDs,
+              },
+            },
+            fields: ["id", "bd_proposal_id"],
+            limit: 100000,
+          }
+        );
+
+        for (const comment of comments) {
+          await strapi.entityService.update(
+            "api::comment.comment",
+            comment?.id,
+            {
+              data: {
+                bd_proposal_id: masterID,
+              },
+            }
+          );
+        }
+
+        const polls = await strapi.entityService.findMany(
+          "api::bd-poll.bd-poll",
+          {
+            filters: {
+              bd_proposal_id: {
+                $in: proposalsIDs,
+              },
+            },
+            fields: ["id", "bd_proposal_id"],
+            limit: 100000,
+          }
+        );
+
+        for (const poll of polls) {
+          await strapi.entityService.update("api::bd-poll.bd-poll", poll?.id, {
+            data: {
+              bd_proposal_id: masterID,
+            },
+          });
+        }
+      } catch (error) {
+        console.log(`Error while processing proposal ${proposal?.id}:`, error);
+      }
+    }
+
+    return {
+      success: true,
+    };
+  },
 };
