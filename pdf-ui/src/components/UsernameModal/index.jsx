@@ -30,7 +30,7 @@ const style = {
     borderRadius: '20px',
 };
 
-const UsernameModal = ({ open, handleClose: close }) => {
+const UsernameModal = ({ open, handleClose: close, setPDFUsername }) => {
     const theme = useTheme();
     const { setUser, setOpenUsernameModal } = useAppContext();
     const [username, setUsername] = useState('');
@@ -92,6 +92,10 @@ const UsernameModal = ({ open, handleClose: close }) => {
                     ...currentUser,
                     user: updatedUser,
                 }));
+
+                if (setPDFUsername) {
+                    setPDFUsername(updatedUser?.govtool_username);
+                }
 
                 setStep(3);
             } catch (error) {

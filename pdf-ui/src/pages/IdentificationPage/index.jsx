@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { Box, Button, Typography } from '@mui/material';
-const IdentificationPage = ({ handleLogin }) => {
+const IdentificationPage = ({ handleLogin, isDRep = false }) => {
     return (
         <Box
             width={'100%'}
@@ -18,7 +18,9 @@ const IdentificationPage = ({ handleLogin }) => {
                         mt: 2,
                     }}
                 >
-                    Please verify your identity using your wallet.
+                    {isDRep
+                        ? 'Please verify your dRep identity using your wallet.'
+                        : 'Please verify your identity using your wallet.'}
                 </Typography>
 
                 <Button
@@ -26,10 +28,14 @@ const IdentificationPage = ({ handleLogin }) => {
                     sx={{
                         mt: 3,
                     }}
-                    onClick={handleLogin}
+                    onClick={() =>
+                        isDRep ? handleLogin(true, isDRep) : handleLogin(true)
+                    }
                     data-testid='verify-identity-button'
                 >
-                    Verify your identity
+                    {isDRep
+                        ? 'Verify your DRep identity'
+                        : 'Verify your identity'}
                 </Button>
             </Box>
         </Box>

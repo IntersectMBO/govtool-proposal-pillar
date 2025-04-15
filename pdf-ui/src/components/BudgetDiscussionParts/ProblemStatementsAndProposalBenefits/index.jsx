@@ -504,6 +504,9 @@ const ProblemStatementsAndProposalBenefits = ({
                                           }
                                     : { ...errors }
                             }
+                            showSaveDraft={
+                                !currentBudgetDiscussionData?.old_ver
+                            }
                         />
                     </CardContent>
                 </Card>

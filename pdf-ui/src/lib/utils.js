@@ -5,13 +5,13 @@ import {
 } from '@emurgo/cardano-serialization-lib-asmjs';
 
 export const URL_REGEX =
-  /^(https?:\/\/)(www\.)?(?:\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}|(?:[a-zA-Z0-9-]+\.)+[a-zA-Z]{2,})(?:\/[^\s]*)?$|^(ipfs:\/\/(?:[a-zA-Z0-9]+(?:\/[a-zA-Z0-9._-]+)*))$/;
+    /^(https?:\/\/)(www\.)?(?:\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}|(?:[a-zA-Z0-9-]+\.)+[a-zA-Z]{2,})(?:\/[^\s]*)?$|^(ipfs:\/\/(?:[a-zA-Z0-9]+(?:\/[a-zA-Z0-9._-]+)*))$/;
 
 export function isValidHashFormat(str) {
-    return "Not Implemented";
-   // const isValidHash = (hash) => !!bech32.decode(hash)?.words?.length
+    return 'Not Implemented';
+    // const isValidHash = (hash) => !!bech32.decode(hash)?.words?.length
 }
-  export const formatIsoDate = (isoDate) => {
+export const formatIsoDate = (isoDate) => {
     if (!isoDate) return '';
 
     return format(new Date(isoDate), 'd MMMM yyyy');
@@ -123,7 +123,7 @@ export const maxLengthCheck = (str, limit) => {
     return str?.length < limit ? true : `Max ${limit} characters.`;
 };
 
-const LOVELACE = 1000000;
+export const LOVELACE = 1000000;
 const DECIMALS = 6;
 
 export const correctAdaFormat = (lovelace) => {
@@ -138,13 +138,43 @@ export function getItemFromLocalStorage(key) {
     return item ? JSON.parse(item) : null;
 }
 
-export const formatDateWithOffset = (date, utcOffsetHrs, formatString, timeZoneString) => {
-	if (!date) {
-		return '';
-	}
+export const formatDateWithOffset = (
+    date,
+    utcOffsetHrs,
+    formatString,
+    timeZoneString
+) => {
+    if (!date) {
+        return '';
+    }
 
-	const baseTzOffset = utcOffsetHrs * 60;
-	const tzOffset = date.getTimezoneOffset();
-	const d = new Date(date.valueOf() + (baseTzOffset + tzOffset) * 60 * 1000);
-	return `${format(d, formatString)}${timeZoneString?" "+timeZoneString:""}`;
+    const baseTzOffset = utcOffsetHrs * 60;
+    const tzOffset = date.getTimezoneOffset();
+    const d = new Date(date.valueOf() + (baseTzOffset + tzOffset) * 60 * 1000);
+    return `${format(d, formatString)}${timeZoneString ? ' ' + timeZoneString : ''}`;
+};
+
+export function decodeJWT() {
+    const jwt = getDataFromSession('pdfUserJwt');
+
+    if (!jwt) {
+        return null;
+    }
+
+    const payload = jwt?.split('.')[1];
+    const decoded = atob(payload.replace(/-/g, '+').replace(/_/g, '/'));
+    return JSON.parse(decoded);
+}
+
+export const correctVoteAdaFormat = (
+    adaAmount = undefined,
+    locale = undefined
+) => {
+    if (adaAmount) {
+        const adaNumber = +adaAmount;
+        return adaNumber?.toLocaleString(locale, {
+            maximumFractionDigits: 3,
+        });
+    }
+    return '0';
 };

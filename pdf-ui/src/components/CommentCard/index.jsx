@@ -31,7 +31,12 @@ import Subcomponent from './Subcomponent';
 import { isCommentRestricted } from '../../lib/helpers';
 import UsernameSection from './UsernameSection';
 
-const CommentCard = ({ comment, proposal, fetchComments }) => {
+const CommentCard = ({
+    comment,
+    proposal,
+    fetchComments,
+    setRefetchProposal,
+}) => {
     const {
         setLoading,
         walletAPI,
@@ -110,9 +115,6 @@ const CommentCard = ({ comment, proposal, fetchComments }) => {
                 bd_proposal_id: comment?.attributes?.bd_proposal_id?.toString(),
                 comment_parent_id: comment?.id?.toString(),
                 comment_text: subcommentText,
-                drep_id: walletAPI?.voter?.isRegisteredAsDRep
-                    ? walletAPI?.dRepID || ''
-                    : '',
             });
 
             if (!newComment) return;
@@ -120,6 +122,7 @@ const CommentCard = ({ comment, proposal, fetchComments }) => {
             loadSubComments(1);
             setCommentHasReplays(true);
             setShowReply(false);
+            setRefetchProposal(true);
         } catch (error) {
             console.error(error);
         } finally {

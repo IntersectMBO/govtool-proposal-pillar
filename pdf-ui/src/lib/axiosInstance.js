@@ -2,9 +2,12 @@ import axios from 'axios';
 import { getDataFromSession } from './utils';
 
 let axiosInstance = axios.create();
+let axiosWithCookies = axios.create();
 
 export const setAxiosBaseURL = (baseURL) => {
     axiosInstance.defaults.baseURL =
+        baseURL || process.env.NEXT_PUBLIC_PROPOSAL_DISCUSSION_API_URL;
+    axiosWithCookies.defaults.baseURL =
         baseURL || process.env.NEXT_PUBLIC_PROPOSAL_DISCUSSION_API_URL;
 };
 
@@ -17,4 +20,9 @@ axiosInstance.interceptors.request.use((config) => {
     return config;
 });
 
+axiosWithCookies.defaults.withCredentials = true;
+
 export default axiosInstance;
+export { axiosWithCookies };
+
+
