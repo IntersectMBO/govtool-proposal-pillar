@@ -42,8 +42,13 @@ import {
     getComments,
     getBudgetDiscussion,
     getBudgetDiscussionPoll,
+    getCountryList,
 } from '../../../lib/api';
-import { formatIsoDate, openInNewTab } from '../../../lib/utils';
+import {
+    correctVoteAdaFormat,
+    formatIsoDate,
+    openInNewTab,
+} from '../../../lib/utils';
 import ProposalOwnModal from '../../../components/ProposalOwnModal';
 import BudgetDiscussionReviewVersions from '../../../components/BudgetDiscussionReviewVersions';
 
@@ -71,6 +76,8 @@ const SingleBudgetDiscussion = ({ id }) => {
     const [ownProposalModal, setOwnProposalModal] = useState(false);
     const [activePoll, setActivePoll] = useState(null);
     const [showCreateBDDialog, setShowCreateBDDialog] = useState(false);
+    const [refetchProposal, setRefetchProposal] = useState(false);
+    const [allCountries, setAllCountries] = useState([]);
 
     // Read More / Show Less logic
     const [showFullText, setShowFullText] = useState(false);
@@ -83,7 +90,20 @@ const SingleBudgetDiscussion = ({ id }) => {
         let origin = domain.origin;
         setProposalLink(`${origin}/budget_discussion/`);
     }, [proposalLink]);
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                if (!allCountries.length) {
+                    const countriesResponse = await getCountryList();
+                    setAllCountries(countriesResponse?.data || []);
+                }
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        };
 
+        fetchData();
+    }, []);
     const disableShareClick = () => {
         setDisableShare(true);
         setTimeout(() => {
@@ -261,6 +281,13 @@ const SingleBudgetDiscussion = ({ id }) => {
             fetchComments(1);
         }
     }, [id, mounted]);
+
+    useEffect(() => {
+        if (mounted && refetchProposal) {
+            fetchProposal(id);
+            setRefetchProposal(false);
+        }
+    }, [mounted, refetchProposal, id]);
 
     useEffect(() => {
         if (mounted) {
@@ -759,7 +786,88 @@ const SingleBudgetDiscussion = ({ id }) => {
                                             }
                                             answerTestId='public-proposal-champion'
                                         /> */}
+                                    {proposal?.attributes
+                                        ?.bd_proposal_ownership?.data?.attributes
+                                        ?.submited_on_behalf === 'Company' ? (
+                                        <Box>
+                                            <BudgetDiscussionInfoSegment
+                                                question='Company Name'
+                                                answer={
+                                                    proposal?.attributes
+                                                        ?.bd_proposal_ownership?.data?.attributes
+                                                        ?.company_name || ''
+                                                }
+                                                answerTestId='company-name-content'
+                                            />
 
+                                            <BudgetDiscussionInfoSegment
+                                                question='Company Domain Name'
+                                                answer={
+                                                    proposal?.attributes
+                                                        ?.bd_proposal_ownership?.data?.attributes
+                                                        ?.company_domain_name ||
+                                                    ''
+                                                }
+                                                answerTestId='company-domain-name-content'
+                                            />
+                                            <BudgetDiscussionInfoSegment
+                                                question='Country of Incorporation'
+                                                answer={
+                                                    allCountries.find(
+                                                        (country) =>
+                                                            country.id ===
+                                                        proposal?.attributes.bd_proposal_ownership.data.attributes.be_country.data.id
+                                                    )?.attributes
+                                                        ?.country_name ||
+                                                    'Error'
+                                                }
+                                                answerTestId='country-of-incorporation-content'
+                                            />
+                                        </Box>
+                                    ) : (
+                                        ''
+                                    )}
+                                    {proposal?.attributes
+                                        ?.bd_proposal_ownership?.data?.attributes
+                                        ?.submited_on_behalf === 'Group' ? 
+                                        
+                                        
+                                        (
+                                        <Box>
+                                            <BudgetDiscussionInfoSegment
+                                                question='Group Name'
+                                                answer={proposal?.attributes
+                                                        ?.bd_proposal_ownership?.data?.attributes
+                                                        ?.group_name || ''
+                                                }
+                                                answerTestId='group-name-content'
+                                            />
+
+                                            <BudgetDiscussionInfoSegment
+                                                question='Type of Group'
+                                                answer={
+                                                    proposal?.attributes
+                                                        ?.bd_proposal_ownership?.data?.attributes
+                                                        ?.type_of_group || ''
+                                                }
+                                                answerTestId='group-type-content'
+                                            />
+
+                                            <BudgetDiscussionInfoSegment
+                                                question='Key Information to Identify
+                                                Group'
+                                                answer={
+                                                    proposal?.attributes
+                                                        ?.bd_proposal_ownership?.data?.attributes
+                                                        ?.key_info_to_identify_group ||
+                                                    ''
+                                                }
+                                                answerTestId='group-identity-information-content'
+                                            />
+                                        </Box>
+                                    ) : (
+                                        ''
+                                    )}
                                         <BudgetDiscussionInfoSegment
                                             question={
                                                 'What social handles would you like to be used? E.g. Github, X'
@@ -918,7 +1026,7 @@ const SingleBudgetDiscussion = ({ id }) => {
                                                 }
                                                 answerTestId={`proposal-key-dependencies`}
                                             />
-                                            
+
                                             <BudgetDiscussionInfoSegment
                                                 question={
                                                     'How will this proposal be maintained and supported after initial development?'
@@ -1004,11 +1112,12 @@ const SingleBudgetDiscussion = ({ id }) => {
 
                                             <BudgetDiscussionInfoSegment
                                                 question={'ADA Amount'}
-                                                answer={
+                                                answer={`₳ ${correctVoteAdaFormat(
                                                     proposal?.attributes
                                                         ?.bd_costing?.data
-                                                        ?.attributes?.ada_amount
-                                                }
+                                                        ?.attributes
+                                                        ?.ada_amount || 0
+                                                )}`}
                                                 answerTestId={`consting-amount`}
                                             />
 
@@ -1042,12 +1151,13 @@ const SingleBudgetDiscussion = ({ id }) => {
                                                 question={
                                                     'Amount in preferred currency'
                                                 }
-                                                answer={
+                                                answer={correctVoteAdaFormat(
                                                     proposal?.attributes
                                                         ?.bd_costing?.data
                                                         ?.attributes
-                                                        ?.amount_in_preferred_currency
-                                                }
+                                                        ?.amount_in_preferred_currency ||
+                                                        0
+                                                )}
                                                 answerTestId={`costing-prefereed-currency-amount`}
                                             />
 
@@ -1177,17 +1287,22 @@ const SingleBudgetDiscussion = ({ id }) => {
                                                 }
                                                 answerTestId={`include-as-auditor`}
                                             />
-                                            {proposal?.attributes?.intersect_named_administrator?'':
+                                            {proposal?.attributes
+                                                ?.intersect_named_administrator ? (
+                                                ''
+                                            ) : (
                                                 <BudgetDiscussionInfoSegment
                                                     question='Please provide further information to help inform DReps. Who is the vendor and what services are they providing?'
                                                     answer={
                                                         proposal?.attributes
-                                                            ?.intersect_admin_further_text ||''
+                                                            ?.intersect_admin_further_text ||
+                                                        ''
                                                     }
                                                     answerTestId={
                                                         'intersect-admin-further-text'
                                                     }
-                                                />}
+                                                />
+                                            )}
                                         </Box>
                                     )}
                                     <Button
@@ -1455,6 +1570,7 @@ const SingleBudgetDiscussion = ({ id }) => {
                                     comment={comment}
                                     proposal={proposal}
                                     fetchComments={fetchComments}
+                                    setRefetchProposal={setRefetchProposal}
                                 />
                             </Box>
                         ))}

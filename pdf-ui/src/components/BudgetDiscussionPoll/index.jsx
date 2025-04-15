@@ -17,7 +17,7 @@ import {
     getUserBudgetDiscussionPollVote,
     updateBudgetDiscussionPollVote,
 } from '../../lib/api';
-import { formatDateWithOffset } from '../../lib/utils';
+import { decodeJWT, formatDateWithOffset } from '../../lib/utils';
 import DrepVotersDialog from '../DrepVotersDialog';
 
 const BudgetDiscussionPoll = ({
@@ -66,22 +66,34 @@ const BudgetDiscussionPoll = ({
         );
     };
 
+    const jwtData = decodeJWT();
+
     const handlePollVote = async ({ vote }) => {
         try {
-            const response = await createBudgetDiscussionPollVote({
-                createData: {
-                    bd_poll_id: `${poll?.id}`,
-                    vote_result: vote,
-                    drep_id: walletAPI?.dRepID,
-                    drep_voting_power: walletAPI?.voter?.votingPower || '',
-                },
-            });
+            if (jwtData) {
+                if (jwtData?.dRepID) {
+                    const response = await createBudgetDiscussionPollVote({
+                        createData: {
+                            bd_poll_id: `${poll?.id}`,
+                            vote_result: vote,
+                            drep_voting_power:
+                                walletAPI?.voter?.votingPower || '',
+                        },
+                    });
 
-            if (!response) return;
+                    if (!response) return;
 
-            setUserPollVote(response);
-            if (fetchActivePoll) {
-                fetchActivePoll();
+                    setUserPollVote(response);
+                    if (fetchActivePoll) {
+                        fetchActivePoll();
+                    }
+                } else {
+                    throw new Error(
+                        'dRepID is not available in authorization token.'
+                    );
+                }
+            } else {
+                throw new Error('Authorization token not available.');
             }
         } catch (error) {
             console.error(error);
@@ -128,7 +140,7 @@ const BudgetDiscussionPoll = ({
                 !userPollVote &&
                 (walletAPI?.voter?.isRegisteredAsDRep ||
                     walletAPI?.voter?.isRegisteredAsSoleVoter) &&
-                walletAPI?.dRepID ? (
+                jwtData?.dRepID ? (
                     <Card
                         sx={{
                             mb: 3,
@@ -285,7 +297,7 @@ const BudgetDiscussionPoll = ({
                             poll?.attributes?.is_poll_active &&
                             (walletAPI?.voter?.isRegisteredAsDRep ||
                                 walletAPI?.voter?.isRegisteredAsSoleVoter) &&
-                            walletAPI?.dRepID && (
+                            jwtData?.dRepID && (
                                 <Box
                                     mt={2}
                                     display={'flex'}

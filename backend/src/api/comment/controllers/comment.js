@@ -1,9 +1,26 @@
 // @ts-nocheck
 "use strict";
+const jwt = require('jsonwebtoken');
 
 /**
  * comment controller
  */
+
+const verifyJWT = (token) => {
+	return new Promise(function (resolve, reject) {
+		jwt.verify(
+			token,
+			process.env.JWT_SECRET,
+			{},
+			function (err, tokenPayload = {}) {
+				if (err) {
+					return reject(new Error('Invalid token.'));
+				}
+				resolve(tokenPayload);
+			}
+		);
+	});
+};
 
 const { createCoreController } = require("@strapi/strapi").factories;
 
@@ -12,9 +29,15 @@ module.exports = createCoreController("api::comment.comment", ({ strapi }) => ({
     const { data } = ctx?.request?.body;
     const user = ctx?.state?.user;
 
-    if (!user) {
-      return ctx.badRequest(null, "User is required");
-    }
+    let token = await verifyJWT(
+		ctx?.request?.header?.authorization?.split(' ')[1]
+	);
+
+	if (!user) {
+		return ctx.badRequest(null, 'User is required');
+	}
+
+
     let comment;
     const deleteComment = async () => {
       let deletedComment = await strapi.entityService.delete(
@@ -28,12 +51,13 @@ module.exports = createCoreController("api::comment.comment", ({ strapi }) => ({
     };
 
     try {
-      comment = await strapi.entityService.create("api::comment.comment", {
-        data: {
-          ...data,
-          user_id: user?.id?.toString(),
-        },
-      });
+      comment = await strapi.entityService.create('api::comment.comment', {
+			data: {
+				...data,
+				drep_id: token?.dRepID,
+				user_id: user?.id?.toString(),
+			},
+		});
 
       if (!comment) {
         return ctx.badRequest(null, "Comment not created");
