@@ -463,7 +463,17 @@ const BudgetDiscussionReview = ({
                                         }
                                         answerTestId={'roadmap-content'}
                                     />
-
+                                    {currentBudgetDiscussionData?.bd_psapb
+                                            ?.explain_proposal_roadmap?
+                                    <InfoSection
+                                        question='Please explain how your proposal supports the Product Roadmap.'
+                                        answer={
+                                            currentBudgetDiscussionData?.bd_psapb
+                                            ?.explain_proposal_roadmap || ''
+                                        }
+                                        answerTestId={'explain-roadmap-content'}
+                                    />
+                                    :''}
                                     <InfoSection
                                         question='Does your proposal align to any of the
                                         budget categories?'

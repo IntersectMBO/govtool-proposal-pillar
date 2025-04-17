@@ -945,7 +945,12 @@ const SingleBudgetDiscussion = ({ id }) => {
                                             show={showFullText}
                                             answerTestId='product-roadmap'
                                         />
-
+                                        {   proposal?.attributes?.bd_psapb?.data?.attributes?.explain_proposal_roadmap?                                            <BudgetDiscussionInfoSegment
+                                                question='Please explain how your proposal supports the Product Roadmap.'
+                                                answer={proposal?.attributes?.bd_psapb?.data?.attributes?.explain_proposal_roadmap || ''}
+                                                answerTestId={'explain-roadmap-content'}
+                                            />
+                                        :''}
                                         <BudgetDiscussionInfoSegment
                                             question={
                                                 'Does your proposal align to any of the budget categories?'

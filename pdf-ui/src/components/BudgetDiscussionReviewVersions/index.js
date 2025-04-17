@@ -483,7 +483,13 @@ const BudgetDiscussionReviewVersions = ({ open, onClose, id }) => {
                                                                         ?.roadmap_name
                                                                 }
                                                             />
-
+                                                            {   selectedVersion?.attributes?.bd_psapb?.data?.attributes?.explain_proposal_roadmap ?
+                                                            <BudgetDiscussionInfoSegment
+                                                                question='Please explain how your proposal supports the Product Roadmap.'
+                                                                answer={selectedVersion?.attributes?.bd_psapb?.data?.attributes?.explain_proposal_roadmap || ''}
+                                                                answerTestId={'explain-roadmap-content'}
+                                                            />
+                                                            :''}
                                                             <BudgetDiscussionInfoSegment
                                                                 question={
                                                                     'Does your proposal align to any of the budget categories?'
