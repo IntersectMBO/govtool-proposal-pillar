@@ -40,8 +40,16 @@ import { ScrollToTop } from '../../lib/hooks';
 const ProposedBudgetDiscussion = () => {
     const location = useLocation();
     const theme = useTheme();
-    const { user, walletAPI, setOpenUsernameModal, setUser, clearStates } =
-        useAppContext();
+    const {
+        user,
+        walletAPI,
+        setOpenUsernameModal,
+        setUser,
+        clearStates,
+        addSuccessAlert,
+        addErrorAlert,
+        addChangesSavedAlert,
+    } = useAppContext();
     const [budgetDiscussionSearchText, setBudgetDiscussionSearchText] =
         useState('');
     const [sortType, setSortType] = useState('desc');
@@ -204,6 +212,10 @@ const ProposedBudgetDiscussion = () => {
                                             callBackFn: () =>
                                                 setShowCreateBDDialog(true),
                                             clearStates: clearStates,
+                                            addErrorAlert: addErrorAlert,
+                                            addSuccessAlert: addSuccessAlert,
+                                            addChangesSavedAlert:
+                                                addChangesSavedAlert,
                                         })
                                     }
                                     startIcon={<IconPlusCircle fill='white' />}
