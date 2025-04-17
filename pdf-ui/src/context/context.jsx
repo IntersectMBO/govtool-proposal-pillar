@@ -13,35 +13,48 @@ export function AppContextProvider({ children }) {
         callBackFn: () => {},
     });
 const [fetchDRepVotingPowerList, setFetchDRepVotingPowerList] = useState(null)
-    const clearStates = () => {
-        setWalletAPI(null);
-        setUser(null);
-        setValidateMetadata(null);
-    };
+const [addSuccessAlert, setAddSuccessAlert] = useState(null);
+const [addErrorAlert, setAddErrorAlert] = useState(null);
+const [addWarningAlert, setAddWarningAlert] = useState(null);
+const [addChangesSavedAlert, setAddChangesSavedAlert] = useState(null);
 
-    return (
-        <AppContext.Provider
-            value={{
-                user,
-                setUser,
-                loading,
-                setLoading,
-                walletAPI,
-                setWalletAPI,
-                locale,
-                setLocale,
-                openUsernameModal,
-                setOpenUsernameModal,
-                validateMetadata,
-                setValidateMetadata,
-                clearStates,
-                fetchDRepVotingPowerList, 
-                setFetchDRepVotingPowerList
-            }}
-        >
-            {children}
-        </AppContext.Provider>
-    );
+const clearStates = () => {
+    setWalletAPI(null);
+    setUser(null);
+    setValidateMetadata(null);
+};
+
+return (
+    <AppContext.Provider
+        value={{
+            user,
+            setUser,
+            loading,
+            setLoading,
+            walletAPI,
+            setWalletAPI,
+            locale,
+            setLocale,
+            openUsernameModal,
+            setOpenUsernameModal,
+            validateMetadata,
+            setValidateMetadata,
+            clearStates,
+            fetchDRepVotingPowerList,
+            setFetchDRepVotingPowerList,
+            addSuccessAlert,
+            setAddSuccessAlert,
+            addErrorAlert,
+            setAddErrorAlert,
+            addWarningAlert,
+            setAddWarningAlert,
+            addChangesSavedAlert,
+            setAddChangesSavedAlert,
+        }}
+    >
+        {children}
+    </AppContext.Provider>
+);
 }
 
 export function useAppContext() {

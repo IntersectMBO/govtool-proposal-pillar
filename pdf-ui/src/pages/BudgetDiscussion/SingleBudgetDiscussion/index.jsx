@@ -1133,7 +1133,7 @@ const SingleBudgetDiscussion = ({ id }) => {
                                                         ?.attributes
                                                         ?.ada_amount || 0
                                                 )}`}
-                                                answerTestId={`consting-amount`}
+                                                answerTestId={`costing-amount`}
                                             />
 
                                             <BudgetDiscussionInfoSegment
@@ -1173,7 +1173,7 @@ const SingleBudgetDiscussion = ({ id }) => {
                                                         ?.amount_in_preferred_currency ||
                                                         0
                                                 )}
-                                                answerTestId={`costing-prefereed-currency-amount`}
+                                                answerTestId={`costing-preferred-currency-amount`}
                                             />
 
                                             <BudgetDiscussionInfoSegment

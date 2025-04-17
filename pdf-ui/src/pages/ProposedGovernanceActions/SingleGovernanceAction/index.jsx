@@ -71,6 +71,9 @@ const SingleGovernanceAction = ({ id }) => {
         setUser,
         walletAPI,
         clearStates,
+        addSuccessAlert,
+        addErrorAlert,
+        addChangesSavedAlert,
     } = useAppContext();
 
     const theme = useTheme();
@@ -620,6 +623,12 @@ const SingleGovernanceAction = ({ id }) => {
                                                                             ),
                                                                     clearStates:
                                                                         clearStates,
+                                                                    addErrorAlert:
+                                                                        addErrorAlert,
+                                                                    addSuccessAlert:
+                                                                        addSuccessAlert,
+                                                                    addChangesSavedAlert:
+                                                                        addChangesSavedAlert,
                                                                 }
                                                             )
                                                         }
