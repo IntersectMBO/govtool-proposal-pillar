@@ -471,9 +471,7 @@ const ProposedBudgetDiscussion = () => {
                                     data-testid='sort-button'
                                 >
                                     Sort:{' '}
-                                    {sortType === 'desc'
-                                        ? 'Last modified (desc)'
-                                        : 'Last modified (asc)'}
+                                    {sortType === 'desc' ? 'Newest' : 'Oldest'}
                                 </Button>
                             </Box>
                         </Grid>
