@@ -35,8 +35,16 @@ import { useLocation } from 'react-router-dom';
 const ProposedGovernanceActions = () => {
     const location = useLocation();
     const theme = useTheme();
-    const { user, walletAPI, setOpenUsernameModal, setUser, clearStates } =
-        useAppContext();
+    const {
+        user,
+        walletAPI,
+        setOpenUsernameModal,
+        setUser,
+        clearStates,
+        addSuccessAlert,
+        addErrorAlert,
+        addChangesSavedAlert,
+    } = useAppContext();
     const [proposalSearchText, setProposalSearchText] = useState('');
     const [sortType, setSortType] = useState('desc');
     const [governanceActionTypeList, setGovernanceActionTypeList] = useState(
@@ -197,6 +205,10 @@ const ProposedGovernanceActions = () => {
                                             callBackFn: () =>
                                                 setShowCreateGADialog(true),
                                             clearStates: clearStates,
+                                            addErrorAlert: addErrorAlert,
+                                            addSuccessAlert: addSuccessAlert,
+                                            addChangesSavedAlert:
+                                                addChangesSavedAlert,
                                         })
                                     }
                                     startIcon={<IconPlusCircle fill='white' />}
@@ -251,44 +263,44 @@ const ProposedGovernanceActions = () => {
                         </Grid>
                         <Grid item>
                             <Box gap={1} display={'flex'}>
-                            <Button
-                                    variant="outlined"
+                                <Button
+                                    variant='outlined'
                                     onClick={handleFiltersClick}
-                                    endIcon={<IconFilter
-                                        color={
-                                            theme.palette.primary.icons
-                                                .black
-                                        }
-                                    />}
+                                    endIcon={
+                                        <IconFilter
+                                            color={
+                                                theme.palette.primary.icons
+                                                    .black
+                                            }
+                                        />
+                                    }
                                     id='filters-button'
                                     data-testid='filter-button'
                                     sx={{
                                         textTransform: 'none',
-                                        borderRadius: '20px', 
-                                        padding: '8px 16px', 
-                                        borderColor: 'primary.main', 
-                                        color: 'text.primary', 
+                                        borderRadius: '20px',
+                                        padding: '8px 16px',
+                                        borderColor: 'primary.main',
+                                        color: 'text.primary',
                                         '&:hover': {
-                                            backgroundColor: 'action.hover', 
+                                            backgroundColor: 'action.hover',
                                         },
                                     }}
-                                        // sx={{
-                                        //     width: 40,
-                                        //     height: 40,
-                                        // }}
-                                        aria-controls={
-                                            openFilters
-                                                ? 'filters-menu'
-                                                : undefined
-                                        }
-                                        aria-haspopup='true'
-                                        aria-expanded={
-                                            openFilters ? 'true' : undefined
-                                        }
-
-
-                                    > Filter:
-                                 </Button>
+                                    // sx={{
+                                    //     width: 40,
+                                    //     height: 40,
+                                    // }}
+                                    aria-controls={
+                                        openFilters ? 'filters-menu' : undefined
+                                    }
+                                    aria-haspopup='true'
+                                    aria-expanded={
+                                        openFilters ? 'true' : undefined
+                                    }
+                                >
+                                    {' '}
+                                    Filter:
+                                </Button>
                                 <Menu
                                     id='filters-menu'
                                     anchorEl={filtersAnchorEl}
@@ -460,53 +472,59 @@ const ProposedGovernanceActions = () => {
                                                 label={'Active proposal'}
                                             />
                                         </MenuItem>
-                                        
+
                                         <MenuItem
                                             onClick={() => resetFilters()}
                                             data-testid='reset-filters'
-                                        >                                            <Typography color={'primary'}>
+                                        >
+                                            {' '}
+                                            <Typography color={'primary'}>
                                                 Reset filters
                                             </Typography>
                                         </MenuItem>
                                     </Box>
                                 </Menu>
                                 <Button
-                                    variant="outlined"
+                                    variant='outlined'
                                     onClick={() =>
                                         setSortType((prev) =>
                                             prev === 'desc' ? 'asc' : 'desc'
-                                        )}
+                                        )
+                                    }
                                     endIcon={
                                         sortType === 'desc' ? (
                                             <IconArrowDown
-                                            color={
-                                                theme.palette.primary.icons
-                                                    .black
-                                            }
-                                        />
+                                                color={
+                                                    theme.palette.primary.icons
+                                                        .black
+                                                }
+                                            />
                                         ) : (
                                             <IconArrowUp
-                                            color={
-                                                theme.palette.primary.icons
-                                                    .red
-                                            }
-                                        />
+                                                color={
+                                                    theme.palette.primary.icons
+                                                        .red
+                                                }
+                                            />
                                             // <IconArrowDown />
                                         )
                                     }
                                     sx={{
                                         textTransform: 'none',
-                                        borderRadius: '20px', 
-                                        padding: '8px 16px', 
-                                        borderColor: 'primary.main', 
-                                        color: 'text.primary', 
+                                        borderRadius: '20px',
+                                        padding: '8px 16px',
+                                        borderColor: 'primary.main',
+                                        color: 'text.primary',
                                         '&:hover': {
-                                            backgroundColor: 'action.hover', 
+                                            backgroundColor: 'action.hover',
                                         },
                                     }}
-                                    data-testid="sort-button"
+                                    data-testid='sort-button'
                                 >
-                                  Sort: {sortType === 'desc' ? 'Last modified (desc)' : 'Last modified (asc)'}  
+                                    Sort:{' '}
+                                    {sortType === 'desc'
+                                        ? 'Last modified (desc)'
+                                        : 'Last modified (asc)'}
                                 </Button>
                             </Box>
                         </Grid>

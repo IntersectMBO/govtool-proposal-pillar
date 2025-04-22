@@ -36,6 +36,14 @@ const GlobalWrapper = ({ ...props }) => {
         user,
         clearStates,
         setFetchDRepVotingPowerList,
+        addSuccessAlert,
+        setAddSuccessAlert,
+        addErrorAlert,
+        setAddErrorAlert,
+        addWarningAlert,
+        setAddWarningAlert,
+        addChangesSavedAlert,
+        setAddChangesSavedAlert,
     } = useAppContext();
     const [mounted, setMounted] = useState(false);
 
@@ -47,6 +55,10 @@ const GlobalWrapper = ({ ...props }) => {
         fetchDRepVotingPowerList: GovToolFetchDRepVotingPowerList,
         username: GovToolAssemblyUsername,
         setUsername: GovToolAssemblySetUsername,
+        addSuccessAlert: GovToolAddSuccessAlert,
+        addErrorAlert: GovToolAddErrorAlert,
+        addWarningAlert: GovToolAddWarningAlert,
+        addChangesSavedAlert: GovToolAddChangesSavedAlert,
     } = props;
 
     function getProposalID(url) {
@@ -79,6 +91,18 @@ const GlobalWrapper = ({ ...props }) => {
                     () => GovToolFetchDRepVotingPowerList
                 );
             }
+            if (GovToolAddSuccessAlert) {
+                setAddSuccessAlert(() => GovToolAddSuccessAlert);
+            }
+            if (GovToolAddErrorAlert) {
+                setAddErrorAlert(() => GovToolAddErrorAlert);
+            }
+            if (GovToolAddWarningAlert) {
+                setAddWarningAlert(() => GovToolAddWarningAlert);
+            }
+            if (GovToolAddChangesSavedAlert) {
+                setAddChangesSavedAlert(() => GovToolAddChangesSavedAlert);
+            }
             await loginUserToApp({
                 wallet: GovToolAssemblyWalletAPI,
                 setUser: setUser,
@@ -87,6 +111,9 @@ const GlobalWrapper = ({ ...props }) => {
                 clearStates: clearStates,
                 setPDFUsername: GovToolAssemblySetUsername,
                 isDRep: useDRepKey,
+                addErrorAlert: GovToolAddErrorAlert,
+                addSuccessAlert: GovToolAddSuccessAlert,
+                addChangesSavedAlert: GovToolAddChangesSavedAlert,
             });
         } else {
             if (
@@ -109,6 +136,30 @@ const GlobalWrapper = ({ ...props }) => {
             setFetchDRepVotingPowerList(() => GovToolFetchDRepVotingPowerList);
         }
     }, [GovToolFetchDRepVotingPowerList]);
+
+    useEffect(() => {
+        if (GovToolAddSuccessAlert) {
+            setAddSuccessAlert(() => GovToolAddSuccessAlert);
+        }
+    }, [GovToolAddSuccessAlert]);
+
+    useEffect(() => {
+        if (GovToolAddErrorAlert) {
+            setAddErrorAlert(() => GovToolAddErrorAlert);
+        }
+    }, [GovToolAddErrorAlert]);
+
+    useEffect(() => {
+        if (GovToolAddWarningAlert) {
+            setAddWarningAlert(() => GovToolAddWarningAlert);
+        }
+    }, [GovToolAddWarningAlert]);
+
+    useEffect(() => {
+        if (GovToolAddChangesSavedAlert) {
+            setAddChangesSavedAlert(() => GovToolAddChangesSavedAlert);
+        }
+    }, [GovToolAddChangesSavedAlert]);
 
     useEffect(() => {
         if (!mounted) {

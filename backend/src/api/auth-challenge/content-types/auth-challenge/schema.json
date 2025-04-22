@@ -1,0 +1,35 @@
+{
+  "kind": "collectionType",
+  "collectionName": "auth_challenges",
+  "info": {
+    "singularName": "auth-challenge",
+    "pluralName": "auth-challenges",
+    "displayName": "Auth Challenge"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "identifier": {
+      "type": "string",
+      "required": true
+    },
+    "nonce": {
+      "type": "string",
+      "required": true
+    },
+    "message": {
+      "type": "text",
+      "required": true
+    },
+    "timestamp": {
+      "type": "datetime",
+      "required": true
+    },
+    "expiresAt": {
+      "type": "datetime",
+      "required": true
+    }
+  }
+}
