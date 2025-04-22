@@ -13,7 +13,7 @@
       "name": "Apache 2.0",
       "url": "https://www.apache.org/licenses/LICENSE-2.0.html"
     },
-    "x-generation-date": "2025-04-15T14:43:20.000Z"
+    "x-generation-date": "2025-04-22T14:25:34.817Z"
   },
   "x-strapi-config": {
     "plugins": [],
@@ -1495,6 +1495,18 @@
                       },
                       "usd_to_ada_conversion_rate": {
                         "type": "string"
+                      },
+                      "ada_amount_clone": {
+                        "type": "number",
+                        "format": "float"
+                      },
+                      "amount_in_preferred_currency_clone": {
+                        "type": "number",
+                        "format": "float"
+                      },
+                      "usd_to_ada_conversion_rate_clone": {
+                        "type": "number",
+                        "format": "float"
                       },
                       "createdAt": {
                         "type": "string",
@@ -3552,6 +3564,18 @@
               },
               "usd_to_ada_conversion_rate": {
                 "type": "string"
+              },
+              "ada_amount_clone": {
+                "type": "number",
+                "format": "float"
+              },
+              "amount_in_preferred_currency_clone": {
+                "type": "number",
+                "format": "float"
+              },
+              "usd_to_ada_conversion_rate_clone": {
+                "type": "number",
+                "format": "float"
               }
             }
           }
@@ -3942,6 +3966,18 @@
           },
           "usd_to_ada_conversion_rate": {
             "type": "string"
+          },
+          "ada_amount_clone": {
+            "type": "number",
+            "format": "float"
+          },
+          "amount_in_preferred_currency_clone": {
+            "type": "number",
+            "format": "float"
+          },
+          "usd_to_ada_conversion_rate_clone": {
+            "type": "number",
+            "format": "float"
           },
           "createdAt": {
             "type": "string",

@@ -28,6 +28,18 @@
     },
     "usd_to_ada_conversion_rate": {
       "type": "string"
+    },
+    "ada_amount_clone": {
+      "type": "decimal",
+      "default": 0
+    },
+    "amount_in_preferred_currency_clone": {
+      "type": "decimal",
+      "default": 0
+    },
+    "usd_to_ada_conversion_rate_clone": {
+      "type": "decimal",
+      "default": 0
     }
   }
 }
