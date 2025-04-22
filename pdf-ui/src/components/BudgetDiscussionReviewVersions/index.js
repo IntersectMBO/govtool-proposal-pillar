@@ -406,6 +406,99 @@ const BudgetDiscussionReviewVersions = ({ open, onClose, id }) => {
                                                                         ?.proposal_public_champion
                                                                 }
                                                             /> */}
+                                                            {selectedVersion?.attributes
+                                                            ?.bd_proposal_ownership?.data
+                                                            ?.attributes?.submited_on_behalf ===
+                                                        'Company' ? (
+                                                            <Box>
+                                                                <BudgetDiscussionInfoSegment
+                                                                    question='Company Name'
+                                                                    answer={
+                                                                        selectedVersion?.attributes
+                                                                            ?.bd_proposal_ownership
+                                                                            ?.data?.attributes
+                                                                            ?.company_name || ''
+                                                                    }
+                                                                    answerTestId='company-name-content'
+                                                                />
+                
+                                                                <BudgetDiscussionInfoSegment
+                                                                    question='Company Domain Name'
+                                                                    answer={
+                                                                        selectedVersion?.attributes
+                                                                            ?.bd_proposal_ownership
+                                                                            ?.data?.attributes
+                                                                            ?.company_domain_name ||
+                                                                        ''
+                                                                    }
+                                                                    answerTestId='company-domain-name-content'
+                                                                />
+                                                                <BudgetDiscussionInfoSegment
+                                                                    question='Country of Incorporation'
+                                                                    answer={
+                                                                        allCountries.find(
+                                                                            (country) =>
+                                                                                country.id ===
+                                                                            selectedVersion
+                                                                                    ?.attributes
+                                                                                    .bd_proposal_ownership
+                                                                                    .data
+                                                                                    .attributes
+                                                                                    .be_country
+                                                                                    .data.id
+                                                                        )?.attributes
+                                                                            ?.country_name ||
+                                                                        'Error'
+                                                                    }
+                                                                    answerTestId='country-of-incorporation-content'
+                                                                />
+                                                            </Box>
+                                                        ) : (
+                                                            ''
+                                                        )}
+                                                        {selectedVersion?.attributes
+                                                            ?.bd_proposal_ownership?.data
+                                                            ?.attributes?.submited_on_behalf ===
+                                                        'Group' ? (
+                                                            <Box>
+                                                                <BudgetDiscussionInfoSegment
+                                                                    question='Group Name'
+                                                                    answer={
+                                                                        selectedVersion?.attributes
+                                                                            ?.bd_proposal_ownership
+                                                                            ?.data?.attributes
+                                                                            ?.group_name || ''
+                                                                    }
+                                                                    answerTestId='group-name-content'
+                                                                />
+                
+                                                                <BudgetDiscussionInfoSegment
+                                                                    question='Type of Group'
+                                                                    answer={
+                                                                        selectedVersion?.attributes
+                                                                            ?.bd_proposal_ownership
+                                                                            ?.data?.attributes
+                                                                            ?.type_of_group ||
+                                                                        ''
+                                                                    }
+                                                                    answerTestId='group-type-content'
+                                                                />
+                                                                <BudgetDiscussionInfoSegment
+                                                                    question='Key Information to Identify
+                                                                Group'
+                                                                    answer={
+                                                                        selectedVersion?.attributes
+                                                                            ?.bd_proposal_ownership
+                                                                            ?.data?.attributes
+                                                                            ?.key_info_to_identify_group ||
+                                                                        ''
+                                                                    }
+                                                                    answerTestId='group-identity-information-content'
+                                                                />
+                                                            </Box>
+                                                        ) : (
+                                                            ''
+                                                        )}
 
                                                             <BudgetDiscussionInfoSegment
                                                                 question={
@@ -594,7 +687,20 @@ const BudgetDiscussionReviewVersions = ({ open, onClose, id }) => {
                                                                         ?.key_dependencies
                                                                 }
                                                             />
-
+                                                            <BudgetDiscussionInfoSegment
+                                                                question='How will this proposal be maintained and
+                                                                supported after initial development?'
+                                                                answer={
+                                                                    selectedVersion?.attributes
+                                                                        ?.bd_proposal_detail
+                                                                        ?.data?.attributes
+                                                                        ?.maintain_and_support ||
+                                                                    ''
+                                                                }
+                                                                answerTestId={
+                                                                    'maintain-and-support-content'
+                                                                }
+                                                            />
                                                             <BudgetDiscussionInfoSegment
                                                                 question={
                                                                     'Key Proposal Deliverable(s) and Definition of Done: What tangible milestones or outcomes are to be delivered and what will the community ultimately receive?'
