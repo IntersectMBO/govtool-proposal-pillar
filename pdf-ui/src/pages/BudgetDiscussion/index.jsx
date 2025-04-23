@@ -25,6 +25,7 @@ import {
     CardContent,
     Stack,
     alpha,
+    Radio,
 } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { getBudgetDiscussionTypes } from '../../lib/api';
@@ -36,6 +37,11 @@ import { useAppContext } from '../../context/context';
 import { loginUserToApp } from '../../lib/helpers';
 import { useLocation } from 'react-router-dom';
 import { ScrollToTop } from '../../lib/hooks';
+
+let proposalsOwnersList = [
+    { id: 'my-proposals', label: 'My Proposals' },
+    { id: 'all-proposals', label: 'All Proposals' },
+];
 
 const ProposedBudgetDiscussion = () => {
     const location = useLocation();
@@ -50,6 +56,12 @@ const ProposedBudgetDiscussion = () => {
         addErrorAlert,
         addChangesSavedAlert,
     } = useAppContext();
+
+    const defaultOwnerFilterId = 'all-proposals';
+    const defaultOwnerFilter = proposalsOwnersList?.find(
+        (f) => f?.id === defaultOwnerFilterId
+    );
+
     const [budgetDiscussionSearchText, setBudgetDiscussionSearchText] =
         useState('');
     const [sortType, setSortType] = useState('desc');
@@ -60,6 +72,9 @@ const ProposedBudgetDiscussion = () => {
         filteredBudgetDiscussionTypeList,
         setFilteredBudgetDiscussionTypeList,
     ] = useState([]);
+    const [proposalsOwnerFilter, setProposalsOwnerFilter] =
+        useState(defaultOwnerFilter); // All proposals as default
+
     const [showCreateBDDialog, setShowCreateBDDialog] = useState(false);
     const [
         filteredBudgetDiscussionStatusList,
@@ -109,9 +124,25 @@ const ProposedBudgetDiscussion = () => {
         setFilteredBudgetDiscussionTypeList(updatedList);
     };
 
+    const toggleProposalsOwnersFilter = (e) => {
+        const propOwnerFilterId = e?.target?.value?.toString();
+        let propOwnerFilter = proposalsOwnersList?.find(
+            (f) => f?.id?.toString() === propOwnerFilterId
+        );
+
+        if (propOwnerFilter) {
+            setProposalsOwnerFilter(propOwnerFilter);
+        }
+    };
+
     const resetFilters = () => {
         setFilteredBudgetDiscussionTypeList([]);
         handleCloseFilters();
+        setShowAllActivated({
+            is_activated: false,
+            bd_type: null,
+        });
+        setProposalsOwnerFilter(defaultOwnerFilter);
     };
 
     useEffect(() => {
@@ -319,6 +350,7 @@ const ProposedBudgetDiscussion = () => {
                                             sx: {
                                                 overflow: 'visible',
                                                 mt: 1,
+                                                minWidth: '300px',
                                             },
                                         },
                                     }}
@@ -424,6 +456,95 @@ const ProposedBudgetDiscussion = () => {
                                                 )}
                                             </Box>
                                         )}
+                                        <Typography
+                                            variant='body1'
+                                            sx={{
+                                                mb: 1,
+                                            }}
+                                        >
+                                            Proposals owners
+                                        </Typography>
+                                        <Divider
+                                            sx={{
+                                                color: (theme) => ({
+                                                    borderColor:
+                                                        theme.palette.border
+                                                            .lightGray,
+                                                }),
+                                            }}
+                                        />
+
+                                        {proposalsOwnersList?.map(
+                                            (ga, index) => (
+                                                <MenuItem
+                                                    key={`${ga?.id}-${index}`}
+                                                    selected={
+                                                        proposalsOwnerFilter?.id ===
+                                                        ga?.id
+                                                    }
+                                                    id={`${ga?.id}-radio-wrapper`}
+                                                    data-testid={
+                                                        ga?.label
+                                                            ?.replace(
+                                                                /\s+/g,
+                                                                '-'
+                                                            )
+                                                            ?.toLowerCase() +
+                                                        `-radio-wrapper`
+                                                    }
+                                                    onClick={
+                                                        toggleProposalsOwnersFilter
+                                                    }
+                                                    sx={{ width: '100%' }}
+                                                >
+                                                    <FormControlLabel
+                                                        name='owner-filter'
+                                                        control={
+                                                            <Radio
+                                                                checked={
+                                                                    proposalsOwnerFilter?.id ===
+                                                                    ga?.id
+                                                                }
+                                                            />
+                                                        }
+                                                        id={`${ga?.label}-radio`}
+                                                        data-testid={
+                                                            ga?.label
+                                                                ?.replace(
+                                                                    /\s+/g,
+                                                                    '-'
+                                                                )
+                                                                ?.toLowerCase() +
+                                                            `-radio`
+                                                        }
+                                                        sx={{
+                                                            width: '100%',
+                                                            marginRight: 0,
+                                                        }}
+                                                        value={ga?.id}
+                                                        label={
+                                                            <Typography
+                                                                data-testid={`${ga?.label}-owner-filter-option`}
+                                                                color={
+                                                                    'text.black'
+                                                                }
+                                                                variant='body1'
+                                                                sx={{
+                                                                    width: '100%',
+                                                                    overflowX:
+                                                                        'hidden',
+                                                                    textOverflow:
+                                                                        'ellipsis',
+                                                                }}
+                                                            >
+                                                                {ga?.label}
+                                                            </Typography>
+                                                        }
+                                                    />
+                                                </MenuItem>
+                                            )
+                                        )}
+
                                         <MenuItem
                                             onClick={() => resetFilters()}
                                             data-testid='reset-filters'
@@ -503,6 +624,7 @@ const ProposedBudgetDiscussion = () => {
                             filteredBudgetDiscussionTypeList={
                                 filteredBudgetDiscussionTypeList
                             }
+                            proposalOwnerFilter={proposalsOwnerFilter}
                         />
                     </Box>
                 ))}
