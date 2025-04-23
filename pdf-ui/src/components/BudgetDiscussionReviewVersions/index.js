@@ -28,7 +28,7 @@ import {
     openInNewTab,
 } from '../../lib/utils';
 import { useEffect, useState } from 'react';
-import { getBudgetDiscussionVersions } from '../../lib/api';
+import { getBudgetDiscussionVersions, getCountryList } from '../../lib/api';
 import BudgetDiscussionInfoSegment from '../BudgetDiscussionInfoSegment';
 
 const BudgetDiscussionReviewVersions = ({ open, onClose, id }) => {
@@ -38,6 +38,7 @@ const BudgetDiscussionReviewVersions = ({ open, onClose, id }) => {
     const [versions, setVersions] = useState(null);
     const [selectedVersion, setSelectedVersion] = useState(null);
     const [openVersionsList, setOpenVersionsList] = useState(false);
+    const [allCountries, setAllCountries] = useState([]);
 
     const isSmallScreen = useMediaQuery((theme) =>
         theme.breakpoints.down('md')
@@ -59,8 +60,20 @@ const BudgetDiscussionReviewVersions = ({ open, onClose, id }) => {
     };
 
     useEffect(() => {
+        const fetchData = async () => {
+            try {
+                if (!allCountries.length) {
+                    const countriesResponse = await getCountryList();
+                    setAllCountries(countriesResponse?.data || []);
+                }
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        };
+
         if (open) {
             fetchVersions();
+            fetchData();
         }
     }, [open]);
 
@@ -406,99 +419,121 @@ const BudgetDiscussionReviewVersions = ({ open, onClose, id }) => {
                                                                         ?.proposal_public_champion
                                                                 }
                                                             /> */}
-                                                            {selectedVersion?.attributes
-                                                            ?.bd_proposal_ownership?.data
-                                                            ?.attributes?.submited_on_behalf ===
-                                                        'Company' ? (
-                                                            <Box>
-                                                                <BudgetDiscussionInfoSegment
-                                                                    question='Company Name'
-                                                                    answer={
-                                                                        selectedVersion?.attributes
-                                                                            ?.bd_proposal_ownership
-                                                                            ?.data?.attributes
-                                                                            ?.company_name || ''
-                                                                    }
-                                                                    answerTestId='company-name-content'
-                                                                />
-                
-                                                                <BudgetDiscussionInfoSegment
-                                                                    question='Company Domain Name'
-                                                                    answer={
-                                                                        selectedVersion?.attributes
-                                                                            ?.bd_proposal_ownership
-                                                                            ?.data?.attributes
-                                                                            ?.company_domain_name ||
-                                                                        ''
-                                                                    }
-                                                                    answerTestId='company-domain-name-content'
-                                                                />
-                                                                <BudgetDiscussionInfoSegment
-                                                                    question='Country of Incorporation'
-                                                                    answer={
-                                                                        allCountries.find(
-                                                                            (country) =>
-                                                                                country.id ===
+                                                            {selectedVersion
+                                                                ?.attributes
+                                                                ?.bd_proposal_ownership
+                                                                ?.data
+                                                                ?.attributes
+                                                                ?.submited_on_behalf ===
+                                                            'Company' ? (
+                                                                <Box>
+                                                                    <BudgetDiscussionInfoSegment
+                                                                        question='Company Name'
+                                                                        answer={
                                                                             selectedVersion
-                                                                                    ?.attributes
-                                                                                    .bd_proposal_ownership
-                                                                                    .data
-                                                                                    .attributes
-                                                                                    .be_country
-                                                                                    .data.id
-                                                                        )?.attributes
-                                                                            ?.country_name ||
-                                                                        'Error'
-                                                                    }
-                                                                    answerTestId='country-of-incorporation-content'
-                                                                />
-                                                            </Box>
-                                                        ) : (
-                                                            ''
-                                                        )}
-                                                        {selectedVersion?.attributes
-                                                            ?.bd_proposal_ownership?.data
-                                                            ?.attributes?.submited_on_behalf ===
-                                                        'Group' ? (
-                                                            <Box>
-                                                                <BudgetDiscussionInfoSegment
-                                                                    question='Group Name'
-                                                                    answer={
-                                                                        selectedVersion?.attributes
-                                                                            ?.bd_proposal_ownership
-                                                                            ?.data?.attributes
-                                                                            ?.group_name || ''
-                                                                    }
-                                                                    answerTestId='group-name-content'
-                                                                />
-                
-                                                                <BudgetDiscussionInfoSegment
-                                                                    question='Type of Group'
-                                                                    answer={
-                                                                        selectedVersion?.attributes
-                                                                            ?.bd_proposal_ownership
-                                                                            ?.data?.attributes
-                                                                            ?.type_of_group ||
-                                                                        ''
-                                                                    }
-                                                                    answerTestId='group-type-content'
-                                                                />
-                                                                <BudgetDiscussionInfoSegment
-                                                                    question='Key Information to Identify
+                                                                                ?.attributes
+                                                                                ?.bd_proposal_ownership
+                                                                                ?.data
+                                                                                ?.attributes
+                                                                                ?.company_name ||
+                                                                            ''
+                                                                        }
+                                                                        answerTestId='company-name-content'
+                                                                    />
+
+                                                                    <BudgetDiscussionInfoSegment
+                                                                        question='Company Domain Name'
+                                                                        answer={
+                                                                            selectedVersion
+                                                                                ?.attributes
+                                                                                ?.bd_proposal_ownership
+                                                                                ?.data
+                                                                                ?.attributes
+                                                                                ?.company_domain_name ||
+                                                                            ''
+                                                                        }
+                                                                        answerTestId='company-domain-name-content'
+                                                                    />
+                                                                    <BudgetDiscussionInfoSegment
+                                                                        question='Country of Incorporation'
+                                                                        answer={
+                                                                            allCountries?.find(
+                                                                                (
+                                                                                    country
+                                                                                ) =>
+                                                                                    country?.id ===
+                                                                                    selectedVersion
+                                                                                        ?.attributes
+                                                                                        ?.bd_proposal_ownership
+                                                                                        ?.data
+                                                                                        ?.attributes
+                                                                                        ?.be_country
+                                                                                        ?.data
+                                                                                        ?.id
+                                                                            )
+                                                                                ?.attributes
+                                                                                ?.country_name ||
+                                                                            'Error'
+                                                                        }
+                                                                        answerTestId='country-of-incorporation-content'
+                                                                    />
+                                                                </Box>
+                                                            ) : (
+                                                                ''
+                                                            )}
+                                                            {selectedVersion
+                                                                ?.attributes
+                                                                ?.bd_proposal_ownership
+                                                                ?.data
+                                                                ?.attributes
+                                                                ?.submited_on_behalf ===
+                                                            'Group' ? (
+                                                                <Box>
+                                                                    <BudgetDiscussionInfoSegment
+                                                                        question='Group Name'
+                                                                        answer={
+                                                                            selectedVersion
+                                                                                ?.attributes
+                                                                                ?.bd_proposal_ownership
+                                                                                ?.data
+                                                                                ?.attributes
+                                                                                ?.group_name ||
+                                                                            ''
+                                                                        }
+                                                                        answerTestId='group-name-content'
+                                                                    />
+
+                                                                    <BudgetDiscussionInfoSegment
+                                                                        question='Type of Group'
+                                                                        answer={
+                                                                            selectedVersion
+                                                                                ?.attributes
+                                                                                ?.bd_proposal_ownership
+                                                                                ?.data
+                                                                                ?.attributes
+                                                                                ?.type_of_group ||
+                                                                            ''
+                                                                        }
+                                                                        answerTestId='group-type-content'
+                                                                    />
+                                                                    <BudgetDiscussionInfoSegment
+                                                                        question='Key Information to Identify
                                                                 Group'
-                                                                    answer={
-                                                                        selectedVersion?.attributes
-                                                                            ?.bd_proposal_ownership
-                                                                            ?.data?.attributes
-                                                                            ?.key_info_to_identify_group ||
-                                                                        ''
-                                                                    }
-                                                                    answerTestId='group-identity-information-content'
-                                                                />
-                                                            </Box>
-                                                        ) : (
-                                                            ''
-                                                        )}
+                                                                        answer={
+                                                                            selectedVersion
+                                                                                ?.attributes
+                                                                                ?.bd_proposal_ownership
+                                                                                ?.data
+                                                                                ?.attributes
+                                                                                ?.key_info_to_identify_group ||
+                                                                            ''
+                                                                        }
+                                                                        answerTestId='group-identity-information-content'
+                                                                    />
+                                                                </Box>
+                                                            ) : (
+                                                                ''
+                                                            )}
 
                                                             <BudgetDiscussionInfoSegment
                                                                 question={
@@ -580,13 +615,29 @@ const BudgetDiscussionReviewVersions = ({ open, onClose, id }) => {
                                                                 }
                                                                 answerTestId='product-roadmap'
                                                             />
-                                                            {   selectedVersion?.attributes?.bd_psapb?.data?.attributes?.explain_proposal_roadmap ?
-                                                            <BudgetDiscussionInfoSegment
-                                                                question='Please explain how your proposal supports the Product Roadmap.'
-                                                                answer={selectedVersion?.attributes?.bd_psapb?.data?.attributes?.explain_proposal_roadmap || ''}
-                                                                answerTestId={'explain-roadmap-content'}
-                                                            />
-                                                            :''}
+                                                            {selectedVersion
+                                                                ?.attributes
+                                                                ?.bd_psapb?.data
+                                                                ?.attributes
+                                                                ?.explain_proposal_roadmap ? (
+                                                                <BudgetDiscussionInfoSegment
+                                                                    question='Please explain how your proposal supports the Product Roadmap.'
+                                                                    answer={
+                                                                        selectedVersion
+                                                                            ?.attributes
+                                                                            ?.bd_psapb
+                                                                            ?.data
+                                                                            ?.attributes
+                                                                            ?.explain_proposal_roadmap ||
+                                                                        ''
+                                                                    }
+                                                                    answerTestId={
+                                                                        'explain-roadmap-content'
+                                                                    }
+                                                                />
+                                                            ) : (
+                                                                ''
+                                                            )}
                                                             <BudgetDiscussionInfoSegment
                                                                 question={
                                                                     'Does your proposal align to any of the budget categories?'
@@ -716,9 +767,11 @@ const BudgetDiscussionReviewVersions = ({ open, onClose, id }) => {
                                                                 question='How will this proposal be maintained and
                                                                 supported after initial development?'
                                                                 answer={
-                                                                    selectedVersion?.attributes
+                                                                    selectedVersion
+                                                                        ?.attributes
                                                                         ?.bd_proposal_detail
-                                                                        ?.data?.attributes
+                                                                        ?.data
+                                                                        ?.attributes
                                                                         ?.maintain_and_support ||
                                                                     ''
                                                                 }

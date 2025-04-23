@@ -27,7 +27,7 @@ import {
     alpha,
 } from '@mui/material';
 import { useEffect, useState, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import {
     CommentCard,
     BudgetDiscussionPoll,
@@ -78,6 +78,23 @@ const SingleBudgetDiscussion = ({ id }) => {
     const [showCreateBDDialog, setShowCreateBDDialog] = useState(false);
     const [refetchProposal, setRefetchProposal] = useState(false);
     const [allCountries, setAllCountries] = useState([]);
+    const [hoveredSection, setHoveredSection] = useState(null);
+
+    function copyToClipboard(value) {
+        navigator.clipboard.writeText(value);
+    }
+
+    const handleSectionEnter = (sectionId) => {
+        setHoveredSection(sectionId);
+    };
+
+    const handleSectionLeave = () => {
+        setHoveredSection(null);
+    };
+
+    const handleToggleSection = (sectionId) => {
+        setHoveredSection(hoveredSection === sectionId ? null : sectionId);
+    };
 
     // Read More / Show Less logic
     const [showFullText, setShowFullText] = useState(false);
@@ -298,6 +315,33 @@ const SingleBudgetDiscussion = ({ id }) => {
         if (!proposal?.id) return;
         fetchActivePoll();
     }, [proposal]);
+
+    const location = useLocation();
+
+    useEffect(() => {
+        const sectionId = location?.hash;
+        if (sectionId) {
+            setShowFullText(true);
+            setTimeout(() => {
+                const section = document?.getElementById(sectionId);
+
+                if (section) {
+                    const rect = section?.getBoundingClientRect();
+                    const offsetTop = rect.top + window.scrollY - 20;
+
+                    const header = document?.querySelector('header');
+                    const headerHeight = header ? header?.offsetHeight : 80;
+
+                    window.scrollTo({
+                        top: offsetTop - headerHeight,
+                        behavior: 'smooth',
+                    });
+                } else {
+                    setShowFullText(false);
+                }
+            }, 200);
+        }
+    }, [location?.hash]);
 
     return !proposal ? null : proposal?.attributes?.content?.attributes
           ?.is_draft ? null : (
@@ -772,9 +816,44 @@ const SingleBudgetDiscussion = ({ id }) => {
                                             variant='h5'
                                             sx={{
                                                 mb: 2,
+                                                position: 'relative',
                                             }}
+                                            onClick={() =>
+                                                handleToggleSection(
+                                                    'problem-ownership'
+                                                )
+                                            }
+                                            onMouseEnter={() =>
+                                                handleSectionEnter(
+                                                    'problem-ownership'
+                                                )
+                                            }
+                                            onMouseLeave={handleSectionLeave}
+                                            id='#problem-ownership'
                                         >
                                             Proposal Ownership
+                                            {hoveredSection ===
+                                            'problem-ownership' ? (
+                                                <IconButton
+                                                    sx={{
+                                                        ml: 1,
+                                                        position: 'absolute',
+                                                        top: '50%',
+                                                        transform:
+                                                            'translateY(-50%)',
+                                                    }}
+                                                    onClick={() =>
+                                                        copyToClipboard(
+                                                            `${proposalLink}${proposal?.attributes?.master_id}#problem-ownership`
+                                                        )
+                                                    }
+                                                >
+                                                    <IconLink
+                                                        width={20}
+                                                        height={20}
+                                                    />
+                                                </IconButton>
+                                            ) : null}
                                         </Typography>
 
                                         {/* <BudgetDiscussionInfoSegment
@@ -905,10 +984,45 @@ const SingleBudgetDiscussion = ({ id }) => {
                                             variant='h5'
                                             sx={{
                                                 mb: 2,
+                                                position: 'relative',
                                             }}
+                                            onClick={() =>
+                                                handleToggleSection(
+                                                    'problem-statement'
+                                                )
+                                            }
+                                            onMouseEnter={() =>
+                                                handleSectionEnter(
+                                                    'problem-statement'
+                                                )
+                                            }
+                                            onMouseLeave={handleSectionLeave}
+                                            id='#problem-statement'
                                         >
                                             Problem Statements and Proposal
                                             Benefits
+                                            {hoveredSection ===
+                                            'problem-statement' ? (
+                                                <IconButton
+                                                    sx={{
+                                                        ml: 1,
+                                                        position: 'absolute',
+                                                        top: '50%',
+                                                        transform:
+                                                            'translateY(-50%)',
+                                                    }}
+                                                    onClick={() =>
+                                                        copyToClipboard(
+                                                            `${proposalLink}${proposal?.attributes?.master_id}#problem-statement`
+                                                        )
+                                                    }
+                                                >
+                                                    <IconLink
+                                                        width={20}
+                                                        height={20}
+                                                    />
+                                                </IconButton>
+                                            ) : null}
                                         </Typography>
 
                                         <BudgetDiscussionInfoSegment
@@ -945,12 +1059,25 @@ const SingleBudgetDiscussion = ({ id }) => {
                                             show={showFullText}
                                             answerTestId='product-roadmap'
                                         />
-                                        {   proposal?.attributes?.bd_psapb?.data?.attributes?.explain_proposal_roadmap?                                            <BudgetDiscussionInfoSegment
+                                        {proposal?.attributes?.bd_psapb?.data
+                                            ?.attributes
+                                            ?.explain_proposal_roadmap ? (
+                                            <BudgetDiscussionInfoSegment
                                                 question='Please explain how your proposal supports the Product Roadmap.'
-                                                answer={proposal?.attributes?.bd_psapb?.data?.attributes?.explain_proposal_roadmap || ''}
-                                                answerTestId={'explain-roadmap-content'}
+                                                answer={
+                                                    proposal?.attributes
+                                                        ?.bd_psapb?.data
+                                                        ?.attributes
+                                                        ?.explain_proposal_roadmap ||
+                                                    ''
+                                                }
+                                                answerTestId={
+                                                    'explain-roadmap-content'
+                                                }
                                             />
-                                        :''}
+                                        ) : (
+                                            ''
+                                        )}
                                         <BudgetDiscussionInfoSegment
                                             question={
                                                 'Does your proposal align to any of the budget categories?'
@@ -1003,9 +1130,47 @@ const SingleBudgetDiscussion = ({ id }) => {
                                                 variant='h5'
                                                 sx={{
                                                     mb: 2,
+                                                    position: 'relative',
                                                 }}
+                                                onClick={() =>
+                                                    handleToggleSection(
+                                                        'proposal-details'
+                                                    )
+                                                }
+                                                onMouseEnter={() =>
+                                                    handleSectionEnter(
+                                                        'proposal-details'
+                                                    )
+                                                }
+                                                onMouseLeave={
+                                                    handleSectionLeave
+                                                }
+                                                id='#proposal-details'
                                             >
                                                 Proposal Details
+                                                {hoveredSection ===
+                                                'proposal-details' ? (
+                                                    <IconButton
+                                                        sx={{
+                                                            ml: 1,
+                                                            position:
+                                                                'absolute',
+                                                            top: '50%',
+                                                            transform:
+                                                                'translateY(-50%)',
+                                                        }}
+                                                        onClick={() =>
+                                                            copyToClipboard(
+                                                                `${proposalLink}${proposal?.attributes?.master_id}#proposal-details`
+                                                            )
+                                                        }
+                                                    >
+                                                        <IconLink
+                                                            width={20}
+                                                            height={20}
+                                                        />
+                                                    </IconButton>
+                                                ) : null}
                                             </Typography>
 
                                             <BudgetDiscussionInfoSegment
@@ -1125,9 +1290,47 @@ const SingleBudgetDiscussion = ({ id }) => {
                                                 variant='h5'
                                                 sx={{
                                                     mb: 2,
+                                                    position: 'relative',
                                                 }}
+                                                onClick={() =>
+                                                    handleToggleSection(
+                                                        'costing'
+                                                    )
+                                                }
+                                                onMouseEnter={() =>
+                                                    handleSectionEnter(
+                                                        'costing'
+                                                    )
+                                                }
+                                                onMouseLeave={
+                                                    handleSectionLeave
+                                                }
+                                                id='#costing'
                                             >
                                                 Costing
+                                                {hoveredSection ===
+                                                'costing' ? (
+                                                    <IconButton
+                                                        sx={{
+                                                            ml: 1,
+                                                            position:
+                                                                'absolute',
+                                                            top: '50%',
+                                                            transform:
+                                                                'translateY(-50%)',
+                                                        }}
+                                                        onClick={() =>
+                                                            copyToClipboard(
+                                                                `${proposalLink}${proposal?.attributes?.master_id}#costing`
+                                                            )
+                                                        }
+                                                    >
+                                                        <IconLink
+                                                            width={20}
+                                                            height={20}
+                                                        />
+                                                    </IconButton>
+                                                ) : null}
                                             </Typography>
 
                                             <BudgetDiscussionInfoSegment
@@ -1204,9 +1407,47 @@ const SingleBudgetDiscussion = ({ id }) => {
                                                 variant='h5'
                                                 sx={{
                                                     mb: 2,
+                                                    position: 'relative',
                                                 }}
+                                                onClick={() =>
+                                                    handleToggleSection(
+                                                        'further-information'
+                                                    )
+                                                }
+                                                onMouseEnter={() =>
+                                                    handleSectionEnter(
+                                                        'further-information'
+                                                    )
+                                                }
+                                                onMouseLeave={
+                                                    handleSectionLeave
+                                                }
+                                                id='#further-information'
                                             >
                                                 Further information
+                                                {hoveredSection ===
+                                                'further-information' ? (
+                                                    <IconButton
+                                                        sx={{
+                                                            ml: 1,
+                                                            position:
+                                                                'absolute',
+                                                            top: '50%',
+                                                            transform:
+                                                                'translateY(-50%)',
+                                                        }}
+                                                        onClick={() =>
+                                                            copyToClipboard(
+                                                                `${proposalLink}${proposal?.attributes?.master_id}#further-information`
+                                                            )
+                                                        }
+                                                    >
+                                                        <IconLink
+                                                            width={20}
+                                                            height={20}
+                                                        />
+                                                    </IconButton>
+                                                ) : null}
                                             </Typography>
                                             {proposal?.attributes
                                                 ?.bd_further_information?.data
@@ -1290,9 +1531,47 @@ const SingleBudgetDiscussion = ({ id }) => {
                                                 variant='h5'
                                                 sx={{
                                                     mb: 2,
+                                                    position: 'relative',
                                                 }}
+                                                onClick={() =>
+                                                    handleToggleSection(
+                                                        'administrating-and-auditing'
+                                                    )
+                                                }
+                                                onMouseEnter={() =>
+                                                    handleSectionEnter(
+                                                        'administrating-and-auditing'
+                                                    )
+                                                }
+                                                onMouseLeave={
+                                                    handleSectionLeave
+                                                }
+                                                id='#administrating-and-auditing'
                                             >
                                                 Administration and Auditing
+                                                {hoveredSection ===
+                                                'administrating-and-auditing' ? (
+                                                    <IconButton
+                                                        sx={{
+                                                            ml: 1,
+                                                            position:
+                                                                'absolute',
+                                                            top: '50%',
+                                                            transform:
+                                                                'translateY(-50%)',
+                                                        }}
+                                                        onClick={() =>
+                                                            copyToClipboard(
+                                                                `${proposalLink}${proposal?.attributes?.master_id}#administrating-and-auditing`
+                                                            )
+                                                        }
+                                                    >
+                                                        <IconLink
+                                                            width={20}
+                                                            height={20}
+                                                        />
+                                                    </IconButton>
+                                                ) : null}
                                             </Typography>
 
                                             <BudgetDiscussionInfoSegment

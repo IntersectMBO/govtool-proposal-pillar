@@ -25,6 +25,7 @@ const markdownTags = [
     'del',
     'span',
     'hr',
+    'a',
 ];
 
 // Map Markdown tags to MUI `Typography` variants
@@ -51,23 +52,23 @@ const fontWeights = {
 
 const symbolReplacements = (text) =>
     text
-        .replace(/\(c\)/gi, '©')
-        .replace(/\(r\)/gi, '®')
-        .replace(/\(tm\)/gi, '™')
-        .replace(/\(p\)/gi, '℗')
-        .replace(/\+\/-/g, '±')
-        .replace(/\.\.+/g, '…') // change .. with ...
-        .replace(/([?!])…/g, '$1..') // Change?... with ?..
-        .replace(/([?!]){4,}/g, '$1$1$1') // Search multiply ? or !
-        .replace(/,{2,}/g, ',') // Change multiple commas with one
-        .replace(/(^|\s)--(?=\s|$)/gm, '$1\u2013') // Change -- with en-dash
-        .replace(/(^|[^-\s])--(?=[^-\s]|$)/gm, '$1\u2013'); // Change -- with en-dash in context
+        ?.replace(/\(c\)/gi, '©')
+        ?.replace(/\(r\)/gi, '®')
+        ?.replace(/\(tm\)/gi, '™')
+        ?.replace(/\(p\)/gi, '℗')
+        ?.replace(/\+\/-/g, '±')
+        ?.replace(/\.\.+/g, '…') // change .. with ...
+        ?.replace(/([?!])…/g, '$1..') // Change?... with ?..
+        ?.replace(/([?!]){4,}/g, '$1$1$1') // Search multiply ? or !
+        ?.replace(/,{2,}/g, ',') // Change multiple commas with one
+        ?.replace(/(^|\s)--(?=\s|$)/gm, '$1\u2013') // Change -- with en-dash
+        ?.replace(/(^|[^-\s])--(?=[^-\s]|$)/gm, '$1\u2013'); // Change -- with en-dash in context
 // .replace(/(^|[^-])---(?=[^-]|$)/gm, '$1\u2014') // Change --- with em-dash
 
-const MarkdownTypography = ({ content, testId }) => {
+const MarkdownTypography = ({ content, testId, onLinkClick }) => {
     const theme = useTheme();
     const typographyComponents = markdownTags.reduce((acc, tag) => {
-        acc[tag] = ({ children }) => {
+        acc[tag] = ({ href, children }) => {
             // Render hr tag without any modification then this
             if (tag === 'hr') {
                 return <hr style={{ marginTop: 0, marginBottom: '1rem' }} />;
@@ -130,6 +131,21 @@ const MarkdownTypography = ({ content, testId }) => {
                 );
             }
 
+            if (tag === 'a') {
+                return (
+                    <a
+                        href={href}
+                        onClick={(e) => {
+                            if (onLinkClick) {
+                                onLinkClick(href, e);
+                            }
+                        }}
+                    >
+                        {children}
+                    </a>
+                );
+            }
+
             return (
                 <Typography
                     variant={typographyVariants[tag] || 'body1'}
@@ -174,7 +190,7 @@ const MarkdownTypography = ({ content, testId }) => {
         let preservedTextIndex = 0;
 
         // Save text with intends and its placeholders
-        text = text.replace(indentedCodeRegex, (match) => {
+        text = text?.replace(indentedCodeRegex, (match) => {
             preservedIndentedCode[preservedTextIndex] = match;
             preservedTextIndex++;
             return `<!--indentedCode${preservedTextIndex - 1}-->`;
@@ -182,7 +198,7 @@ const MarkdownTypography = ({ content, testId }) => {
 
         const preserveCodeBlocksRegex = /```(.*?)```/gs;
         let preservedCodeBlocks = [];
-        text = text.replace(preserveCodeBlocksRegex, (match, codeContent) => {
+        text = text?.replace(preserveCodeBlocksRegex, (match, codeContent) => {
             preservedCodeBlocks.push(codeContent);
             return `<!--codeBlock${preservedCodeBlocks.length - 1}-->`;
         });
@@ -196,30 +212,30 @@ const MarkdownTypography = ({ content, testId }) => {
         // });
 
         preservedCodeBlocks.forEach((codeBlock, index) => {
-            text = text.replace(
+            text = text?.replace(
                 `<!--codeBlock${index}-->`,
                 `\`\`\`${codeBlock}\`\`\``
             );
         });
 
         // Handle strikethrough text
-        text = text.replace(/~~(.*?)~~/g, '<del>$1</del>'); // This will replace ~~text~~ with <del>text</del>
+        text = text?.replace(/~~(.*?)~~/g, '<del>$1</del>'); // This will replace ~~text~~ with <del>text</del>
 
         // Recognition of marked text (==text==) and change with <mark> tags
-        text = text.replace(/==(.*?)==/g, '<mark>$1</mark>'); // This will replace ==text== with <mark>text</mark>
+        text = text?.replace(/==(.*?)==/g, '<mark>$1</mark>'); // This will replace ==text== with <mark>text</mark>
 
         // Recognition of inserted text (++text++) and change with <ins> tags
-        text = text.replace(/\+\+(.*?)\+\+/g, '<ins>$1</ins>'); // This will replace ++text++ with <ins>text</ins>
+        text = text?.replace(/\+\+(.*?)\+\+/g, '<ins>$1</ins>'); // This will replace ++text++ with <ins>text</ins>
 
         // Recognition superscript (19^th^) and change with <sup> tags
-        text = text.replace(/\^([^~\^]+)\^/g, '<sup>$1</sup>'); // This will replace 19^th^ with <sup>th</sup>
+        text = text?.replace(/\^([^~\^]+)\^/g, '<sup>$1</sup>'); // This will replace 19^th^ with <sup>th</sup>
 
         // Recognition subscript (H~2~O) and change with <sub> tags
-        text = text.replace(/~([^~]+)~/g, '<sub>$1</sub>'); // This will replace H~2~O with <sub>2</sub>O
+        text = text?.replace(/~([^~]+)~/g, '<sub>$1</sub>'); // This will replace H~2~O with <sub>2</sub>O
 
         // Return code and comments back with their values
         preservedIndentedCode.forEach((code, index) => {
-            text = text.replace(`<!--indentedCode${index}-->`, code);
+            text = text?.replace(`<!--indentedCode${index}-->`, code);
         });
 
         // // Table regex
