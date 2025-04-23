@@ -30,6 +30,7 @@ import {
 import Subcomponent from './Subcomponent';
 import { isCommentRestricted } from '../../lib/helpers';
 import UsernameSection from './UsernameSection';
+import MarkdownTypography from '../../lib/markdownRenderer';
 
 const CommentCard = ({
     comment,
@@ -230,6 +231,37 @@ const CommentCard = ({
         }
     }, [comment]);
 
+    const [clickedHash, setClickedHash] = useState(null);
+
+    const handleMarkdownLinkClick = (href, e) => {
+        const isSameHash = window?.location?.href === href;
+        if (isSameHash) {
+            e?.preventDefault(); // Do not reload
+            setClickedHash(null); // pre reset
+            setTimeout(() => {
+                setClickedHash(window?.location?.hash);
+            }, 50);
+        }
+    };
+
+    useEffect(() => {
+        if (clickedHash) {
+            const section = document?.getElementById(clickedHash);
+            if (section) {
+                const rect = section?.getBoundingClientRect();
+                const offsetTop = rect.top + window.scrollY - 20;
+
+                const header = document?.querySelector('header');
+                const headerHeight = header ? header?.offsetHeight : 80;
+
+                window.scrollTo({
+                    top: offsetTop - headerHeight,
+                    behavior: 'smooth',
+                });
+            }
+        }
+    }, [clickedHash]);
+
     return (
         <Card
             sx={{
@@ -371,24 +403,53 @@ const CommentCard = ({
                                 </Box>
                             </Tooltip>
                         </Box>
-                        <Typography
-                            variant='body2'
-                            sx={{
-                                maxWidth: '100%',
-                                wordWrap: 'break-word',
-                                whiteSpace: 'pre-line',
-                            }}
-                            data-testid={`comment-${comment?.id}-content`}
-                            ref={showMoreRef}
-                        >
-                            {isCommentRestricted(comment) === false
-                                ? isExpanded
-                                    ? comment?.attributes?.comment_text
-                                    : sliceString(
-                                          comment?.attributes?.comment_text
-                                      ) || ''
-                                : 'Restricted comment due to reports'}
-                        </Typography>
+                        {isCommentRestricted(comment) === true ? (
+                            <Typography
+                                variant='body2'
+                                sx={{
+                                    maxWidth: '100%',
+                                    wordWrap: 'break-word',
+                                    whiteSpace: 'pre-line',
+                                }}
+                                data-testid={`comment-${comment?.id}-content`}
+                                // ref={showMoreRef}
+                            >
+                                Restricted comment due to reports
+                            </Typography>
+                        ) : null}
+                        {isCommentRestricted(comment) === false ? (
+                            // <Typography
+                            //     variant='body2'
+                            //     sx={{
+                            //         maxWidth: '100%',
+                            //         wordWrap: 'break-word',
+                            //         whiteSpace: 'pre-line',
+                            //     }}
+                            //     data-testid={`comment-${comment?.id}-content`}
+                            //     ref={showMoreRef}
+                            // >
+                            //     {sliceString(
+                            //               comment?.attributes?.comment_text
+                            //           ) || ''}
+                            // </Typography>
+
+                            <Box ref={showMoreRef}>
+                                <MarkdownTypography
+                                    content={
+                                        isExpanded
+                                            ? comment?.attributes?.comment_text
+                                            : sliceString(
+                                                  comment?.attributes
+                                                      ?.comment_text
+                                              ) || ''
+                                    }
+                                    testId={`comment-${comment?.id}-content`}
+                                    onLinkClick={(href, e) =>
+                                        handleMarkdownLinkClick(href, e)
+                                    }
+                                />
+                            </Box>
+                        ) : null}
 
                         {comment?.attributes?.comment_text?.length >
                             maxLength && (
@@ -554,6 +615,9 @@ const CommentCard = ({
                                 <Subcomponent
                                     key={index}
                                     comment={subcomment}
+                                    handleMarkdownLinkClick={
+                                        handleMarkdownLinkClick
+                                    }
                                 />
                             ))}
 
