@@ -57,7 +57,7 @@ const BudgetDiscussionSubmit = ({
                             }}
                         >
                             <Typography variant='h4' gutterBottom mb={2}>
-                                Submit
+                                Privacy Policy & Terms of Use
                             </Typography>
                             <Box color={(theme) => theme.palette.text.grey}>
                                 <FormControlLabel
