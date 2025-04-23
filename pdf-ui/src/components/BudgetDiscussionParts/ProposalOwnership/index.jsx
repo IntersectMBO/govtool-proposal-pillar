@@ -431,10 +431,10 @@ const ProposalOwnership = ({
                             <FormControlLabel
                                 control={
                                     <Checkbox
-                                        checked={
+                                        checked={Boolean(
                                             currentBudgetDiscussionData
                                                 ?.bd_proposal_ownership?.agreed
-                                        }
+                                        )}
                                         onChange={(e) =>
                                             handleDataChange(e, 'agreed')
                                         }

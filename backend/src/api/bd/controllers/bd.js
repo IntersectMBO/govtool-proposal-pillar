@@ -227,6 +227,8 @@ module.exports = createCoreController("api::bd.bd", ({ strapi }) => ({
       delete entity?.creator?.is_validated;
       delete entity?.creator?.password;
       delete entity?.creator?.confirmed;
+      delete entity?.creator?.confirmationToken;
+		delete entity?.creator?.resetPasswordToken;
     }
 
     const sanitizedEntity = await this.sanitizeOutput(entity, ctx);
@@ -234,32 +236,39 @@ module.exports = createCoreController("api::bd.bd", ({ strapi }) => ({
   },
 
   async find(ctx) {
-    const query = ctx.request.query;
+		const query = ctx.request.query;
 
-    const { results, pagination } = await strapi.service("api::bd.bd").find({
-      ...query,
-    });
+		const { results, pagination } = await strapi
+			.service('api::bd.bd')
+			.find({
+				...query,
+			});
 
-    const sanitizedResults = results.map((entity) => {
-      if (entity?.bd_contact_information) {
-        delete entity.bd_contact_information;
-      }
+		const sanitizedResults = results.map((entity) => {
+			if (entity?.bd_contact_information) {
+				delete entity.bd_contact_information;
+			}
 
-      if (entity?.creator) {
-        delete entity?.creator?.username;
-        delete entity?.creator?.email;
-        delete entity?.creator?.provider;
-        delete entity?.creator?.blocked;
-        delete entity?.creator?.createdAt;
-        delete entity?.creator?.updatedAt;
-        delete entity?.creator?.is_validated;
-        delete entity?.creator?.password;
-        delete entity?.creator?.confirmed;
-      }
-      return entity;
-    });
+			if (entity?.creator) {
+				delete entity?.creator?.username;
+				delete entity?.creator?.email;
+				delete entity?.creator?.provider;
+				delete entity?.creator?.blocked;
+				delete entity?.creator?.createdAt;
+				delete entity?.creator?.updatedAt;
+				delete entity?.creator?.is_validated;
+				delete entity?.creator?.password;
+				delete entity?.creator?.confirmed;
+				delete entity?.creator?.confirmationToken;
+				delete entity?.creator?.resetPasswordToken;
+			}
+			return entity;
+		});
 
-    const sanitizedOutput = await this.sanitizeOutput(sanitizedResults, ctx);
-    return this.transformResponse(sanitizedOutput, { pagination });
+		const transformed = this.transformResponse(sanitizedResults, {
+			pagination,
+		});
+
+		return transformed;
   },
 }));
