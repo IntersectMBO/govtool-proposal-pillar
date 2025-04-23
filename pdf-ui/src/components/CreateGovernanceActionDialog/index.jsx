@@ -94,12 +94,11 @@ const CreateGovernanceActionDialog = ({ open = false, onClose = false }) => {
                     setIsContinueDisabled(false);
                 }
             }
-            
             const selectedLabel = governanceActionTypes.find(
                 (option) => option?.value === proposalData?.gov_action_type_id
             )?.label;
             const selectedType = governanceActionTypes.find((option) => option?.value === proposalData?.gov_action_type_id)?.value;
-            if (selectedType == 2) {
+            if (proposalData?.gov_action_type_id == 2) {
                 if (proposalData?.proposal_withdrawals) {
                      if (
                          proposalData?.proposal_withdrawals?.some(
@@ -114,26 +113,25 @@ const CreateGovernanceActionDialog = ({ open = false, onClose = false }) => {
                     }
                 }
             } 
-            if (selectedType == 3){
-                if(!proposalData.proposal_constitution_content.prop_constitution_url || constitutionErrors.prop_constitution_url)
+            if (proposalData?.gov_action_type_id == 3) {
+                if(!proposalData?.proposal_constitution_content?.prop_constitution_url || constitutionErrors?.prop_constitution_url)
                     return setIsContinueDisabled(true);
-                if(proposalData.proposal_constitution_content.prop_have_guardrails_script)
+                if(proposalData?.proposal_constitution_content?.prop_have_guardrails_script)
                 {
-                    if(constitutionErrors.prop_guardrails_script_url || constitutionErrors.prop_guardrails_script_hash)
-                        return setIsContinueDisabled(true);
+                    if(proposalData?.proposal_constitution_content.prop_guardrails_script_url.length === 0 || proposalData?.proposal_constitution_content.prop_guardrails_script_hash.length === 0)
+                       return setIsContinueDisabled(true);
                 }
                 else {
                     setIsContinueDisabled(false);
                 }
             }
-            else {
-                setIsContinueDisabled(false);
-            }
         } else {
             setIsContinueDisabled(true);
         }
     }, [proposalData, errors, linksErrors, withdrawalsErrors, constitutionErrors]); // proposalData is a dependency
-
+    // useEffect(() => {
+    //     handleIsContinueDisabled()
+    // },[proposalData])
     const handleCreateProposal = async (isDraft = false) => {
         setLoading(true);
         try {
