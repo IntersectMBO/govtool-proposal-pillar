@@ -30,6 +30,7 @@ import { useAppContext } from '../../context/context';
 import { correctVoteAdaFormat, formatIsoDate } from '../../lib/utils';
 import EditProposalDialog from '../EditProposalDialog';
 import MarkdownTextComponent from '../MarkdownTextComponent';
+import CreateBudgetDiscussionDialog from '../CreateBudgetDiscussionDialog';
 
 const BudgetDiscussionCard = ({
     budgetDiscussion,
@@ -53,13 +54,13 @@ const BudgetDiscussionCard = ({
     }, [budgetDiscussionLink]);
 
     const handleEditProposal = () => {
-        // pokrenuti popunjavanje sa predefinisam podacime ... ne edit
-        // setOpenEditDialog(true);
+        // Open edit modal
+        setOpenEditDialog(true);
     };
 
     const handleCloseEditDialog = () => {
-        // zatvori stepper za edit
-        //  setOpenEditDialog(false);
+        // Close edit modal
+        setOpenEditDialog(false);
     };
 
     const filterProps = ({ draft, submitted, ...rest }) => rest;
@@ -505,12 +506,12 @@ const BudgetDiscussionCard = ({
                                     </Tooltip>
                                     {user &&
                                         user?.user?.id?.toString() ===
-                                            budgetDiscussion?.creator?.atributes?.user_id?.toString() && (
+                                            budgetDiscussion?.attributes?.creator?.data?.id?.toString() && (
                                             <Tooltip title='Edit'>
                                                 <IconButton
                                                     aria-label='edit'
                                                     onClick={handleEditProposal}
-                                                    // data-testid={`proposal-${proposal?.id}-edit-button`}
+                                                    data-testid={`budget-proposals-${budgetDiscussion?.attributes?.master_id}-edit-button`}
                                                 >
                                                     <IconPencilAlt />
                                                 </IconButton>
@@ -648,19 +649,13 @@ const BudgetDiscussionCard = ({
                 <CardContentComponent budgetDiscussion={budgetDiscussion} />
             </CardStatusBadge>
 
-            {openEditDialog && (
-                <Box>Edit</Box>
-                // <EditProposalDialog
-                //     proposal={proposal}
-                //     openEditDialog={openEditDialog}
-                //     handleCloseEditDialog={handleCloseEditDialog}
-                //     setMounted={() => {}}
-                //     onUpdate={() =>
-                //         navigate(`/proposal_discussion/${proposal?.id}`)
-                //     }
-                //     setShouldRefresh={setShouldRefresh}
-                // />
-            )}
+            {openEditDialog ? (
+                <CreateBudgetDiscussionDialog
+                    open={openEditDialog}
+                    onClose={handleCloseEditDialog}
+                    current_bd_id={budgetDiscussion?.attributes?.master_id}
+                />
+            ) : null}
         </div>
     );
 };

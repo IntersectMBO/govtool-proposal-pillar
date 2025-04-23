@@ -192,9 +192,9 @@ const ProposedBudgetDiscussion = () => {
                                             bd_type: null,
                                         });
                                     }}
-                                    data-testid='back-to-budget-discussion-button'
+                                    data-testid='back-to-budget-proposals-button'
                                 >
-                                    Back to Budget Discussion
+                                    Back to Budget Proposals
                                 </Button>
                             </Grid>
                         )}
@@ -340,7 +340,7 @@ const ProposedBudgetDiscussion = () => {
                                                         mb: 1,
                                                     }}
                                                 >
-                                                    Budget Discussion types
+                                                    Budget categories
                                                 </Typography>
                                                 <Divider
                                                     sx={{
@@ -471,7 +471,9 @@ const ProposedBudgetDiscussion = () => {
                                     data-testid='sort-button'
                                 >
                                     Sort:{' '}
-                                    {sortType === 'desc' ? 'Newest' : 'Oldest'}
+                                    {sortType === 'desc'
+                                        ? 'Newest first'
+                                        : 'Oldest first'}
                                 </Button>
                             </Box>
                         </Grid>
