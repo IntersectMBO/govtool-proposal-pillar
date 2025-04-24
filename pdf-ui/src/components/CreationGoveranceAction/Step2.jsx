@@ -135,26 +135,12 @@ const Step2 = ({
             setIsDraftDisabled(true)
         }
         if(proposalData?.proposal_constitution_content?.prop_have_guardrails_script)
-            {
-                if(proposalData?.proposal_constitution_content.prop_guardrails_script_url.length === 0 || proposalData?.proposal_constitution_content.prop_guardrails_script_hash.length === 0)
-                    setIsDraftDisabled(true)
-            }
-            else 
-            {
+        {
+            if(!proposalData.proposal_constitution_content.prop_guardrails_script_url && !proposalData.proposal_constitution_content.prop_guardrails_script_hash)
                 setIsDraftDisabled(false)
-            }
-            if(proposalData?.proposal_constitution_content?.prop_have_guardrails_script)
-                {
-                    if(!proposalData.proposal_constitution_content.prop_guardrails_script_url && !proposalData.proposal_constitution_content.prop_guardrails_script_hash)
-                        setIsDraftDisabled(false)
-                    else
-                        setIsDraftDisabled(true)
-                }
-                else 
-                {
-                    setIsDraftDisabled(true)
-                }
-
+            else
+                setIsDraftDisabled(true)
+        }
     },[proposalData])
     return (
         <Card>
