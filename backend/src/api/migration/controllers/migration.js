@@ -889,11 +889,18 @@ module.exports = {
 					bdCost?.id,
 					{
 						data: {
-							ada_amount_clone: +bdCost?.ada_amount || 0,
+							ada_amount_clone:
+								+bdCost?.ada_amount
+									?.toString()
+									?.replace(',', '.') || 0,
 							amount_in_preferred_currency_clone:
-								+bdCost?.amount_in_preferred_currency || 0,
+								+bdCost?.amount_in_preferred_currency
+									?.toString()
+									?.replace(',', '.') || 0,
 							usd_to_ada_conversion_rate_clone:
-								+bdCost?.usd_to_ada_conversion_rate || 0,
+								+bdCost?.usd_to_ada_conversion_rate
+									?.toString()
+									?.replace(',', '.') || 0,
 						},
 					}
 				);
