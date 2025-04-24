@@ -143,7 +143,17 @@ const Step2 = ({
             {
                 setIsDraftDisabled(false)
             }
-        
+            if(proposalData?.proposal_constitution_content?.prop_have_guardrails_script)
+                {
+                    if(!proposalData.proposal_constitution_content.prop_guardrails_script_url && !proposalData.proposal_constitution_content.prop_guardrails_script_hash)
+                        setIsDraftDisabled(false)
+                    else
+                        setIsDraftDisabled(true)
+                }
+                else 
+                {
+                    setIsDraftDisabled(true)
+                }
 
     },[proposalData])
     return (
