@@ -48,7 +48,7 @@ const BudgetDiscussionsList = ({
     const [pageCount, setPageCount] = useState(0);
     const [currentPage, setCurrentPage] = useState(1);
     const [mounted, setMounted] = useState(false);
-    const debouncedSearchValue = useDebounce(searchText.trim());
+    const debouncedSearchValue = searchText;
     const [shouldRefresh, setShouldRefresh] = useState(false);
     const isXs = useMediaQuery(theme.breakpoints.only('xs'));
     const isSm = useMediaQuery(theme.breakpoints.only('sm'));
@@ -85,7 +85,7 @@ const BudgetDiscussionsList = ({
                     currentBudgetDiscussionType?.id
                 }&filters[$and][2][bd_proposal_detail][proposal_name][$containsi]=${
                     debouncedSearchValue || ''
-                }${proposalOwnerFilter?.id === 'all-proposals' ? '' : '&filters[$and][3][creator]=' + user?.user?.id}&pagination[page]=${page}&pagination[pageSize]=25&sort[createdAt]=${
+                }${proposalOwnerFilter?.id === 'all-proposals' ? '' : user?.user?.id ? '&filters[$and][3][creator]=' + user?.user?.id : ''}&pagination[page]=${page}&pagination[pageSize]=25&sort[createdAt]=${
                     sortType
                 }&populate[0]=bd_costing&populate[1]=bd_psapb.type_name&populate[2]=bd_proposal_detail&populate[3]=creator`;
                 const { budgetDiscussions, pgCount, total } =

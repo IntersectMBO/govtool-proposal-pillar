@@ -32,16 +32,14 @@ import { getBudgetDiscussionTypes } from '../../lib/api';
 import {
     CreateBudgetDiscussionDialog,
     BudgetDiscussionsList,
+    SearchInput,
 } from '../../components';
 import { useAppContext } from '../../context/context';
 import { loginUserToApp } from '../../lib/helpers';
 import { useLocation } from 'react-router-dom';
-import { ScrollToTop } from '../../lib/hooks';
+import { ScrollToTop, useDebounce } from '../../lib/hooks';
 
-let proposalsOwnersList = [
-    { id: 'my-proposals', label: 'My Proposals' },
-    { id: 'all-proposals', label: 'All Proposals' },
-];
+let proposalsOwnersList = [{ id: 'all-proposals', label: 'All Proposals' }];
 
 const ProposedBudgetDiscussion = () => {
     const location = useLocation();
@@ -189,6 +187,23 @@ const ProposedBudgetDiscussion = () => {
 
     const showNoProposals = allEmptyMatchBudget || allFilteredAreEmpty;
 
+    useEffect(() => {
+        if (user?.user?.id) {
+            if (proposalsOwnersList?.find((f) => f?.id === 'my-proposals'))
+                return;
+            proposalsOwnersList?.push({
+                id: 'my-proposals',
+                label: 'My Proposals',
+            });
+        } else {
+            if (proposalsOwnersList?.find((f) => f?.id === 'my-proposals')) {
+                proposalsOwnersList = proposalsOwnersList.filter(
+                    (f) => f?.id === 'my-proposals'
+                );
+            }
+        }
+    }, [user?.user?.id]);
+
     return (
         <Box sx={{ mt: 3 }}>
             <ScrollToTop step={showAllActivated?.is_activated} />
@@ -258,47 +273,11 @@ const ProposedBudgetDiscussion = () => {
                         )}
 
                         <Grid item md={6} sx={{ flexGrow: { xs: 1 } }}>
-                            <TextField
-                                fullWidth
-                                id='outlined-basic'
-                                placeholder='Search...'
-                                variant='outlined'
-                                value={budgetDiscussionSearchText || ''}
-                                onChange={(e) =>
-                                    setBudgetDiscussionSearchText(
-                                        e.target.value
-                                    )
+                            <SearchInput
+                                onDebouncedChange={
+                                    setBudgetDiscussionSearchText
                                 }
-                                InputProps={{
-                                    startAdornment: (
-                                        <InputAdornment position='start'>
-                                            <IconSearch
-                                                color={
-                                                    theme.palette.primary.icons
-                                                        .black
-                                                }
-                                                width={24}
-                                                height={24}
-                                            />
-                                        </InputAdornment>
-                                    ),
-                                }}
-                                inputProps={{
-                                    'data-testid': 'search-input',
-                                }}
-                                sx={{
-                                    '.MuiOutlinedInput-root': {
-                                        borderRadius: 100,
-                                        backgroundColor: 'white',
-                                        input: {
-                                            '&::placeholder': {
-                                                color: (theme) =>
-                                                    theme.palette.text.grey,
-                                                opacity: 1,
-                                            },
-                                        },
-                                    },
-                                }}
+                                placeholder='Search...'
                             />
                         </Grid>
                         <Grid item>
@@ -612,7 +591,7 @@ const ProposedBudgetDiscussion = () => {
                     >
                         <BudgetDiscussionsList
                             currentBudgetDiscussionType={item}
-                            searchText={budgetDiscussionSearchText}
+                            searchText={budgetDiscussionSearchText?.trim()}
                             sortType={sortType}
                             statusList={filteredBudgetDiscussionStatusList}
                             setShowAllActivated={setShowAllActivated}

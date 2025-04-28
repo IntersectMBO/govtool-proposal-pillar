@@ -176,7 +176,9 @@ const CreateBudgetDiscussionDialog = ({
             const newBD = await createBudgetDiscussion(budgetDiscussionData);
 
             onClose();
-            navigate(`/budget_discussion/${current_bd_id}`);
+            navigate(
+                `/budget_discussion/${current_bd_id ? current_bd_id : newBD?.master_id}`
+            );
             // if (
             //     !(
             //         budgetDiscussionData?.proposal_id &&
