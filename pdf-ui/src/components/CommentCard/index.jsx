@@ -44,10 +44,12 @@ const CommentCard = ({
         user,
         setOpenUsernameModal,
         fetchDRepVotingPowerList,
+        addSuccessAlert,
+        addErrorAlert,
     } = useAppContext();
     const theme = useTheme();
     const maxLength = 128;
-    const subcommentMaxLength = 2500;
+    const subcommentMaxLength = 15000;
     const sliceString = (str) => {
         if (!str) return '';
         if (str.length > maxLength) {
@@ -124,7 +126,9 @@ const CommentCard = ({
             setCommentHasReplays(true);
             setShowReply(false);
             setRefetchProposal(true);
+            addSuccessAlert('Commented successfully');
         } catch (error) {
+            addErrorAlert('Failed to comment');
             console.error(error);
         } finally {
             setLoading(false);

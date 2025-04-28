@@ -53,12 +53,18 @@ import ProposalOwnModal from '../../../components/ProposalOwnModal';
 import BudgetDiscussionReviewVersions from '../../../components/BudgetDiscussionReviewVersions';
 
 const SingleBudgetDiscussion = ({ id }) => {
-    const MAX_COMMENT_LENGTH = 2500;
+    const MAX_COMMENT_LENGTH = 15000;
     const navigate = useNavigate();
     const openLink = (link) => openInNewTab(link);
 
-    const { user, setLoading, setOpenUsernameModal, walletAPI } =
-        useAppContext();
+    const {
+        user,
+        setLoading,
+        setOpenUsernameModal,
+        walletAPI,
+        addErrorAlert,
+        addSuccessAlert,
+    } = useAppContext();
 
     const theme = useTheme();
     const [proposal, setProposal] = useState(null);
@@ -182,8 +188,14 @@ const SingleBudgetDiscussion = ({ id }) => {
 
             handleCloseDeleteModal();
             navigate('/budget_discussion');
+            addSuccessAlert('Proposal deleted successfully');
         } catch (error) {
+            let errorMessage = 'Failed to delete proposal';
+            if (error?.response?.data?.error?.message) {
+                errorMessage = error?.response?.data?.error?.message;
+            }
             console.error('Failed to delete proposal:', error);
+            addErrorAlert(errorMessage);
         } finally {
             setLoading(false);
         }
@@ -245,7 +257,9 @@ const SingleBudgetDiscussion = ({ id }) => {
             setNewCommentText('');
             fetchProposal(id);
             fetchComments(1);
+            addSuccessAlert('Commented successfully');
         } catch (error) {
+            addErrorAlert('Failed to comment');
             console.error(error);
         } finally {
             setLoading(false);

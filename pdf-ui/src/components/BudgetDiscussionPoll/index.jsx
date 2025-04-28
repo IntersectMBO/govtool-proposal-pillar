@@ -19,6 +19,7 @@ import {
 } from '../../lib/api';
 import { decodeJWT, formatDateWithOffset } from '../../lib/utils';
 import DrepVotersDialog from '../DrepVotersDialog';
+import { add } from 'date-fns';
 
 const BudgetDiscussionPoll = ({
     fetchActivePoll = false,
@@ -26,8 +27,14 @@ const BudgetDiscussionPoll = ({
     proposalAuthorUsername,
     poll,
 }) => {
-    const { user, setLoading, setOpenUsernameModal, walletAPI } =
-        useAppContext();
+    const {
+        user,
+        setLoading,
+        setOpenUsernameModal,
+        walletAPI,
+        addSuccessAlert,
+        addErrorAlert,
+    } = useAppContext();
     const [userPollVote, setUserPollVote] = useState(null);
     const [showChangeVoteModal, setShowChangeVoteModal] = useState(false);
     const [showDrepVotersDialog, setShowDrepVotersDialog] = useState(false);
@@ -87,15 +94,24 @@ const BudgetDiscussionPoll = ({
                     if (fetchActivePoll) {
                         fetchActivePoll();
                     }
+
+                    addSuccessAlert(
+                        `Voted ${vote ? 'yes' : 'no'} successfully.`
+                    );
                 } else {
+                    addErrorAlert(
+                        'dRepID is not available in authorization token.'
+                    );
                     throw new Error(
                         'dRepID is not available in authorization token.'
                     );
                 }
             } else {
+                addErrorAlert('Authorization token not available.');
                 throw new Error('Authorization token not available.');
             }
         } catch (error) {
+            addErrorAlert('Failed to submit vote.');
             console.error(error);
         }
     };
@@ -120,7 +136,11 @@ const BudgetDiscussionPoll = ({
                 fetchActivePoll();
             }
             toggleChangeVoteModal();
+            addSuccessAlert(
+                `Voted ${userPollVote?.attributes?.vote_result ? 'no' : 'yes'} successfully.`
+            );
         } catch (error) {
+            addErrorAlert('Failed to submit vote.');
             console.error(error);
         } finally {
             setLoading(false);

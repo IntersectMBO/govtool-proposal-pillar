@@ -34,6 +34,7 @@ import { cleanObject } from '../../lib/helpers';
 import { useAppContext } from '../../context/context';
 import { useLocation } from 'react-router-dom';
 import BudgetDiscussionInfo from '../BudgetDiscussionParts/BudgetDiscussionInfo';
+import { add } from 'date-fns';
 
 const CreateBudgetDiscussionDialog = ({
     open = false,
@@ -43,7 +44,8 @@ const CreateBudgetDiscussionDialog = ({
     const location = useLocation();
     const navigate = useNavigate();
     const theme = useTheme();
-    const { setLoading } = useAppContext();
+    const { setLoading, addChangesSavedAlert, addSuccessAlert } =
+        useAppContext();
     const [step, setStep] = useState(1);
     const [budgetDiscussionData, setBudgetDiscussionData] = useState({
         // bd_contact_information: {},
@@ -179,6 +181,9 @@ const CreateBudgetDiscussionDialog = ({
             navigate(
                 `/budget_discussion/${current_bd_id ? current_bd_id : newBD?.master_id}`
             );
+            current_bd_id
+                ? addChangesSavedAlert()
+                : addSuccessAlert('Budget proposal created successfully');
             // if (
             //     !(
             //         budgetDiscussionData?.proposal_id &&

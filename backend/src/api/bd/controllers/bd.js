@@ -20,85 +20,101 @@ async function getLastOldVersion(oldVerId) {
 module.exports = createCoreController("api::bd.bd", ({ strapi }) => ({
   async create(ctx) {
     try {
-      const user = ctx.state.user;
-      if (!user) return ctx.unauthorized("Unknown user");
+		const user = ctx.state.user;
+		if (!user) return ctx.unauthorized('Unknown user');
 
-      const { data } = ctx.request.body;
-      if (!data.privacy_policy) {
-        return ctx.badRequest("Privacy policy must be accepted");
-      }
+		const { data } = ctx.request.body;
+		if (!data.privacy_policy) {
+			return ctx.badRequest('Privacy policy must be accepted');
+		}
 
-      const savedEntities = {};
+		const savedEntities = {};
 
-      // BD-PSAPB
-      if (data.bd_psapb) {
-        savedEntities.bd_psapb = await strapi.entityService.create(
-          "api::bd-psapb.bd-psapb",
-          {
-            data: data.bd_psapb,
-          }
-        );
-      }
+		// BD-PSAPB
+		if (data.bd_psapb) {
+			savedEntities.bd_psapb = await strapi.entityService.create(
+				'api::bd-psapb.bd-psapb',
+				{
+					data: data.bd_psapb,
+				}
+			);
+		}
 
-      // BD-Costing
-      if (data.bd_costing) {
-        savedEntities.bd_costing = await strapi.entityService.create(
-          "api::bd-costing.bd-costing",
-          {
-            data: data.bd_costing,
-          }
-        );
-      }
+		// BD-Costing
+		if (data.bd_costing) {
+			savedEntities.bd_costing = await strapi.entityService.create(
+				'api::bd-costing.bd-costing',
+				{
+					data: data.bd_costing,
+				}
+			);
+		}
 
-      // BD-Proposal-Details
-      if (data.bd_proposal_detail) {
-        savedEntities.bd_proposal_detail = await strapi.entityService.create(
-          "api::bd-proposal-detail.bd-proposal-detail",
-          {
-            data: data.bd_proposal_detail,
-          }
-        );
-      }
+		// BD-Proposal-Details
+		if (data.bd_proposal_detail) {
+			savedEntities.bd_proposal_detail =
+				await strapi.entityService.create(
+					'api::bd-proposal-detail.bd-proposal-detail',
+					{
+						data: data.bd_proposal_detail,
+					}
+				);
+		}
 
-      // BD-Proposal-Ownership
-      if (data.bd_proposal_ownership) {
-        savedEntities.bd_proposal_ownership = await strapi.entityService.create(
-          "api::bd-proposal-ownership.bd-proposal-ownership",
-          {
-            data: data.bd_proposal_ownership,
-          }
-        );
-      }
+		// BD-Proposal-Ownership
+		if (data.bd_proposal_ownership) {
+			savedEntities.bd_proposal_ownership =
+				await strapi.entityService.create(
+					'api::bd-proposal-ownership.bd-proposal-ownership',
+					{
+						data: data.bd_proposal_ownership,
+					}
+				);
+		}
 
-      // BD-Contact-Information
-      if (data.bd_contact_information) {
-        savedEntities.bd_contact_information =
-          await strapi.entityService.create(
-            "api::bd-contact-information.bd-contact-information",
-            {
-              data: data.bd_contact_information,
-            }
-          );
-      }
+		// BD-Contact-Information
+		if (data.bd_contact_information) {
+			savedEntities.bd_contact_information =
+				await strapi.entityService.create(
+					'api::bd-contact-information.bd-contact-information',
+					{
+						data: data.bd_contact_information,
+					}
+				);
+		}
 
-      //BD-Further-Information
-      if (data.bd_further_information) {
-        const furtherInfoData = { ...data.bd_further_information };
-        if (furtherInfoData.proposal_links) {
-          savedEntities.bd_further_information =
-            await strapi.entityService.create(
-              "api::bd-further-information.bd-further-information",
-              {
-                data: furtherInfoData,
-              }
-            );
-        }
-      }
+		//BD-Further-Information
+		if (data.bd_further_information) {
+			const furtherInfoData = { ...data.bd_further_information };
+			if (furtherInfoData.proposal_links) {
+				savedEntities.bd_further_information =
+					await strapi.entityService.create(
+						'api::bd-further-information.bd-further-information',
+						{
+							data: furtherInfoData,
+						}
+					);
+			}
+		}
 
-      let latestVersionId = null;
+		let latestVersionId = null;
 
-      if (data?.master_id) {
+		if (data?.master_id) {
 			latestVersionId = await getLastOldVersion(data?.master_id);
+
+			// Get latest proposal version
+			const latestProposal = await strapi.entityService.findOne(
+				'api::bd.bd',
+				latestVersionId,
+				{
+					populate: ['creator'],
+				}
+			);
+
+			// Check if proposal creator is same as logged in user
+			if (latestProposal?.creator?.id !== user.id) {
+				return ctx.unauthorized('Unauthorized');
+			}
 		}
 
 		const mainEntryData = {
@@ -181,8 +197,8 @@ module.exports = createCoreController("api::bd.bd", ({ strapi }) => ({
 			});
 		}
 
-      return createdEntry;
-    } catch (error) {
+		return createdEntry;
+	} catch (error) {
       console.log(error);
       strapi.log.error("FULL CREATE ERROR:", {
         message: error.message,
