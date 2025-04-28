@@ -96,68 +96,90 @@ module.exports = createCoreController("api::bd.bd", ({ strapi }) => ({
       }
 
       let latestVersionId = null;
-      console.log(data);
+
       if (data?.master_id) {
-        latestVersionId = await getLastOldVersion(data?.master_id);
-      }
+			latestVersionId = await getLastOldVersion(data?.master_id);
+		}
 
-      const mainEntryData = {
-        privacy_policy: data.privacy_policy,
-        intersect_named_administrator:
-          data.intersect_named_administrator || false,
-        intersect_admin_further_text: data.intersect_admin_further_text || null,
-        creator: user.id,
-        bd_psapb: savedEntities.bd_psapb?.id || null,
-        bd_costing: savedEntities.bd_costing?.id || null,
-        bd_proposal_detail: savedEntities.bd_proposal_detail?.id || null,
-        bd_proposal_ownership: savedEntities.bd_proposal_ownership?.id || null,
-        bd_contact_information:
-          savedEntities.bd_contact_information?.id || null,
-        bd_further_information:
-          savedEntities.bd_further_information?.id || null,
-      };
+		const mainEntryData = {
+			privacy_policy: data.privacy_policy,
+			intersect_named_administrator:
+				data.intersect_named_administrator || false,
+			intersect_admin_further_text:
+				data.intersect_admin_further_text || null,
+			creator: user.id,
+			bd_psapb: savedEntities.bd_psapb?.id || null,
+			bd_costing: savedEntities.bd_costing?.id || null,
+			bd_proposal_detail: savedEntities.bd_proposal_detail?.id || null,
+			bd_proposal_ownership:
+				savedEntities.bd_proposal_ownership?.id || null,
+			bd_contact_information:
+				savedEntities.bd_contact_information?.id || null,
+			bd_further_information:
+				savedEntities.bd_further_information?.id || null,
+		};
 
-      const createdEntry = await strapi.entityService.create("api::bd.bd", {
-        data: mainEntryData,
-        populate: {
-          bd_psapb: true,
-          bd_costing: true,
-          bd_proposal_detail: true,
-          bd_proposal_ownership: true,
-          bd_contact_information: true,
-          bd_further_information: {
-            populate: ["proposal_links"],
-          },
-          creator: true,
-        },
-      });
+		let createdEntry = await strapi.entityService.create('api::bd.bd', {
+			data: mainEntryData,
+			populate: {
+				bd_psapb: true,
+				bd_costing: true,
+				bd_proposal_detail: true,
+				bd_proposal_ownership: true,
+				bd_contact_information: true,
+				bd_further_information: {
+					populate: ['proposal_links'],
+				},
+				creator: true,
+			},
+		});
 
-      if (latestVersionId) {
-        await strapi.entityService.update("api::bd.bd", latestVersionId, {
-          data: { is_active: false },
-        });
+		if (latestVersionId) {
+			await strapi.entityService.update('api::bd.bd', latestVersionId, {
+				data: { is_active: false },
+			});
 
-        const latestVersionProposalData = await strapi.entityService.findOne(
-          "api::bd.bd",
-          latestVersionId
-        );
-        await strapi.entityService.update("api::bd.bd", createdEntry?.id, {
-          data: {
-            prop_comments_number:
-              latestVersionProposalData?.prop_comments_number || 0,
-            master_id: latestVersionProposalData?.master_id || "",
-          },
-        });
-      } else {
-        await strapi.entityService.update("api::bd.bd", createdEntry?.id, {
-          data: {
-            master_id: createdEntry?.id?.toString(),
-          },
-        });
-        await strapi.entityService.create("api::bd-poll.bd-poll", {
-          data: { bd_proposal_id: createdEntry.id.toString() },
-        });
-      }
+			const latestVersionProposalData =
+				await strapi.entityService.findOne(
+					'api::bd.bd',
+					latestVersionId
+				);
+			let updatedEntry = await strapi.entityService.update(
+				'api::bd.bd',
+				createdEntry?.id,
+				{
+					data: {
+						prop_comments_number:
+							latestVersionProposalData?.prop_comments_number ||
+							0,
+						master_id: latestVersionProposalData?.master_id || '',
+					},
+				}
+			);
+			if (updatedEntry?.id) {
+				createdEntry.prop_comments_number =
+					latestVersionProposalData?.prop_comments_number || 0;
+				createdEntry.master_id =
+					latestVersionProposalData?.master_id || '';
+			}
+		} else {
+			let updatedBd = await strapi.entityService.update(
+				'api::bd.bd',
+				createdEntry?.id,
+				{
+					data: {
+						master_id: createdEntry?.id?.toString(),
+					},
+				}
+			);
+
+			if (updatedBd?.id) {
+				createdEntry.master_id = createdEntry?.id?.toString();
+			}
+			await strapi.entityService.create('api::bd-poll.bd-poll', {
+				data: { bd_proposal_id: createdEntry.id.toString() },
+			});
+		}
 
       return createdEntry;
     } catch (error) {
