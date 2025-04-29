@@ -172,7 +172,7 @@ components:
               type: string
             comment_text:
               type: string
-              maximum: 2500
+              maximum: 15000
     CommentListResponseDataItem:
       type: object
       properties:

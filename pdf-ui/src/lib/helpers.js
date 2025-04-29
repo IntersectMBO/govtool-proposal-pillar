@@ -4,6 +4,7 @@ import {
     getDataFromSession,
     utf8ToHex,
     clearSession,
+    decodeJWT,
 } from '../lib/utils';
 
 export const loginUserToApp = async ({
@@ -22,6 +23,48 @@ export const loginUserToApp = async ({
     try {
         if (!isDRep) {
             if (getDataFromSession('pdfUserJwt')) {
+                const jwt = decodeJWT(); // Get JWT from session
+
+                if (jwt?.stakeKey) {
+                    // Check wallet stake key and jwt stake key
+                    if (wallet) {
+                        if (jwt.stakeKey !== wallet?.stakeKey) {
+                            clearStates();
+                            clearSession();
+                            return;
+                        }
+                    } else {
+                        clearStates();
+                        clearSession();
+                        return;
+                    }
+                } else {
+                    clearStates();
+                    clearSession();
+                    return;
+                }
+
+                if (jwt?.dRepID) {
+                    // Check wallet stake key and jwt stake key
+                    if (wallet) {
+                        if (wallet.dRepID) {
+                            if (jwt.dRepID !== wallet?.dRepID) {
+                                clearStates();
+                                clearSession();
+                                return;
+                            }
+                        } else {
+                            clearStates();
+                            clearSession();
+                            return;
+                        }
+                    } else {
+                        clearStates();
+                        clearSession();
+                        return;
+                    }
+                }
+
                 const loggedInUser = await getLoggedInUserInfo();
                 setUser({
                     user: {

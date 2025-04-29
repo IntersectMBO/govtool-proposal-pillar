@@ -60,7 +60,7 @@ import ReactMarkdown from 'react-markdown';
 import { loginUserToApp } from '../../../lib/helpers';
 
 const SingleGovernanceAction = ({ id }) => {
-    const MAX_COMMENT_LENGTH = 2500;
+    const MAX_COMMENT_LENGTH = 15000;
     const navigate = useNavigate();
     const openLink = (link) => openInNewTab(link);
 
