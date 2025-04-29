@@ -60,7 +60,7 @@ import ReactMarkdown from 'react-markdown';
 import { loginUserToApp } from '../../../lib/helpers';
 
 const SingleGovernanceAction = ({ id }) => {
-    const MAX_COMMENT_LENGTH = 2500;
+    const MAX_COMMENT_LENGTH = 15000;
     const navigate = useNavigate();
     const openLink = (link) => openInNewTab(link);
 
@@ -71,6 +71,9 @@ const SingleGovernanceAction = ({ id }) => {
         setUser,
         walletAPI,
         clearStates,
+        addSuccessAlert,
+        addErrorAlert,
+        addChangesSavedAlert,
     } = useAppContext();
 
     const theme = useTheme();
@@ -620,6 +623,12 @@ const SingleGovernanceAction = ({ id }) => {
                                                                             ),
                                                                     clearStates:
                                                                         clearStates,
+                                                                    addErrorAlert:
+                                                                        addErrorAlert,
+                                                                    addSuccessAlert:
+                                                                        addSuccessAlert,
+                                                                    addChangesSavedAlert:
+                                                                        addChangesSavedAlert,
                                                                 }
                                                             )
                                                         }

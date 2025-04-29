@@ -84,7 +84,7 @@ module.exports = (plugin) => {
 		}
 
 		if (provider === 'local') {
-			const { identifier, signedData } = params;
+			const { identifier, signedMessage } = params;
 
 			let userInfo = ctx?.state?.user;
 
@@ -92,27 +92,96 @@ module.exports = (plugin) => {
 				throw new ValidationError('identifier was not provided');
 			}
 
-			if (!signedData) {
+			if (!signedMessage) {
 				throw new ValidationError('signData object was not provided');
 			}
 
-			const decoded = COSESign1.from_bytes(
-				Buffer.from(signedData.signature, 'hex')
+			if (!signedMessage?.expectedSignedMessage) {
+				throw new ValidationError(
+					'Payload was not provided in signData object.'
+				);
+			}
+
+			if (!signedMessage?.signature) {
+				throw new ValidationError(
+					'Signature was not provided in signData object.'
+				);
+			}
+
+			if (!signedMessage?.key) {
+				throw new ValidationError(
+					'Key was not provided in signData object.'
+				);
+			}
+
+			const expectedSignedMessage = signedMessage?.expectedSignedMessage;
+
+			const nonceMatch = expectedSignedMessage?.match(/Nonce:\s*(\w+)/);
+			const timestampMatch =
+				expectedSignedMessage?.match(/Timestamp:\s*(\d+)/);
+
+			const nonce = nonceMatch?.[1];
+			const timestamp = parseInt(timestampMatch?.[1], 10);
+			if (!nonce || !timestamp) {
+				throw new ValidationError(
+					'Invalid expectedSignedMessage format'
+				);
+			}
+
+			const challenge = await strapi.db
+				.query('api::auth-challenge.auth-challenge')
+				.findOne({
+					where: { identifier, nonce },
+				});
+
+			if (!challenge) {
+				throw new ApplicationError('Challenge not found');
+			}
+
+			if (Date.now() > new Date(challenge?.expiresAt).getTime()) {
+				// Clean up challenge
+				await strapi.db
+					.query('api::auth-challenge.auth-challenge')
+					.delete({ where: { id: challenge.id } });
+
+				throw new ValidationError('Challenge expired');
+			}
+
+			if (expectedSignedMessage !== challenge?.message) {
+				throw new ValidationError(
+					'expectedSignedMessage does not match original challenge message'
+				);
+			}
+
+			const receivedCOSESig = COSESign1.from_bytes(
+				Buffer.from(signedMessage.signature, 'hex')
 			);
-			const key = COSEKey.from_bytes(Buffer.from(signedData.key, 'hex'));
-			const pubKeyBytes = key
+			const receivedCOSEKey = COSEKey.from_bytes(
+				Buffer.from(signedMessage.key, 'hex')
+			);
+			const receivedPublicKeyBytes = receivedCOSEKey
 				.header(Label.new_int(Int.new_negative(BigNum.from_str('2'))))
 				.as_bytes();
-			const publicKey = PublicKey.from_bytes(pubKeyBytes);
-			const signature = Ed25519Signature.from_bytes(decoded.signature());
-			const receivedData = decoded.signed_data().to_bytes();
+			const receivedPublicKey = PublicKey.from_bytes(
+				receivedPublicKeyBytes
+			);
+			const receivedSignature = Ed25519Signature.from_bytes(
+				receivedCOSESig.signature()
+			);
+			const receivedMessageBytes = receivedCOSESig
+				.signed_data()
+				.to_bytes();
 
-			// Remove network id from identifier
-			const rawKeyHash = userInfo ? identifier : identifier.slice(2);
+			// Remove network id from identifier, if included
+			const expectedKeyHash = userInfo ? identifier : identifier.slice(2);
 
+			// Check the received key hash matches the received signature
+			// and check that the received key hash matches the expected key hash
 			const isVerified =
-				publicKey.verify(receivedData, signature) &&
-				rawKeyHash === publicKey.hash().to_hex();
+				receivedPublicKey.verify(
+					receivedMessageBytes,
+					receivedSignature
+				) && expectedKeyHash === receivedPublicKey.hash().to_hex();
 
 			if (!isVerified) {
 				throw new ApplicationError('Verification failed');
@@ -217,6 +286,11 @@ module.exports = (plugin) => {
 					}
 				);
 
+				// Clean up challenge
+				await strapi.db
+					.query('api::auth-challenge.auth-challenge')
+					.delete({ where: { id: challenge.id } });
+
 				return ctx.send({
 					status: 'Authenticated',
 					jwt: issueJWT(
@@ -260,6 +334,11 @@ module.exports = (plugin) => {
 						sameSite: 'Lax',
 					}
 				);
+
+				// Clean up challenge
+				await strapi.db
+					.query('api::auth-challenge.auth-challenge')
+					.delete({ where: { id: challenge.id } });
 
 				return ctx.send({
 					status: 'Authenticated',

@@ -68,6 +68,9 @@
     },
     "intersect_admin_further_text": {
       "type": "text"
+    },
+    "master_id": {
+      "type": "string"
     }
   }
 }

@@ -25,23 +25,41 @@ import {
     CardContent,
     Stack,
     alpha,
+    Radio,
 } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { getBudgetDiscussionTypes } from '../../lib/api';
 import {
     CreateBudgetDiscussionDialog,
     BudgetDiscussionsList,
+    SearchInput,
 } from '../../components';
 import { useAppContext } from '../../context/context';
 import { loginUserToApp } from '../../lib/helpers';
 import { useLocation } from 'react-router-dom';
-import { ScrollToTop } from '../../lib/hooks';
+import { ScrollToTop, useDebounce } from '../../lib/hooks';
+
+let proposalsOwnersList = [{ id: 'all-proposals', label: 'All Proposals' }];
 
 const ProposedBudgetDiscussion = () => {
     const location = useLocation();
     const theme = useTheme();
-    const { user, walletAPI, setOpenUsernameModal, setUser, clearStates } =
-        useAppContext();
+    const {
+        user,
+        walletAPI,
+        setOpenUsernameModal,
+        setUser,
+        clearStates,
+        addSuccessAlert,
+        addErrorAlert,
+        addChangesSavedAlert,
+    } = useAppContext();
+
+    const defaultOwnerFilterId = 'all-proposals';
+    const defaultOwnerFilter = proposalsOwnersList?.find(
+        (f) => f?.id === defaultOwnerFilterId
+    );
+
     const [budgetDiscussionSearchText, setBudgetDiscussionSearchText] =
         useState('');
     const [sortType, setSortType] = useState('desc');
@@ -52,6 +70,9 @@ const ProposedBudgetDiscussion = () => {
         filteredBudgetDiscussionTypeList,
         setFilteredBudgetDiscussionTypeList,
     ] = useState([]);
+    const [proposalsOwnerFilter, setProposalsOwnerFilter] =
+        useState(defaultOwnerFilter); // All proposals as default
+
     const [showCreateBDDialog, setShowCreateBDDialog] = useState(false);
     const [
         filteredBudgetDiscussionStatusList,
@@ -101,9 +122,25 @@ const ProposedBudgetDiscussion = () => {
         setFilteredBudgetDiscussionTypeList(updatedList);
     };
 
+    const toggleProposalsOwnersFilter = (e) => {
+        const propOwnerFilterId = e?.target?.value?.toString();
+        let propOwnerFilter = proposalsOwnersList?.find(
+            (f) => f?.id?.toString() === propOwnerFilterId
+        );
+
+        if (propOwnerFilter) {
+            setProposalsOwnerFilter(propOwnerFilter);
+        }
+    };
+
     const resetFilters = () => {
         setFilteredBudgetDiscussionTypeList([]);
         handleCloseFilters();
+        setShowAllActivated({
+            is_activated: false,
+            bd_type: null,
+        });
+        setProposalsOwnerFilter(defaultOwnerFilter);
     };
 
     useEffect(() => {
@@ -150,6 +187,23 @@ const ProposedBudgetDiscussion = () => {
 
     const showNoProposals = allEmptyMatchBudget || allFilteredAreEmpty;
 
+    useEffect(() => {
+        if (user?.user?.id) {
+            if (proposalsOwnersList?.find((f) => f?.id === 'my-proposals'))
+                return;
+            proposalsOwnersList?.push({
+                id: 'my-proposals',
+                label: 'My Proposals',
+            });
+        } else {
+            if (proposalsOwnersList?.find((f) => f?.id === 'my-proposals')) {
+                proposalsOwnersList = proposalsOwnersList.filter(
+                    (f) => f?.id === 'my-proposals'
+                );
+            }
+        }
+    }, [user?.user?.id]);
+
     return (
         <Box sx={{ mt: 3 }}>
             <ScrollToTop step={showAllActivated?.is_activated} />
@@ -184,9 +238,9 @@ const ProposedBudgetDiscussion = () => {
                                             bd_type: null,
                                         });
                                     }}
-                                    data-testid='back-to-budget-discussion-button'
+                                    data-testid='back-to-budget-proposals-button'
                                 >
-                                    Back to Budget Discussion
+                                    Back to Budget Proposals
                                 </Button>
                             </Grid>
                         )}
@@ -204,6 +258,10 @@ const ProposedBudgetDiscussion = () => {
                                             callBackFn: () =>
                                                 setShowCreateBDDialog(true),
                                             clearStates: clearStates,
+                                            addErrorAlert: addErrorAlert,
+                                            addSuccessAlert: addSuccessAlert,
+                                            addChangesSavedAlert:
+                                                addChangesSavedAlert,
                                         })
                                     }
                                     startIcon={<IconPlusCircle fill='white' />}
@@ -215,47 +273,11 @@ const ProposedBudgetDiscussion = () => {
                         )}
 
                         <Grid item md={6} sx={{ flexGrow: { xs: 1 } }}>
-                            <TextField
-                                fullWidth
-                                id='outlined-basic'
-                                placeholder='Search...'
-                                variant='outlined'
-                                value={budgetDiscussionSearchText || ''}
-                                onChange={(e) =>
-                                    setBudgetDiscussionSearchText(
-                                        e.target.value
-                                    )
+                            <SearchInput
+                                onDebouncedChange={
+                                    setBudgetDiscussionSearchText
                                 }
-                                InputProps={{
-                                    startAdornment: (
-                                        <InputAdornment position='start'>
-                                            <IconSearch
-                                                color={
-                                                    theme.palette.primary.icons
-                                                        .black
-                                                }
-                                                width={24}
-                                                height={24}
-                                            />
-                                        </InputAdornment>
-                                    ),
-                                }}
-                                inputProps={{
-                                    'data-testid': 'search-input',
-                                }}
-                                sx={{
-                                    '.MuiOutlinedInput-root': {
-                                        borderRadius: 100,
-                                        backgroundColor: 'white',
-                                        input: {
-                                            '&::placeholder': {
-                                                color: (theme) =>
-                                                    theme.palette.text.grey,
-                                                opacity: 1,
-                                            },
-                                        },
-                                    },
-                                }}
+                                placeholder='Search...'
                             />
                         </Grid>
                         <Grid item>
@@ -307,6 +329,7 @@ const ProposedBudgetDiscussion = () => {
                                             sx: {
                                                 overflow: 'visible',
                                                 mt: 1,
+                                                minWidth: '300px',
                                             },
                                         },
                                     }}
@@ -328,7 +351,7 @@ const ProposedBudgetDiscussion = () => {
                                                         mb: 1,
                                                     }}
                                                 >
-                                                    Budget Discussion types
+                                                    Budget categories
                                                 </Typography>
                                                 <Divider
                                                     sx={{
@@ -412,6 +435,95 @@ const ProposedBudgetDiscussion = () => {
                                                 )}
                                             </Box>
                                         )}
+                                        <Typography
+                                            variant='body1'
+                                            sx={{
+                                                mb: 1,
+                                            }}
+                                        >
+                                            Proposals owners
+                                        </Typography>
+                                        <Divider
+                                            sx={{
+                                                color: (theme) => ({
+                                                    borderColor:
+                                                        theme.palette.border
+                                                            .lightGray,
+                                                }),
+                                            }}
+                                        />
+
+                                        {proposalsOwnersList?.map(
+                                            (ga, index) => (
+                                                <MenuItem
+                                                    key={`${ga?.id}-${index}`}
+                                                    selected={
+                                                        proposalsOwnerFilter?.id ===
+                                                        ga?.id
+                                                    }
+                                                    id={`${ga?.id}-radio-wrapper`}
+                                                    data-testid={
+                                                        ga?.label
+                                                            ?.replace(
+                                                                /\s+/g,
+                                                                '-'
+                                                            )
+                                                            ?.toLowerCase() +
+                                                        `-radio-wrapper`
+                                                    }
+                                                    onClick={
+                                                        toggleProposalsOwnersFilter
+                                                    }
+                                                    sx={{ width: '100%' }}
+                                                >
+                                                    <FormControlLabel
+                                                        name='owner-filter'
+                                                        control={
+                                                            <Radio
+                                                                checked={
+                                                                    proposalsOwnerFilter?.id ===
+                                                                    ga?.id
+                                                                }
+                                                            />
+                                                        }
+                                                        id={`${ga?.label}-radio`}
+                                                        data-testid={
+                                                            ga?.label
+                                                                ?.replace(
+                                                                    /\s+/g,
+                                                                    '-'
+                                                                )
+                                                                ?.toLowerCase() +
+                                                            `-radio`
+                                                        }
+                                                        sx={{
+                                                            width: '100%',
+                                                            marginRight: 0,
+                                                        }}
+                                                        value={ga?.id}
+                                                        label={
+                                                            <Typography
+                                                                data-testid={`${ga?.label}-owner-filter-option`}
+                                                                color={
+                                                                    'text.black'
+                                                                }
+                                                                variant='body1'
+                                                                sx={{
+                                                                    width: '100%',
+                                                                    overflowX:
+                                                                        'hidden',
+                                                                    textOverflow:
+                                                                        'ellipsis',
+                                                                }}
+                                                            >
+                                                                {ga?.label}
+                                                            </Typography>
+                                                        }
+                                                    />
+                                                </MenuItem>
+                                            )
+                                        )}
+
                                         <MenuItem
                                             onClick={() => resetFilters()}
                                             data-testid='reset-filters'
@@ -460,8 +572,8 @@ const ProposedBudgetDiscussion = () => {
                                 >
                                     Sort:{' '}
                                     {sortType === 'desc'
-                                        ? 'Last modified (desc)'
-                                        : 'Last modified (asc)'}
+                                        ? 'Newest first'
+                                        : 'Oldest first'}
                                 </Button>
                             </Box>
                         </Grid>
@@ -479,7 +591,7 @@ const ProposedBudgetDiscussion = () => {
                     >
                         <BudgetDiscussionsList
                             currentBudgetDiscussionType={item}
-                            searchText={budgetDiscussionSearchText}
+                            searchText={budgetDiscussionSearchText?.trim()}
                             sortType={sortType}
                             statusList={filteredBudgetDiscussionStatusList}
                             setShowAllActivated={setShowAllActivated}
@@ -491,6 +603,7 @@ const ProposedBudgetDiscussion = () => {
                             filteredBudgetDiscussionTypeList={
                                 filteredBudgetDiscussionTypeList
                             }
+                            proposalOwnerFilter={proposalsOwnerFilter}
                         />
                     </Box>
                 ))}

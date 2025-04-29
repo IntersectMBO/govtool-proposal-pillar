@@ -23,6 +23,7 @@ import { getBudgetDiscussionDrafts, getBudgetDiscussions } from '../../lib/api';
 import { settings } from '../../lib/carouselSettings';
 import { useTheme } from '@emotion/react';
 import { BudgetDiscussionsCard } from '..';
+import { useAppContext } from '../../context/context';
 
 const BudgetDiscussionsList = ({
     currentBudgetDiscussionType = null,
@@ -37,6 +38,7 @@ const BudgetDiscussionsList = ({
     isAllProposalsListEmpty,
     setIsAllProposalsListEmpty,
     filteredBudgetDiscussionTypeList,
+    proposalOwnerFilter = null,
 }) => {
     const theme = useTheme();
     const sliderRef = useRef(null);
@@ -46,12 +48,14 @@ const BudgetDiscussionsList = ({
     const [pageCount, setPageCount] = useState(0);
     const [currentPage, setCurrentPage] = useState(1);
     const [mounted, setMounted] = useState(false);
-    const debouncedSearchValue = useDebounce(searchText.trim());
+    const debouncedSearchValue = searchText;
     const [shouldRefresh, setShouldRefresh] = useState(false);
     const isXs = useMediaQuery(theme.breakpoints.only('xs'));
     const isSm = useMediaQuery(theme.breakpoints.only('sm'));
     const isMd = useMediaQuery(theme.breakpoints.only('md'));
     const isLg = useMediaQuery(theme.breakpoints.only('lg'));
+
+    const { user } = useAppContext();
 
     let extraBoxes = 0;
 
@@ -81,7 +85,7 @@ const BudgetDiscussionsList = ({
                     currentBudgetDiscussionType?.id
                 }&filters[$and][2][bd_proposal_detail][proposal_name][$containsi]=${
                     debouncedSearchValue || ''
-                }&pagination[page]=${page}&pagination[pageSize]=25&sort[createdAt]=${
+                }${proposalOwnerFilter?.id === 'all-proposals' ? '' : user?.user?.id ? '&filters[$and][3][creator]=' + user?.user?.id : ''}&pagination[page]=${page}&pagination[pageSize]=25&sort[createdAt]=${
                     sortType
                 }&populate[0]=bd_costing&populate[1]=bd_psapb.type_name&populate[2]=bd_proposal_detail&populate[3]=creator`;
                 const { budgetDiscussions, pgCount, total } =
@@ -116,6 +120,7 @@ const BudgetDiscussionsList = ({
         isDraft ? null : statusList,
         showAllActivated,
         currentBudgetDiscussionType,
+        proposalOwnerFilter?.id,
     ]);
 
     useEffect(() => {
@@ -210,11 +215,18 @@ const BudgetDiscussionsList = ({
                                         }));
                                     }
                                 }}
-                                data-testid={isDraft?'draft-show-all-button':
-                                    (currentBudgetDiscussionType?.attributes?.type_name ==
-                                    'None of these'
-                                        ? 'no-category-show-all-button'
-                                        : currentBudgetDiscussionType?.attributes?.type_name.replace(/\s+/g, '-').toLowerCase() +'-show-all-button')}
+                                data-testid={
+                                    isDraft
+                                        ? 'draft-show-all-button'
+                                        : currentBudgetDiscussionType
+                                                ?.attributes?.type_name ==
+                                            'None of these'
+                                          ? 'no-category-show-all-button'
+                                          : currentBudgetDiscussionType?.attributes?.type_name
+                                                .replace(/\s+/g, '-')
+                                                .toLowerCase() +
+                                            '-show-all-button'
+                                }
                             >
                                 {setShowAllActivated
                                     ? setShowAllActivated?.is_activated

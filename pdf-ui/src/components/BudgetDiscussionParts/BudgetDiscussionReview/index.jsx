@@ -25,6 +25,8 @@ import {
 import { StepperActionButtons } from '../../BudgetDiscussionParts';
 import ReactMarkdown from 'react-markdown';
 import { correctVoteAdaFormat } from '../../../lib/utils';
+import MarkdownTypography from '../../../lib/markdownRenderer';
+import { useTheme } from '@emotion/react';
 
 const BudgetDiscussionReview = ({
     setStep,
@@ -39,6 +41,7 @@ const BudgetDiscussionReview = ({
     errors,
     setErrors,
 }) => {
+    const theme = useTheme();
     const [allCountries, setAllCountries] = useState([]);
     const [allCurrencyList, setAllCurrencyList] = useState([]);
     const [allRoadMaps, setAllRoadMaps] = useState([]);
@@ -56,70 +59,10 @@ const BudgetDiscussionReview = ({
                 <Typography variant='caption' gutterBottom>
                     {question}
                 </Typography>
-                <div data-testid={answerTestId}>
-                    <ReactMarkdown
-                        components={{
-                            p(props) {
-                                const { children } = props;
-                                return (
-                                    <Typography
-                                        variant='body1'
-                                        style={{
-                                            wordWrap: 'break-word',
-                                        }}
-                                    >
-                                        {children}
-                                    </Typography>
-                                );
-                            },
-                            ul(props) {
-                                const { children } = props;
-                                return (
-                                    <ul
-                                        style={{
-                                            display: 'block',
-                                            'list-style-type': 'disc',
-                                            'margin-block-start': '1em',
-                                            'margin-block-end': '1em',
-                                            'margin-inline-start': '0px',
-                                            'margin-inline-end': '0px',
-                                            'padding-inline-start': '40px',
-                                            'unicode-bidi': 'isolate',
-                                        }}
-                                    >
-                                        {children}
-                                    </ul>
-                                );
-                            },
-                            li(props) {
-                                const { children } = props;
-                                return (
-                                    <li>
-                                        <Typography
-                                            variant='body1'
-                                            component='span'
-                                            style={{ wordWrap: 'break-word' }}
-                                        >
-                                            {children}
-                                        </Typography>
-                                    </li>
-                                );
-                            },
-                        }}
-                    >
-                        {answer?.toString() || '-'}
-                    </ReactMarkdown>
-                </div>
-                {/* <Typography
-                    variant='body1'
-                    gutterBottom
-                    data-testid={answerTestId}
-                    sx={{
-                        mb: 2,
-                    }}
-                >
-                    {answer || '-'}
-                </Typography> */}
+                <MarkdownTypography
+                    content={answer}
+                    testId={`${answerTestId}`}
+                />
             </Box>
         );
     };
@@ -132,6 +75,7 @@ const BudgetDiscussionReview = ({
                 confidentiality_description: '',
             });
     }, [currentBudgetDiscussionData]);
+
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -170,6 +114,7 @@ const BudgetDiscussionReview = ({
         };
         fetchData();
     }, []);
+
     return (
         <Box display='flex' flexDirection='column'>
             <Box>
@@ -463,7 +408,17 @@ const BudgetDiscussionReview = ({
                                         }
                                         answerTestId={'roadmap-content'}
                                     />
-
+                                    {currentBudgetDiscussionData?.bd_psapb
+                                            ?.explain_proposal_roadmap?
+                                    <InfoSection
+                                        question='Please explain how your proposal supports the Product Roadmap.'
+                                        answer={
+                                            currentBudgetDiscussionData?.bd_psapb
+                                            ?.explain_proposal_roadmap || ''
+                                        }
+                                        answerTestId={'explain-roadmap-content'}
+                                    />
+                                    :''}
                                     <InfoSection
                                         question='Does your proposal align to any of the
                                         budget categories?'
@@ -781,7 +736,7 @@ const BudgetDiscussionReview = ({
                             nextStep={step + 1}
                             backStep={step - 1}
                             showSaveDraft={
-                                !currentBudgetDiscussionData?.old_ver
+                                !currentBudgetDiscussionData?.master_id
                             }
                         />
                     </CardContent>

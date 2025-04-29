@@ -1,9 +1,10 @@
-import { loginUser, getLoggedInUserInfo } from '../lib/api';
+import { loginUser, getLoggedInUserInfo, getChallenge } from '../lib/api';
 import {
     saveDataInSession,
     getDataFromSession,
     utf8ToHex,
     clearSession,
+    decodeJWT,
 } from '../lib/utils';
 
 export const loginUserToApp = async ({
@@ -15,16 +16,62 @@ export const loginUserToApp = async ({
     clearStates,
     setPDFUsername,
     isDRep = false,
+    addErrorAlert,
+    addSuccessAlert,
+    addChangesSavedAlert,
 }) => {
     try {
         if (!isDRep) {
             if (getDataFromSession('pdfUserJwt')) {
+                const jwt = decodeJWT(); // Get JWT from session
+
+                if (jwt?.stakeKey) {
+                    // Check wallet stake key and jwt stake key
+                    if (wallet) {
+                        if (jwt.stakeKey !== wallet?.stakeKey) {
+                            clearStates();
+                            clearSession();
+                            return;
+                        }
+                    } else {
+                        clearStates();
+                        clearSession();
+                        return;
+                    }
+                } else {
+                    clearStates();
+                    clearSession();
+                    return;
+                }
+
+                if (jwt?.dRepID) {
+                    // Check wallet stake key and jwt stake key
+                    if (wallet) {
+                        if (wallet.dRepID) {
+                            if (jwt.dRepID !== wallet?.dRepID) {
+                                clearStates();
+                                clearSession();
+                                return;
+                            }
+                        } else {
+                            clearStates();
+                            clearSession();
+                            return;
+                        }
+                    } else {
+                        clearStates();
+                        clearSession();
+                        return;
+                    }
+                }
+
                 const loggedInUser = await getLoggedInUserInfo();
                 setUser({
                     user: {
                         ...loggedInUser,
                     },
                 });
+                !callBackFn && addSuccessAlert('Successfully logged in.');
 
                 if (loggedInUser && !loggedInUser?.govtool_username) {
                     setOpenUsernameModal({
@@ -44,22 +91,29 @@ export const loginUserToApp = async ({
             } else {
                 if (trigerSignData) {
                     const keyToSign = wallet?.stakeKey;
-                    const messageUtf = `To proceed, please sign this data to verify your identity. This ensures that the action is secure and confirms your identity. Timestamp: ${new Date()?.getTime()}`;
-                    const messageHex = utf8ToHex(messageUtf);
+                    const challengeRes = await getChallenge({
+                        query: `?identifier=${keyToSign}`,
+                    });
+                    const { message } = challengeRes;
+                    const messageHex = utf8ToHex(message);
 
-                    const signedData = await wallet?.cip95.signData(
+                    const signedMessage = await wallet?.cip95.signData(
                         keyToSign,
                         messageHex
                     );
 
                     const userResponse = await loginUser({
                         identifier: keyToSign,
-                        signedData: signedData,
+                        signedMessage: {
+                            ...signedMessage,
+                            expectedSignedMessage: message,
+                        },
                     });
 
                     if (!userResponse) return;
                     saveDataInSession('pdfUserJwt', userResponse?.jwt);
                     setUser(userResponse);
+                    addSuccessAlert('Successfully signed data with stake key.');
 
                     if (userResponse && !userResponse?.user?.govtool_username) {
                         setOpenUsernameModal({
@@ -84,22 +138,29 @@ export const loginUserToApp = async ({
         } else {
             if (trigerSignData) {
                 const keyToSign = wallet?.dRepID;
-                const messageUtf = `To proceed, please sign this data to verify your dRep identity. This ensures that the action is secure and confirms your identity. Timestamp: ${new Date()?.getTime()}`;
-                const messageHex = utf8ToHex(messageUtf);
+                const challengeRes = await getChallenge({
+                    query: `?identifier=${keyToSign}`,
+                });
+                const { message } = challengeRes;
+                const messageHex = utf8ToHex(message);
 
-                const signedData = await wallet?.cip95.signData(
+                const signedMessage = await wallet?.cip95.signData(
                     keyToSign,
                     messageHex
                 );
 
                 const userResponse = await loginUser({
                     identifier: keyToSign,
-                    signedData: signedData,
+                    signedMessage: {
+                        ...signedMessage,
+                        expectedSignedMessage: message,
+                    },
                 });
 
                 if (!userResponse) return;
                 saveDataInSession('pdfUserJwt', userResponse?.jwt);
                 setUser(userResponse);
+                addSuccessAlert('Successfully signed data with dRep key.');
 
                 if (userResponse && !userResponse?.user?.govtool_username) {
                     setOpenUsernameModal({
@@ -121,6 +182,11 @@ export const loginUserToApp = async ({
         }
     } catch (error) {
         console.error(error);
+        let errorMessage = 'Something went wrong';
+        if (error?.response?.data?.error?.message) {
+            errorMessage = error?.response?.data?.error?.message;
+        }
+        addErrorAlert(errorMessage);
         clearStates();
         clearSession();
     }

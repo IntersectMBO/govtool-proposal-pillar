@@ -11,7 +11,7 @@ export const loginUser = async (loginData) => {
         );
         return data;
     } catch (error) {
-        console.error(error);
+        throw error;
     }
 };
 export const getProposals = async (query = '') => {
@@ -572,6 +572,17 @@ export const updateUser = async (updateData) => {
 export const getRefreshToken = async () => {
     try {
         const data = await axiosWithCookies.post(`/api/token/refresh`, {});
+        return data.data;
+    } catch (error) {
+        throw error;
+    }
+};
+
+export const getChallenge = async ({ query = '' }) => {
+    try {
+        const data = await axiosInstance.get(`/api/auth/challenge${query}`, {
+            withCredentials: true,
+        });
         return data.data;
     } catch (error) {
         throw error;
