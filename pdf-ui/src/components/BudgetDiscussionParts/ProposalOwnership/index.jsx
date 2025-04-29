@@ -431,10 +431,10 @@ const ProposalOwnership = ({
                             <FormControlLabel
                                 control={
                                     <Checkbox
-                                        checked={
+                                        checked={Boolean(
                                             currentBudgetDiscussionData
                                                 ?.bd_proposal_ownership?.agreed
-                                        }
+                                        )}
                                         onChange={(e) =>
                                             handleDataChange(e, 'agreed')
                                         }
@@ -458,9 +458,9 @@ const ProposalOwnership = ({
                             nextStep={step + 1}
                             backStep={step - 1}
                             errors={errors}
-                            showBack={!currentBudgetDiscussionData?.old_ver}
+                            showBack={!currentBudgetDiscussionData?.master_id}
                             showSaveDraft={
-                                !currentBudgetDiscussionData?.old_ver
+                                !currentBudgetDiscussionData?.master_id
                             }
                         />
                     </CardContent>

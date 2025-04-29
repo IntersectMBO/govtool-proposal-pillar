@@ -23,7 +23,7 @@
     },
     "comment_text": {
       "type": "text",
-      "maxLength": 2500
+      "maxLength": 15000
     },
     "comments_reports": {
       "type": "relation",

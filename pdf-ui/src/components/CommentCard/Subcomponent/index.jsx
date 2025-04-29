@@ -5,7 +5,8 @@ import CommentReportPopup from '../../CommentReportPopup';
 import { isCommentRestricted } from '../../../lib/helpers';
 import { formatDateWithOffset } from '../../../lib/utils';
 import UsernameSection from '../UsernameSection';
-const Subcomponent = ({ comment }) => {
+import MarkdownTypography from '../../../lib/markdownRenderer';
+const Subcomponent = ({ comment, handleMarkdownLinkClick }) => {
     const { fetchDRepVotingPowerList } = useAppContext();
     const [drepData, setDrepData] = useState({});
     const [showReportCommentPopup, setShowReportCommentPopup] = useState(false);
@@ -135,7 +136,37 @@ const Subcomponent = ({ comment }) => {
                         </Box>
                     </Box>
                 </Box>
-                <Typography
+                {isCommentRestricted(comment) === true ? (
+                    <Typography
+                        variant='body2'
+                        sx={{
+                            maxWidth: '100%',
+                            wordWrap: 'break-word',
+                            whiteSpace: 'pre-line',
+                        }}
+                        data-testid={`comment-${comment?.id}-content`}
+                    >
+                        Restricted comment due to reports
+                    </Typography>
+                ) : null}
+
+                {isCommentRestricted(comment) === false ? (
+                    <MarkdownTypography
+                        content={
+                            isExpanded
+                                ? comment?.attributes?.comment_text
+                                : sliceString(
+                                      comment?.attributes?.comment_text
+                                  ) || ''
+                        }
+                        testId={`reply-${comment?.id}-content`}
+                        onLinkClick={(href, e) =>
+                            handleMarkdownLinkClick &&
+                            handleMarkdownLinkClick(href, e)
+                        }
+                    />
+                ) : null}
+                {/* <Typography
                     variant='body2'
                     data-testid={`reply-${comment?.id}-content`}
                     sx={{
@@ -150,7 +181,7 @@ const Subcomponent = ({ comment }) => {
                             : sliceString(comment?.attributes?.comment_text) ||
                               ''
                         : 'Restricted comment due to reports'}
-                </Typography>
+                </Typography> */}
 
                 {comment?.attributes?.comment_text?.length > maxLength && (
                     <Box mt={2}>

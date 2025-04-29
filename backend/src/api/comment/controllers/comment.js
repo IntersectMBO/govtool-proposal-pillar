@@ -1,25 +1,25 @@
 // @ts-nocheck
 "use strict";
-const jwt = require('jsonwebtoken');
+const jwt = require("jsonwebtoken");
 
 /**
  * comment controller
  */
 
 const verifyJWT = (token) => {
-	return new Promise(function (resolve, reject) {
-		jwt.verify(
-			token,
-			process.env.JWT_SECRET,
-			{},
-			function (err, tokenPayload = {}) {
-				if (err) {
-					return reject(new Error('Invalid token.'));
-				}
-				resolve(tokenPayload);
-			}
-		);
-	});
+  return new Promise(function (resolve, reject) {
+    jwt.verify(
+      token,
+      process.env.JWT_SECRET,
+      {},
+      function (err, tokenPayload = {}) {
+        if (err) {
+          return reject(new Error("Invalid token."));
+        }
+        resolve(tokenPayload);
+      }
+    );
+  });
 };
 
 const { createCoreController } = require("@strapi/strapi").factories;
@@ -30,13 +30,12 @@ module.exports = createCoreController("api::comment.comment", ({ strapi }) => ({
     const user = ctx?.state?.user;
 
     let token = await verifyJWT(
-		ctx?.request?.header?.authorization?.split(' ')[1]
-	);
+      ctx?.request?.header?.authorization?.split(" ")[1]
+    );
 
-	if (!user) {
-		return ctx.badRequest(null, 'User is required');
-	}
-
+    if (!user) {
+      return ctx.badRequest(null, "User is required");
+    }
 
     let comment;
     const deleteComment = async () => {
@@ -51,13 +50,13 @@ module.exports = createCoreController("api::comment.comment", ({ strapi }) => ({
     };
 
     try {
-      comment = await strapi.entityService.create('api::comment.comment', {
-			data: {
-				...data,
-				drep_id: token?.dRepID,
-				user_id: user?.id?.toString(),
-			},
-		});
+      comment = await strapi.entityService.create("api::comment.comment", {
+        data: {
+          ...data,
+          drep_id: token?.dRepID,
+          user_id: user?.id?.toString(),
+        },
+      });
 
       if (!comment) {
         return ctx.badRequest(null, "Comment not created");
@@ -83,10 +82,18 @@ module.exports = createCoreController("api::comment.comment", ({ strapi }) => ({
 
       if (data?.bd_proposal_id) {
         try {
-          proposal = await strapi.entityService.findOne(
+          const proposalsData = await strapi.entityService.findMany(
             "api::bd.bd",
-            data?.bd_proposal_id
+            {
+              filters: {
+                master_id: data?.bd_proposal_id,
+              },
+              sort: "createdAt:desc",
+              limit: 1,
+            }
           );
+
+          proposal = proposalsData[0];
 
           if (!proposal) {
             comment && (await deleteComment());
@@ -114,7 +121,7 @@ module.exports = createCoreController("api::comment.comment", ({ strapi }) => ({
         if (data?.bd_proposal_id) {
           updatedProposal = await strapi.entityService.update(
             "api::bd.bd",
-            data?.bd_proposal_id,
+            proposal?.id,
             {
               data: {
                 prop_comments_number: proposal?.prop_comments_number + 1,
@@ -203,10 +210,10 @@ module.exports = createCoreController("api::comment.comment", ({ strapi }) => ({
       }
 
       if (user?.is_validated) {
-			comment.user_is_validated = user?.is_validated;
-		} else {
-			comment.user_is_validated = false;
-		}
+        comment.user_is_validated = user?.is_validated;
+      } else {
+        comment.user_is_validated = false;
+      }
 
       comment.subcommens_number = subcommentsCount;
 

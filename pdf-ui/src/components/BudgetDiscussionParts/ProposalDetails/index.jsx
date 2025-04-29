@@ -541,7 +541,7 @@ const ProposalDetails = ({
                                     : { ...errors }
                             }
                             showSaveDraft={
-                                !currentBudgetDiscussionData?.old_ver
+                                !currentBudgetDiscussionData?.master_id
                             }
                         />
                     </CardContent>

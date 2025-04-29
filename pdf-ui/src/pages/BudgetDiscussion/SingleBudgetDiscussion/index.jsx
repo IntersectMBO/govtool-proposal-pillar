@@ -27,7 +27,7 @@ import {
     alpha,
 } from '@mui/material';
 import { useEffect, useState, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import {
     CommentCard,
     BudgetDiscussionPoll,
@@ -53,12 +53,18 @@ import ProposalOwnModal from '../../../components/ProposalOwnModal';
 import BudgetDiscussionReviewVersions from '../../../components/BudgetDiscussionReviewVersions';
 
 const SingleBudgetDiscussion = ({ id }) => {
-    const MAX_COMMENT_LENGTH = 2500;
+    const MAX_COMMENT_LENGTH = 15000;
     const navigate = useNavigate();
     const openLink = (link) => openInNewTab(link);
 
-    const { user, setLoading, setOpenUsernameModal, walletAPI } =
-        useAppContext();
+    const {
+        user,
+        setLoading,
+        setOpenUsernameModal,
+        walletAPI,
+        addErrorAlert,
+        addSuccessAlert,
+    } = useAppContext();
 
     const theme = useTheme();
     const [proposal, setProposal] = useState(null);
@@ -78,6 +84,23 @@ const SingleBudgetDiscussion = ({ id }) => {
     const [showCreateBDDialog, setShowCreateBDDialog] = useState(false);
     const [refetchProposal, setRefetchProposal] = useState(false);
     const [allCountries, setAllCountries] = useState([]);
+    const [hoveredSection, setHoveredSection] = useState(null);
+
+    function copyToClipboard(value) {
+        navigator.clipboard.writeText(value);
+    }
+
+    const handleSectionEnter = (sectionId) => {
+        setHoveredSection(sectionId);
+    };
+
+    const handleSectionLeave = () => {
+        setHoveredSection(null);
+    };
+
+    const handleToggleSection = (sectionId) => {
+        setHoveredSection(hoveredSection === sectionId ? null : sectionId);
+    };
 
     // Read More / Show Less logic
     const [showFullText, setShowFullText] = useState(false);
@@ -165,8 +188,14 @@ const SingleBudgetDiscussion = ({ id }) => {
 
             handleCloseDeleteModal();
             navigate('/budget_discussion');
+            addSuccessAlert('Proposal deleted successfully');
         } catch (error) {
+            let errorMessage = 'Failed to delete proposal';
+            if (error?.response?.data?.error?.message) {
+                errorMessage = error?.response?.data?.error?.message;
+            }
             console.error('Failed to delete proposal:', error);
+            addErrorAlert(errorMessage);
         } finally {
             setLoading(false);
         }
@@ -228,7 +257,9 @@ const SingleBudgetDiscussion = ({ id }) => {
             setNewCommentText('');
             fetchProposal(id);
             fetchComments(1);
+            addSuccessAlert('Commented successfully');
         } catch (error) {
+            addErrorAlert('Failed to comment');
             console.error(error);
         } finally {
             setLoading(false);
@@ -262,7 +293,7 @@ const SingleBudgetDiscussion = ({ id }) => {
 
     const fetchActivePoll = async () => {
         try {
-            const query = `filters[$and][0][bd_proposal_id][$eq]=${proposal?.id}&filters[$and][1][is_poll_active]=true&pagination[page]=1&pagination[pageSize]=1&sort[createdAt]=desc`;
+            const query = `filters[$and][0][bd_proposal_id][$eq]=${id}&filters[$and][1][is_poll_active]=true&pagination[page]=1&pagination[pageSize]=1&sort[createdAt]=desc`;
             const { polls, pgCount, total } = await getBudgetDiscussionPoll({
                 query: query,
             });
@@ -280,7 +311,7 @@ const SingleBudgetDiscussion = ({ id }) => {
             fetchProposal(id);
             fetchComments(1);
         }
-    }, [id, mounted]);
+    }, [id, mounted, openEditDialog]);
 
     useEffect(() => {
         if (mounted && refetchProposal) {
@@ -299,6 +330,33 @@ const SingleBudgetDiscussion = ({ id }) => {
         fetchActivePoll();
     }, [proposal]);
 
+    const location = useLocation();
+
+    useEffect(() => {
+        const sectionId = location?.hash;
+        if (sectionId) {
+            setShowFullText(true);
+            setTimeout(() => {
+                const section = document?.getElementById(sectionId);
+
+                if (section) {
+                    const rect = section?.getBoundingClientRect();
+                    const offsetTop = rect.top + window.scrollY - 20;
+
+                    const header = document?.querySelector('header');
+                    const headerHeight = header ? header?.offsetHeight : 80;
+
+                    window.scrollTo({
+                        top: offsetTop - headerHeight,
+                        behavior: 'smooth',
+                    });
+                } else {
+                    setShowFullText(false);
+                }
+            }, 200);
+        }
+    }, [location?.hash]);
+
     return !proposal ? null : proposal?.attributes?.content?.attributes
           ?.is_draft ? null : (
         <>
@@ -307,7 +365,7 @@ const SingleBudgetDiscussion = ({ id }) => {
                     <CreateBudgetDiscussionDialog
                         open={openEditDialog}
                         onClose={() => setOpenEditDialog(false)}
-                        current_bd_id={proposal?.id}
+                        current_bd_id={proposal?.attributes?.master_id}
                     />
                 ) : (
                     <Box>
@@ -756,7 +814,10 @@ const SingleBudgetDiscussion = ({ id }) => {
                                                 onClose={
                                                     handleCloseReviewVersions
                                                 }
-                                                id={proposal?.id}
+                                                id={
+                                                    proposal?.attributes
+                                                        ?.master_id
+                                                }
                                             />
                                         </Box>
                                     </Box>
@@ -769,9 +830,44 @@ const SingleBudgetDiscussion = ({ id }) => {
                                             variant='h5'
                                             sx={{
                                                 mb: 2,
+                                                position: 'relative',
                                             }}
+                                            onClick={() =>
+                                                handleToggleSection(
+                                                    'problem-ownership'
+                                                )
+                                            }
+                                            onMouseEnter={() =>
+                                                handleSectionEnter(
+                                                    'problem-ownership'
+                                                )
+                                            }
+                                            onMouseLeave={handleSectionLeave}
+                                            id='#problem-ownership'
                                         >
                                             Proposal Ownership
+                                            {hoveredSection ===
+                                            'problem-ownership' ? (
+                                                <IconButton
+                                                    sx={{
+                                                        ml: 1,
+                                                        position: 'absolute',
+                                                        top: '50%',
+                                                        transform:
+                                                            'translateY(-50%)',
+                                                    }}
+                                                    onClick={() =>
+                                                        copyToClipboard(
+                                                            `${proposalLink}${proposal?.attributes?.master_id}#problem-ownership`
+                                                        )
+                                                    }
+                                                >
+                                                    <IconLink
+                                                        width={20}
+                                                        height={20}
+                                                    />
+                                                </IconButton>
+                                            ) : null}
                                         </Typography>
 
                                         {/* <BudgetDiscussionInfoSegment
@@ -786,88 +882,100 @@ const SingleBudgetDiscussion = ({ id }) => {
                                             }
                                             answerTestId='public-proposal-champion'
                                         /> */}
-                                    {proposal?.attributes
-                                        ?.bd_proposal_ownership?.data?.attributes
-                                        ?.submited_on_behalf === 'Company' ? (
-                                        <Box>
-                                            <BudgetDiscussionInfoSegment
-                                                question='Company Name'
-                                                answer={
-                                                    proposal?.attributes
-                                                        ?.bd_proposal_ownership?.data?.attributes
-                                                        ?.company_name || ''
-                                                }
-                                                answerTestId='company-name-content'
-                                            />
+                                        {proposal?.attributes
+                                            ?.bd_proposal_ownership?.data
+                                            ?.attributes?.submited_on_behalf ===
+                                        'Company' ? (
+                                            <Box>
+                                                <BudgetDiscussionInfoSegment
+                                                    question='Company Name'
+                                                    answer={
+                                                        proposal?.attributes
+                                                            ?.bd_proposal_ownership
+                                                            ?.data?.attributes
+                                                            ?.company_name || ''
+                                                    }
+                                                    answerTestId='company-name-content'
+                                                />
 
-                                            <BudgetDiscussionInfoSegment
-                                                question='Company Domain Name'
-                                                answer={
-                                                    proposal?.attributes
-                                                        ?.bd_proposal_ownership?.data?.attributes
-                                                        ?.company_domain_name ||
-                                                    ''
-                                                }
-                                                answerTestId='company-domain-name-content'
-                                            />
-                                            <BudgetDiscussionInfoSegment
-                                                question='Country of Incorporation'
-                                                answer={
-                                                    allCountries.find(
-                                                        (country) =>
-                                                            country.id ===
-                                                        proposal?.attributes.bd_proposal_ownership.data.attributes.be_country.data.id
-                                                    )?.attributes
-                                                        ?.country_name ||
-                                                    'Error'
-                                                }
-                                                answerTestId='country-of-incorporation-content'
-                                            />
-                                        </Box>
-                                    ) : (
-                                        ''
-                                    )}
-                                    {proposal?.attributes
-                                        ?.bd_proposal_ownership?.data?.attributes
-                                        ?.submited_on_behalf === 'Group' ? 
-                                        
-                                        
-                                        (
-                                        <Box>
-                                            <BudgetDiscussionInfoSegment
-                                                question='Group Name'
-                                                answer={proposal?.attributes
-                                                        ?.bd_proposal_ownership?.data?.attributes
-                                                        ?.group_name || ''
-                                                }
-                                                answerTestId='group-name-content'
-                                            />
+                                                <BudgetDiscussionInfoSegment
+                                                    question='Company Domain Name'
+                                                    answer={
+                                                        proposal?.attributes
+                                                            ?.bd_proposal_ownership
+                                                            ?.data?.attributes
+                                                            ?.company_domain_name ||
+                                                        ''
+                                                    }
+                                                    answerTestId='company-domain-name-content'
+                                                />
+                                                <BudgetDiscussionInfoSegment
+                                                    question='Country of Incorporation'
+                                                    answer={
+                                                        allCountries.find(
+                                                            (country) =>
+                                                                country.id ===
+                                                                proposal
+                                                                    ?.attributes
+                                                                    .bd_proposal_ownership
+                                                                    .data
+                                                                    .attributes
+                                                                    .be_country
+                                                                    .data.id
+                                                        )?.attributes
+                                                            ?.country_name ||
+                                                        'Error'
+                                                    }
+                                                    answerTestId='country-of-incorporation-content'
+                                                />
+                                            </Box>
+                                        ) : (
+                                            ''
+                                        )}
+                                        {proposal?.attributes
+                                            ?.bd_proposal_ownership?.data
+                                            ?.attributes?.submited_on_behalf ===
+                                        'Group' ? (
+                                            <Box>
+                                                <BudgetDiscussionInfoSegment
+                                                    question='Group Name'
+                                                    answer={
+                                                        proposal?.attributes
+                                                            ?.bd_proposal_ownership
+                                                            ?.data?.attributes
+                                                            ?.group_name || ''
+                                                    }
+                                                    answerTestId='group-name-content'
+                                                />
 
-                                            <BudgetDiscussionInfoSegment
-                                                question='Type of Group'
-                                                answer={
-                                                    proposal?.attributes
-                                                        ?.bd_proposal_ownership?.data?.attributes
-                                                        ?.type_of_group || ''
-                                                }
-                                                answerTestId='group-type-content'
-                                            />
+                                                <BudgetDiscussionInfoSegment
+                                                    question='Type of Group'
+                                                    answer={
+                                                        proposal?.attributes
+                                                            ?.bd_proposal_ownership
+                                                            ?.data?.attributes
+                                                            ?.type_of_group ||
+                                                        ''
+                                                    }
+                                                    answerTestId='group-type-content'
+                                                />
 
-                                            <BudgetDiscussionInfoSegment
-                                                question='Key Information to Identify
+                                                <BudgetDiscussionInfoSegment
+                                                    question='Key Information to Identify
                                                 Group'
-                                                answer={
-                                                    proposal?.attributes
-                                                        ?.bd_proposal_ownership?.data?.attributes
-                                                        ?.key_info_to_identify_group ||
-                                                    ''
-                                                }
-                                                answerTestId='group-identity-information-content'
-                                            />
-                                        </Box>
-                                    ) : (
-                                        ''
-                                    )}
+                                                    answer={
+                                                        proposal?.attributes
+                                                            ?.bd_proposal_ownership
+                                                            ?.data?.attributes
+                                                            ?.key_info_to_identify_group ||
+                                                        ''
+                                                    }
+                                                    answerTestId='group-identity-information-content'
+                                                />
+                                            </Box>
+                                        ) : (
+                                            ''
+                                        )}
                                         <BudgetDiscussionInfoSegment
                                             question={
                                                 'What social handles would you like to be used? E.g. Github, X'
@@ -890,10 +998,45 @@ const SingleBudgetDiscussion = ({ id }) => {
                                             variant='h5'
                                             sx={{
                                                 mb: 2,
+                                                position: 'relative',
                                             }}
+                                            onClick={() =>
+                                                handleToggleSection(
+                                                    'problem-statement'
+                                                )
+                                            }
+                                            onMouseEnter={() =>
+                                                handleSectionEnter(
+                                                    'problem-statement'
+                                                )
+                                            }
+                                            onMouseLeave={handleSectionLeave}
+                                            id='#problem-statement'
                                         >
                                             Problem Statements and Proposal
                                             Benefits
+                                            {hoveredSection ===
+                                            'problem-statement' ? (
+                                                <IconButton
+                                                    sx={{
+                                                        ml: 1,
+                                                        position: 'absolute',
+                                                        top: '50%',
+                                                        transform:
+                                                            'translateY(-50%)',
+                                                    }}
+                                                    onClick={() =>
+                                                        copyToClipboard(
+                                                            `${proposalLink}${proposal?.attributes?.master_id}#problem-statement`
+                                                        )
+                                                    }
+                                                >
+                                                    <IconLink
+                                                        width={20}
+                                                        height={20}
+                                                    />
+                                                </IconButton>
+                                            ) : null}
                                         </Typography>
 
                                         <BudgetDiscussionInfoSegment
@@ -930,7 +1073,25 @@ const SingleBudgetDiscussion = ({ id }) => {
                                             show={showFullText}
                                             answerTestId='product-roadmap'
                                         />
-
+                                        {proposal?.attributes?.bd_psapb?.data
+                                            ?.attributes
+                                            ?.explain_proposal_roadmap ? (
+                                            <BudgetDiscussionInfoSegment
+                                                question='Please explain how your proposal supports the Product Roadmap.'
+                                                answer={
+                                                    proposal?.attributes
+                                                        ?.bd_psapb?.data
+                                                        ?.attributes
+                                                        ?.explain_proposal_roadmap ||
+                                                    ''
+                                                }
+                                                answerTestId={
+                                                    'explain-roadmap-content'
+                                                }
+                                            />
+                                        ) : (
+                                            ''
+                                        )}
                                         <BudgetDiscussionInfoSegment
                                             question={
                                                 'Does your proposal align to any of the budget categories?'
@@ -983,9 +1144,47 @@ const SingleBudgetDiscussion = ({ id }) => {
                                                 variant='h5'
                                                 sx={{
                                                     mb: 2,
+                                                    position: 'relative',
                                                 }}
+                                                onClick={() =>
+                                                    handleToggleSection(
+                                                        'proposal-details'
+                                                    )
+                                                }
+                                                onMouseEnter={() =>
+                                                    handleSectionEnter(
+                                                        'proposal-details'
+                                                    )
+                                                }
+                                                onMouseLeave={
+                                                    handleSectionLeave
+                                                }
+                                                id='#proposal-details'
                                             >
                                                 Proposal Details
+                                                {hoveredSection ===
+                                                'proposal-details' ? (
+                                                    <IconButton
+                                                        sx={{
+                                                            ml: 1,
+                                                            position:
+                                                                'absolute',
+                                                            top: '50%',
+                                                            transform:
+                                                                'translateY(-50%)',
+                                                        }}
+                                                        onClick={() =>
+                                                            copyToClipboard(
+                                                                `${proposalLink}${proposal?.attributes?.master_id}#proposal-details`
+                                                            )
+                                                        }
+                                                    >
+                                                        <IconLink
+                                                            width={20}
+                                                            height={20}
+                                                        />
+                                                    </IconButton>
+                                                ) : null}
                                             </Typography>
 
                                             <BudgetDiscussionInfoSegment
@@ -1105,9 +1304,47 @@ const SingleBudgetDiscussion = ({ id }) => {
                                                 variant='h5'
                                                 sx={{
                                                     mb: 2,
+                                                    position: 'relative',
                                                 }}
+                                                onClick={() =>
+                                                    handleToggleSection(
+                                                        'costing'
+                                                    )
+                                                }
+                                                onMouseEnter={() =>
+                                                    handleSectionEnter(
+                                                        'costing'
+                                                    )
+                                                }
+                                                onMouseLeave={
+                                                    handleSectionLeave
+                                                }
+                                                id='#costing'
                                             >
                                                 Costing
+                                                {hoveredSection ===
+                                                'costing' ? (
+                                                    <IconButton
+                                                        sx={{
+                                                            ml: 1,
+                                                            position:
+                                                                'absolute',
+                                                            top: '50%',
+                                                            transform:
+                                                                'translateY(-50%)',
+                                                        }}
+                                                        onClick={() =>
+                                                            copyToClipboard(
+                                                                `${proposalLink}${proposal?.attributes?.master_id}#costing`
+                                                            )
+                                                        }
+                                                    >
+                                                        <IconLink
+                                                            width={20}
+                                                            height={20}
+                                                        />
+                                                    </IconButton>
+                                                ) : null}
                                             </Typography>
 
                                             <BudgetDiscussionInfoSegment
@@ -1118,7 +1355,7 @@ const SingleBudgetDiscussion = ({ id }) => {
                                                         ?.attributes
                                                         ?.ada_amount || 0
                                                 )}`}
-                                                answerTestId={`consting-amount`}
+                                                answerTestId={`costing-amount`}
                                             />
 
                                             <BudgetDiscussionInfoSegment
@@ -1158,7 +1395,7 @@ const SingleBudgetDiscussion = ({ id }) => {
                                                         ?.amount_in_preferred_currency ||
                                                         0
                                                 )}
-                                                answerTestId={`costing-prefereed-currency-amount`}
+                                                answerTestId={`costing-preferred-currency-amount`}
                                             />
 
                                             <BudgetDiscussionInfoSegment
@@ -1184,9 +1421,47 @@ const SingleBudgetDiscussion = ({ id }) => {
                                                 variant='h5'
                                                 sx={{
                                                     mb: 2,
+                                                    position: 'relative',
                                                 }}
+                                                onClick={() =>
+                                                    handleToggleSection(
+                                                        'further-information'
+                                                    )
+                                                }
+                                                onMouseEnter={() =>
+                                                    handleSectionEnter(
+                                                        'further-information'
+                                                    )
+                                                }
+                                                onMouseLeave={
+                                                    handleSectionLeave
+                                                }
+                                                id='#further-information'
                                             >
                                                 Further information
+                                                {hoveredSection ===
+                                                'further-information' ? (
+                                                    <IconButton
+                                                        sx={{
+                                                            ml: 1,
+                                                            position:
+                                                                'absolute',
+                                                            top: '50%',
+                                                            transform:
+                                                                'translateY(-50%)',
+                                                        }}
+                                                        onClick={() =>
+                                                            copyToClipboard(
+                                                                `${proposalLink}${proposal?.attributes?.master_id}#further-information`
+                                                            )
+                                                        }
+                                                    >
+                                                        <IconLink
+                                                            width={20}
+                                                            height={20}
+                                                        />
+                                                    </IconButton>
+                                                ) : null}
                                             </Typography>
                                             {proposal?.attributes
                                                 ?.bd_further_information?.data
@@ -1270,9 +1545,47 @@ const SingleBudgetDiscussion = ({ id }) => {
                                                 variant='h5'
                                                 sx={{
                                                     mb: 2,
+                                                    position: 'relative',
                                                 }}
+                                                onClick={() =>
+                                                    handleToggleSection(
+                                                        'administrating-and-auditing'
+                                                    )
+                                                }
+                                                onMouseEnter={() =>
+                                                    handleSectionEnter(
+                                                        'administrating-and-auditing'
+                                                    )
+                                                }
+                                                onMouseLeave={
+                                                    handleSectionLeave
+                                                }
+                                                id='#administrating-and-auditing'
                                             >
                                                 Administration and Auditing
+                                                {hoveredSection ===
+                                                'administrating-and-auditing' ? (
+                                                    <IconButton
+                                                        sx={{
+                                                            ml: 1,
+                                                            position:
+                                                                'absolute',
+                                                            top: '50%',
+                                                            transform:
+                                                                'translateY(-50%)',
+                                                        }}
+                                                        onClick={() =>
+                                                            copyToClipboard(
+                                                                `${proposalLink}${proposal?.attributes?.master_id}#administrating-and-auditing`
+                                                            )
+                                                        }
+                                                    >
+                                                        <IconLink
+                                                            width={20}
+                                                            height={20}
+                                                        />
+                                                    </IconButton>
+                                                ) : null}
                                             </Typography>
 
                                             <BudgetDiscussionInfoSegment
