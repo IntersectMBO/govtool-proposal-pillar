@@ -35,5 +35,20 @@ module.exports = {
 			path: '/migration/submissions',
 			handler: 'migration.migrateSubmissions',
 		},
+		{
+			method: 'GET',
+			path: '/migration/proposal-master-id',
+			handler: 'migration.migrateBDProposalsMasterId',
+		},
+		{
+			method: 'GET',
+			path: '/migration/comments-and-poll-master-id',
+			handler: 'migration.migrateCommentsAndPollMasterId',
+		},
+		{
+			method: 'POST',
+			path: '/migration/bd-costing-amounts',
+			handler: 'migration.migrateAmounts',
+		},
 	],
 };

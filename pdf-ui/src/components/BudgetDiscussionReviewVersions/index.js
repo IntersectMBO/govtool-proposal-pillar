@@ -28,7 +28,7 @@ import {
     openInNewTab,
 } from '../../lib/utils';
 import { useEffect, useState } from 'react';
-import { getBudgetDiscussionVersions } from '../../lib/api';
+import { getBudgetDiscussionVersions, getCountryList } from '../../lib/api';
 import BudgetDiscussionInfoSegment from '../BudgetDiscussionInfoSegment';
 
 const BudgetDiscussionReviewVersions = ({ open, onClose, id }) => {
@@ -38,6 +38,7 @@ const BudgetDiscussionReviewVersions = ({ open, onClose, id }) => {
     const [versions, setVersions] = useState(null);
     const [selectedVersion, setSelectedVersion] = useState(null);
     const [openVersionsList, setOpenVersionsList] = useState(false);
+    const [allCountries, setAllCountries] = useState([]);
 
     const isSmallScreen = useMediaQuery((theme) =>
         theme.breakpoints.down('md')
@@ -59,8 +60,20 @@ const BudgetDiscussionReviewVersions = ({ open, onClose, id }) => {
     };
 
     useEffect(() => {
+        const fetchData = async () => {
+            try {
+                if (!allCountries.length) {
+                    const countriesResponse = await getCountryList();
+                    setAllCountries(countriesResponse?.data || []);
+                }
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        };
+
         if (open) {
             fetchVersions();
+            fetchData();
         }
     }, [open]);
 
@@ -406,6 +419,121 @@ const BudgetDiscussionReviewVersions = ({ open, onClose, id }) => {
                                                                         ?.proposal_public_champion
                                                                 }
                                                             /> */}
+                                                            {selectedVersion
+                                                                ?.attributes
+                                                                ?.bd_proposal_ownership
+                                                                ?.data
+                                                                ?.attributes
+                                                                ?.submited_on_behalf ===
+                                                            'Company' ? (
+                                                                <Box>
+                                                                    <BudgetDiscussionInfoSegment
+                                                                        question='Company Name'
+                                                                        answer={
+                                                                            selectedVersion
+                                                                                ?.attributes
+                                                                                ?.bd_proposal_ownership
+                                                                                ?.data
+                                                                                ?.attributes
+                                                                                ?.company_name ||
+                                                                            ''
+                                                                        }
+                                                                        answerTestId='company-name-content'
+                                                                    />
+
+                                                                    <BudgetDiscussionInfoSegment
+                                                                        question='Company Domain Name'
+                                                                        answer={
+                                                                            selectedVersion
+                                                                                ?.attributes
+                                                                                ?.bd_proposal_ownership
+                                                                                ?.data
+                                                                                ?.attributes
+                                                                                ?.company_domain_name ||
+                                                                            ''
+                                                                        }
+                                                                        answerTestId='company-domain-name-content'
+                                                                    />
+                                                                    <BudgetDiscussionInfoSegment
+                                                                        question='Country of Incorporation'
+                                                                        answer={
+                                                                            allCountries?.find(
+                                                                                (
+                                                                                    country
+                                                                                ) =>
+                                                                                    country?.id ===
+                                                                                    selectedVersion
+                                                                                        ?.attributes
+                                                                                        ?.bd_proposal_ownership
+                                                                                        ?.data
+                                                                                        ?.attributes
+                                                                                        ?.be_country
+                                                                                        ?.data
+                                                                                        ?.id
+                                                                            )
+                                                                                ?.attributes
+                                                                                ?.country_name ||
+                                                                            'Error'
+                                                                        }
+                                                                        answerTestId='country-of-incorporation-content'
+                                                                    />
+                                                                </Box>
+                                                            ) : (
+                                                                ''
+                                                            )}
+                                                            {selectedVersion
+                                                                ?.attributes
+                                                                ?.bd_proposal_ownership
+                                                                ?.data
+                                                                ?.attributes
+                                                                ?.submited_on_behalf ===
+                                                            'Group' ? (
+                                                                <Box>
+                                                                    <BudgetDiscussionInfoSegment
+                                                                        question='Group Name'
+                                                                        answer={
+                                                                            selectedVersion
+                                                                                ?.attributes
+                                                                                ?.bd_proposal_ownership
+                                                                                ?.data
+                                                                                ?.attributes
+                                                                                ?.group_name ||
+                                                                            ''
+                                                                        }
+                                                                        answerTestId='group-name-content'
+                                                                    />
+
+                                                                    <BudgetDiscussionInfoSegment
+                                                                        question='Type of Group'
+                                                                        answer={
+                                                                            selectedVersion
+                                                                                ?.attributes
+                                                                                ?.bd_proposal_ownership
+                                                                                ?.data
+                                                                                ?.attributes
+                                                                                ?.type_of_group ||
+                                                                            ''
+                                                                        }
+                                                                        answerTestId='group-type-content'
+                                                                    />
+                                                                    <BudgetDiscussionInfoSegment
+                                                                        question='Key Information to Identify
+                                                                Group'
+                                                                        answer={
+                                                                            selectedVersion
+                                                                                ?.attributes
+                                                                                ?.bd_proposal_ownership
+                                                                                ?.data
+                                                                                ?.attributes
+                                                                                ?.key_info_to_identify_group ||
+                                                                            ''
+                                                                        }
+                                                                        answerTestId='group-identity-information-content'
+                                                                    />
+                                                                </Box>
+                                                            ) : (
+                                                                ''
+                                                            )}
 
                                                             <BudgetDiscussionInfoSegment
                                                                 question={
@@ -419,6 +547,7 @@ const BudgetDiscussionReviewVersions = ({ open, onClose, id }) => {
                                                                         ?.attributes
                                                                         ?.social_handles
                                                                 }
+                                                                answerTestId='social-handles'
                                                             />
                                                         </Box>
 
@@ -451,6 +580,7 @@ const BudgetDiscussionReviewVersions = ({ open, onClose, id }) => {
                                                                         ?.attributes
                                                                         ?.problem_statement
                                                                 }
+                                                                answerTestId='problem-statement'
                                                             />
 
                                                             <BudgetDiscussionInfoSegment
@@ -465,6 +595,7 @@ const BudgetDiscussionReviewVersions = ({ open, onClose, id }) => {
                                                                         ?.attributes
                                                                         ?.proposal_benefit
                                                                 }
+                                                                answerTestId='problem-benefit'
                                                             />
 
                                                             <BudgetDiscussionInfoSegment
@@ -482,8 +613,31 @@ const BudgetDiscussionReviewVersions = ({ open, onClose, id }) => {
                                                                         ?.attributes
                                                                         ?.roadmap_name
                                                                 }
+                                                                answerTestId='product-roadmap'
                                                             />
-
+                                                            {selectedVersion
+                                                                ?.attributes
+                                                                ?.bd_psapb?.data
+                                                                ?.attributes
+                                                                ?.explain_proposal_roadmap ? (
+                                                                <BudgetDiscussionInfoSegment
+                                                                    question='Please explain how your proposal supports the Product Roadmap.'
+                                                                    answer={
+                                                                        selectedVersion
+                                                                            ?.attributes
+                                                                            ?.bd_psapb
+                                                                            ?.data
+                                                                            ?.attributes
+                                                                            ?.explain_proposal_roadmap ||
+                                                                        ''
+                                                                    }
+                                                                    answerTestId={
+                                                                        'explain-roadmap-content'
+                                                                    }
+                                                                />
+                                                            ) : (
+                                                                ''
+                                                            )}
                                                             <BudgetDiscussionInfoSegment
                                                                 question={
                                                                     'Does your proposal align to any of the budget categories?'
@@ -499,6 +653,7 @@ const BudgetDiscussionReviewVersions = ({ open, onClose, id }) => {
                                                                         ?.attributes
                                                                         ?.type_name
                                                                 }
+                                                                answerTestId='budget-discussion-type'
                                                             />
 
                                                             <BudgetDiscussionInfoSegment
@@ -516,6 +671,7 @@ const BudgetDiscussionReviewVersions = ({ open, onClose, id }) => {
                                                                         ?.attributes
                                                                         ?.committee_name
                                                                 }
+                                                                answerTestId='align-proposal-committees'
                                                             />
 
                                                             <BudgetDiscussionInfoSegment
@@ -530,6 +686,7 @@ const BudgetDiscussionReviewVersions = ({ open, onClose, id }) => {
                                                                         ?.attributes
                                                                         ?.supplementary_endorsement
                                                                 }
+                                                                answerTestId='evidence'
                                                             />
                                                         </Box>
 
@@ -559,6 +716,7 @@ const BudgetDiscussionReviewVersions = ({ open, onClose, id }) => {
                                                                         ?.attributes
                                                                         ?.proposal_name
                                                                 }
+                                                                answerTestId='proposal-name'
                                                             />
 
                                                             <BudgetDiscussionInfoSegment
@@ -573,6 +731,7 @@ const BudgetDiscussionReviewVersions = ({ open, onClose, id }) => {
                                                                         ?.attributes
                                                                         ?.proposal_description
                                                                 }
+                                                                answerTestId='proposal-description'
                                                             />
 
                                                             <BudgetDiscussionInfoSegment
@@ -587,8 +746,39 @@ const BudgetDiscussionReviewVersions = ({ open, onClose, id }) => {
                                                                         ?.attributes
                                                                         ?.key_dependencies
                                                                 }
+                                                                answerTestId={`proposal-key-dependencies`}
                                                             />
 
+                                                            <BudgetDiscussionInfoSegment
+                                                                question={
+                                                                    'How will this proposal be maintained and supported after initial development?'
+                                                                }
+                                                                answer={
+                                                                    selectedVersion
+                                                                        ?.attributes
+                                                                        ?.bd_proposal_detail
+                                                                        ?.data
+                                                                        ?.attributes
+                                                                        ?.maintain_and_support
+                                                                }
+                                                                answerTestId={`proposal-maintain-and-support`}
+                                                            />
+                                                            <BudgetDiscussionInfoSegment
+                                                                question='How will this proposal be maintained and
+                                                                supported after initial development?'
+                                                                answer={
+                                                                    selectedVersion
+                                                                        ?.attributes
+                                                                        ?.bd_proposal_detail
+                                                                        ?.data
+                                                                        ?.attributes
+                                                                        ?.maintain_and_support ||
+                                                                    ''
+                                                                }
+                                                                answerTestId={
+                                                                    'maintain-and-support-content'
+                                                                }
+                                                            />
                                                             <BudgetDiscussionInfoSegment
                                                                 question={
                                                                     'Key Proposal Deliverable(s) and Definition of Done: What tangible milestones or outcomes are to be delivered and what will the community ultimately receive?'
@@ -601,6 +791,7 @@ const BudgetDiscussionReviewVersions = ({ open, onClose, id }) => {
                                                                         ?.attributes
                                                                         ?.key_proposal_deliverables
                                                                 }
+                                                                answerTestId={`proposal-milestone`}
                                                             />
 
                                                             <BudgetDiscussionInfoSegment
@@ -615,6 +806,7 @@ const BudgetDiscussionReviewVersions = ({ open, onClose, id }) => {
                                                                         ?.attributes
                                                                         ?.resourcing_duration_estimates
                                                                 }
+                                                                answerTestId={`proposal-resources-&-duration-estimates`}
                                                             />
 
                                                             <BudgetDiscussionInfoSegment
@@ -629,6 +821,7 @@ const BudgetDiscussionReviewVersions = ({ open, onClose, id }) => {
                                                                         ?.attributes
                                                                         ?.experience
                                                                 }
+                                                                answerTestId={`project-experience`}
                                                             />
 
                                                             <BudgetDiscussionInfoSegment
@@ -646,6 +839,7 @@ const BudgetDiscussionReviewVersions = ({ open, onClose, id }) => {
                                                                         ?.attributes
                                                                         ?.contract_type_name
                                                                 }
+                                                                answerTestId={`proposal-contracting`}
                                                             />
                                                         </Box>
 
@@ -676,6 +870,7 @@ const BudgetDiscussionReviewVersions = ({ open, onClose, id }) => {
                                                                         ?.ada_amount ||
                                                                         0
                                                                 )}`}
+                                                                answerTestId={`costing-amount`}
                                                             />
 
                                                             <BudgetDiscussionInfoSegment
@@ -690,6 +885,7 @@ const BudgetDiscussionReviewVersions = ({ open, onClose, id }) => {
                                                                         ?.attributes
                                                                         ?.usd_to_ada_conversion_rate
                                                                 }
+                                                                answerTestId={`costing-conversion-rate`}
                                                             />
 
                                                             <BudgetDiscussionInfoSegment
@@ -707,6 +903,7 @@ const BudgetDiscussionReviewVersions = ({ open, onClose, id }) => {
                                                                         ?.attributes
                                                                         ?.currency_name
                                                                 }
+                                                                answerTestId={`costing-preferred-currency`}
                                                             />
 
                                                             <BudgetDiscussionInfoSegment
@@ -722,6 +919,7 @@ const BudgetDiscussionReviewVersions = ({ open, onClose, id }) => {
                                                                         ?.amount_in_preferred_currency ||
                                                                         0
                                                                 )}
+                                                                answerTestId={`costing-preferred-currency-amount`}
                                                             />
 
                                                             <BudgetDiscussionInfoSegment
@@ -736,6 +934,7 @@ const BudgetDiscussionReviewVersions = ({ open, onClose, id }) => {
                                                                         ?.attributes
                                                                         ?.cost_breakdown
                                                                 }
+                                                                answerTestId={`cost-breakdown`}
                                                             />
                                                         </Box>
 
@@ -862,7 +1061,26 @@ const BudgetDiscussionReviewVersions = ({ open, onClose, id }) => {
                                                                         ? 'Yes'
                                                                         : 'No'
                                                                 }
+                                                                answerTestId={`include-as-auditor`}
                                                             />
+                                                            {selectedVersion
+                                                                ?.attributes
+                                                                ?.intersect_named_administrator ? (
+                                                                ''
+                                                            ) : (
+                                                                <BudgetDiscussionInfoSegment
+                                                                    question='Please provide further information to help inform DReps. Who is the vendor and what services are they providing?'
+                                                                    answer={
+                                                                        selectedVersion
+                                                                            ?.attributes
+                                                                            ?.intersect_admin_further_text ||
+                                                                        ''
+                                                                    }
+                                                                    answerTestId={
+                                                                        'intersect-admin-further-text'
+                                                                    }
+                                                                />
+                                                            )}
                                                         </Box>
                                                     </Box>
                                                 </Box>

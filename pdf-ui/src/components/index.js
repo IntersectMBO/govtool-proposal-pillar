@@ -20,3 +20,4 @@ export { default as CreateBudgetDiscussionDialog } from './CreateBudgetDiscussio
 export { default as BudgetDiscussionsList } from './BudgetDiscussionsList';
 export { default as DrepVotersDialog } from './DrepVotersDialog';
 export { default as BudgetDiscussionsCard } from './BudgetDiscussionCard';
+export { default as SearchInput } from './SearchInput';

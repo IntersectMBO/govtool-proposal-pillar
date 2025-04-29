@@ -1,28 +1,27 @@
 'use strict';
 
 /**
- * bd router
+ * auth-challenge router
  */
 
 const { createCoreRouter } = require('@strapi/strapi').factories;
 
-module.exports = createCoreRouter('api::bd.bd', {
+module.exports = createCoreRouter('api::auth-challenge.auth-challenge', {
 	config: {
 		find: {
 			roles: ['authenticated', 'public'],
 		},
 		create: {
-			roles: ['authenticated'],
+			roles: [],
 		},
 		findOne: {
 			roles: ['authenticated', 'public'],
 		},
 		update: {
-			roles: ['authenticated'],
+			roles: [],
 		},
 		delete: {
-			roles: ['authenticated'],
-			middlewares: ['global::is-bd-owner'],
+			roles: [],
 		},
 	},
 });

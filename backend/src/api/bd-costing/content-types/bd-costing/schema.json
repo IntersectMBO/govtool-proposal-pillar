@@ -12,22 +12,34 @@
   },
   "pluginOptions": {},
   "attributes": {
-    "cost_breakdown": {
-      "type": "text"
-    },
-    "preferred_currency": {
-      "type": "relation",
-      "relation": "oneToOne",
-      "target": "api::bd-currency-list.bd-currency-list"
-    },
-    "ada_amount": {
-      "type": "string"
-    },
-    "amount_in_preferred_currency": {
-      "type": "string"
-    },
-    "usd_to_ada_conversion_rate": {
-      "type": "string"
-    }
+		"cost_breakdown": {
+			"type": "text"
+		},
+		"preferred_currency": {
+			"type": "relation",
+			"relation": "oneToOne",
+			"target": "api::bd-currency-list.bd-currency-list"
+		},
+		"ada_amount": {
+			"type": "string"
+		},
+		"amount_in_preferred_currency": {
+			"type": "string"
+		},
+		"usd_to_ada_conversion_rate": {
+			"type": "string"
+		},
+		"ada_amount_clone": {
+			"type": "float",
+			"default": 0
+		},
+		"amount_in_preferred_currency_clone": {
+			"type": "float",
+			"default": 0
+		},
+		"usd_to_ada_conversion_rate_clone": {
+			"type": "float",
+			"default": 0
+		}
   }
 }

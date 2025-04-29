@@ -34,6 +34,7 @@ import { cleanObject } from '../../lib/helpers';
 import { useAppContext } from '../../context/context';
 import { useLocation } from 'react-router-dom';
 import BudgetDiscussionInfo from '../BudgetDiscussionParts/BudgetDiscussionInfo';
+import { add } from 'date-fns';
 
 const CreateBudgetDiscussionDialog = ({
     open = false,
@@ -43,7 +44,8 @@ const CreateBudgetDiscussionDialog = ({
     const location = useLocation();
     const navigate = useNavigate();
     const theme = useTheme();
-    const { setLoading } = useAppContext();
+    const { setLoading, addChangesSavedAlert, addSuccessAlert } =
+        useAppContext();
     const [step, setStep] = useState(1);
     const [budgetDiscussionData, setBudgetDiscussionData] = useState({
         // bd_contact_information: {},
@@ -67,12 +69,7 @@ const CreateBudgetDiscussionDialog = ({
     };
 
     const [errors, setErrors] = useState({});
-    useEffect(() => {
-        if (current_bd_id !== null && !budgetDiscussionData?.old_ver) {
-            fetchBudgetDiscussion(current_bd_id);
-            setStep(2);
-        }
-    }, []);
+
     const fetchBudgetDiscussion = async (id) => {
         setLoading(true);
         //let query = `populate[0]=creator&populate[1]=bd_costing.preferred_currency&populate[2]=bd_proposal_detail.contract_type_name&populate[3]=bd_further_information.proposal_links&populate[4]=bd_psapb.type_name&populate[5]=bd_psapb.roadmap_name&populate[6]=bd_psapb.committee_name&populate[7]=bd_proposal_ownership.be_country&populate[8]=bd_contact_information.be_nationality&populate[9]=bd_contact_information.be_country_of_res`;
@@ -84,7 +81,7 @@ const CreateBudgetDiscussionDialog = ({
             });
             let newData = cleanObject(response);
 
-            newData.old_ver = id;
+            newData.master_id = id;
             //newData.bd_contact_information.be_country_of_res =
             //    response?.attributes?.bd_contact_information?.data.attributes?.be_country_of_res?.data?.id;
             //newData.bd_contact_information.be_nationality =
@@ -181,7 +178,12 @@ const CreateBudgetDiscussionDialog = ({
             const newBD = await createBudgetDiscussion(budgetDiscussionData);
 
             onClose();
-            navigate(`/budget_discussion/${newBD.id}`);
+            navigate(
+                `/budget_discussion/${current_bd_id ? current_bd_id : newBD?.master_id}`
+            );
+            current_bd_id
+                ? addChangesSavedAlert()
+                : addSuccessAlert('Budget proposal created successfully');
             // if (
             //     !(
             //         budgetDiscussionData?.proposal_id &&
@@ -479,6 +481,13 @@ const CreateBudgetDiscussionDialog = ({
             });
         }
     }, [step]);
+
+    useEffect(() => {
+        if (current_bd_id !== null) {
+            fetchBudgetDiscussion(current_bd_id);
+            setStep(2);
+        }
+    }, [current_bd_id]);
 
     return (
         <Dialog
