@@ -243,14 +243,17 @@ const CommentCard = ({
             e?.preventDefault(); // Do not reload
             setClickedHash(null); // pre reset
             setTimeout(() => {
-                setClickedHash(window?.location?.hash);
+                setClickedHash(window?.location?.hash.slice(1));
             }, 50);
         }
     };
 
     useEffect(() => {
         if (clickedHash) {
-            const section = document?.getElementById(clickedHash);
+            const section = document?.querySelector(
+                `[data-section='${clickedHash}']`
+            );
+
             if (section) {
                 const rect = section?.getBoundingClientRect();
                 const offsetTop = rect.top + window.scrollY - 20;
