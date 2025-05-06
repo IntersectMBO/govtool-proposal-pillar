@@ -51,6 +51,17 @@ import {
 } from '../../../lib/utils';
 import ProposalOwnModal from '../../../components/ProposalOwnModal';
 import BudgetDiscussionReviewVersions from '../../../components/BudgetDiscussionReviewVersions';
+import { useScrollToHashSection } from '../../../lib/hooks';
+
+const SECTIONS = [
+    'problem-statement',
+    'proposal-details',
+    'costing',
+    'further-information',
+    'administrating-and-auditing',
+];
+
+const VISIBLE_SECTIONS = ['problem-ownership']; // Visible on start, without expanding text
 
 const SingleBudgetDiscussion = ({ id }) => {
     const MAX_COMMENT_LENGTH = 15000;
@@ -104,6 +115,14 @@ const SingleBudgetDiscussion = ({ id }) => {
 
     // Read More / Show Less logic
     const [showFullText, setShowFullText] = useState(false);
+    const { sectionRefs, shouldExpand, setShouldExpand } =
+        useScrollToHashSection(SECTIONS, VISIBLE_SECTIONS);
+
+    useEffect(() => {
+        if (shouldExpand) {
+            setShowFullText(true);
+        }
+    }, [shouldExpand]);
 
     const targetRef = useRef();
     const menuRef = useRef();
@@ -331,31 +350,6 @@ const SingleBudgetDiscussion = ({ id }) => {
     }, [proposal]);
 
     const location = useLocation();
-
-    useEffect(() => {
-        const sectionId = location?.hash;
-        if (sectionId) {
-            setShowFullText(true);
-            setTimeout(() => {
-                const section = document?.getElementById(sectionId);
-
-                if (section) {
-                    const rect = section?.getBoundingClientRect();
-                    const offsetTop = rect.top + window.scrollY - 20;
-
-                    const header = document?.querySelector('header');
-                    const headerHeight = header ? header?.offsetHeight : 80;
-
-                    window.scrollTo({
-                        top: offsetTop - headerHeight,
-                        behavior: 'smooth',
-                    });
-                } else {
-                    setShowFullText(false);
-                }
-            }, 200);
-        }
-    }, [location?.hash]);
 
     return !proposal ? null : proposal?.attributes?.content?.attributes
           ?.is_draft ? null : (
@@ -843,7 +837,10 @@ const SingleBudgetDiscussion = ({ id }) => {
                                                 )
                                             }
                                             onMouseLeave={handleSectionLeave}
-                                            id='#problem-ownership'
+                                            data-section='problem-ownership'
+                                            ref={
+                                                sectionRefs['problem-ownership']
+                                            }
                                         >
                                             Proposal Ownership
                                             {hoveredSection ===
@@ -1011,7 +1008,10 @@ const SingleBudgetDiscussion = ({ id }) => {
                                                 )
                                             }
                                             onMouseLeave={handleSectionLeave}
-                                            id='#problem-statement'
+                                            data-section='problem-statement'
+                                            ref={
+                                                sectionRefs['problem-statement']
+                                            }
                                         >
                                             Problem Statements and Proposal
                                             Benefits
@@ -1159,7 +1159,12 @@ const SingleBudgetDiscussion = ({ id }) => {
                                                 onMouseLeave={
                                                     handleSectionLeave
                                                 }
-                                                id='#proposal-details'
+                                                data-section='proposal-details'
+                                                ref={
+                                                    sectionRefs[
+                                                        'proposal-details'
+                                                    ]
+                                                }
                                             >
                                                 Proposal Details
                                                 {hoveredSection ===
@@ -1319,7 +1324,8 @@ const SingleBudgetDiscussion = ({ id }) => {
                                                 onMouseLeave={
                                                     handleSectionLeave
                                                 }
-                                                id='#costing'
+                                                data-section='costing'
+                                                ref={sectionRefs['costing']}
                                             >
                                                 Costing
                                                 {hoveredSection ===
@@ -1436,7 +1442,12 @@ const SingleBudgetDiscussion = ({ id }) => {
                                                 onMouseLeave={
                                                     handleSectionLeave
                                                 }
-                                                id='#further-information'
+                                                data-section='further-information'
+                                                ref={
+                                                    sectionRefs[
+                                                        'further-information'
+                                                    ]
+                                                }
                                             >
                                                 Further information
                                                 {hoveredSection ===
@@ -1560,7 +1571,12 @@ const SingleBudgetDiscussion = ({ id }) => {
                                                 onMouseLeave={
                                                     handleSectionLeave
                                                 }
-                                                id='#administrating-and-auditing'
+                                                data-section='administrating-and-auditing'
+                                                ref={
+                                                    sectionRefs[
+                                                        'administrating-and-auditing'
+                                                    ]
+                                                }
                                             >
                                                 Administration and Auditing
                                                 {hoveredSection ===
@@ -1620,9 +1636,10 @@ const SingleBudgetDiscussion = ({ id }) => {
                                     )}
                                     <Button
                                         variant='text'
-                                        onClick={() =>
-                                            setShowFullText(!showFullText)
-                                        }
+                                        onClick={() => {
+                                            setShowFullText(!showFullText),
+                                                setShouldExpand(!showFullText);
+                                        }}
                                         sx={{
                                             textTransform: 'none',
                                             padding: '0',
