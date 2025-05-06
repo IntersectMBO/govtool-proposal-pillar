@@ -282,6 +282,26 @@ module.exports = createCoreController("api::bd.bd", ({ strapi }) => ({
 				...query,
 			});
 
+		for (const result of results) {
+			if (result?.master_id) {
+				// Check if master_id is not the same as id, if it is not the same fetch proposal by master_id and set master_proposal_created_at to that value
+				if (result?.master_id?.toString() !== result?.id?.toString()) {
+					// fetch proposal it is not in the proposals list because it is not active version
+					let masterProposal = await strapi.entityService.findOne(
+						'api::bd.bd',
+						result?.master_id
+					);
+
+					if (masterProposal) {
+						result.master_proposal_created_at =
+							masterProposal?.createdAt;
+					}
+				} else {
+					result.master_proposal_created_at = result?.createdAt;
+				}
+			}
+		}
+
 		const sanitizedResults = results.map((entity) => {
 			if (entity?.bd_contact_information) {
 				delete entity.bd_contact_information;
