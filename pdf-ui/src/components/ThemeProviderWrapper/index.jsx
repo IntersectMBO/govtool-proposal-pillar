@@ -102,6 +102,49 @@ let theme = createTheme({
                 },
             },
         },
+        MuiDialog: {
+            styleOverrides: {
+              paper: {
+                borderRadius: '28px',
+                boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
+              },
+            },
+          },
+          MuiDialogTitle: {
+            styleOverrides: {
+              root: {
+                padding: '16px',
+                backgroundColor: '#f8f9fa',
+                borderBottom: '1px solid #e9ecef',
+                fontWeight: 'bold',
+                fontSize: '18px',
+                color: '#212529',
+              },
+            },
+          },
+          MuiDialogContent: {
+            styleOverrides: {
+              root: {
+                padding: '20px 16px',
+                selfstretch: 'stretch',
+                fontFamily: 'Poppins',
+                fontSize: '16px',
+                tracking: '0.5px',
+                leading: '150%',
+                lineHeight: '1.5',
+                color: '#506288',
+              },
+            },
+          },
+          MuiDialogActions: {
+            styleOverrides: {
+              root: {
+                padding: '12px 16px',
+                justifyContent: 'flex-end',
+                borderTop: '1px solid #e9ecef',
+              },
+            },
+          },
     },
     typography: {
         fontFamily: [
