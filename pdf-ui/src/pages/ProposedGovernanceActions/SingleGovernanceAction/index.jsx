@@ -10,6 +10,7 @@ import {
     IconReply,
     IconShare,
     IconSort,
+    IconX,
     IconThumbDown,
     IconThumbUp,
     IconTrash,
@@ -31,6 +32,10 @@ import {
     Tooltip,
     Typography,
     alpha,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogContentText,
 } from '@mui/material';
 import { useEffect, useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -54,7 +59,7 @@ import {
     createPoll,
     getPolls,
 } from '../../../lib/api';
-import { formatIsoDate, openInNewTab } from '../../../lib/utils';
+import { correctVoteAdaFormat, formatIsoDate, openInNewTab } from '../../../lib/utils';
 import ProposalOwnModal from '../../../components/ProposalOwnModal';
 import ReactMarkdown from 'react-markdown';
 import { loginUserToApp } from '../../../lib/helpers';
@@ -94,6 +99,7 @@ const SingleGovernanceAction = ({ id }) => {
     const [ownProposalModal, setOwnProposalModal] = useState(false);
     const [unactivePollList, setUnactivePollList] = useState([]);
     const [activePoll, setActivePoll] = useState(null);
+    const [openAlertDialog, setOpenAlertDialog] = useState(false);
 
     const targetRef = useRef();
     const menuRef = useRef();
@@ -193,6 +199,9 @@ const SingleGovernanceAction = ({ id }) => {
         } finally {
             setLoading(false);
         }
+    };
+    const handleAlertDialogClose = () => {
+        setOpenAlertDialog(false);
     };
 
     const fetchProposal = async (id) => {
@@ -617,10 +626,17 @@ const SingleGovernanceAction = ({ id }) => {
                                                                     setOpenUsernameModal:
                                                                         setOpenUsernameModal,
                                                                     callBackFn:
-                                                                        () =>
-                                                                            setOpenGASubmissionDialog(
-                                                                                true
-                                                                            ),
+                                                                        () =>{
+                                                                            let bal = (walletAPI?.voter?.votingPower || 0);
+                                                                            if( bal/1000000 >= 100000.18)
+                                                                            {
+                                                                                setOpenGASubmissionDialog(true)
+                                                                            }
+                                                                            else
+                                                                            {
+                                                                                setOpenAlertDialog(true)
+                                                                            }
+                                                                        },
                                                                     clearStates:
                                                                         clearStates,
                                                                     addErrorAlert:
@@ -2119,7 +2135,33 @@ const SingleGovernanceAction = ({ id }) => {
                     </Box>
                 )}
             </Typography>
+            <Dialog
+                open={openAlertDialog}
+                onClose={handleAlertDialogClose}
+                >
+                <DialogContent>
+                    <Box sx={{display: 'flex',  alignItems: 'center', justifyContent: 'between', width: '100%', marginBottom:'16px'}}>
+                        <Typography variant='h5' fontWeight={600} color='text.black' width={'100%'}>
+                        Insufficient wallet balance
+                        </Typography>
+                        <IconButton   onClick={handleAlertDialogClose}>
+                            <IconX/>
+                        </IconButton>
+                    </Box>
+                <DialogContentText id="alert-dialog-description">
+                
+                    Insufficient wallet balance to submit a Governance Action. 
+                    To submit a Governance Action on-chain, you require a wallet balance of ₳100,000 (refundable deposit) plus a transaction fee of ₳0.18.
+                </DialogContentText>
+                </DialogContent>
+                <DialogActions fullWidth>
+                    <Button onClick={handleAlertDialogClose}  variant='contained' fullWidth autoFocus>
+                        Close
+                    </Button>
+                </DialogActions>
+            </Dialog>
         </>
+        
     );
 };
 
