@@ -467,7 +467,7 @@ const BudgetDiscussionCard = ({
                                     <span data-testid='proposed-date'>
                                         {formatIsoDate(
                                             budgetDiscussion?.attributes
-                                                ?.createdAt
+                                                ?.master_proposal_created_at
                                         )}
                                     </span>
                                 )}
