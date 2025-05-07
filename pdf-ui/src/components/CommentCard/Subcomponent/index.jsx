@@ -50,7 +50,7 @@ const Subcomponent = ({ comment, handleMarkdownLinkClick }) => {
             sx={{
                 position: 'relative',
             }}
-            data-testid={`subcomment-${comment?.id}-content`}
+            // data-testid={`subcomment-${comment?.id}-content`}
         >
             <Box
                 sx={{
@@ -159,7 +159,8 @@ const Subcomponent = ({ comment, handleMarkdownLinkClick }) => {
                                       comment?.attributes?.comment_text
                                   ) || ''
                         }
-                        testId={`reply-${comment?.id}-content`}
+                        // testId={`reply-${comment?.id}-content`}
+                        data-testid={`subcomment-${comment?.id}-content`}
                         onLinkClick={(href, e) =>
                             handleMarkdownLinkClick &&
                             handleMarkdownLinkClick(href, e)
