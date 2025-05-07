@@ -16,7 +16,7 @@ module.exports = ({ env }) => ({
     config: {
       info: { version: "1.0.0" }, // Set the documentation version
       "x-strapi-config": {
-        plugins: [], // Additional plugin configuration (currently empty)
+        plugins: ["users-permissions"], // Additional plugin configuration (currently empty)
       },
     },
   },
