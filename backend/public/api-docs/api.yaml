@@ -40,6 +40,10 @@ info:
     
 openapi: 3.0.0
 tags:
+  - name: Authentication
+    description: User authentication and authorization
+  - name: Users
+    description: User management operations
   - name: Proposal
   - name: Proposal vote
   - name: Comment
@@ -97,6 +101,8 @@ tags:
 x-tagGroups:
   - name: Endpoints
     tags:
+      - Authentication
+      - Users
       - Proposal
       - Proposal content
       - Proposal submition
@@ -108,6 +114,8 @@ x-tagGroups:
       - Wallet type
   - name: Models
     tags:
+      - Authentication
+      - Users
       - proposal_model
       - proposal_content_model
       - proposal_submition_model
@@ -152,6 +160,66 @@ components:
               type: string
             details:
               type: object
+    AuthChallengeResponse:
+      type: object
+      properties:
+        message:
+          type: string
+    AuthLocalRequest:
+      type: object
+      properties:
+        identifier:
+          type: string
+        signedMessage:
+          $ref: '#/components/schemas/SignedMessage'
+          description: Signed message
+    SignedMessage:
+      type: object
+      properties:
+        key:
+          type: string
+        signature:
+          type: string
+        expectedSignedMessage:
+          type: string
+    AuthLocalResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          enum:
+            - Authenticated
+            - Failed
+            - NotFound
+        jwt:
+          type: string
+        user:
+          $ref: '#/components/schemas/User'
+    User:
+      type: object
+      properties:
+        id:
+          type: number | string
+        username:
+          type: string
+        email:
+          type: string
+        provider:
+          type: string
+        confirmed:
+          type: boolean
+        blocked:
+          type: boolean
+        govtool_username:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+        is_validated:
+          type: boolean
     CommentRequest:
       type: object
       required:
@@ -1084,6 +1152,127 @@ components:
         meta:
           type: object
 paths:
+  /auth/challenge:
+    get:
+      security:
+        - none: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthChallengeResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      tags:
+        - Authentication
+      parameters:
+        - name: identifier
+          in: query
+          description: Identifier
+          deprecated: false
+          required: true
+          schema:
+            type: string
+      operationId: get/auth/challenge
+      summary: Get authentication challenge
+      description: |
+        Get authentication challenge
+  /auth/local:
+    post:
+      security:
+        - none: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthLocalResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      tags:
+        - Authentication
+      parameters: []
+      operationId: post/auth/local
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: 
+              $ref: '#/components/schemas/AuthLocalRequest'
+      summary: Login
+  /users/{id}: 
+    put:
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      tags:
+        - Users
+      parameters:         
+        - name: id
+          in: path
+          description: ''
+          deprecated: false
+          required: true
+          schema:
+            type: number
+      operationId: Update user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
   /comments:
     get:
       responses:
