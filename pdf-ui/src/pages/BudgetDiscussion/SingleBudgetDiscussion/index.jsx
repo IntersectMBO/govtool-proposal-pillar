@@ -79,7 +79,6 @@ const SingleBudgetDiscussion = ({ id }) => {
 
     const theme = useTheme();
     const [proposal, setProposal] = useState(null);
-    console.log('🚀 ~ SingleBudgetDiscussion ~ proposal:', proposal);
     const [mounted, setMounted] = useState(false);
     const [commentsList, setCommentsList] = useState([]);
     const [newCommentText, setNewCommentText] = useState('');
@@ -1300,7 +1299,9 @@ const SingleBudgetDiscussion = ({ id }) => {
                                             {proposal?.attributes
                                                 ?.bd_proposal_detail?.data
                                                 ?.attributes?.contract_type_name
-                                                ?.data?.id === 4 && (
+                                                ?.data?.attributes
+                                                ?.contract_type_name ===
+                                                'Other' && (
                                                 <BudgetDiscussionInfoSegment
                                                     question='Please describe what you have in mind.'
                                                     answer={
@@ -1309,7 +1310,7 @@ const SingleBudgetDiscussion = ({ id }) => {
                                                             ?.data?.attributes
                                                             ?.other_contract_type
                                                     }
-                                                    answerTestId={`project-experience`}
+                                                    answerTestId={`other-contract-description`}
                                                 />
                                             )}
                                         </Box>

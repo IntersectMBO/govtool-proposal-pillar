@@ -588,8 +588,9 @@ const BudgetDiscussionReview = ({
                                         }
                                     />
                                     {currentBudgetDiscussionData
-                                        ?.bd_proposal_detail
-                                        ?.contract_type_name === 4 && (
+                                        ?.bd_proposal_detail?.contract_type_name
+                                        .attributes?.contract_type_name ===
+                                        'Other' && (
                                         <InfoSection
                                             question='Please describe what you have in mind.'
                                             answer={
