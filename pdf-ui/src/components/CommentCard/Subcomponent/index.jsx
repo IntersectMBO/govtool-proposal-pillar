@@ -159,8 +159,7 @@ const Subcomponent = ({ comment, handleMarkdownLinkClick }) => {
                                       comment?.attributes?.comment_text
                                   ) || ''
                         }
-                        // testId={`reply-${comment?.id}-content`}
-                        data-testid={`subcomment-${comment?.id}-content`}
+                        testId={`subcomment-${comment?.id}-content`}
                         onLinkClick={(href, e) =>
                             handleMarkdownLinkClick &&
                             handleMarkdownLinkClick(href, e)
