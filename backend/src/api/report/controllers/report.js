@@ -54,8 +54,8 @@ module.exports = {
             ]}
           });
 
-          bd[0].comments = JSON.stringify(allComments);
-          bd[0].votes = JSON.stringify(allVotes);
+          bd[0].comments = JSON.stringify(allComments)||[];
+          bd[0].votes = JSON.stringify(allVotes)||[];
           const votes = allVotes.reduce((acc, vote) => {
             const votingPower = Number(vote.drep_voting_power);
             if (vote.vote_result) {
@@ -75,7 +75,7 @@ module.exports = {
           bd[0].total_yes_voting_power = votes.true || 0;
           bd[0].total_no_votes = votes.no || 0;
           bd[0].total_no_voting_power = votes.false || 0;
-          bd[0].votes = JSON.stringify(allVotes);
+          bd[0].votes = JSON.stringify(allVotes)||[];
           report.push(bd[0]);
         }
       }
