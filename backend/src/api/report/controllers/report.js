@@ -54,8 +54,8 @@ module.exports = {
             ]}
           });
 
-          bd[0].comments = JSON.stringify(allComments)||[];
-          bd[0].votes = JSON.stringify(allVotes)||[];
+          bd[0].comments = allComments? JSON.stringify(allComments):[];
+          bd[0].votes = allVotes?JSON.stringify(allVotes):[];
           const votes = allVotes.reduce((acc, vote) => {
             const votingPower = Number(vote.drep_voting_power);
             if (vote.vote_result) {
