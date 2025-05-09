@@ -409,16 +409,22 @@ const BudgetDiscussionReview = ({
                                         answerTestId={'roadmap-content'}
                                     />
                                     {currentBudgetDiscussionData?.bd_psapb
-                                            ?.explain_proposal_roadmap?
-                                    <InfoSection
-                                        question='Please explain how your proposal supports the Product Roadmap.'
-                                        answer={
-                                            currentBudgetDiscussionData?.bd_psapb
-                                            ?.explain_proposal_roadmap || ''
-                                        }
-                                        answerTestId={'explain-roadmap-content'}
-                                    />
-                                    :''}
+                                        ?.explain_proposal_roadmap ? (
+                                        <InfoSection
+                                            question='Please explain how your proposal supports the Product Roadmap.'
+                                            answer={
+                                                currentBudgetDiscussionData
+                                                    ?.bd_psapb
+                                                    ?.explain_proposal_roadmap ||
+                                                ''
+                                            }
+                                            answerTestId={
+                                                'explain-roadmap-content'
+                                            }
+                                        />
+                                    ) : (
+                                        ''
+                                    )}
                                     <InfoSection
                                         question='Does your proposal align to any of the
                                         budget categories?'
@@ -581,6 +587,22 @@ const BudgetDiscussionReview = ({
                                             'contracting-type-name-content'
                                         }
                                     />
+                                    {currentBudgetDiscussionData
+                                        ?.bd_proposal_detail?.contract_type_name
+                                        .attributes?.contract_type_name ===
+                                        'Other' && (
+                                        <InfoSection
+                                            question='Please describe what you have in mind.'
+                                            answer={
+                                                currentBudgetDiscussionData
+                                                    ?.bd_proposal_detail
+                                                    ?.other_contract_type || ''
+                                            }
+                                            answerTestId={
+                                                'other-contract-description'
+                                            }
+                                        />
+                                    )}
                                 </Box>
                                 <Box sx={{ align: 'left' }}>
                                     <Typography

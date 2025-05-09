@@ -118,7 +118,7 @@ const CreateGovernanceActionDialog = ({ open = false, onClose = false }) => {
                     return setIsContinueDisabled(true);
                 if(proposalData?.proposal_constitution_content?.prop_have_guardrails_script)
                 {
-                    if(proposalData?.proposal_constitution_content.prop_guardrails_script_url.length === 0 || proposalData?.proposal_constitution_content.prop_guardrails_script_hash.length === 0)
+                    if(!proposalData?.proposal_constitution_content.prop_guardrails_script_url || !proposalData?.proposal_constitution_content.prop_guardrails_script_hash)
                        return setIsContinueDisabled(true);
                 }
                 else {

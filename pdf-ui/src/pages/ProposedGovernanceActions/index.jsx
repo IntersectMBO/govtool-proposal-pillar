@@ -146,7 +146,7 @@ const ProposedGovernanceActions = () => {
         if (location.pathname.includes('propose')) {
             if (user?.user?.govtool_username) {
                 setShowCreateGADialog(true);
-            } else {
+            } else if (user) {
                 setOpenUsernameModal({ open: true, callBackFn: () => {} });
             }
         }

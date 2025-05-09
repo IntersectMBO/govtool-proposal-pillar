@@ -1296,6 +1296,23 @@ const SingleBudgetDiscussion = ({ id }) => {
                                                 }
                                                 answerTestId={`proposal-contracting`}
                                             />
+                                            {proposal?.attributes
+                                                ?.bd_proposal_detail?.data
+                                                ?.attributes?.contract_type_name
+                                                ?.data?.attributes
+                                                ?.contract_type_name ===
+                                                'Other' && (
+                                                <BudgetDiscussionInfoSegment
+                                                    question='Please describe what you have in mind.'
+                                                    answer={
+                                                        proposal?.attributes
+                                                            ?.bd_proposal_detail
+                                                            ?.data?.attributes
+                                                            ?.other_contract_type
+                                                    }
+                                                    answerTestId={`other-contract-description`}
+                                                />
+                                            )}
                                         </Box>
                                     )}
 
