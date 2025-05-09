@@ -53,30 +53,33 @@ module.exports = {
               },             
             ]}
           });
-
-          bd[0].comments = allComments? JSON.stringify(allComments):[];
-          bd[0].votes = allVotes?JSON.stringify(allVotes):[];
-          const votes = allVotes.reduce((acc, vote) => {
-            const votingPower = Number(vote.drep_voting_power);
-            if (vote.vote_result) {
-              acc.true = (acc.true || 0) + votingPower;
-              acc.yes = (acc.yes || 0) + 1;
-            } else {
-              acc.false = (acc.false || 0) + votingPower;
-              acc.no = (acc.no || 0) + 1;
-            }
-            acc.total = (acc.total || 0) + votingPower;
-            return acc;
-          }, {});
+          try {
+            bd[0].comments = allComments? JSON.stringify(allComments):[];
+            bd[0].votes = allVotes?JSON.stringify(allVotes):[];
+            const votes = allVotes.reduce((acc, vote) => {
+             const votingPower = Number(vote.drep_voting_power);
+             if (vote.vote_result) {
+                acc.true = (acc.true || 0) + votingPower;
+                acc.yes = (acc.yes || 0) + 1;
+              } else {
+                acc.false = (acc.false || 0) + votingPower;
+                acc.no = (acc.no || 0) + 1;
+              }
+              acc.total = (acc.total || 0) + votingPower;
+              return acc;
+            }, {});
         
-          bd[0].total_votes = allVotes.length || 0;
-          bd[0].total_voting_power = votes.total || 0;
-          bd[0].total_yes_votes = votes.yes || 0;
-          bd[0].total_yes_voting_power = votes.true || 0;
-          bd[0].total_no_votes = votes.no || 0;
-          bd[0].total_no_voting_power = votes.false || 0;
-          bd[0].votes = JSON.stringify(allVotes)||[];
-          report.push(bd[0]);
+            bd[0].total_votes = allVotes.length || 0;
+            bd[0].total_voting_power = votes.total || 0;
+            bd[0].total_yes_votes = votes.yes || 0;
+            bd[0].total_yes_voting_power = votes.true || 0;
+            bd[0].total_no_votes = votes.no || 0;
+            bd[0].total_no_voting_power = votes.false || 0;
+            bd[0].votes = JSON.stringify(allVotes)||[];
+            report.push(bd[0]);
+          } catch (error) {
+            console.log(error);
+          }
         }
       }
       ctx.send(report);
