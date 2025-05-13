@@ -30,6 +30,11 @@ const Costing = ({
 }) => {
     const [allCurrencyList, setAllCurrencyList] = useState([]);
     const costBreakdownMaxLength = 15000;
+    const [touched, setTouched] = useState({
+        ada_amount: false,
+        usd_to_ada_conversion_rate: false,
+        amount_in_preferred_currency: false,
+    });
     const handleDataChange = (e, dataName) => {
         setBudgetDiscussionData({
             ...currentBudgetDiscussionData,
@@ -37,6 +42,10 @@ const Costing = ({
                 ...currentBudgetDiscussionData?.bd_costing,
                 [dataName]: e.target.value,
             },
+        });
+        setTouched({
+            ...touched,
+            dataName: false,
         });
     };
     useEffect(() => {
@@ -52,6 +61,7 @@ const Costing = ({
         };
         fetchData();
     }, []);
+
     useEffect(() => {
         validateSection('bd_costing');
     }, [currentBudgetDiscussionData?.bd_costing]);
@@ -132,15 +142,42 @@ const Costing = ({
                                                 ?.bd_costing?.ada_amount || ''
                                         }
                                         required
-                                        type='number'
+                                        //changed to string from number to allow entering letters for error notifications
+                                        type='string'
                                         fullWidth
                                         onChange={(e) =>
                                             handleDataChange(e, 'ada_amount')
                                         }
                                         sx={{ mb: 2 }}
+                                        onBlur={() => {
+                                            if (!touched.ada_amount) {
+                                                setTouched({
+                                                    ...touched,
+                                                    ada_amount: true,
+                                                });
+                                            }
+                                        }}
                                         data-testid='ada-amount-input'
-                                        // helperText={errors['bd_costing.ada_amount']?.trim()}
-                                        // error={!!errors['bd_costing.ada_amount']?.trim()}
+                                        helperText={
+                                            touched.ada_amount &&
+                                            errors[
+                                                'bd_costing.ada_amount'
+                                            ]?.trim()
+                                        }
+                                        error={
+                                            touched.ada_amount &&
+                                            !!errors[
+                                                'bd_costing.ada_amount'
+                                            ]?.trim()
+                                        }
+                                        FormHelperTextProps={{
+                                            ...(errors[
+                                                'bd_costing.ada_amount'
+                                            ]?.trim() && {
+                                                'data-testid':
+                                                    'ada-amount-error',
+                                            }),
+                                        }}
                                     />
                                 </Grid>
                                 <Grid item xs={6}>
@@ -155,18 +192,26 @@ const Costing = ({
                                         }
                                         required
                                         fullWidth
-                                        type='number'
+                                        type='string'
+                                        onBlur={() => {
+                                            setTouched({
+                                                ...touched,
+                                                usd_to_ada_conversion_rate: true,
+                                            });
+                                        }}
                                         helperText={
-                                            // errors[
-                                            //     'bd_costing.usd_to_ada_conversion_rate'
-                                            // ]?.trim() ||
+                                            (touched.usd_to_ada_conversion_rate &&
+                                                errors[
+                                                    'bd_costing.usd_to_ada_conversion_rate'
+                                                ]?.trim()) ||
                                             'The rate you used to budget for this proposal'
                                         }
-                                        // error={
-                                        //     !!errors[
-                                        //         'bd_costing.usd_to_ada_conversion_rate'
-                                        //     ]?.trim()
-                                        // }
+                                        error={
+                                            touched.usd_to_ada_conversion_rate &&
+                                            !!errors[
+                                                'bd_costing.usd_to_ada_conversion_rate'
+                                            ]?.trim()
+                                        }
                                         onChange={(e) =>
                                             handleDataChange(
                                                 e,
@@ -175,6 +220,14 @@ const Costing = ({
                                         }
                                         sx={{ mb: 2 }}
                                         data-testid='usd-ada-conversion-input'
+                                        FormHelperTextProps={{
+                                            ...(errors[
+                                                'bd_costing.ada_amount'
+                                            ]?.trim() && {
+                                                'data-testid':
+                                                    'usd-to-ada-converson-error',
+                                            }),
+                                        }}
                                     />
                                 </Grid>
                                 <Grid item xs={6}>
@@ -242,15 +295,25 @@ const Costing = ({
                                             ''
                                         }
                                         required
-                                        type='number'
-                                        // helperText={errors[
-                                        //     'bd_costing.amount_in_preferred_currency'
-                                        // ]?.trim()}
-                                        // error={
-                                        //     !!errors[
-                                        //         'bd_costing.amount_in_preferred_currency'
-                                        //     ]?.trim()
-                                        // }
+                                        type='string'
+                                        helperText={
+                                            touched.amount_in_preferred_currency &&
+                                            errors[
+                                                'bd_costing.amount_in_preferred_currency'
+                                            ]?.trim()
+                                        }
+                                        onBlur={(e) => {
+                                            setTouched({
+                                                ...touched,
+                                                amount_in_preferred_currency: true,
+                                            });
+                                        }}
+                                        error={
+                                            touched.amount_in_preferred_currency &&
+                                            !!errors[
+                                                'bd_costing.amount_in_preferred_currency'
+                                            ]?.trim()
+                                        }
                                         fullWidth
                                         onChange={(e) =>
                                             handleDataChange(
@@ -260,6 +323,14 @@ const Costing = ({
                                         }
                                         sx={{ mb: 2 }}
                                         data-testid='preferred-currency-amount-input'
+                                        FormHelperTextProps={{
+                                            ...(errors[
+                                                'bd_costing.amount_in_preferred_currency'
+                                            ]?.trim() && {
+                                                'data-testid':
+                                                    'preferred-currency-error',
+                                            }),
+                                        }}
                                     />
                                 </Grid>
                             </Grid>
