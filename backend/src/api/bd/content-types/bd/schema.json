@@ -71,6 +71,9 @@
     },
     "master_id": {
       "type": "string"
+    },
+    "submitted_for_vote": {
+      "type": "datetime"
     }
   }
 }
