@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 As a minor extension, we also keep a semantic version for the `UNRELEASED`
 changes.
+
+## [v0.7.0-beta-27](https://www.npmjs.com/package/@intersect.mbo/pdf-ui/v/0.7.0-beta-27) 2025-05-14
+
+ - feat: [Disable interactions on budget proposals](https://github.com/IntersectMBO/govtool/issues/3614)
+ - fix: [Fix “Save Draft” Button Disabled When Valid Guardrails Script is Provided in Constitution Proposal](https://github.com/IntersectMBO/govtool/issues/3531)
+ - fix: [Budget Submission Allows Negative Values & Restricts String](https://github.com/IntersectMBO/govtool/issues/3477)
+ - fix: [Username Modal Incorrectly Pops Up on Wallet Disconnect State](https://github.com/IntersectMBO/govtool/issues/3187)
+ - fix: [Bug: "Other" Contracting Method Details Not Displayed in Review](https://github.com/IntersectMBO/govtool/issues/3553)
+ - fix: [Missing Test IDs for PDF components](https://github.com/IntersectMBO/govtool/issues/2988) 
+
 ## [v0.7.0](https://www.npmjs.com/package/@intersect.mbo/pdf-ui/v/0.7.0) 2025-03-31
 ### Add Budget Discussion functionality [Proposal discussion expansion for DReps](https://github.com/IntersectMBO/govtool/issues/3196)
 
