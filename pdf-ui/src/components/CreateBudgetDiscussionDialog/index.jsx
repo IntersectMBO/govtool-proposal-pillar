@@ -240,13 +240,23 @@ const CreateBudgetDiscussionDialog = ({
                 },
             },
             bd_costing: {
-                ada_amount: { required: true, type: 'string' },
+                ada_amount: {
+                    required: true,
+                    type: 'string',
+                    //added isSpecial: true, for value check in validation
+                    isSpecial: true,
+                },
                 cost_breakdown: { required: true, type: 'string' },
                 preferred_currency: { required: true, type: 'number' },
-                usd_to_ada_conversion_rate: { required: true, type: 'string' },
+                usd_to_ada_conversion_rate: {
+                    required: true,
+                    type: 'string',
+                    isSpecial: true,
+                },
                 amount_in_preferred_currency: {
                     required: true,
                     type: 'string',
+                    isSpecial: true,
                 },
             },
             privacy_policy: { required: true, type: 'boolean' },
@@ -394,9 +404,25 @@ const CreateBudgetDiscussionDialog = ({
                         isValid =
                             typeof section[field] === 'string' &&
                             section[field].trim() !== '';
+                        if (rule.isSpecial && isValid) {
+                            const value = Number(section[field]);
+                            if (isNaN(value)) {
+                                isValid = false;
+                                errors[fullFieldPath] =
+                                    'Only number is allowed';
+                            } else if (value < 0) {
+                                isValid = false;
+                                errors[fullFieldPath] =
+                                    'Only positive number is allowed';
+                            }
+                        } else if (!isValid && rule.isSpecial) {
+                            errors[fullFieldPath] =
+                                `Field should be a valid number`;
+                        }
                         break;
                     case 'number':
                         isValid = typeof section[field] === 'number';
+
                         break;
                     case 'numberString':
                         isValid = isNumberString(section[field]);
@@ -433,8 +459,7 @@ const CreateBudgetDiscussionDialog = ({
                     default:
                         isValid = true;
                 }
-
-                if (!isValid) {
+                if (!isValid && !rule.isSpecial) {
                     errors[fullFieldPath] =
                         `Field should be a valid ${rule.type}`;
                 }
