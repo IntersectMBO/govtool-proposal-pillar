@@ -380,6 +380,30 @@ const SingleBudgetDiscussion = ({ id }) => {
 
                         <Box mt={4}>
                             <Card>
+                                {proposal?.attributes?.submitted_for_vote !== null && (
+                                <CardContent data-testid='budget-discussion-submited-card-content'>  
+                                    <Grid container>
+                                        <Grid item xs={10} display='flex' justifyContent='center'>
+                                            <Typography
+                                                variant='body2'
+                                                component='h4'
+                                                data-testid='submited-for-vote-title'
+                                            >
+                                                Submitted for vote on {formatIsoDate(proposal?.attributes?.submitted_for_vote)}
+                                            </Typography>
+                                        </Grid>
+                                        <Grid item xs={10} display='flex' justifyContent='center'>
+                                            <Typography
+                                                variant='body2'
+                                                component='h4'
+                                                data-testid='submited-for-vote-edit'
+                                            >
+                                                Editing options have been disabled for this proposal because it is included in the Intersect Budget info action
+                                            </Typography>
+                                        </Grid>
+                                    </Grid>
+                                </CardContent>
+                                )}
                                 <CardContent>
                                     <Grid container>
                                         <Grid item xs={10}>
@@ -586,7 +610,8 @@ const SingleBudgetDiscussion = ({ id }) => {
 
                                             {user &&
                                                 user?.user?.id?.toString() ===
-                                                    proposal?.attributes?.creator?.data?.id?.toString() && (
+                                                    proposal?.attributes?.creator?.data?.id?.toString() &&
+                                                    proposal?.attributes?.submitted_for_vote == null && (
                                                     <Box
                                                         display='flex'
                                                         justifyContent='flex-end'
@@ -783,6 +808,7 @@ const SingleBudgetDiscussion = ({ id }) => {
                                         </Typography>
 
                                         <Box>
+                                            {proposal?.attributes?.submitted_for_vote == null && (
                                             <Button
                                                 variant='outlined'
                                                 startIcon={
@@ -802,6 +828,7 @@ const SingleBudgetDiscussion = ({ id }) => {
                                             >
                                                 Review Versions
                                             </Button>
+                                            )}
 
                                             <BudgetDiscussionReviewVersions
                                                 open={reviewVersionsOpen}
