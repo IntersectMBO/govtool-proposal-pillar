@@ -8,6 +8,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 As a minor extension, we also keep a semantic version for the `UNRELEASED`
 changes.
 
+
+## [v0.7.0-beta-28](https://www.npmjs.com/package/@intersect.mbo/pdf-ui/v/0.7.0-beta-28) 2025-05-15
+
+### Fixed
+-   fix: [Bug: "Other" Contracting Method Details Not Displayed in Review](https://github.com/IntersectMBO/govtool/issues/3553)
+
 ## [v0.7.0-beta-27](https://www.npmjs.com/package/@intersect.mbo/pdf-ui/v/0.7.0-beta-27) 2025-05-14
 
 -   feat: [Disable interactions on budget proposals](https://github.com/IntersectMBO/govtool/issues/3614)

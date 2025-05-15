@@ -506,7 +506,8 @@ const BudgetDiscussionCard = ({
                                     </Tooltip>
                                     {user &&
                                         user?.user?.id?.toString() ===
-                                            budgetDiscussion?.attributes?.creator?.data?.id?.toString() && (
+                                            budgetDiscussion?.attributes?.creator?.data?.id?.toString() && 
+                                            budgetDiscussion?.attributes?.submitted_for_vote == null && (
                                             <Tooltip title='Edit'>
                                                 <IconButton
                                                     aria-label='edit'
