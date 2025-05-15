@@ -841,6 +841,29 @@ const BudgetDiscussionReviewVersions = ({ open, onClose, id }) => {
                                                                 }
                                                                 answerTestId={`proposal-contracting`}
                                                             />
+                                                            {selectedVersion
+                                                                ?.attributes
+                                                                ?.bd_proposal_detail
+                                                                ?.data
+                                                                ?.attributes
+                                                                ?.contract_type_name
+                                                                ?.data
+                                                                ?.attributes
+                                                                ?.contract_type_name ===
+                                                                'Other' && (
+                                                                <BudgetDiscussionInfoSegment
+                                                                    question='Please describe what you have in mind.'
+                                                                    answer={
+                                                                        selectedVersion
+                                                                            ?.attributes
+                                                                            ?.bd_proposal_detail
+                                                                            ?.data
+                                                                            ?.attributes
+                                                                            ?.other_contract_type
+                                                                    }
+                                                                    answerTestId={`other-contract-description`}
+                                                                />
+                                                            )}
                                                         </Box>
 
                                                         <Box
