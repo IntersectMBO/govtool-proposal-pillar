@@ -1,6 +1,6 @@
 import { useTheme } from '@emotion/react';
 import { IconPlus, IconX } from '@intersect.mbo/intersectmbo.org-icons-set';
-import { Box, Button, TextField,IconButton } from '@mui/material';
+import { Box, Button, TextField, IconButton } from '@mui/material';
 
 import { isValidURLFormat } from '../../lib/utils';
 
@@ -124,6 +124,8 @@ const LinkManager = ({
                                 }}
                                 inputProps={{
                                     'data-testid': `link-${index}-url-input`,
+                                    //link length limited to 255 characters
+                                    maxLength: 255,
                                 }}
                                 error={!!linksErrors[index]?.url}
                                 helperText={linksErrors[index]?.url}
