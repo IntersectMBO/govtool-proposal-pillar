@@ -8,6 +8,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 As a minor extension, we also keep a semantic version for the `UNRELEASED`
 changes.
 
+## [v0.7.0-beta-28](https://www.npmjs.com/package/@intersect.mbo/pdf-ui/v/0.7.0-beta-29) 2025-05-15
+
+### Fixed
+-   fix: display message when bd is submited for vote and hidden the poll
+-   fix: Missing Character Limit Validation for Link Text in Proposal Submission
 
 ## [v0.7.0-beta-28](https://www.npmjs.com/package/@intersect.mbo/pdf-ui/v/0.7.0-beta-28) 2025-05-15
 
