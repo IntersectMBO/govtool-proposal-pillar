@@ -1,6 +1,14 @@
-import {Box, Button, Card, CardContent, MenuItem, TextField, Typography } from '@mui/material';
+import {
+    Box,
+    Button,
+    Card,
+    CardContent,
+    MenuItem,
+    TextField,
+    Typography,
+} from '@mui/material';
 import { useEffect, useState } from 'react';
-import { LinkManager, WithdrawalsManager, ConstitutionManager} from '.';
+import { LinkManager, WithdrawalsManager, ConstitutionManager } from '.';
 import { useAppContext } from '../../context/context';
 import { getGovernanceActionTypes } from '../../lib/api';
 import { containsString, maxLengthCheck } from '../../lib/utils';
@@ -22,7 +30,7 @@ const Step2 = ({
     withdrawalsErrors,
     setWithdrawalsErrors,
     constitutionErrors,
-    setConstitutionErrors 
+    setConstitutionErrors,
 }) => {
     const titleMaxLength = 80;
     const abstractMaxLength = 2500;
@@ -34,9 +42,10 @@ const Step2 = ({
         )?.label || ''
     );
     const [selectedGovActionId, setSelectedGovActionId] = useState(
-        proposalData?.attributes?.content?.attributes?.gov_action_type?.id || null
+        proposalData?.attributes?.content?.attributes?.gov_action_type?.id ||
+            null
     );
-    const [isDraftDisabled,setIsDraftDisabled] = useState(true);
+    const [isDraftDisabled, setIsDraftDisabled] = useState(true);
     const handleChange = (e) => {
         const selectedValue = e.target.value;
         const selectedLabel = governanceActionTypes.find(
@@ -46,15 +55,16 @@ const Step2 = ({
         setProposalData((prev) => ({
             ...prev,
             gov_action_type_id: selectedValue,
-            proposal_withdrawals:[{ prop_receiving_address: null, prop_amount: null }]
+            proposal_withdrawals: [
+                { prop_receiving_address: null, prop_amount: null },
+            ],
         }));
-        if(selectedValue  != 3)
-        { //cleanup fields co
+        if (selectedValue != 3) {
+            //cleanup fields co
             setProposalData((prev) => ({
                 ...prev,
-                proposal_constitution_content:{}
+                proposal_constitution_content: {},
             }));
-
         }
         setSelectedGovActionId(selectedValue);
         setSelectedGovActionName(selectedLabel);
@@ -104,7 +114,7 @@ const Step2 = ({
         }
 
         setHelperText((prev) => ({
-            ...prev,
+            ...prev, 
             [errorField]: errorMessage === true ? '' : errorMessage,
         }));
 
@@ -118,30 +128,39 @@ const Step2 = ({
         fetchGovernanceActionTypes();
     }, []);
 
-    useEffect(()=>{
-        setSelectedGovActionName(governanceActionTypes.find(
-            (option) => option?.value === +proposalData?.gov_action_type_id
-        )?.label || '')
-        setSelectedGovActionId(+proposalData?.gov_action_type_id)
-
-    },[governanceActionTypes])
     useEffect(() => {
-        if(proposalData?.gov_action_type_id && proposalData?.prop_name?.length !== 0)
-        {
-            setIsDraftDisabled(false)
+        setSelectedGovActionName(
+            governanceActionTypes.find(
+                (option) => option?.value === +proposalData?.gov_action_type_id
+            )?.label || ''
+        );
+        setSelectedGovActionId(+proposalData?.gov_action_type_id);
+    }, [governanceActionTypes]);
+
+    useEffect(() => {
+        if (
+            proposalData?.gov_action_type_id &&
+            proposalData?.prop_name?.length !== 0
+        ) {
+            setIsDraftDisabled(false);
+        } else {
+            setIsDraftDisabled(true);
         }
-        else
-        {
-            setIsDraftDisabled(true)
+        if (
+            proposalData?.proposal_constitution_content
+                ?.prop_have_guardrails_script
+        ) {
+            if (
+                proposalData.proposal_constitution_content
+                    .prop_guardrails_script_url &&
+                proposalData.proposal_constitution_content
+                    .prop_guardrails_script_hash
+            ) {
+                setIsDraftDisabled(false);
+            } else setIsDraftDisabled(true);
         }
-        if(proposalData?.proposal_constitution_content?.prop_have_guardrails_script)
-        {
-            if(!proposalData.proposal_constitution_content.prop_guardrails_script_url && !proposalData.proposal_constitution_content.prop_guardrails_script_hash)
-                setIsDraftDisabled(false)
-            else
-                setIsDraftDisabled(true)
-        }
-    },[proposalData])
+    }, [proposalData]);
+
     return (
         <Card>
             <CardContent
@@ -387,34 +406,40 @@ const Step2 = ({
                                 : 'rationale-helper',
                         }}
                     />
-                    { /// Treasury
+                    {
+                        /// Treasury
                         selectedGovActionId == 2 ? (
-                        <>
-                            <Box
-                        sx={{
-                            align: 'center',
-                            textAlign: 'center',
-                            mt: 2,
-                        }}
-                            >
-                            <WithdrawalsManager
+                            <>
+                                <Box
+                                    sx={{
+                                        align: 'center',
+                                        textAlign: 'center',
+                                        mt: 2,
+                                    }}
+                                >
+                                    <WithdrawalsManager
+                                        proposalData={proposalData}
+                                        setProposalData={setProposalData}
+                                        withdrawalsErrors={withdrawalsErrors}
+                                        setWithdrawalsErrors={
+                                            setWithdrawalsErrors
+                                        }
+                                    />
+                                </Box>
+                            </>
+                        ) : null
+                    }
+                    {
+                        /// 'Constitution'
+                        selectedGovActionId === 3 ? (
+                            <ConstitutionManager
                                 proposalData={proposalData}
                                 setProposalData={setProposalData}
-                                withdrawalsErrors={withdrawalsErrors}
-                                setWithdrawalsErrors={setWithdrawalsErrors}
-                            />
-                            </Box>
-                        </>
-
-                    ) : null}
-                    { /// 'Constitution'
-                        selectedGovActionId === 3 ? (
-                        <ConstitutionManager
-                            proposalData={proposalData}
-                            setProposalData={setProposalData}
-                            constitutionManagerErrors={constitutionErrors}
-                            setConstitutionManagerErrors={setConstitutionErrors}
-                        ></ConstitutionManager>
+                                constitutionManagerErrors={constitutionErrors}
+                                setConstitutionManagerErrors={
+                                    setConstitutionErrors
+                                }
+                            ></ConstitutionManager>
                         ) : null
                     }
                     <Box
