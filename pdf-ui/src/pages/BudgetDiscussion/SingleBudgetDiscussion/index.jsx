@@ -9,6 +9,7 @@ import {
     IconShare,
     IconSort,
     IconTrash,
+    IconInformationCircle,    
 } from '@intersect.mbo/intersectmbo.org-icons-set';
 import {
     Badge,
@@ -16,6 +17,7 @@ import {
     Button,
     Card,
     CardContent,
+    CardHeader,
     Grid,
     IconButton,
     Menu,
@@ -379,31 +381,92 @@ const SingleBudgetDiscussion = ({ id }) => {
                         </Box>
 
                         <Box mt={4}>
+                            {proposal?.attributes?.submitted_for_vote !== null && (
+                            <Card
+                                variant='outlined'
+                                sx={{
+                                    backgroundColor: alpha('#FFFFFF', 0.3),
+                                    marginBottom: 3,
+                                }}
+                            >
+                                <CardHeader
+                                    sx={{
+                                        pt: 1,
+                                        pb: 1,
+                                        backgroundColor: alpha('#F2F4F8', 0.7),
+                                    }}
+                                    title={
+                                        <Box
+                                            display={'flex'}
+                                            justifyContent={'center'}
+                                            alignItems={'center'}
+                                            flexDirection={'row'}
+                                        >
+                                            <Typography
+                                                variant='caption'
+                                                component='p'
+                                            >
+                                                Submitted for vote
+                                            </Typography>
+                                            {/* <Tooltip
+                                                title={
+                                                        <span
+                                                            style={{
+                                                                whiteSpace:
+                                                                    'pre-line',
+                                                            }}
+                                                        >
+                                                        Editing and Voting options have been disabled for this proposal because it is included in the Intersect Budget info action
+                                                        </span>
+                                                }
+                                            >
+                                                <Box>
+                                                    <IconInformationCircle
+                                                        width={16}
+                                                        height={16}
+                                                        fill={
+                                                            theme?.palette
+                                                                ?.primary?.icons
+                                                                ?.grey
+                                                        }
+                                                    />
+                                                </Box>
+                                            </Tooltip> */}
+                                        </Box>
+                                    }
+                                ></CardHeader>
+                                 <CardContent>
+                                        <Box
+                                            display='flex'
+                                            alignItems='center'
+                                            justifyContent='space-between'
+                                            flexDirection={{
+                                                xs: 'column',
+                                                md: 'row',
+                                            }}
+                                            gap={1}
+                                        >
+                                            <Box
+                                                textAlign={{
+                                                    xs: 'center',
+                                                    md: 'left',
+                                                }}
+                                            >
+
+                                                <Typography
+                                                    variant='caption'
+                                                    sx={{
+                                                        textWrap: 'balance',
+                                                    }}
+                                                >
+                                                    Editing and Voting options have been disabled for this proposal because it is included in the Intersect Budget info action
+                                                </Typography>
+                                            </Box>
+                                        </Box>
+                                 </CardContent>
+                            </Card>)}
+                                
                             <Card>
-                                {proposal?.attributes?.submitted_for_vote !== null && (
-                                <CardContent data-testid='budget-discussion-submited-card-content'>  
-                                    <Grid container>
-                                        <Grid item xs={10} display='flex' justifyContent='center'>
-                                            <Typography
-                                                variant='body2'
-                                                component='h4'
-                                                data-testid='submited-for-vote-title'
-                                            >
-                                                Submitted for vote on {formatIsoDate(proposal?.attributes?.submitted_for_vote)}
-                                            </Typography>
-                                        </Grid>
-                                        <Grid item xs={10} display='flex' justifyContent='center'>
-                                            <Typography
-                                                variant='body2'
-                                                component='h4'
-                                                data-testid='submited-for-vote-edit'
-                                            >
-                                                Editing options have been disabled for this proposal because it is included in the Intersect Budget info action
-                                            </Typography>
-                                        </Grid>
-                                    </Grid>
-                                </CardContent>
-                                )}
                                 <CardContent>
                                     <Grid container>
                                         <Grid item xs={10}>
@@ -806,9 +869,7 @@ const SingleBudgetDiscussion = ({ id }) => {
                                                 proposal?.attributes?.createdAt
                                             )}`}
                                         </Typography>
-
                                         <Box>
-                                            {proposal?.attributes?.submitted_for_vote == null && (
                                             <Button
                                                 variant='outlined'
                                                 startIcon={
@@ -828,8 +889,6 @@ const SingleBudgetDiscussion = ({ id }) => {
                                             >
                                                 Review Versions
                                             </Button>
-                                            )}
-
                                             <BudgetDiscussionReviewVersions
                                                 open={reviewVersionsOpen}
                                                 onClose={
@@ -1792,7 +1851,8 @@ const SingleBudgetDiscussion = ({ id }) => {
                             </IconButton>
                         </Box>
 
-                        {activePoll && (
+                        {activePoll && 
+                        proposal?.attributes?.submitted_for_vote === null && (
                             <Box mt={4}>
                                 <BudgetDiscussionPoll
                                     proposalUserId={
