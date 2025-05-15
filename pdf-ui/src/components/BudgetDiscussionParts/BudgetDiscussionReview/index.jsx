@@ -587,9 +587,13 @@ const BudgetDiscussionReview = ({
                                             'contracting-type-name-content'
                                         }
                                     />
-                                    {currentBudgetDiscussionData
-                                        ?.bd_proposal_detail?.contract_type_name
-                                        .attributes?.contract_type_name ===
+                                    {allContractTypeList.find(
+                                        (co) =>
+                                            co.id ===
+                                            currentBudgetDiscussionData
+                                                ?.bd_proposal_detail
+                                                ?.contract_type_name
+                                    )?.attributes?.contract_type_name ===
                                         'Other' && (
                                         <InfoSection
                                             question='Please describe what you have in mind.'
