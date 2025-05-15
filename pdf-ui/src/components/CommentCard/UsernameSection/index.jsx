@@ -18,7 +18,7 @@ const UsernameSection = ({ drepData, comment }) => {
                 {comment?.attributes?.user_is_validated === true ? (
                     <ValidationCheckmark />
                 ) : null}
-                {drepData?.view && <Chip label='DRep' />}
+                {drepData?.view && <Chip data-testid='dRep-tag' label='DRep' />}
             </Box>
 
             <Box
@@ -34,7 +34,10 @@ const UsernameSection = ({ drepData, comment }) => {
                         target='_blank'
                         rel='noopener noreferrer'
                     >
-                        <Typography variant='caption'>
+                        <Typography
+                            variant='caption'
+                            data-testid='dRep-given-name'
+                        >
                             {drepData?.givenName || ''}
                         </Typography>
                     </Link>
@@ -46,7 +49,7 @@ const UsernameSection = ({ drepData, comment }) => {
                         target='_blank'
                         rel='noopener noreferrer'
                     >
-                        <Typography variant='caption'>
+                        <Typography variant='caption' data-testid='dRep-id'>
                             {drepData?.view?.slice(0, 26) + '...' || ''}
                         </Typography>
                     </Link>
