@@ -21,7 +21,7 @@ async function isVotingLockedFromPoolId(bd_poll_id) {
 module.exports = {
   async beforeCreate(event) {
     const { data } = event.params;
-    const isLocked = await isVotingLockedFromPoolId(data.bd_poll_id);
+    const isLocked = await isVotingLockedFromPoolId(data?.bd_poll_id);
     if (isLocked) {
       throw new ValidationError('Creating poll votes is not allowed after the proposal has been submitted for voting.');
     }

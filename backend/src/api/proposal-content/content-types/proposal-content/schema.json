@@ -74,6 +74,10 @@
       "relation": "oneToOne",
       "target": "api::proposal-constitution-content.proposal-constitution-content",
       "mappedBy": "proposal_content"
+    },
+    "is_locked": {
+      "type": "boolean",
+      "default": false
     }
   }
 }

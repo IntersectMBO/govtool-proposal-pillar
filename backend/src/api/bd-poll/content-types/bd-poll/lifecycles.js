@@ -32,7 +32,7 @@ module.exports = {
   },
   async beforeCreate(event) {
     const { data } = event;
-    const bdId = data.bd_proposal_id;
+    const bdId = data?.bd_proposal_id;
     if (!bdId) return; 
     const relatedBd = await strapi.entityService.findOne('api::bd.bd', bdId, {
       fields: ['submitted_for_vote'],
