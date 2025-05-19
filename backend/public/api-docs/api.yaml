@@ -9197,6 +9197,8 @@ components:
             $ref: '#/components/schemas/ProposalProposalLinkComponent'
         is_draft:
           type: boolean
+        is_locked:
+          type: boolean
         user_id:
           type: string
         prop_submitted:
