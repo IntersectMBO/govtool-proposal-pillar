@@ -35,7 +35,7 @@ module.exports = {
 
     if (!data) return;
 
-    const bdId = data.bd; 
+    const bdId = data?.bd; 
 
     if (!bdId) return;
 
