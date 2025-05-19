@@ -36,6 +36,7 @@ import {
     DialogActions,
     DialogContent,
     DialogContentText,
+    badgeClasses,
 } from '@mui/material';
 import { useEffect, useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -152,6 +153,7 @@ const SingleGovernanceAction = ({ id }) => {
     const [truncatedText, setTruncatedText] = useState('');
     const [totalCharLength, setTotalCharLength] = useState(0);
     const [AbstractMarkdownText, setAbstractMarkdownText] = useState('');
+    const [currentWalletBalance, setCurrentWalletBalance] = useState(0);
     const maxLength = 500;
     useEffect(() => {
         if (AbstractMarkdownText.length > maxLength) {
@@ -274,6 +276,15 @@ const SingleGovernanceAction = ({ id }) => {
         }
     };
 
+    const fetchCurrentWalletBalance = async () => {
+        try {
+            const bal = await walletAPI.getBalance();
+            const balance = Number('0x' + bal.match(/^1b([0-9a-fA-F]{16})$/)[1]) || 0;
+            setCurrentWalletBalance(balance/1000000);
+        } catch (error) {
+            console.error(error);
+        }
+    }
     const handleCreateComment = async () => {
         setLoading(true);
         try {
@@ -626,9 +637,9 @@ const SingleGovernanceAction = ({ id }) => {
                                                                     setOpenUsernameModal:
                                                                         setOpenUsernameModal,
                                                                     callBackFn:
-                                                                        () =>{
-                                                                            let bal = (walletAPI?.voter?.votingPower || 0);
-                                                                            if( bal/1000000 >= 100000.18)
+                                                                        () =>{    
+                                                                            fetchCurrentWalletBalance();
+                                                                            if( currentWalletBalance >= 100000.18)
                                                                             {
                                                                                 setOpenGASubmissionDialog(true)
                                                                             }
