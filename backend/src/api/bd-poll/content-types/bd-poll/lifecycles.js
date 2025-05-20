@@ -3,8 +3,7 @@ const { ValidationError } = require('@strapi/utils').errors;
 module.exports = {
   async beforeUpdate(event) {
     const { where } = event.params;
-
-    const existingPool = await strapi.entityService.findOne('api::bd-pool.bd-pool', where.id, {
+    const existingPool = await strapi.entityService.findOne('api::bd-poll.bd-poll', where.id, {
       fields: ['bd_proposal_id'],
     });
     const bdId = existingPool?.bd_proposal_id;
@@ -18,7 +17,7 @@ module.exports = {
   },
   async beforeDelete(event) {
     const { where } = event.params;
-    const existingPool = await strapi.entityService.findOne('api::bd-pool.bd-pool', where.id, {
+    const existingPool = await strapi.entityService.findOne('api::bd-poll.bd-poll', where.id, {
       fields: ['bd_proposal_id'],
     });
     const bdId = existingPool?.bd_proposal_id;
