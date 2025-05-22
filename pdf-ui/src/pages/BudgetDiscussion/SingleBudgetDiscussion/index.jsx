@@ -233,8 +233,12 @@ const SingleBudgetDiscussion = ({ id }) => {
             if (!response) return;
 
             setProposal(response);
-        } catch (error) {
-            console.error(error);
+        }catch (error) {
+            if (
+                error?.response?.data?.error?.message ===
+                    'Not Found' ) {
+                return navigate('/budget_discussion');
+            }
         } finally {
             setLoading(false);
         }
