@@ -12,6 +12,7 @@ import {
 import { ProposalsList } from '..';
 import { getProposals } from '../../lib/api';
 import { useEffect, useState } from 'react';
+import { useAppContext } from '../../context/context';
 
 const Step1 = ({ setStep, setProposalData, onClose, setSelectedDraftId }) => {
     const [draftsEnabled, setDraftsEnabled] = useState(false);
@@ -28,7 +29,7 @@ const Step1 = ({ setStep, setProposalData, onClose, setSelectedDraftId }) => {
             console.error(error);
         }
     };
-
+    const {walletAPI} = useAppContext();
     useEffect(() => {
         if (!mounted) {
             setMounted(true);
@@ -177,6 +178,28 @@ const Step1 = ({ setStep, setProposalData, onClose, setSelectedDraftId }) => {
                                             voted on.
                                         </Typography>
                                     </ListItem>
+                                    {
+                                        walletAPI?.walletName.toLowerCase() == 'ledger' 
+                                        || walletAPI?.walletName.toLowerCase() == 'trezor'? (
+                                        <ListItem
+                                                sx={{
+                                                    textAlign: 'justify',
+                                                    display: 'list-item',
+                                                    paddingX: 0,
+                                                    color: "#9c2224"
+                                                }}
+                                            >
+                                                <Typography
+                                                    variant='body1'
+                                                    gutterBottom
+                                                    sx={{ color: "#9c2224" }}
+                                                >
+                                                    Our system has detected that you are using a hardware wallet which does not support the submission of governance actions. 
+                                                    As a result, you will not be able to submit actions to the blockchain using this wallet.
+                                                </Typography>
+                                        </ListItem>): null
+                                    }
+
                                 </List>
                             </Box>
                             <Box

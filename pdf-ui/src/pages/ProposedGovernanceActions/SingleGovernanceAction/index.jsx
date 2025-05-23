@@ -621,7 +621,9 @@ const SingleGovernanceAction = ({ id }) => {
                                                     </Button>
                                                 ) : user &&
                                                   user?.user?.id?.toString() ===
-                                                      proposal?.attributes?.user_id?.toString() ? (
+                                                      proposal?.attributes?.user_id?.toString() 
+                                                      && walletAPI?.walletName.toLowerCase() != 'ledger' 
+                                                      && walletAPI?.walletName.toLowerCase() != 'trezor'? (
                                                     <Button
                                                         variant='outlined'
                                                         data-testid='submit-as-GA-button'
@@ -663,7 +665,20 @@ const SingleGovernanceAction = ({ id }) => {
                                                         Submit as Governance
                                                         Action
                                                     </Button>
-                                                ) : (
+                                                ) : 
+                                                   walletAPI?.walletName.toLowerCase() == 'ledger' 
+                                                   || walletAPI?.walletName.toLowerCase() == 'trezor'?
+                                                   (
+                                                     <Typography variant='body2' component={'h5'}
+                                                     sx={{
+                                                         color: "#9c2224",
+                                                         mt: 1,
+                                                     }}
+                                                     >
+                                                         {`You hardware wallet does not support submitting governance actions`}
+                                                    </Typography>
+                                                   ) :                                               
+                                                (
                                                     <Button
                                                         variant='outlined'
                                                         data-testid='proposal-details-header-comment-button'
