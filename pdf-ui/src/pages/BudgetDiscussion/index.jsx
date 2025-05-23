@@ -8,6 +8,7 @@ import {
     IconArrowLeft,
     IconArrowDown,
     IconArrowUp,
+    IconSort,
 } from '@intersect.mbo/intersectmbo.org-icons-set';
 import {
     Box,
@@ -40,6 +41,32 @@ import { useLocation } from 'react-router-dom';
 import { ScrollToTop, useDebounce } from '../../lib/hooks';
 
 let proposalsOwnersList = [{ id: 'all-proposals', label: 'All Proposals' }];
+let sortOptions = [
+    { fieldId: 'createdAt', type: 'DESC', title: 'Newest' },
+    { fieldId: 'createdAt', type: 'ASC', title: 'Oldest' },
+    { fieldId: 'prop_comments_number', type: 'DESC', title: 'Most comments' },
+    { fieldId: 'prop_comments_number', type: 'ASC', title: 'Least comments' },
+    {
+        fieldId: 'bd_proposal_detail][proposal_name',
+        type: 'ASC',
+        title: 'Name A-Z',
+    },
+    {
+        fieldId: 'bd_proposal_detail][proposal_name',
+        type: 'DESC',
+        title: 'Name Z-A',
+    },
+    {
+        fieldId: 'creator][govtool_username',
+        type: 'ASC',
+        title: 'Proposer A-Z',
+    },
+    {
+        fieldId: 'creator][govtool_username',
+        type: 'DESC',
+        title: 'Proposer Z-A',
+    },
+];
 
 const ProposedBudgetDiscussion = () => {
     const location = useLocation();
@@ -62,7 +89,7 @@ const ProposedBudgetDiscussion = () => {
 
     const [budgetDiscussionSearchText, setBudgetDiscussionSearchText] =
         useState('');
-    const [sortType, setSortType] = useState('desc');
+    const [sortType, setSortType] = useState(sortOptions[0]);
     const [budgetDiscussionTypeList, setBudgetDiscussionTypeList] = useState(
         []
     );
@@ -71,7 +98,7 @@ const ProposedBudgetDiscussion = () => {
         setFilteredBudgetDiscussionTypeList,
     ] = useState([]);
     const [proposalsOwnerFilter, setProposalsOwnerFilter] =
-        useState(defaultOwnerFilter); // All proposals as default
+        useState(defaultOwnerFilter);
 
     const [showCreateBDDialog, setShowCreateBDDialog] = useState(false);
     const [
@@ -83,15 +110,24 @@ const ProposedBudgetDiscussion = () => {
         is_activated: false,
         bd_type: null,
     });
+    const [sortAnchorEl, setSortAnchorEl] = useState(null);
 
     const [isAllProposalsListEmpty, setIsAllProposalsListEmpty] = useState([]);
 
     const openFilters = Boolean(filtersAnchorEl);
+    const openSort = Boolean(sortAnchorEl);
     const handleFiltersClick = (event) => {
         setFiltersAnchorEl(event.currentTarget);
     };
     const handleCloseFilters = () => {
         setFiltersAnchorEl(null);
+    };
+
+    const handleSortClick = (event) => {
+        setSortAnchorEl(event.currentTarget);
+    };
+    const handleSortClose = () => {
+        setSortAnchorEl(null);
     };
     const fetchBudgetDiscussionTypes = async () => {
         try {
@@ -534,7 +570,81 @@ const ProposedBudgetDiscussion = () => {
                                         </MenuItem>
                                     </Box>
                                 </Menu>
-                                <Button
+                                <>
+                                    <Button
+                                        variant='outlined'
+                                        onClick={(e) => handleSortClick(e)}
+                                        endIcon={
+                                            <IconSort
+                                                color={
+                                                    theme.palette.primary.icons
+                                                        .black
+                                                }
+                                            />
+                                        }
+                                        sx={{
+                                            textTransform: 'none',
+                                            borderRadius: '20px',
+                                            padding: '8px 16px',
+                                            borderColor: 'primary.main',
+                                            color: 'text.primary',
+                                            '&:hover': {
+                                                backgroundColor: 'action.hover',
+                                            },
+                                        }}
+                                        data-testid='sort-button'
+                                    >
+                                        Sort: {sortType.title}
+                                    </Button>
+                                    <Menu
+                                        id='sort-menu'
+                                        anchorEl={sortAnchorEl}
+                                        open={openSort}
+                                        onClose={handleSortClose}
+                                        MenuListProps={{
+                                            'aria-labelledby': 'filters-button',
+                                        }}
+                                        slotProps={{
+                                            paper: {
+                                                elevation: 4,
+                                                sx: {
+                                                    overflow: 'visible',
+                                                    mt: 1,
+                                                    minWidth: '300px',
+                                                },
+                                            },
+                                        }}
+                                        transformOrigin={{
+                                            horizontal: 'right',
+                                            vertical: 'top',
+                                        }}
+                                        anchorOrigin={{
+                                            horizontal: 'right',
+                                            vertical: 'bottom',
+                                        }}
+                                    >
+                                        <Box>
+                                            {sortOptions.map((sort, index) => (
+                                                <MenuItem
+                                                    key={`${sort?.title}-${index}`}
+                                                    selected={sort === sortType}
+                                                    id={`${sort?.title}`}
+                                                    data-testid={`${sort?.title}-sort-option`}
+                                                    onClick={() => {
+                                                        setSortType(sort);
+                                                        handleSortClose();
+                                                    }}
+                                                    sx={{
+                                                        width: '100%',
+                                                    }}
+                                                >
+                                                    {sort.title}
+                                                </MenuItem>
+                                            ))}
+                                        </Box>
+                                    </Menu>
+                                </>
+                                {/* <Button
                                     variant='outlined'
                                     onClick={() =>
                                         setSortType((prev) =>
@@ -574,7 +684,7 @@ const ProposedBudgetDiscussion = () => {
                                     {sortType === 'desc'
                                         ? 'Newest first'
                                         : 'Oldest first'}
-                                </Button>
+                                </Button> */}
                             </Box>
                         </Grid>
                     </Grid>
@@ -592,7 +702,7 @@ const ProposedBudgetDiscussion = () => {
                         <BudgetDiscussionsList
                             currentBudgetDiscussionType={item}
                             searchText={budgetDiscussionSearchText?.trim()}
-                            sortType={sortType}
+                            sortOption={sortType}
                             statusList={filteredBudgetDiscussionStatusList}
                             setShowAllActivated={setShowAllActivated}
                             showAllActivated={showAllActivated}
