@@ -75,7 +75,10 @@ const BudgetDiscussionSubmit = ({
                                                     'privacy_policy'
                                                 )
                                             }
-                                            data-testid='submit-checkbox'
+                                            inputProps={{
+                                                'data-testid':
+                                                    'submit-checkbox',
+                                            }}
                                         />
                                     }
                                     label={
