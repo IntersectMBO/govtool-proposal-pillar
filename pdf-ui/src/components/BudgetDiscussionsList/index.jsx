@@ -28,7 +28,7 @@ import { useAppContext } from '../../context/context';
 const BudgetDiscussionsList = ({
     currentBudgetDiscussionType = null,
     searchText = '',
-    sortType = 'desc',
+    sortOption = { fieldId: 'createdAt', type: 'DESC', title: 'Newest' },
     isDraft = false,
     statusList = [],
     startEdittinButtonClick = false,
@@ -85,8 +85,8 @@ const BudgetDiscussionsList = ({
                     currentBudgetDiscussionType?.id
                 }&filters[$and][2][bd_proposal_detail][proposal_name][$containsi]=${
                     debouncedSearchValue || ''
-                }${proposalOwnerFilter?.id === 'all-proposals' ? '' : user?.user?.id ? '&filters[$and][3][creator]=' + user?.user?.id : ''}&pagination[page]=${page}&pagination[pageSize]=25&sort[createdAt]=${
-                    sortType
+                }${proposalOwnerFilter?.id === 'all-proposals' ? '' : user?.user?.id ? '&filters[$and][3][creator]=' + user?.user?.id : ''}&pagination[page]=${page}&pagination[pageSize]=25&sort[${sortOption.fieldId}]=${
+                    sortOption.type
                 }&populate[0]=bd_costing&populate[1]=bd_psapb.type_name&populate[2]=bd_proposal_detail&populate[3]=creator`;
                 const { budgetDiscussions, pgCount, total } =
                     await getBudgetDiscussions(query);
@@ -116,7 +116,7 @@ const BudgetDiscussionsList = ({
     }, [
         mounted,
         debouncedSearchValue,
-        sortType,
+        sortOption,
         isDraft ? null : statusList,
         showAllActivated,
         currentBudgetDiscussionType,
