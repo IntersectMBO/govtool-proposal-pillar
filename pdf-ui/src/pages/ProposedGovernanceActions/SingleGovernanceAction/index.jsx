@@ -639,7 +639,7 @@ const SingleGovernanceAction = ({ id }) => {
                                                                     callBackFn:
                                                                         () =>{    
                                                                             fetchCurrentWalletBalance();
-                                                                            if( currentWalletBalance >= 100000.18)
+                                                                            if( currentWalletBalance >= 100.18)
                                                                             {
                                                                                 setOpenGASubmissionDialog(true)
                                                                             }
