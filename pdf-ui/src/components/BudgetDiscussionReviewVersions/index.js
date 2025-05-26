@@ -345,8 +345,6 @@ const BudgetDiscussionReviewVersions = ({ open, onClose, id }) => {
                                                                 {`${formatIsoDate(
                                                                     selectedVersion
                                                                         ?.attributes
-                                                                        ?.content
-                                                                        ?.attributes
                                                                         ?.createdAt
                                                                 )}${
                                                                     selectedVersion

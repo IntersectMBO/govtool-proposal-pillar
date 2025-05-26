@@ -8,15 +8,31 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 As a minor extension, we also keep a semantic version for the `UNRELEASED`
 changes.
 
+## [v0.7.0-beta-28](https://www.npmjs.com/package/@intersect.mbo/pdf-ui/v/0.7.0-beta-30) 2025-05-26
+
+### Fixed
+
+-   fix: Update data-testid attributes for improved accessibility in form…
+-   Hardware Wallet warning #2575
+-   fix: Refactor sorting mechanism in BudgetDiscussionsList and Proposed…
+-   fix: Update aria-labelledby attribute for sort button and pass isDraf…
+-   feat: Enhanced Markdown rendering to support additional tags and styl…
+-   fix: Remove unnecessary optional chaining for content attribute in BudgetDiscussionReviewVersions component
+
+### Added
+-   feat/ Implement Infinite Scroll for Proposal Discussion Forum Section…
+
 ## [v0.7.0-beta-28](https://www.npmjs.com/package/@intersect.mbo/pdf-ui/v/0.7.0-beta-29) 2025-05-15
 
 ### Fixed
+
 -   fix: display message when bd is submited for vote and hidden the poll
 -   fix: Missing Character Limit Validation for Link Text in Proposal Submission
 
 ## [v0.7.0-beta-28](https://www.npmjs.com/package/@intersect.mbo/pdf-ui/v/0.7.0-beta-28) 2025-05-15
 
 ### Fixed
+
 -   fix: [Bug: "Other" Contracting Method Details Not Displayed in Review](https://github.com/IntersectMBO/govtool/issues/3553)
 
 ## [v0.7.0-beta-27](https://www.npmjs.com/package/@intersect.mbo/pdf-ui/v/0.7.0-beta-27) 2025-05-14
