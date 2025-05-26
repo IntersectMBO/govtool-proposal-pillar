@@ -602,7 +602,7 @@ const ProposedBudgetDiscussion = () => {
                                         open={openSort}
                                         onClose={handleSortClose}
                                         MenuListProps={{
-                                            'aria-labelledby': 'filters-button',
+                                            'aria-labelledby': 'sort-button',
                                         }}
                                         slotProps={{
                                             paper: {
