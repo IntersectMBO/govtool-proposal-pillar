@@ -171,11 +171,12 @@ const CreateBudgetDiscussionDialog = ({
                 budgetDiscussionData?.bd_costing?.amount_in_preferred_currency?.toString() ||
                 '';
 
-            if (selectedDraftId) {
+            const newBD = await createBudgetDiscussion(budgetDiscussionData);
+
+            //Moved deletion down and added check for newBD so draft is deleted only if newBD is created
+            if (selectedDraftId && newBD) {
                 await deleteBudgetDiscussionDraft(selectedDraftId);
             }
-
-            const newBD = await createBudgetDiscussion(budgetDiscussionData);
 
             onClose();
             navigate(
