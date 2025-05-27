@@ -1,12 +1,12 @@
 'use strict';
 
 /**
- * proposal-hard-fork-content router
+ * proposal-update-committee-content router
  */
 
 const { createCoreRouter } = require('@strapi/strapi').factories;
 
-module.exports = createCoreRouter('api::proposal-hard-fork-content.proposal-hard-fork-content', {
+module.exports = createCoreRouter('api::proposal-update-committee-content.proposal-update-committee-content', {
   config: {
     find: {
       roles: ["authenticated", "public"],
