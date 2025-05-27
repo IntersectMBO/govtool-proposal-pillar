@@ -31,6 +31,7 @@ import { correctVoteAdaFormat, formatIsoDate } from '../../lib/utils';
 import EditProposalDialog from '../EditProposalDialog';
 import MarkdownTextComponent from '../MarkdownTextComponent';
 import CreateBudgetDiscussionDialog from '../CreateBudgetDiscussionDialog';
+import MarkdownTypography from '../../lib/markdownRenderer';
 
 const BudgetDiscussionCard = ({
     budgetDiscussion,
@@ -379,8 +380,8 @@ const BudgetDiscussionCard = ({
                                         : 'proposal-benefit'
                                 }
                             >
-                                <MarkdownTextComponent
-                                    markdownText={
+                                <MarkdownTypography
+                                    content={
                                         isDraft
                                             ? budgetDiscussion?.attributes
                                                   ?.draft_data?.bd_psapb
@@ -390,6 +391,17 @@ const BudgetDiscussionCard = ({
                                                   ?.proposal_benefit
                                     }
                                 />
+                                {/* <MarkdownTextComponent
+                                    markdownText={
+                                        isDraft
+                                            ? budgetDiscussion?.attributes
+                                                  ?.draft_data?.bd_psapb
+                                                  ?.proposal_benefit
+                                            : budgetDiscussion?.attributes
+                                                  ?.bd_psapb?.data?.attributes
+                                                  ?.proposal_benefit
+                                    }
+                                /> */}
                             </div>
                         </Box>
                         <Box>
@@ -506,8 +518,9 @@ const BudgetDiscussionCard = ({
                                     </Tooltip>
                                     {user &&
                                         user?.user?.id?.toString() ===
-                                            budgetDiscussion?.attributes?.creator?.data?.id?.toString() && 
-                                            budgetDiscussion?.attributes?.submitted_for_vote == null && (
+                                            budgetDiscussion?.attributes?.creator?.data?.id?.toString() &&
+                                        budgetDiscussion?.attributes
+                                            ?.submitted_for_vote == null && (
                                             <Tooltip title='Edit'>
                                                 <IconButton
                                                     aria-label='edit'

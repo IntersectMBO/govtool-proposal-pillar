@@ -13,6 +13,22 @@ import {
 } from '@mui/material';
 import ReactMarkdown from 'react-markdown';
 import { openInNewTab } from '../../lib/utils';
+import MarkdownTypography from '../../lib/markdownRenderer';
+
+const InfoSection = ({ question, answer, answerTestId }) => {
+    return (
+        <Box
+            sx={{
+                mb: 2,
+            }}
+        >
+            <Typography variant='caption' gutterBottom>
+                {question}
+            </Typography>
+            <MarkdownTypography content={answer} testId={`${answerTestId}`} />
+        </Box>
+    );
+};
 
 const Step3 = ({
     setStep,
@@ -25,6 +41,7 @@ const Step3 = ({
     const theme = useTheme();
     const selectedGATypeId = proposalData?.gov_action_type_id;
     const pc = proposalData?.proposal_constitution_content;
+
     return (
         <Card variant='outlined'>
             <CardContent
@@ -103,7 +120,11 @@ const Step3 = ({
                         >
                             Abstrtact
                         </Typography>
-                        <ReactMarkdown
+                        <MarkdownTypography
+                            content={proposalData?.prop_abstract || ''}
+                            testId={`abstract-content`}
+                        />
+                        {/* <ReactMarkdown
                             components={{
                                 p(props) {
                                     const { children } = props;
@@ -122,7 +143,7 @@ const Step3 = ({
                             }}
                         >
                             {proposalData?.prop_abstract || ''}
-                        </ReactMarkdown>
+                        </ReactMarkdown> */}
                     </Box>
 
                     <Box>
@@ -133,10 +154,15 @@ const Step3 = ({
                         >
                             Motivation
                         </Typography>
-                        <ReactMarkdown
+                        <MarkdownTypography
+                            content={proposalData?.prop_motivation || ''}
+                            testId={`motivation-content`}
+                        />
+                        {/* <ReactMarkdown
                             components={{
                                 p(props) {
                                     const { children } = props;
+
                                     return (
                                         <Typography
                                             variant='body1'
@@ -152,7 +178,7 @@ const Step3 = ({
                             }}
                         >
                             {proposalData?.prop_motivation || ''}
-                        </ReactMarkdown>
+                        </ReactMarkdown> */}
                     </Box>
 
                     <Box>
@@ -163,7 +189,11 @@ const Step3 = ({
                         >
                             Rationale
                         </Typography>
-                        <ReactMarkdown
+                        <MarkdownTypography
+                            content={proposalData?.prop_rationale || ''}
+                            testId={`rationale-content`}
+                        />
+                        {/* <ReactMarkdown
                             components={{
                                 p(props) {
                                     const { children } = props;
@@ -182,7 +212,7 @@ const Step3 = ({
                             }}
                         >
                             {proposalData?.prop_rationale || ''}
-                        </ReactMarkdown>
+                        </ReactMarkdown> */}
                     </Box>
                     {selectedGATypeId == 2
                         ? proposalData?.proposal_withdrawals?.map(

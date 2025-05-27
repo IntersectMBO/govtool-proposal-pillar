@@ -1047,6 +1047,12 @@ const BudgetDiscussionReviewVersions = ({ open, onClose, id }) => {
                                                                                             variant='body2'
                                                                                             style={{
                                                                                                 margin: 0,
+                                                                                                textOverflow:
+                                                                                                    'ellipsis',
+                                                                                                overflow:
+                                                                                                    'hidden',
+                                                                                                maxWidth:
+                                                                                                    '600px',
                                                                                             }}
                                                                                             data-testid={`link-${index}-text-content`}
                                                                                         >

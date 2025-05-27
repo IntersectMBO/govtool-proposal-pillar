@@ -30,6 +30,7 @@ import { useAppContext } from '../../context/context';
 import { formatIsoDate } from '../../lib/utils';
 import EditProposalDialog from '../EditProposalDialog';
 import MarkdownTextComponent from '../MarkdownTextComponent';
+import MarkdownTypography from '../../lib/markdownRenderer';
 
 const ProposalCard = ({
     proposal,
@@ -318,12 +319,19 @@ const ProposalCard = ({
                                 Abstract
                             </Typography>
 
-                            <MarkdownTextComponent
+                            <MarkdownTypography
+                                content={
+                                    proposal?.attributes?.content?.attributes
+                                        ?.prop_abstract || ''
+                                }
+                                testId={`abstract-content`}
+                            />
+                            {/* <MarkdownTextComponent
                                 markdownText={
                                     proposal?.attributes?.content?.attributes
                                         ?.prop_abstract || ''
                                 }
-                            />
+                            /> */}
                         </Box>
                         <Box>
                             <Typography

@@ -104,7 +104,9 @@ const StoreDataStep = ({ setStep }) => {
                                             onChange={(e) =>
                                                 setChecked((prev) => !prev)
                                             }
-                                            data-testid='agree-checkbox'
+                                        inputProps={{
+                                            'data-testid': 'agree-checkbox',
+                                        }}
                                         />
                                     }
                                     label={

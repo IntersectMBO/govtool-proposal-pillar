@@ -706,7 +706,17 @@ const BudgetDiscussionReview = ({
                                                     target='_blank'
                                                     rel='noopener noreferrer'
                                                 >
-                                                    {link.prop_link_text}
+                                                    <Typography
+                                                        style={{
+                                                            margin: 0,
+                                                            textOverflow:
+                                                                'ellipsis',
+                                                            overflow: 'hidden',
+                                                            maxWidth: '800px',
+                                                        }}
+                                                    >
+                                                        {link.prop_link_text}
+                                                    </Typography>
                                                 </Link>
                                             )
                                         )}

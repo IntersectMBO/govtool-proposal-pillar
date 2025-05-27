@@ -60,10 +60,15 @@ import {
     createPoll,
     getPolls,
 } from '../../../lib/api';
-import { correctVoteAdaFormat, formatIsoDate, openInNewTab } from '../../../lib/utils';
+import {
+    correctVoteAdaFormat,
+    formatIsoDate,
+    openInNewTab,
+} from '../../../lib/utils';
 import ProposalOwnModal from '../../../components/ProposalOwnModal';
 import ReactMarkdown from 'react-markdown';
 import { loginUserToApp } from '../../../lib/helpers';
+import MarkdownTypography from '../../../lib/markdownRenderer';
 
 const SingleGovernanceAction = ({ id }) => {
     const MAX_COMMENT_LENGTH = 15000;
@@ -279,12 +284,13 @@ const SingleGovernanceAction = ({ id }) => {
     const fetchCurrentWalletBalance = async () => {
         try {
             const bal = await walletAPI.getBalance();
-            const balance = Number('0x' + bal.match(/^1b([0-9a-fA-F]{16})$/)[1]) || 0;
-            setCurrentWalletBalance(balance/1000000);
+            const balance =
+                Number('0x' + bal.match(/^1b([0-9a-fA-F]{16})$/)[1]) || 0;
+            setCurrentWalletBalance(balance / 1000000);
         } catch (error) {
             console.error(error);
         }
-    }
+    };
     const handleCreateComment = async () => {
         setLoading(true);
         try {
@@ -621,9 +627,11 @@ const SingleGovernanceAction = ({ id }) => {
                                                     </Button>
                                                 ) : user &&
                                                   user?.user?.id?.toString() ===
-                                                      proposal?.attributes?.user_id?.toString() 
-                                                      && walletAPI?.walletName.toLowerCase() != 'ledger' 
-                                                      && walletAPI?.walletName.toLowerCase() != 'trezor'? (
+                                                      proposal?.attributes?.user_id?.toString() &&
+                                                  walletAPI?.walletName.toLowerCase() !=
+                                                      'ledger' &&
+                                                  walletAPI?.walletName.toLowerCase() !=
+                                                      'trezor' ? (
                                                     <Button
                                                         variant='outlined'
                                                         data-testid='submit-as-GA-button'
@@ -639,15 +647,19 @@ const SingleGovernanceAction = ({ id }) => {
                                                                     setOpenUsernameModal:
                                                                         setOpenUsernameModal,
                                                                     callBackFn:
-                                                                        () =>{    
+                                                                        () => {
                                                                             fetchCurrentWalletBalance();
-                                                                            if( currentWalletBalance >= 100.18)
-                                                                            {
-                                                                                setOpenGASubmissionDialog(true)
-                                                                            }
-                                                                            else
-                                                                            {
-                                                                                setOpenAlertDialog(true)
+                                                                            if (
+                                                                                currentWalletBalance >=
+                                                                                100.18
+                                                                            ) {
+                                                                                setOpenGASubmissionDialog(
+                                                                                    true
+                                                                                );
+                                                                            } else {
+                                                                                setOpenAlertDialog(
+                                                                                    true
+                                                                                );
                                                                             }
                                                                         },
                                                                     clearStates:
@@ -665,20 +677,21 @@ const SingleGovernanceAction = ({ id }) => {
                                                         Submit as Governance
                                                         Action
                                                     </Button>
-                                                ) : 
-                                                   walletAPI?.walletName.toLowerCase() == 'ledger' 
-                                                   || walletAPI?.walletName.toLowerCase() == 'trezor'?
-                                                   (
-                                                     <Typography variant='body2' component={'h5'}
-                                                     sx={{
-                                                         color: "#9c2224",
-                                                         mt: 1,
-                                                     }}
-                                                     >
-                                                         {`You hardware wallet does not support submitting governance actions`}
+                                                ) : walletAPI?.walletName.toLowerCase() ==
+                                                      'ledger' ||
+                                                  walletAPI?.walletName.toLowerCase() ==
+                                                      'trezor' ? (
+                                                    <Typography
+                                                        variant='body2'
+                                                        component={'h5'}
+                                                        sx={{
+                                                            color: '#9c2224',
+                                                            mt: 1,
+                                                        }}
+                                                    >
+                                                        {`You hardware wallet does not support submitting governance actions`}
                                                     </Typography>
-                                                   ) :                                               
-                                                (
+                                                ) : (
                                                     <Button
                                                         variant='outlined'
                                                         data-testid='proposal-details-header-comment-button'
@@ -1145,11 +1158,19 @@ const SingleGovernanceAction = ({ id }) => {
                                             Abstract
                                         </Typography>
                                         <div data-testid='abstract-content'>
-                                            <ReactMarkdown data-testid='abstract-content'>
+                                            <MarkdownTypography
+                                                content={
+                                                    showFullText || !maxLength
+                                                        ? AbstractMarkdownText
+                                                        : truncatedText
+                                                }
+                                                testId={`abstract-content`}
+                                            />
+                                            {/* <ReactMarkdown data-testid='abstract-content'>
                                                 {showFullText || !maxLength
                                                     ? AbstractMarkdownText
                                                     : truncatedText}
-                                            </ReactMarkdown>
+                                            </ReactMarkdown> */}
                                         </div>
                                         {!showFullText &&
                                             totalCharLength > maxLength && (
@@ -1191,11 +1212,21 @@ const SingleGovernanceAction = ({ id }) => {
                                                 Motivation
                                             </Typography>
                                             <div data-testid='motivation-content'>
-                                                <ReactMarkdown>
+                                                <MarkdownTypography
+                                                    content={
+                                                        proposal?.attributes
+                                                            ?.content
+                                                            ?.attributes
+                                                            ?.prop_motivation ||
+                                                        ''
+                                                    }
+                                                    testId={`motivation-content`}
+                                                />
+                                                {/* <ReactMarkdown>
                                                     {proposal?.attributes
                                                         ?.content?.attributes
                                                         ?.prop_motivation || ''}
-                                                </ReactMarkdown>
+                                                </ReactMarkdown> */}
                                             </div>
                                         </Box>
                                     )}
@@ -1212,11 +1243,21 @@ const SingleGovernanceAction = ({ id }) => {
                                                 Rationale
                                             </Typography>
                                             <div data-testid='rationale-content'>
-                                                <ReactMarkdown>
+                                                <MarkdownTypography
+                                                    content={
+                                                        proposal?.attributes
+                                                            ?.content
+                                                            ?.attributes
+                                                            ?.prop_rationale ||
+                                                        ''
+                                                    }
+                                                    testId={`rationale-content`}
+                                                />
+                                                {/* <ReactMarkdown>
                                                     {proposal?.attributes
                                                         ?.content?.attributes
                                                         ?.prop_rationale || ''}
-                                                </ReactMarkdown>
+                                                </ReactMarkdown> */}
                                             </div>
                                         </Box>
                                     )}
@@ -1445,6 +1486,12 @@ const SingleGovernanceAction = ({ id }) => {
                                                                 variant='body2'
                                                                 style={{
                                                                     margin: 0,
+                                                                    textOverflow:
+                                                                        'ellipsis',
+                                                                    overflow:
+                                                                        'hidden',
+                                                                    maxWidth:
+                                                                        '800px',
                                                                 }}
                                                                 data-testid={`link-${index}-text-content`}
                                                             >
@@ -2161,33 +2208,48 @@ const SingleGovernanceAction = ({ id }) => {
                     </Box>
                 )}
             </Typography>
-            <Dialog
-                open={openAlertDialog}
-                onClose={handleAlertDialogClose}
-                >
+            <Dialog open={openAlertDialog} onClose={handleAlertDialogClose}>
                 <DialogContent>
-                    <Box sx={{display: 'flex',  alignItems: 'center', justifyContent: 'between', width: '100%', marginBottom:'16px'}}>
-                        <Typography variant='h5' fontWeight={600} color='text.black' width={'100%'}>
-                        Insufficient wallet balance
+                    <Box
+                        sx={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'between',
+                            width: '100%',
+                            marginBottom: '16px',
+                        }}
+                    >
+                        <Typography
+                            variant='h5'
+                            fontWeight={600}
+                            color='text.black'
+                            width={'100%'}
+                        >
+                            Insufficient wallet balance
                         </Typography>
-                        <IconButton   onClick={handleAlertDialogClose}>
-                            <IconX/>
+                        <IconButton onClick={handleAlertDialogClose}>
+                            <IconX />
                         </IconButton>
                     </Box>
-                <DialogContentText id="alert-dialog-description">
-                
-                    Insufficient wallet balance to submit a Governance Action. 
-                    To submit a Governance Action on-chain, you require a wallet balance of ₳100,000 (refundable deposit) plus a transaction fee of ₳0.18.
-                </DialogContentText>
+                    <DialogContentText id='alert-dialog-description'>
+                        Insufficient wallet balance to submit a Governance
+                        Action. To submit a Governance Action on-chain, you
+                        require a wallet balance of ₳100,000 (refundable
+                        deposit) plus a transaction fee of ₳0.18.
+                    </DialogContentText>
                 </DialogContent>
                 <DialogActions fullWidth>
-                    <Button onClick={handleAlertDialogClose}  variant='contained' fullWidth autoFocus>
+                    <Button
+                        onClick={handleAlertDialogClose}
+                        variant='contained'
+                        fullWidth
+                        autoFocus
+                    >
                         Close
                     </Button>
                 </DialogActions>
             </Dialog>
         </>
-        
     );
 };
 

@@ -7,10 +7,12 @@
   "options": {},
   "attributes": {
     "prop_link": {
-      "type": "string"
+      "type": "text",
+      "maxLength": 2048
     },
     "prop_link_text": {
-      "type": "string"
+      "type": "string",
+      "maxLength": 255
     }
   }
 }
