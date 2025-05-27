@@ -16,7 +16,7 @@ import {
     alpha,
     useMediaQuery,
 } from '@mui/material';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, useCallback, useMemo } from 'react';
 import Slider from 'react-slick';
 import { useDebounce } from '../..//lib/hooks';
 import { getBudgetDiscussionDrafts, getBudgetDiscussions } from '../../lib/api';
@@ -28,7 +28,7 @@ import { useAppContext } from '../../context/context';
 const BudgetDiscussionsList = ({
     currentBudgetDiscussionType = null,
     searchText = '',
-    sortType = 'desc',
+    sortOption = { fieldId: 'createdAt', type: 'DESC', title: 'Newest' },
     isDraft = false,
     statusList = [],
     startEdittinButtonClick = false,
@@ -75,60 +75,87 @@ const BudgetDiscussionsList = ({
         <Box key={`extra-${index}`} height={'100%'} />
     ));
 
-    const fetchBudgetDiscussions = async (reset = true, page) => {
-        try {
-            if (isDraft) {
-                let bdlist = await getBudgetDiscussionDrafts();
-                setBudgetDiscussionList(bdlist.data);
-            } else {
-                let query = `filters[$and][0][is_active]=true&filters[$and][1][bd_psapb][type_name][id]=${
-                    currentBudgetDiscussionType?.id
-                }&filters[$and][2][bd_proposal_detail][proposal_name][$containsi]=${
-                    debouncedSearchValue || ''
-                }${proposalOwnerFilter?.id === 'all-proposals' ? '' : user?.user?.id ? '&filters[$and][3][creator]=' + user?.user?.id : ''}&pagination[page]=${page}&pagination[pageSize]=25&sort[createdAt]=${
-                    sortType
-                }&populate[0]=bd_costing&populate[1]=bd_psapb.type_name&populate[2]=bd_proposal_detail&populate[3]=creator`;
-                const { budgetDiscussions, pgCount, total } =
-                    await getBudgetDiscussions(query);
-
-                if (!budgetDiscussions) return;
-                if (reset) {
-                    setBudgetDiscussionList(budgetDiscussions);
+    const fetchBudgetDiscussions = useCallback(
+        async (reset = true, page) => {
+            try {
+                if (isDraft) {
+                    let bdlist = await getBudgetDiscussionDrafts();
+                    setBudgetDiscussionList(bdlist.data);
                 } else {
-                    setBudgetDiscussionList((prev) => [
-                        ...prev,
-                        ...budgetDiscussions,
-                    ]);
+                    let query = `filters[$and][0][is_active]=true&filters[$and][1][bd_psapb][type_name][id]=${
+                        currentBudgetDiscussionType?.id
+                    }&filters[$and][2][bd_proposal_detail][proposal_name][$containsi]=${
+                        debouncedSearchValue || ''
+                    }${proposalOwnerFilter?.id === 'all-proposals' ? '' : user?.user?.id ? '&filters[$and][3][creator]=' + user?.user?.id : ''}&pagination[page]=${page}&pagination[pageSize]=25&sort[${sortOption.fieldId}]=${
+                        sortOption.type
+                    }&populate[0]=bd_costing&populate[1]=bd_psapb.type_name&populate[2]=bd_proposal_detail&populate[3]=creator`;
+                    const { budgetDiscussions, pgCount, total } =
+                        await getBudgetDiscussions(query);
+
+                    if (!budgetDiscussions) return;
+                    if (reset) {
+                        setBudgetDiscussionList(budgetDiscussions);
+                    } else {
+                        setBudgetDiscussionList((prev) => [
+                            ...prev,
+                            ...budgetDiscussions,
+                        ]);
+                    }
+                    setPageCount(pgCount);
                 }
-                setPageCount(pgCount);
+            } catch (error) {
+                console.error(error);
             }
-        } catch (error) {
-            console.error(error);
-        }
-    };
+        },
+        [
+            isDraft,
+            currentBudgetDiscussionType?.id,
+            debouncedSearchValue,
+            proposalOwnerFilter?.id,
+            user?.user?.id,
+            sortOption.fieldId,
+            sortOption.type,
+        ]
+    );
+
+    // Separate useEffect for drafts - Infinite calls issue
+    // This effect only runs when isDraft is true
     useEffect(() => {
-        if (!mounted) {
-            setMounted(true);
-        } else {
+        if (mounted && isDraft) {
+            fetchBudgetDiscussions(true, 1);
+            setCurrentPage(1);
+        }
+    }, [mounted, isDraft]);
+
+    useEffect(() => {
+        if (mounted && !isDraft) {
             fetchBudgetDiscussions(true, 1);
             setCurrentPage(1);
         }
     }, [
         mounted,
+        isDraft,
         debouncedSearchValue,
-        sortType,
-        isDraft ? null : statusList,
+        sortOption.fieldId,
+        sortOption.type,
+        statusList,
         showAllActivated,
-        currentBudgetDiscussionType,
+        currentBudgetDiscussionType?.id,
         proposalOwnerFilter?.id,
+        fetchBudgetDiscussions,
     ]);
+
+    // Mount effect
+    useEffect(() => {
+        setMounted(true);
+    }, []);
 
     useEffect(() => {
         if (shouldRefresh) {
             fetchBudgetDiscussions(true, 1);
             setShouldRefresh(false);
         }
-    }, [shouldRefresh]);
+    }, [shouldRefresh, fetchBudgetDiscussions]);
 
     useEffect(() => {
         if (!isDraft) {
@@ -176,6 +203,9 @@ const BudgetDiscussionsList = ({
         isAllProposalsListEmpty?.length,
         filteredBudgetDiscussionTypeList?.length,
         isDraft,
+        currentBudgetDiscussionType?.id,
+        currentBudgetDiscussionType?.attributes?.type_name,
+        setIsAllProposalsListEmpty,
     ]);
 
     return budgetDiscussionList?.length === 0 ? null : (

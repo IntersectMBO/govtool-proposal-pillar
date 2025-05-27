@@ -232,7 +232,13 @@ const BudgetDiscussionReviewVersions = ({ open, onClose, id }) => {
                                                     </Typography>
                                                 </Box>
                                                 {/* Versions */}
-                                                <List sx={{ padding: 0 }}>
+                                                <List
+                                                    sx={{
+                                                        padding: 0,
+                                                        maxHeight: '70vh',
+                                                        overflowY: 'auto',
+                                                    }}
+                                                >
                                                     {versions?.map(
                                                         (version, index) => (
                                                             <ListItem
@@ -338,8 +344,6 @@ const BudgetDiscussionReviewVersions = ({ open, onClose, id }) => {
                                                             >
                                                                 {`${formatIsoDate(
                                                                     selectedVersion
-                                                                        ?.attributes
-                                                                        ?.content
                                                                         ?.attributes
                                                                         ?.createdAt
                                                                 )}${
