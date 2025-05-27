@@ -87,7 +87,9 @@ const CreateGovernanceActionDialog = ({ open = false, onClose = false }) => {
                     proposalData?.proposal_links?.some(
                         (link) => !link.prop_link || !link.prop_link_text
                     ) ||
-                    Object.values(linksErrors).some((error) => error.url)
+                    Object.values(linksErrors).some(
+                        (error) => error.url || error.text
+                    )
                 ) {
                     return setIsContinueDisabled(true);
                 } else {

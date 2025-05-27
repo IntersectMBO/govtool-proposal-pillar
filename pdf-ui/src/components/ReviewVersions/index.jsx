@@ -24,6 +24,7 @@ import {
 } from '@intersect.mbo/intersectmbo.org-icons-set';
 import { formatIsoDate, formatIsoTime, openInNewTab } from '../../lib/utils';
 import { useEffect, useState } from 'react';
+import MarkdownTypography from '../../lib/markdownRenderer';
 import { getProposals } from '../../lib/api';
 import ReactMarkdown from 'react-markdown';
 
@@ -409,7 +410,18 @@ const ReviewVersions = ({ open, onClose, id }) => {
                                                         >
                                                             Abstract
                                                         </Typography>
-                                                        <ReactMarkdown
+                                                        <MarkdownTypography
+                                                            content={
+                                                                selectedVersion
+                                                                    ?.attributes
+                                                                    ?.content
+                                                                    ?.attributes
+                                                                    ?.prop_abstract ||
+                                                                ''
+                                                            }
+                                                            testId={`abstract-content`}
+                                                        />
+                                                        {/* <ReactMarkdown
                                                             components={{
                                                                 p(props) {
                                                                     const {
@@ -437,7 +449,7 @@ const ReviewVersions = ({ open, onClose, id }) => {
                                                                 ?.attributes
                                                                 ?.prop_abstract ||
                                                                 ''}
-                                                        </ReactMarkdown>
+                                                        </ReactMarkdown> */}
                                                     </Box>
                                                     <Box>
                                                         <Typography
@@ -449,7 +461,18 @@ const ReviewVersions = ({ open, onClose, id }) => {
                                                         >
                                                             Motivation
                                                         </Typography>
-                                                        <ReactMarkdown
+                                                        <MarkdownTypography
+                                                            content={
+                                                                selectedVersion
+                                                                    ?.attributes
+                                                                    ?.content
+                                                                    ?.attributes
+                                                                    ?.prop_motivation ||
+                                                                ''
+                                                            }
+                                                            testId={`motivation-content`}
+                                                        />
+                                                        {/* <ReactMarkdown
                                                             components={{
                                                                 p(props) {
                                                                     const {
@@ -477,7 +500,7 @@ const ReviewVersions = ({ open, onClose, id }) => {
                                                                 ?.attributes
                                                                 ?.prop_motivation ||
                                                                 ''}
-                                                        </ReactMarkdown>
+                                                        </ReactMarkdown> */}
                                                     </Box>
                                                     <Box>
                                                         <Typography
@@ -490,7 +513,19 @@ const ReviewVersions = ({ open, onClose, id }) => {
                                                             Rationale
                                                         </Typography>
 
-                                                        <ReactMarkdown
+                                                        <MarkdownTypography
+                                                            content={
+                                                                selectedVersion
+                                                                    ?.attributes
+                                                                    ?.content
+                                                                    ?.attributes
+                                                                    ?.prop_rationale ||
+                                                                ''
+                                                            }
+                                                            testId={`rationale-content`}
+                                                        />
+
+                                                        {/* <ReactMarkdown
                                                             components={{
                                                                 p(props) {
                                                                     const {
@@ -518,7 +553,7 @@ const ReviewVersions = ({ open, onClose, id }) => {
                                                                 ?.attributes
                                                                 ?.prop_rationale ||
                                                                 ''}
-                                                        </ReactMarkdown>
+                                                        </ReactMarkdown> */}
                                                     </Box>
 
                                                     {selectedVersion?.attributes
@@ -586,6 +621,15 @@ const ReviewVersions = ({ open, onClose, id }) => {
                                                                                 variant='body2'
                                                                                 component='span'
                                                                                 data-testid={`link-${index}-text-content`}
+                                                                                style={{
+                                                                                    margin: 0,
+                                                                                    textOverflow:
+                                                                                        'ellipsis',
+                                                                                    overflow:
+                                                                                        'hidden',
+                                                                                    maxWidth:
+                                                                                        '400px',
+                                                                                }}
                                                                             >
                                                                                 {
                                                                                     link?.prop_link_text
