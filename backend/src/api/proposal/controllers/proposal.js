@@ -189,21 +189,38 @@ module.exports = createCoreController(
 		},
 		async findOne(ctx) {
 			const { id } = ctx?.params;
-
+			let proposal;
 			if (!id) {
 				return ctx.badRequest(null, 'Proposal ID is required');
 			}
 			// const sanitizedQueryParams = await this.sanitizeQuery(ctx);
-
-			const proposal = await strapi.entityService.findOne(
-				'api::proposal.proposal',
-				id
-			);
-
+			if(Number.isInteger(id)){
+				proposal = await strapi.entityService.findOne(
+					'api::proposal.proposal',
+					id
+				);
+			}
+			else{
+				const proposalByHash = await strapi.entityService.findMany(
+					'api::proposal-content.proposal-content',{
+						filters: {
+						prop_submission_tx_hash: {
+							$eq: id
+						}
+						}
+					}
+				);
+				let xid = parseInt(proposalByHash[0].proposal_id, 10);
+				if (!proposalByHash) {
+					return ctx.badRequest(null, 'Proposal not found');
+				}
+				proposal = await strapi.entityService.findOne(
+					'api::proposal.proposal', xid
+				);	
+			}
 			if (!proposal) {
 				return ctx.badRequest(null, 'Proposal not found');
 			}
-
 			const proposalContent = await strapi
 				.controller('api::proposal-content.proposal-content')
 				.find({
