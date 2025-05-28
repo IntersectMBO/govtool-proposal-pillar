@@ -78,6 +78,12 @@
     "is_locked": {
       "type": "boolean",
       "default": false
+    },
+    "proposal": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::proposal.proposal",
+      "inversedBy": "proposal_content"
     }
   }
 }
