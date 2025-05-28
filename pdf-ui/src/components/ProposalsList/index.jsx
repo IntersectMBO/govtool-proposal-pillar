@@ -27,7 +27,7 @@ import { useTheme } from '@emotion/react';
 const ProposalsList = ({
     governanceAction,
     searchText = '',
-    sortType = 'desc',
+    sortType = { fieldId: 'createdAt', type: 'DESC', title: 'Newest' },
     isDraft = false,
     statusList = [],
     startEdittinButtonClick = false,
@@ -88,14 +88,14 @@ const ProposalsList = ({
                         governanceAction?.id
                     }&filters[$and][1][prop_name][$containsi]=${
                         debouncedSearchValue || ''
-                    }&pagination[page]=${page}&pagination[pageSize]=25&sort[createdAt]=${sortType}&populate[0]=proposal_links&populate[1]=proposal_withdrawals&populate[2]=proposal_constitution_content`;
+                    }&pagination[page]=${page}&pagination[pageSize]=25&sort[${sortType.fieldId}]=${sortType.type}&populate[0]=proposal_links&populate[1]=proposal_withdrawals&populate[2]=proposal_constitution_content&populate[3]=proposal`;
                 } else {
                     const isSubmitted = haveSubmittedFilter ? 'true' : 'false';
                     query = `filters[$and][0][gov_action_type_id]=${
                         governanceAction?.id
                     }&filters[$and][1][prop_name][$containsi]=${
                         debouncedSearchValue || ''
-                    }&filters[$and][2][prop_submitted]=${isSubmitted}&pagination[page]=${page}&pagination[pageSize]=25&sort[createdAt]=${sortType}&populate[0]=proposal_links&populate[1]=proposal_withdrawals&populate[2]=proposal_constitution_content`;
+                    }&filters[$and][2][prop_submitted]=${isSubmitted}&pagination[page]=${page}&pagination[pageSize]=25&sort[${sortType.fieldId}]=${sortType.type}&populate[0]=proposal_links&populate[1]=proposal_withdrawals&populate[2]=proposal_constitution_content&populate[3]=proposal`;
                 }
             }
             const { proposals, pgCount } = await getProposals(query);
@@ -106,6 +106,7 @@ const ProposalsList = ({
             } else {
                 setProposalsList((prev) => [...prev, ...proposals]);
             }
+            console.log('🚀 ~ fetchProposals ~ proposals:', proposals);
             setPageCount(pgCount);
         } catch (error) {
             console.error(error);
