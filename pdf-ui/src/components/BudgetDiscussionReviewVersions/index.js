@@ -902,7 +902,7 @@ const BudgetDiscussionReviewVersions = ({ open, onClose, id }) => {
 
                                                             <BudgetDiscussionInfoSegment
                                                                 question={
-                                                                    'ADA to USD Conversion Rate'
+                                                                    'USD to ADA Conversion Rate'
                                                                 }
                                                                 answer={
                                                                     selectedVersion
