@@ -281,16 +281,18 @@ const SingleGovernanceAction = ({ id }) => {
         }
     };
 
-    const fetchCurrentWalletBalance = async () => {
-        try {
-            const bal = await walletAPI.getBalance();
-            const balance =
-                Number('0x' + bal.match(/^1b([0-9a-fA-F]{16})$/)[1]) || 0;
-            setCurrentWalletBalance(balance / 1000000);
-        } catch (error) {
-            console.error(error);
-        }
-    };
+   const fetchCurrentWalletBalance = async () => {
+    try {
+        const bal = await walletAPI.getBalance();
+        const balance = Number('0x' + bal.match(/^1b([0-9a-fA-F]{16})$/)[1]) || 0;
+        const normalized = balance / 1000000;
+        setCurrentWalletBalance(normalized);
+        return normalized; 
+    } catch (error) {
+        console.error(error);
+        return 0; // fallback
+    }
+};
     const handleCreateComment = async () => {
         setLoading(true);
         try {
@@ -634,41 +636,25 @@ const SingleGovernanceAction = ({ id }) => {
                                                         sx={{
                                                             width: 'max-content',
                                                         }}
-                                                        onClick={async () =>
-                                                            await loginUserToApp(
-                                                                {
-                                                                    wallet: walletAPI,
-                                                                    setUser:
-                                                                        setUser,
-                                                                    setOpenUsernameModal:
-                                                                        setOpenUsernameModal,
-                                                                    callBackFn:
-                                                                        () => {
-                                                                            fetchCurrentWalletBalance();
-                                                                            if (
-                                                                                currentWalletBalance >=
-                                                                                100.18
-                                                                            ) {
-                                                                                setOpenGASubmissionDialog(
-                                                                                    true
-                                                                                );
-                                                                            } else {
-                                                                                setOpenAlertDialog(
-                                                                                    true
-                                                                                );
-                                                                            }
-                                                                        },
-                                                                    clearStates:
-                                                                        clearStates,
-                                                                    addErrorAlert:
-                                                                        addErrorAlert,
-                                                                    addSuccessAlert:
-                                                                        addSuccessAlert,
-                                                                    addChangesSavedAlert:
-                                                                        addChangesSavedAlert,
-                                                                }
-                                                            )
-                                                        }
+                                                        onClick={async () => {
+                                                                    const balance = await fetchCurrentWalletBalance();
+                                                                    if (balance >= 100000.18) {
+                                                                        await loginUserToApp({
+                                                                            wallet: walletAPI,
+                                                                            setUser,
+                                                                            setOpenUsernameModal,
+                                                                            callBackFn: () => {
+                                                                                setOpenGASubmissionDialog(true);
+                                                                            },
+                                                                            clearStates,
+                                                                            addErrorAlert,
+                                                                            addSuccessAlert,
+                                                                            addChangesSavedAlert,
+                                                                        });
+                                                                    } else {
+                                                                        setOpenAlertDialog(true);
+                                                                    }
+                                                                }}
                                                     >
                                                         Submit as Governance
                                                         Action
