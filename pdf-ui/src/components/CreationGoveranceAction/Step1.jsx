@@ -178,9 +178,7 @@ const Step1 = ({ setStep, setProposalData, onClose, setSelectedDraftId }) => {
                                             voted on.
                                         </Typography>
                                     </ListItem>
-                                    {
-                                        walletAPI?.walletName.toLowerCase() == 'ledger' 
-                                        || walletAPI?.walletName.toLowerCase() == 'trezor'? (
+                                    
                                         <ListItem
                                                 sx={{
                                                     textAlign: 'justify',
@@ -197,9 +195,7 @@ const Step1 = ({ setStep, setProposalData, onClose, setSelectedDraftId }) => {
                                                     Our system has detected that you are using a hardware wallet which does not support the submission of governance actions. 
                                                     As a result, you will not be able to submit actions to the blockchain using this wallet.
                                                 </Typography>
-                                        </ListItem>): null
-                                    }
-
+                                        </ListItem>
                                 </List>
                             </Box>
                             <Box
