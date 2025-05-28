@@ -627,7 +627,7 @@ const BudgetDiscussionReview = ({
                                     />
 
                                     <InfoSection
-                                        question='ADA to USD Conversion Rate'
+                                        question='USD to ADA Conversion Rate'
                                         answer={
                                             currentBudgetDiscussionData
                                                 ?.bd_costing
