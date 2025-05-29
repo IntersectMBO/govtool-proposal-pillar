@@ -498,10 +498,7 @@ const BudgetDiscussionCard = ({
                                             display={'flex'}
                                             alignItems={'center'}
                                         >
-                                            <IconButton
-                                                // data-testid={`proposal-${proposal?.id}-comment-count`}
-                                                disabled={true}
-                                            >
+                                            <IconButton disabled={true}>
                                                 <StyledBadge
                                                     badgeContent={
                                                         budgetDiscussion
@@ -511,6 +508,7 @@ const BudgetDiscussionCard = ({
                                                     }
                                                     aria-label='comments'
                                                     showZero
+                                                    data-testid={`budget-discussion-${budgetDiscussion?.id}-comment-count`}
                                                 ></StyledBadge>
                                                 <IconChatAlt />
                                             </IconButton>

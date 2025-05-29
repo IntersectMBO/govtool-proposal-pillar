@@ -705,6 +705,7 @@ const BudgetDiscussionReview = ({
                                                     href={link.prop_link}
                                                     target='_blank'
                                                     rel='noopener noreferrer'
+                                                    data-testid={`link-${index}-label`}
                                                 >
                                                     <Typography
                                                         style={{

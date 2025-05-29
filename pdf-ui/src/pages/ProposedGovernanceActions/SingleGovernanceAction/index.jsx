@@ -281,18 +281,19 @@ const SingleGovernanceAction = ({ id }) => {
         }
     };
 
-   const fetchCurrentWalletBalance = async () => {
-    try {
-        const bal = await walletAPI.getBalance();
-        const balance = Number('0x' + bal.match(/^1b([0-9a-fA-F]{16})$/)[1]) || 0;
-        const normalized = balance / 1000000;
-        setCurrentWalletBalance(normalized);
-        return normalized; 
-    } catch (error) {
-        console.error(error);
-        return 0; // fallback
-    }
-};
+    const fetchCurrentWalletBalance = async () => {
+        try {
+            const bal = await walletAPI.getBalance();
+            const balance =
+                Number('0x' + bal.match(/^1b([0-9a-fA-F]{16})$/)[1]) || 0;
+            const normalized = balance / 1000000;
+            setCurrentWalletBalance(normalized);
+            return normalized;
+        } catch (error) {
+            console.error(error);
+            return 0; // fallback
+        }
+    };
     const handleCreateComment = async () => {
         setLoading(true);
         try {
@@ -637,24 +638,35 @@ const SingleGovernanceAction = ({ id }) => {
                                                             width: 'max-content',
                                                         }}
                                                         onClick={async () => {
-                                                                    const balance = await fetchCurrentWalletBalance();
-                                                                    if (balance >= 100000.18) {
-                                                                        await loginUserToApp({
-                                                                            wallet: walletAPI,
-                                                                            setUser,
-                                                                            setOpenUsernameModal,
-                                                                            callBackFn: () => {
-                                                                                setOpenGASubmissionDialog(true);
+                                                            const balance =
+                                                                await fetchCurrentWalletBalance();
+                                                            if (
+                                                                balance >=
+                                                                100000.18
+                                                            ) {
+                                                                await loginUserToApp(
+                                                                    {
+                                                                        wallet: walletAPI,
+                                                                        setUser,
+                                                                        setOpenUsernameModal,
+                                                                        callBackFn:
+                                                                            () => {
+                                                                                setOpenGASubmissionDialog(
+                                                                                    true
+                                                                                );
                                                                             },
-                                                                            clearStates,
-                                                                            addErrorAlert,
-                                                                            addSuccessAlert,
-                                                                            addChangesSavedAlert,
-                                                                        });
-                                                                    } else {
-                                                                        setOpenAlertDialog(true);
+                                                                        clearStates,
+                                                                        addErrorAlert,
+                                                                        addSuccessAlert,
+                                                                        addChangesSavedAlert,
                                                                     }
-                                                                }}
+                                                                );
+                                                            } else {
+                                                                setOpenAlertDialog(
+                                                                    true
+                                                                );
+                                                            }
+                                                        }}
                                                     >
                                                         Submit as Governance
                                                         Action
@@ -2192,6 +2204,7 @@ const SingleGovernanceAction = ({ id }) => {
                             fontWeight={600}
                             color='text.black'
                             width={'100%'}
+                            data-testid='insufficient-wallet-balance-title'
                         >
                             Insufficient wallet balance
                         </Typography>
@@ -2212,6 +2225,7 @@ const SingleGovernanceAction = ({ id }) => {
                         variant='contained'
                         fullWidth
                         autoFocus
+                        data-testid='insufficient-wallet-balance-dialog-button'
                     >
                         Close
                     </Button>
