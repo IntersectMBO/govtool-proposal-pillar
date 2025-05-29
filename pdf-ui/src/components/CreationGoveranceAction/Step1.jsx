@@ -192,8 +192,7 @@ const Step1 = ({ setStep, setProposalData, onClose, setSelectedDraftId }) => {
                                                     gutterBottom
                                                     sx={{ color: "#9c2224" }}
                                                 >
-                                                    Our system has detected that you are using a hardware wallet which does not support the submission of governance actions. 
-                                                    As a result, you will not be able to submit actions to the blockchain using this wallet.
+                                                    Please be aware that Ledger and Trezor hardware wallet do not support submission of governance actions, but you'll still be able to create the proposal.
                                                 </Typography>
                                         </ListItem>
                                 </List>
