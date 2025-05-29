@@ -841,9 +841,6 @@ module.exports = {
       .query("api::proposal-content.proposal-content")
       .findMany({
         populate: { proposal: true },
-        where: {
-          proposal: null,
-        },
       });
 
     let result = {
