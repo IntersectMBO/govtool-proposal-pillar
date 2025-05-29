@@ -318,14 +318,26 @@ const ProposalCard = ({
                             >
                                 Abstract
                             </Typography>
+                            <div
+                                style={{
+                                    display: '-webkit-box',
+                                    WebkitBoxOrient: 'vertical',
+                                    WebkitLineClamp: 3,
+                                    overflow: 'hidden',
+                                    textOverflow: 'ellipsis',
+                                    lineHeight: '1.5',
+                                    maxHeight: '4.5em',
+                                }}
+                            >
+                                <MarkdownTypography
+                                    content={
+                                        proposal?.attributes?.content
+                                            ?.attributes?.prop_abstract || ''
+                                    }
+                                    testId={`abstract-content`}
+                                />
+                            </div>
 
-                            <MarkdownTypography
-                                content={
-                                    proposal?.attributes?.content?.attributes
-                                        ?.prop_abstract || ''
-                                }
-                                testId={`abstract-content`}
-                            />
                             {/* <MarkdownTextComponent
                                 markdownText={
                                     proposal?.attributes?.content?.attributes
