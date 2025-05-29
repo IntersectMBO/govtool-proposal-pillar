@@ -81,9 +81,9 @@
     },
     "proposal": {
       "type": "relation",
-      "relation": "oneToOne",
+      "relation": "manyToOne",
       "target": "api::proposal.proposal",
-      "inversedBy": "proposal_content"
+      "inversedBy": "proposal_contents"
     }
   }
 }
