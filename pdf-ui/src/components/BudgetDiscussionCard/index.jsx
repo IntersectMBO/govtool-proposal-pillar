@@ -379,6 +379,15 @@ const BudgetDiscussionCard = ({
                                         ? `draft-proposal-benefit`
                                         : 'proposal-benefit'
                                 }
+                                style={{
+                                    display: '-webkit-box',
+                                    WebkitBoxOrient: 'vertical',
+                                    WebkitLineClamp: 3,
+                                    overflow: 'hidden',
+                                    textOverflow: 'ellipsis',
+                                    lineHeight: '1.5',
+                                    maxHeight: '4.5em',
+                                }}
                             >
                                 <MarkdownTypography
                                     content={
