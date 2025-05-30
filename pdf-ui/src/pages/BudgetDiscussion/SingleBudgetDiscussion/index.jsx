@@ -9,7 +9,7 @@ import {
     IconShare,
     IconSort,
     IconTrash,
-    IconInformationCircle,    
+    IconInformationCircle,
 } from '@intersect.mbo/intersectmbo.org-icons-set';
 import {
     Badge,
@@ -385,34 +385,38 @@ const SingleBudgetDiscussion = ({ id }) => {
                         </Box>
 
                         <Box mt={4}>
-                            {proposal?.attributes?.submitted_for_vote !== null && (
-                            <Card
-                                variant='outlined'
-                                sx={{
-                                    backgroundColor: alpha('#FFFFFF', 0.3),
-                                    marginBottom: 3,
-                                }}
-                            >
-                                <CardHeader
+                            {proposal?.attributes?.submitted_for_vote !==
+                                null && (
+                                <Card
+                                    variant='outlined'
                                     sx={{
-                                        pt: 1,
-                                        pb: 1,
-                                        backgroundColor: alpha('#F2F4F8', 0.7),
+                                        backgroundColor: alpha('#FFFFFF', 0.3),
+                                        marginBottom: 3,
                                     }}
-                                    title={
-                                        <Box
-                                            display={'flex'}
-                                            justifyContent={'center'}
-                                            alignItems={'center'}
-                                            flexDirection={'row'}
-                                        >
-                                            <Typography
-                                                variant='caption'
-                                                component='p'
+                                >
+                                    <CardHeader
+                                        sx={{
+                                            pt: 1,
+                                            pb: 1,
+                                            backgroundColor: alpha(
+                                                '#F2F4F8',
+                                                0.7
+                                            ),
+                                        }}
+                                        title={
+                                            <Box
+                                                display={'flex'}
+                                                justifyContent={'center'}
+                                                alignItems={'center'}
+                                                flexDirection={'row'}
                                             >
-                                                Submitted for vote
-                                            </Typography>
-                                            {/* <Tooltip
+                                                <Typography
+                                                    variant='caption'
+                                                    component='p'
+                                                >
+                                                    Submitted for vote
+                                                </Typography>
+                                                {/* <Tooltip
                                                 title={
                                                         <span
                                                             style={{
@@ -436,10 +440,10 @@ const SingleBudgetDiscussion = ({ id }) => {
                                                     />
                                                 </Box>
                                             </Tooltip> */}
-                                        </Box>
-                                    }
-                                ></CardHeader>
-                                 <CardContent>
+                                            </Box>
+                                        }
+                                    ></CardHeader>
+                                    <CardContent>
                                         <Box
                                             display='flex'
                                             alignItems='center'
@@ -456,20 +460,24 @@ const SingleBudgetDiscussion = ({ id }) => {
                                                     md: 'left',
                                                 }}
                                             >
-
                                                 <Typography
                                                     variant='caption'
                                                     sx={{
                                                         textWrap: 'balance',
                                                     }}
                                                 >
-                                                    Editing and Voting options have been disabled for this proposal because it is included in the Intersect Budget info action
+                                                    Editing and Voting options
+                                                    have been disabled for this
+                                                    proposal because it is
+                                                    included in the Intersect
+                                                    Budget info action
                                                 </Typography>
                                             </Box>
                                         </Box>
-                                 </CardContent>
-                            </Card>)}
-                                
+                                    </CardContent>
+                                </Card>
+                            )}
+
                             <Card>
                                 <CardContent>
                                     <Grid container>
@@ -678,7 +686,9 @@ const SingleBudgetDiscussion = ({ id }) => {
                                             {user &&
                                                 user?.user?.id?.toString() ===
                                                     proposal?.attributes?.creator?.data?.id?.toString() &&
-                                                    proposal?.attributes?.submitted_for_vote == null && (
+                                                proposal?.attributes
+                                                    ?.submitted_for_vote ==
+                                                    null && (
                                                     <Box
                                                         display='flex'
                                                         justifyContent='flex-end'
@@ -1638,6 +1648,12 @@ const SingleBudgetDiscussion = ({ id }) => {
                                                                             variant='body2'
                                                                             style={{
                                                                                 margin: 0,
+                                                                                textOverflow:
+                                                                                    'ellipsis',
+                                                                                overflow:
+                                                                                    'hidden',
+                                                                                maxWidth:
+                                                                                    '800px',
                                                                             }}
                                                                             data-testid={`link-${index}-text-content`}
                                                                         >
@@ -1855,22 +1871,24 @@ const SingleBudgetDiscussion = ({ id }) => {
                             </IconButton>
                         </Box>
 
-                        {activePoll && 
-                        proposal?.attributes?.submitted_for_vote === null && (
-                            <Box mt={4}>
-                                <BudgetDiscussionPoll
-                                    proposalUserId={
-                                        proposal?.attributes?.creator?.data?.id
-                                    }
-                                    proposalAuthorUsername={
-                                        proposal?.attributes
-                                            ?.user_govtool_username
-                                    }
-                                    poll={activePoll}
-                                    fetchActivePoll={fetchActivePoll}
-                                />
-                            </Box>
-                        )}
+                        {activePoll &&
+                            proposal?.attributes?.submitted_for_vote ===
+                                null && (
+                                <Box mt={4}>
+                                    <BudgetDiscussionPoll
+                                        proposalUserId={
+                                            proposal?.attributes?.creator?.data
+                                                ?.id
+                                        }
+                                        proposalAuthorUsername={
+                                            proposal?.attributes
+                                                ?.user_govtool_username
+                                        }
+                                        poll={activePoll}
+                                        fetchActivePoll={fetchActivePoll}
+                                    />
+                                </Box>
+                            )}
 
                         {proposal?.attributes?.content?.attributes
                             ?.prop_submitted ? null : (

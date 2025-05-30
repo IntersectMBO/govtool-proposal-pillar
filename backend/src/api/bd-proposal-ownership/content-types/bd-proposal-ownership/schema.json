@@ -37,7 +37,7 @@
       "type": "string"
     },
     "key_info_to_identify_group": {
-      "type": "string"
+      "type": "text"
     },
     "be_country": {
       "type": "relation",

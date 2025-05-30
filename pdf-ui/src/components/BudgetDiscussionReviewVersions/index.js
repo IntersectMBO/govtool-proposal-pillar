@@ -345,8 +345,6 @@ const BudgetDiscussionReviewVersions = ({ open, onClose, id }) => {
                                                                 {`${formatIsoDate(
                                                                     selectedVersion
                                                                         ?.attributes
-                                                                        ?.content
-                                                                        ?.attributes
                                                                         ?.createdAt
                                                                 )}${
                                                                     selectedVersion
@@ -904,7 +902,7 @@ const BudgetDiscussionReviewVersions = ({ open, onClose, id }) => {
 
                                                             <BudgetDiscussionInfoSegment
                                                                 question={
-                                                                    'ADA to USD Conversion Rate'
+                                                                    'USD to ADA Conversion Rate'
                                                                 }
                                                                 answer={
                                                                     selectedVersion
@@ -1049,6 +1047,12 @@ const BudgetDiscussionReviewVersions = ({ open, onClose, id }) => {
                                                                                             variant='body2'
                                                                                             style={{
                                                                                                 margin: 0,
+                                                                                                textOverflow:
+                                                                                                    'ellipsis',
+                                                                                                overflow:
+                                                                                                    'hidden',
+                                                                                                maxWidth:
+                                                                                                    '600px',
                                                                                             }}
                                                                                             data-testid={`link-${index}-text-content`}
                                                                                         >

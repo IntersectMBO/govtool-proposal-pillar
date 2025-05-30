@@ -12,6 +12,7 @@ import {
 import { ProposalsList } from '..';
 import { getProposals } from '../../lib/api';
 import { useEffect, useState } from 'react';
+import { useAppContext } from '../../context/context';
 
 const Step1 = ({ setStep, setProposalData, onClose, setSelectedDraftId }) => {
     const [draftsEnabled, setDraftsEnabled] = useState(false);
@@ -28,7 +29,7 @@ const Step1 = ({ setStep, setProposalData, onClose, setSelectedDraftId }) => {
             console.error(error);
         }
     };
-
+    const {walletAPI} = useAppContext();
     useEffect(() => {
         if (!mounted) {
             setMounted(true);
@@ -177,6 +178,23 @@ const Step1 = ({ setStep, setProposalData, onClose, setSelectedDraftId }) => {
                                             voted on.
                                         </Typography>
                                     </ListItem>
+                                    
+                                        <ListItem
+                                                sx={{
+                                                    textAlign: 'justify',
+                                                    display: 'list-item',
+                                                    paddingX: 0,
+                                                    color: "#9c2224"
+                                                }}
+                                            >
+                                                <Typography
+                                                    variant='body1'
+                                                    gutterBottom
+                                                    sx={{ color: "#9c2224" }}
+                                                >
+                                                    Please be aware that Ledger and Trezor hardware wallet do not support submission of governance actions, but you'll still be able to create the proposal.
+                                                </Typography>
+                                        </ListItem>
                                 </List>
                             </Box>
                             <Box

@@ -335,6 +335,12 @@ const ProblemStatementsAndProposalBenefits = ({
                                         'explain_proposal_roadmap'
                                     )
                                 }
+                                InputProps={{
+                                    inputProps: {
+                                        'data-testid':
+                                            'proposal-roadmap-description-input',
+                                    },
+                                }}
                                 sx={{ mb: 2 }}
                             />
                         ) : null}
