@@ -3,6 +3,7 @@ import ReactMarkdown from 'react-markdown';
 import remarkBreaks from 'remark-breaks';
 import remarkMath from 'remark-math';
 import rehypeKatex from 'rehype-katex';
+import remarkGfm from 'remark-gfm';
 import rehypeRaw from 'rehype-raw';
 import { Typography } from '@mui/material';
 import 'highlight.js/styles/github.css';
@@ -26,6 +27,12 @@ const markdownTags = [
     'span',
     'hr',
     'a',
+    'table',
+    'thead',
+    'tbody',
+    'tr',
+    'th',
+    'td',
 ];
 
 // Map Markdown tags to MUI `Typography` variants
@@ -68,7 +75,7 @@ const symbolReplacements = (text) =>
 const MarkdownTypography = ({ content, testId, onLinkClick }) => {
     const theme = useTheme();
     const typographyComponents = markdownTags.reduce((acc, tag) => {
-        acc[tag] = ({ href, children }) => {
+        acc[tag] = ({ href, children, style, align }) => {
             // Render hr tag without any modification then this
             if (tag === 'hr') {
                 return <hr style={{ marginTop: 0, marginBottom: '1rem' }} />;
@@ -143,6 +150,74 @@ const MarkdownTypography = ({ content, testId, onLinkClick }) => {
                     >
                         {children}
                     </a>
+                );
+            }
+
+            if (tag === 'table') {
+                return (
+                    <table
+                        style={{
+                            display: 'block',
+                            overflowX: 'auto',
+                            margin: '32px 0',
+                            borderSpacing: 0,
+                            borderCollapse: 'collapse',
+                            maxWidth: '100%',
+                        }}
+                    >
+                        {children}
+                    </table>
+                );
+            }
+            if (tag === 'thead') {
+                return (
+                    <thead
+                        style={{
+                            backgroundColor: '#d6e2ff80',
+                        }}
+                    >
+                        {children}
+                    </thead>
+                );
+            }
+            if (tag === 'tbody') {
+                return <tbody>{children}</tbody>;
+            }
+            if (tag === 'tr') {
+                return (
+                    <tr
+                        style={{
+                            ':nth-child(2n)': {
+                                backgroundColor: '#d6e2ff80',
+                            },
+                        }}
+                    >
+                        {children}
+                    </tr>
+                );
+            }
+            if (tag === 'th') {
+                return (
+                    <th
+                        style={{
+                            padding: '6px 13px',
+                            border: '1px solid #d6e2ff',
+                        }}
+                    >
+                        {children}
+                    </th>
+                );
+            }
+            if (tag === 'td') {
+                return (
+                    <td
+                        style={{
+                            padding: '6px 13px',
+                            border: '1px solid #d6e2ff',
+                        }}
+                    >
+                        <div style={{ marginBottom: 0 }}>{children}</div>
+                    </td>
                 );
             }
 
@@ -304,6 +379,16 @@ const MarkdownTypography = ({ content, testId, onLinkClick }) => {
     useEffect(() => {
         hljs.highlightAll.called = false;
         hljs?.highlightAll();
+
+        const tables = document.querySelectorAll('table');
+        tables.forEach((table) => {
+            const rows = table.querySelectorAll('tbody tr');
+            rows.forEach((row, index) => {
+                if ((index + 1) % 2 === 0) {
+                    row.style.backgroundColor = '#d6e2ff80';
+                }
+            });
+        });
     }, []);
 
     return (
@@ -312,7 +397,7 @@ const MarkdownTypography = ({ content, testId, onLinkClick }) => {
                 components={typographyComponents}
                 key={testId}
                 rehypePlugins={[rehypeRaw, rehypeKatex]}
-                remarkPlugins={[remarkBreaks, remarkMath]}
+                remarkPlugins={[remarkBreaks, remarkMath, remarkGfm]}
             >
                 {processedContent}
             </ReactMarkdown>

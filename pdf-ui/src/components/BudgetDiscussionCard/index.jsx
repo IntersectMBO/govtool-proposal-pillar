@@ -31,6 +31,7 @@ import { correctVoteAdaFormat, formatIsoDate } from '../../lib/utils';
 import EditProposalDialog from '../EditProposalDialog';
 import MarkdownTextComponent from '../MarkdownTextComponent';
 import CreateBudgetDiscussionDialog from '../CreateBudgetDiscussionDialog';
+import MarkdownTypography from '../../lib/markdownRenderer';
 
 const BudgetDiscussionCard = ({
     budgetDiscussion,
@@ -378,9 +379,18 @@ const BudgetDiscussionCard = ({
                                         ? `draft-proposal-benefit`
                                         : 'proposal-benefit'
                                 }
+                                style={{
+                                    display: '-webkit-box',
+                                    WebkitBoxOrient: 'vertical',
+                                    WebkitLineClamp: 3,
+                                    overflow: 'hidden',
+                                    textOverflow: 'ellipsis',
+                                    lineHeight: '1.5',
+                                    maxHeight: '4.5em',
+                                }}
                             >
-                                <MarkdownTextComponent
-                                    markdownText={
+                                <MarkdownTypography
+                                    content={
                                         isDraft
                                             ? budgetDiscussion?.attributes
                                                   ?.draft_data?.bd_psapb
@@ -390,6 +400,17 @@ const BudgetDiscussionCard = ({
                                                   ?.proposal_benefit
                                     }
                                 />
+                                {/* <MarkdownTextComponent
+                                    markdownText={
+                                        isDraft
+                                            ? budgetDiscussion?.attributes
+                                                  ?.draft_data?.bd_psapb
+                                                  ?.proposal_benefit
+                                            : budgetDiscussion?.attributes
+                                                  ?.bd_psapb?.data?.attributes
+                                                  ?.proposal_benefit
+                                    }
+                                /> */}
                             </div>
                         </Box>
                         <Box>
@@ -486,10 +507,7 @@ const BudgetDiscussionCard = ({
                                             display={'flex'}
                                             alignItems={'center'}
                                         >
-                                            <IconButton
-                                                // data-testid={`proposal-${proposal?.id}-comment-count`}
-                                                disabled={true}
-                                            >
+                                            <IconButton disabled={true}>
                                                 <StyledBadge
                                                     badgeContent={
                                                         budgetDiscussion
@@ -499,6 +517,7 @@ const BudgetDiscussionCard = ({
                                                     }
                                                     aria-label='comments'
                                                     showZero
+                                                    data-testid={`budget-discussion-${budgetDiscussion?.id}-comment-count`}
                                                 ></StyledBadge>
                                                 <IconChatAlt />
                                             </IconButton>
@@ -506,8 +525,9 @@ const BudgetDiscussionCard = ({
                                     </Tooltip>
                                     {user &&
                                         user?.user?.id?.toString() ===
-                                            budgetDiscussion?.attributes?.creator?.data?.id?.toString() && 
-                                            budgetDiscussion?.attributes?.submitted_for_vote == null && (
+                                            budgetDiscussion?.attributes?.creator?.data?.id?.toString() &&
+                                        budgetDiscussion?.attributes
+                                            ?.submitted_for_vote == null && (
                                             <Tooltip title='Edit'>
                                                 <IconButton
                                                     aria-label='edit'

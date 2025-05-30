@@ -157,7 +157,12 @@ const Costing = ({
                                                 });
                                             }
                                         }}
-                                        data-testid='ada-amount-input'
+                                        InputProps={{
+                                            inputProps: {
+                                                'data-testid':
+                                                    'ada-amount-input',
+                                            },
+                                        }}
                                         helperText={
                                             touched.ada_amount &&
                                             errors[
@@ -219,7 +224,12 @@ const Costing = ({
                                             )
                                         }
                                         sx={{ mb: 2 }}
-                                        data-testid='usd-ada-conversion-input'
+                                        InputProps={{
+                                            inputProps: {
+                                                'data-testid':
+                                                    'usd-ada-conversion-input',
+                                            },
+                                        }}
                                         FormHelperTextProps={{
                                             ...(errors[
                                                 'bd_costing.ada_amount'
@@ -322,7 +332,12 @@ const Costing = ({
                                             )
                                         }
                                         sx={{ mb: 2 }}
-                                        data-testid='preferred-currency-amount-input'
+                                        InputProps={{
+                                            inputProps: {
+                                                'data-testid':
+                                                    'preferred-currency-amount-input',
+                                            },
+                                        }}
                                         FormHelperTextProps={{
                                             ...(errors[
                                                 'bd_costing.amount_in_preferred_currency'

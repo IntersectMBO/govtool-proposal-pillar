@@ -30,13 +30,13 @@ const CreateGovernanceActionDialog = ({ open = false, onClose = false }) => {
     const [proposalData, setProposalData] = useState({
         proposal_links: [],
         proposal_withdrawals: [],
-        proposal_constitution_content:{}
+        proposal_constitution_content: {},
     });
-
 
     const [governanceActionTypes, setGovernanceActionTypes] = useState([]);
     const [isContinueDisabled, setIsContinueDisabled] = useState(true);
-    const [showDraftSuccessfulModal, setShowDraftSuccessfulModal] = useState(false);
+    const [showDraftSuccessfulModal, setShowDraftSuccessfulModal] =
+        useState(false);
     const [selectedDraftId, setSelectedDraftId] = useState(null);
     const [errors, setErrors] = useState({
         name: false,
@@ -52,8 +52,8 @@ const CreateGovernanceActionDialog = ({ open = false, onClose = false }) => {
     });
 
     const [linksErrors, setLinksErrors] = useState({});
-    const [withdrawalsErrors, setWithdrawalsErrors ] = useState({});
-    const [constitutionErrors,setConstitutionErrors] = useState({});
+    const [withdrawalsErrors, setWithdrawalsErrors] = useState({});
+    const [constitutionErrors, setConstitutionErrors] = useState({});
     const isSmallScreen = useMediaQuery((theme) =>
         theme.breakpoints.down('sm')
     );
@@ -87,7 +87,9 @@ const CreateGovernanceActionDialog = ({ open = false, onClose = false }) => {
                     proposalData?.proposal_links?.some(
                         (link) => !link.prop_link || !link.prop_link_text
                     ) ||
-                    Object.values(linksErrors).some((error) => error.url)
+                    Object.values(linksErrors).some(
+                        (error) => error.url || error.text
+                    )
                 ) {
                     return setIsContinueDisabled(true);
                 } else {
@@ -97,38 +99,61 @@ const CreateGovernanceActionDialog = ({ open = false, onClose = false }) => {
             const selectedLabel = governanceActionTypes.find(
                 (option) => option?.value === proposalData?.gov_action_type_id
             )?.label;
-            const selectedType = governanceActionTypes.find((option) => option?.value === proposalData?.gov_action_type_id)?.value;
+            const selectedType = governanceActionTypes.find(
+                (option) => option?.value === proposalData?.gov_action_type_id
+            )?.value;
             if (proposalData?.gov_action_type_id == 2) {
                 if (proposalData?.proposal_withdrawals) {
-                     if (
-                         proposalData?.proposal_withdrawals?.some(
-                             (proposal_withdrawal) => !proposal_withdrawal.prop_receiving_address || !proposal_withdrawal.prop_amount
-                         ) ||
-                         Object.values(withdrawalsErrors).some(
-                            (errors) =>!errors.prop_amount== '' || !errors.prop_receiving_address ==''
-                        ) ){
+                    if (
+                        proposalData?.proposal_withdrawals?.some(
+                            (proposal_withdrawal) =>
+                                !proposal_withdrawal.prop_receiving_address ||
+                                !proposal_withdrawal.prop_amount
+                        ) ||
+                        Object.values(withdrawalsErrors).some(
+                            (errors) =>
+                                !errors.prop_amount == '' ||
+                                !errors.prop_receiving_address == ''
+                        )
+                    ) {
                         return setIsContinueDisabled(true);
                     } else {
                         setIsContinueDisabled(false);
                     }
                 }
-            } 
+            }
             if (proposalData?.gov_action_type_id == 3) {
-                if(!proposalData?.proposal_constitution_content?.prop_constitution_url || constitutionErrors?.prop_constitution_url)
+                if (
+                    !proposalData?.proposal_constitution_content
+                        ?.prop_constitution_url ||
+                    constitutionErrors?.prop_constitution_url
+                )
                     return setIsContinueDisabled(true);
-                if(proposalData?.proposal_constitution_content?.prop_have_guardrails_script)
-                {
-                    if(!proposalData?.proposal_constitution_content.prop_guardrails_script_url || !proposalData?.proposal_constitution_content.prop_guardrails_script_hash)
-                       return setIsContinueDisabled(true);
-                }
-                else {
+                if (
+                    proposalData?.proposal_constitution_content
+                        ?.prop_have_guardrails_script
+                ) {
+                    if (
+                        !proposalData?.proposal_constitution_content
+                            .prop_guardrails_script_url ||
+                        !proposalData?.proposal_constitution_content
+                            .prop_guardrails_script_hash
+                    )
+                        return setIsContinueDisabled(true);
+                } else {
                     setIsContinueDisabled(false);
                 }
             }
         } else {
             setIsContinueDisabled(true);
         }
-    }, [proposalData, errors, linksErrors, withdrawalsErrors, constitutionErrors]); // proposalData is a dependency
+    }, [
+        proposalData,
+        errors,
+        linksErrors,
+        withdrawalsErrors,
+        constitutionErrors,
+    ]); // proposalData is a dependency
     // useEffect(() => {
     //     handleIsContinueDisabled()
     // },[proposalData])
@@ -185,6 +210,9 @@ const CreateGovernanceActionDialog = ({ open = false, onClose = false }) => {
             open={open}
             onClose={onClose}
             data-testid='create-governance-action-dialog'
+            PaperProps={{
+                sx: { borderRadius: 0 },
+            }}
         >
             <Box
                 sx={{
@@ -278,7 +306,9 @@ const CreateGovernanceActionDialog = ({ open = false, onClose = false }) => {
                                     withdrawalsErrors={withdrawalsErrors}
                                     setWithdrawalsErrors={setWithdrawalsErrors}
                                     constitutionErrors={constitutionErrors}
-                                    setConstitutionErrors={setConstitutionErrors}
+                                    setConstitutionErrors={
+                                        setConstitutionErrors
+                                    }
                                 />
                             )}
 

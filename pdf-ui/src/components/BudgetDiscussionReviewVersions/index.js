@@ -232,7 +232,13 @@ const BudgetDiscussionReviewVersions = ({ open, onClose, id }) => {
                                                     </Typography>
                                                 </Box>
                                                 {/* Versions */}
-                                                <List sx={{ padding: 0 }}>
+                                                <List
+                                                    sx={{
+                                                        padding: 0,
+                                                        maxHeight: '70vh',
+                                                        overflowY: 'auto',
+                                                    }}
+                                                >
                                                     {versions?.map(
                                                         (version, index) => (
                                                             <ListItem
@@ -338,8 +344,6 @@ const BudgetDiscussionReviewVersions = ({ open, onClose, id }) => {
                                                             >
                                                                 {`${formatIsoDate(
                                                                     selectedVersion
-                                                                        ?.attributes
-                                                                        ?.content
                                                                         ?.attributes
                                                                         ?.createdAt
                                                                 )}${
@@ -898,7 +902,7 @@ const BudgetDiscussionReviewVersions = ({ open, onClose, id }) => {
 
                                                             <BudgetDiscussionInfoSegment
                                                                 question={
-                                                                    'ADA to USD Conversion Rate'
+                                                                    'USD to ADA Conversion Rate'
                                                                 }
                                                                 answer={
                                                                     selectedVersion
@@ -1043,6 +1047,12 @@ const BudgetDiscussionReviewVersions = ({ open, onClose, id }) => {
                                                                                             variant='body2'
                                                                                             style={{
                                                                                                 margin: 0,
+                                                                                                textOverflow:
+                                                                                                    'ellipsis',
+                                                                                                overflow:
+                                                                                                    'hidden',
+                                                                                                maxWidth:
+                                                                                                    '600px',
                                                                                             }}
                                                                                             data-testid={`link-${index}-text-content`}
                                                                                         >

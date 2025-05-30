@@ -152,19 +152,31 @@ const ProposalOwnership = ({
                                 }}
                                 SelectProps={{
                                     SelectDisplayProps: {
-                                        'data-testid': 'beneficiary-type',
+                                        'data-testid': 'proposal-committee',
                                     },
                                 }}
                                 helperText='If you are submitting on behalf of an Intersect Committee, please select Group. The Group Name would be the “Name of the Committee (e.g. MCC, TSC)”. The Type of Group would be “Intersect Committee”. The Key Information to Identify the Group would be the names of the Voting members of the Committee.'
                                 sx={{ mb: 2 }}
                             >
-                                <MenuItem key={'1'} value={'Individual'}>
+                                <MenuItem
+                                    key={'1'}
+                                    value={'Individual'}
+                                    data-testid='individual-submission'
+                                >
                                     Individual
                                 </MenuItem>
-                                <MenuItem key={'2'} value={'Company'}>
+                                <MenuItem
+                                    key={'2'}
+                                    value={'Company'}
+                                    data-testid='company-submission'
+                                >
                                     Company
                                 </MenuItem>
-                                <MenuItem key={'3'} value={'Group'}>
+                                <MenuItem
+                                    key={'3'}
+                                    value={'Group'}
+                                    data-testid='group-submission'
+                                >
                                     Group
                                 </MenuItem>
                             </TextField>
@@ -193,7 +205,12 @@ const ProposalOwnership = ({
                                         //     ]?.trim()
                                         // }
                                         sx={{ mb: 2 }}
-                                        data-testid='company-name-input'
+                                        InputProps={{
+                                            inputProps: {
+                                                'data-testid':
+                                                    'company-name-input',
+                                            },
+                                        }}
                                     />
                                     <TextField
                                         name='Company Domain Name'
@@ -223,7 +240,12 @@ const ProposalOwnership = ({
                                             )
                                         }
                                         sx={{ mb: 2 }}
-                                        data-testid='company-domain-input'
+                                        InputProps={{
+                                            inputProps: {
+                                                'data-testid':
+                                                    'company-domain-input',
+                                            },
+                                        }}
                                     />
                                     <TextField
                                         select
@@ -296,7 +318,12 @@ const ProposalOwnership = ({
                                         //     ]?.trim()
                                         // }
                                         sx={{ mb: 2 }}
-                                        data-testid='group-name-input'
+                                        InputProps={{
+                                            inputProps: {
+                                                'data-testid':
+                                                    'group-name-input',
+                                            },
+                                        }}
                                     />
                                     <TextField
                                         name='Type of Group'
@@ -320,7 +347,12 @@ const ProposalOwnership = ({
                                         //     ]?.trim()
                                         // }
                                         sx={{ mb: 2 }}
-                                        data-testid='group-type-input'
+                                        InputProps={{
+                                            inputProps: {
+                                                'data-testid':
+                                                    'group-type-input',
+                                            },
+                                        }}
                                     />
                                     <TextField
                                         name='Key Information to Identify Group'
@@ -351,7 +383,12 @@ const ProposalOwnership = ({
                                         //     ]?.trim()
                                         // }
                                         sx={{ mb: 4 }}
-                                        data-testid='group-identity-information-input'
+                                        InputProps={{
+                                            inputProps: {
+                                                'data-testid':
+                                                    'group-identity-information-input',
+                                            },
+                                        }}
                                     />
                                 </Box>
                             ) : (
@@ -425,7 +462,12 @@ const ProposalOwnership = ({
                                     //       ]?.trim()
                                     //   }
                                     sx={{ mb: 2 }}
-                                    data-testid='provide-preferred-input'
+                                    InputProps={{
+                                        inputProps: {
+                                            'data-testid':
+                                                'provide-preferred-input',
+                                        },
+                                    }}
                                 />
                             }
                             <FormControlLabel
@@ -438,7 +480,9 @@ const ProposalOwnership = ({
                                         onChange={(e) =>
                                             handleDataChange(e, 'agreed')
                                         }
-                                        data-testid='agree-checkbox'
+                                        inputProps={{
+                                            'data-testid': 'agree-checkbox',
+                                        }}
                                     />
                                 }
                                 label={

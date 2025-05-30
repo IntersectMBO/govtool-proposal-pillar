@@ -16,7 +16,7 @@ import {
     alpha,
     useMediaQuery,
 } from '@mui/material';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, useCallback, useMemo } from 'react';
 import Slider from 'react-slick';
 import { ProposalCard } from '..';
 import { useDebounce } from '../..//lib/hooks';
@@ -27,7 +27,7 @@ import { useTheme } from '@emotion/react';
 const ProposalsList = ({
     governanceAction,
     searchText = '',
-    sortType = 'desc',
+    sortType = { fieldId: 'createdAt', type: 'DESC', title: 'Newest' },
     isDraft = false,
     statusList = [],
     startEdittinButtonClick = false,
@@ -36,6 +36,7 @@ const ProposalsList = ({
 }) => {
     const theme = useTheme();
     const sliderRef = useRef(null);
+    const observer = useRef();
 
     const [showAll, setShowAll] = useState(false);
     const [proposalsList, setProposalsList] = useState([]);
@@ -76,10 +77,10 @@ const ProposalsList = ({
             let query = '';
             if (isDraft) {
                 if (statusList?.length === 0 || statusList?.length === 2) {
-                    query = `filters[$and][2][is_draft]=true&pagination[page]=${page}&pagination[pageSize]=25&sort[createdAt]=${sortType}&populate[0]=proposal_links&populate[1]=proposal_withdrawals&populate[2]=proposal_constitution_content`;
+                    query = `filters[$and][2][is_draft]=true&pagination[page]=${page}&pagination[pageSize]=25&sort[createdAt]=desc&populate[0]=proposal_links&populate[1]=proposal_withdrawals&populate[2]=proposal_constitution_content`;
                 } else {
                     const isSubmitted = haveSubmittedFilter ? 'true' : 'false';
-                    query = `filters[$and][2][is_draft]=true&filters[$and][3][prop_submitted]=${isSubmitted}&pagination[page]=${page}&pagination[pageSize]=25&sort[createdAt]=${sortType}&populate[0]=proposal_links&populate[1]=proposal_withdrawals&populate[2]=proposal_constitution_content`;
+                    query = `filters[$and][2][is_draft]=true&filters[$and][3][prop_submitted]=${isSubmitted}&pagination[page]=${page}&pagination[pageSize]=25&sort[createdAt]=desc&populate[0]=proposal_links&populate[1]=proposal_withdrawals&populate[2]=proposal_constitution_content`;
                 }
             } else {
                 if (statusList?.length === 0 || statusList?.length === 2) {
@@ -87,14 +88,14 @@ const ProposalsList = ({
                         governanceAction?.id
                     }&filters[$and][1][prop_name][$containsi]=${
                         debouncedSearchValue || ''
-                    }&pagination[page]=${page}&pagination[pageSize]=25&sort[createdAt]=${sortType}&populate[0]=proposal_links&populate[1]=proposal_withdrawals&populate[2]=proposal_constitution_content`;
+                    }&pagination[page]=${page}&pagination[pageSize]=25&sort[${sortType.fieldId}]=${sortType.type}&populate[0]=proposal_links&populate[1]=proposal_withdrawals&populate[2]=proposal_constitution_content&populate[3]=proposal`;
                 } else {
                     const isSubmitted = haveSubmittedFilter ? 'true' : 'false';
                     query = `filters[$and][0][gov_action_type_id]=${
                         governanceAction?.id
                     }&filters[$and][1][prop_name][$containsi]=${
                         debouncedSearchValue || ''
-                    }&filters[$and][2][prop_submitted]=${isSubmitted}&pagination[page]=${page}&pagination[pageSize]=25&sort[createdAt]=${sortType}&populate[0]=proposal_links&populate[1]=proposal_withdrawals&populate[2]=proposal_constitution_content`;
+                    }&filters[$and][2][prop_submitted]=${isSubmitted}&pagination[page]=${page}&pagination[pageSize]=25&sort[${sortType.fieldId}]=${sortType.type}&populate[0]=proposal_links&populate[1]=proposal_withdrawals&populate[2]=proposal_constitution_content&populate[3]=proposal`;
                 }
             }
             const { proposals, pgCount } = await getProposals(query);
@@ -105,12 +106,18 @@ const ProposalsList = ({
             } else {
                 setProposalsList((prev) => [...prev, ...proposals]);
             }
-
             setPageCount(pgCount);
         } catch (error) {
             console.error(error);
         }
     };
+
+    // Memoize sortType and statusList dependencies to prevent infinite re-renders
+    const sortTypeString = useMemo(() => JSON.stringify(sortType), [sortType]);
+    const statusListString = useMemo(
+        () => JSON.stringify(statusList),
+        [statusList]
+    );
 
     useEffect(() => {
         if (!mounted) {
@@ -122,8 +129,8 @@ const ProposalsList = ({
     }, [
         mounted,
         debouncedSearchValue,
-        sortType,
-        isDraft ? null : statusList,
+        sortTypeString,
+        isDraft ? null : statusListString,
         showAllActivated,
     ]);
 
@@ -133,6 +140,24 @@ const ProposalsList = ({
             setShouldRefresh(false);
         }
     }, [shouldRefresh]);
+
+    const lastProposalRef = useCallback(
+        (node) => {
+            if (observer.current) observer.current.disconnect();
+            observer.current = new window.IntersectionObserver((entries) => {
+                if (
+                    entries[0].isIntersecting &&
+                    currentPage < pageCount &&
+                    proposalsList.length > 0
+                ) {
+                    fetchProposals(false, currentPage + 1);
+                    setCurrentPage((prev) => prev + 1);
+                }
+            });
+            if (node) observer.current.observe(node);
+        },
+        [currentPage, pageCount, proposalsList.length]
+    );
 
     return isDraft && proposalsList?.length === 0 ? null : (
         <Box overflow={'visible'}>
@@ -168,7 +193,11 @@ const ProposalsList = ({
                                         }));
                                     }
                                 }}
-                                data-testid={governanceAction?.attributes?.gov_action_type_name.replace(/\s+/g, '-').toLowerCase() +'-show-all-button'}
+                                data-testid={
+                                    governanceAction?.attributes?.gov_action_type_name
+                                        .replace(/\s+/g, '-')
+                                        .toLowerCase() + '-show-all-button'
+                                }
                             >
                                 {setShowAllActivated
                                     ? setShowAllActivated?.is_activated
@@ -205,35 +234,51 @@ const ProposalsList = ({
                 ) ? (
                     <Box>
                         <Grid container spacing={4} paddingY={4}>
-                            {proposalsList?.map((proposal, index) => (
-                                <Grid item key={index} xs={12} sm={6} md={4}>
-                                    <ProposalCard
-                                        proposal={proposal}
-                                        startEdittinButtonClick={
-                                            startEdittinButtonClick
-                                        }
-                                        setShouldRefresh={setShouldRefresh}
-                                    />
-                                </Grid>
-                            ))}
+                            {proposalsList?.map((proposal, index) => {
+                                if (index === proposalsList.length - 1) {
+                                    return (
+                                        <Grid
+                                            item
+                                            key={index}
+                                            xs={12}
+                                            sm={6}
+                                            md={4}
+                                            ref={lastProposalRef}
+                                        >
+                                            <ProposalCard
+                                                proposal={proposal}
+                                                startEdittinButtonClick={
+                                                    startEdittinButtonClick
+                                                }
+                                                setShouldRefresh={
+                                                    setShouldRefresh
+                                                }
+                                            />
+                                        </Grid>
+                                    );
+                                } else {
+                                    return (
+                                        <Grid
+                                            item
+                                            key={index}
+                                            xs={12}
+                                            sm={6}
+                                            md={4}
+                                        >
+                                            <ProposalCard
+                                                proposal={proposal}
+                                                startEdittinButtonClick={
+                                                    startEdittinButtonClick
+                                                }
+                                                setShouldRefresh={
+                                                    setShouldRefresh
+                                                }
+                                            />
+                                        </Grid>
+                                    );
+                                }
+                            })}
                         </Grid>
-
-                        {currentPage < pageCount && (
-                            <Box
-                                marginY={2}
-                                display={'flex'}
-                                justifyContent={'flex-end'}
-                            >
-                                <Button
-                                    onClick={() => {
-                                        fetchProposals(false, currentPage + 1);
-                                        setCurrentPage((prev) => prev + 1);
-                                    }}
-                                >
-                                    Load more
-                                </Button>
-                            </Box>
-                        )}
                     </Box>
                 ) : (
                     <Box py={2}>

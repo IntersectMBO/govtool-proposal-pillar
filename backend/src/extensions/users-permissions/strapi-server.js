@@ -270,13 +270,13 @@ module.exports = (plugin) => {
 
 					return ctx.send({ user: sanitizedUser });
 				}
-
+				let refreshToken = issueRefreshToken({
+					id: sanitizedUser.id,
+					stakeKey: identifier,
+				});
 				ctx.cookies.set(
 					'refreshToken',
-					issueRefreshToken({
-						id: sanitizedUser.id,
-						stakeKey: identifier,
-					}),
+					refreshToken,
 					{
 						httpOnly: true,
 						secure: false, //process.env.NODE_ENV === 'production',
@@ -297,6 +297,7 @@ module.exports = (plugin) => {
 						{ id: user.id, stakeKey: identifier },
 						{ expiresIn: process.env.JWT_SECRET_EXPIRES }
 					),
+					refreshToken: refreshToken,
 					user: sanitizedUser,
 				});
 			} else {
@@ -317,14 +318,14 @@ module.exports = (plugin) => {
 						'Your account has been blocked by an administrator'
 					);
 				}
-
-				ctx.cookies.set(
-					'refreshToken',
-					issueRefreshToken({
+				let refreshToken = issueRefreshToken({
 						id: user.id,
 						stakeKey: user?.username,
 						dRepID: userInfo ? identifier : null,
-					}),
+					});
+				ctx.cookies.set(
+					'refreshToken',
+					 refreshToken,
 					{
 						httpOnly: true,
 						// secure: process.env.NODE_ENV === 'production',
@@ -350,6 +351,7 @@ module.exports = (plugin) => {
 						},
 						{ expiresIn: process.env.JWT_SECRET_EXPIRES }
 					),
+					refreshToken: refreshToken,
 					user: await sanitizeUser(user, ctx),
 				});
 			}
@@ -404,6 +406,7 @@ module.exports = (plugin) => {
 					'Your account has been blocked by an administrator'
 				);
 			}
+			
 			const refreshToken = issueRefreshToken({
 				id: user.id,
 				stakeKey: obj?.stakeKey,
