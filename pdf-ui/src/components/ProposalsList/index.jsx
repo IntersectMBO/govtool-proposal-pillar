@@ -106,7 +106,6 @@ const ProposalsList = ({
             } else {
                 setProposalsList((prev) => [...prev, ...proposals]);
             }
-            console.log('🚀 ~ fetchProposals ~ proposals:', proposals);
             setPageCount(pgCount);
         } catch (error) {
             console.error(error);
