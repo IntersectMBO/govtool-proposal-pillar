@@ -627,7 +627,7 @@ const BudgetDiscussionReview = ({
                                     />
 
                                     <InfoSection
-                                        question='ADA to USD Conversion Rate'
+                                        question='USD to ADA Conversion Rate'
                                         answer={
                                             currentBudgetDiscussionData
                                                 ?.bd_costing
@@ -705,8 +705,19 @@ const BudgetDiscussionReview = ({
                                                     href={link.prop_link}
                                                     target='_blank'
                                                     rel='noopener noreferrer'
+                                                    data-testid={`link-${index}-label`}
                                                 >
-                                                    {link.prop_link_text}
+                                                    <Typography
+                                                        style={{
+                                                            margin: 0,
+                                                            textOverflow:
+                                                                'ellipsis',
+                                                            overflow: 'hidden',
+                                                            maxWidth: '800px',
+                                                        }}
+                                                    >
+                                                        {link.prop_link_text}
+                                                    </Typography>
                                                 </Link>
                                             )
                                         )}

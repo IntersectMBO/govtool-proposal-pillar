@@ -84,6 +84,12 @@
       "relation": "oneToOne",
       "target": "api::proposal-hard-fork-content.proposal-hard-fork-content",
       "mappedBy": "proposal_content"
+    },
+    "proposal": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::proposal.proposal",
+      "inversedBy": "proposal_contents"
     }
   }
 }

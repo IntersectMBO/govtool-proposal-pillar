@@ -21,9 +21,12 @@ const StepperActionButtons = ({
     backText = 'Back',
     errors,
 }) => {
+    console.log('🚀 ~ errors:', errors);
     // Calculate backStep if not provided
     const calculatedBackStep = backStep !== undefined ? backStep : nextStep - 2;
     const [continueDisabled, setContinueDisabled] = useState(false);
+    const [draftDisabled, setDraftDisabled] = useState(false);
+
     const hasAnyNonEmptyString = (obj) => {
         if (typeof obj === 'string') {
             return obj.trim() !== '';
@@ -39,6 +42,14 @@ const StepperActionButtons = ({
 
     useEffect(() => {
         setContinueDisabled(hasAnyNonEmptyString(errors));
+
+        setDraftDisabled(
+            !!(
+                errors &&
+                errors.linkErrors &&
+                (errors.linkErrors[0]?.url || errors.linkErrors[0]?.text)
+            )
+        );
     }, [errors, continueDisabled]);
 
     return (
@@ -71,6 +82,7 @@ const StepperActionButtons = ({
                     <Button
                         variant='outlined'
                         sx={{ mr: 1 }}
+                        disabled={draftDisabled}
                         onClick={() => onSaveDraft(selectedDraftId)}
                         data-testid='draft-button'
                     >
@@ -82,8 +94,11 @@ const StepperActionButtons = ({
                         variant='contained'
                         disabled={continueDisabled}
                         onClick={() => onContinue(nextStep)}
-                        
-                        data-testid={continueText === 'Continue' ? 'continue-button' : 'submit-button'}
+                        data-testid={
+                            continueText === 'Continue'
+                                ? 'continue-button'
+                                : 'submit-button'
+                        }
                     >
                         {continueText}
                     </Button>

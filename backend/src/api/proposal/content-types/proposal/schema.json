@@ -27,6 +27,12 @@
     "user_id": {
       "type": "string",
       "required": true
+    },
+    "proposal_contents": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::proposal-content.proposal-content",
+      "mappedBy": "proposal"
     }
   }
 }

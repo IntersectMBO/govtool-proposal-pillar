@@ -32,6 +32,51 @@ import { useAppContext } from '../../context/context';
 import { loginUserToApp } from '../../lib/helpers';
 import { useLocation } from 'react-router-dom';
 
+let sortOptions = [
+    { fieldId: 'createdAt', type: 'DESC', title: 'Newest' },
+    { fieldId: 'createdAt', type: 'ASC', title: 'Oldest' },
+    {
+        fieldId: 'proposal][prop_likes',
+        type: 'DESC',
+        title: 'Most likes',
+    },
+    {
+        fieldId: 'proposal][prop_likes',
+        type: 'ASC',
+        title: 'Least likes',
+    },
+    {
+        fieldId: 'proposal][prop_dislikes',
+        type: 'DESC',
+        title: 'Most dislikes',
+    },
+    {
+        fieldId: 'proposal][prop_dislikes',
+        type: 'ASC',
+        title: 'Least dislikes',
+    },
+        {
+        fieldId: 'proposal][prop_comments_number',
+        type: 'DESC',
+        title: 'Most comments',
+    },
+    {
+        fieldId: 'proposal][prop_comments_number',
+        type: 'ASC',
+        title: 'Least comments',
+    },
+    {
+        fieldId: 'prop_name',
+        type: 'ASC',
+        title: 'Name A-Z',
+    },
+    {
+        fieldId: 'prop_name',
+        type: 'DESC',
+        title: 'Name Z-A',
+    },
+];
+
 const ProposedGovernanceActions = () => {
     const location = useLocation();
     const theme = useTheme();
@@ -46,7 +91,7 @@ const ProposedGovernanceActions = () => {
         addChangesSavedAlert,
     } = useAppContext();
     const [proposalSearchText, setProposalSearchText] = useState('');
-    const [sortType, setSortType] = useState('desc');
+    const [sortType, setSortType] = useState(sortOptions[0]);
     const [governanceActionTypeList, setGovernanceActionTypeList] = useState(
         []
     );
@@ -72,6 +117,16 @@ const ProposedGovernanceActions = () => {
     };
     const handleCloseFilters = () => {
         setFiltersAnchorEl(null);
+    };
+
+    const [sortAnchorEl, setSortAnchorEl] = useState(null);
+    const openSort = Boolean(sortAnchorEl);
+
+    const handleSortClick = (event) => {
+        setSortAnchorEl(event.currentTarget);
+    };
+    const handleSortClose = () => {
+        setSortAnchorEl(null);
     };
 
     const fetchGovernanceActionTypes = async () => {
@@ -484,7 +539,81 @@ const ProposedGovernanceActions = () => {
                                         </MenuItem>
                                     </Box>
                                 </Menu>
-                                <Button
+                                <>
+                                    <Button
+                                        variant='outlined'
+                                        onClick={(e) => handleSortClick(e)}
+                                        endIcon={
+                                            <IconSort
+                                                color={
+                                                    theme.palette.primary.icons
+                                                        .black
+                                                }
+                                            />
+                                        }
+                                        sx={{
+                                            textTransform: 'none',
+                                            borderRadius: '20px',
+                                            padding: '8px 16px',
+                                            borderColor: 'primary.main',
+                                            color: 'text.primary',
+                                            '&:hover': {
+                                                backgroundColor: 'action.hover',
+                                            },
+                                        }}
+                                        data-testid='sort-button'
+                                    >
+                                        Sort: {sortType.title}
+                                    </Button>
+                                    <Menu
+                                        id='sort-menu'
+                                        anchorEl={sortAnchorEl}
+                                        open={openSort}
+                                        onClose={handleSortClose}
+                                        MenuListProps={{
+                                            'aria-labelledby': 'sort-button',
+                                        }}
+                                        slotProps={{
+                                            paper: {
+                                                elevation: 4,
+                                                sx: {
+                                                    overflow: 'visible',
+                                                    mt: 1,
+                                                    minWidth: '300px',
+                                                },
+                                            },
+                                        }}
+                                        transformOrigin={{
+                                            horizontal: 'right',
+                                            vertical: 'top',
+                                        }}
+                                        anchorOrigin={{
+                                            horizontal: 'right',
+                                            vertical: 'bottom',
+                                        }}
+                                    >
+                                        <Box>
+                                            {sortOptions.map((sort, index) => (
+                                                <MenuItem
+                                                    key={`${sort?.title}-${index}`}
+                                                    selected={sort === sortType}
+                                                    id={`${sort?.title}`}
+                                                    data-testid={`${sort?.title}-sort-option`}
+                                                    onClick={() => {
+                                                        setSortType(sort);
+                                                        handleSortClose();
+                                                    }}
+                                                    sx={{
+                                                        width: '100%',
+                                                    }}
+                                                >
+                                                    {sort.title}
+                                                </MenuItem>
+                                            ))}
+                                        </Box>
+                                    </Menu>
+                                </>
+                                {/* <Button
                                     variant='outlined'
                                     onClick={() =>
                                         setSortType((prev) =>
@@ -525,7 +654,7 @@ const ProposedGovernanceActions = () => {
                                     {sortType === 'desc'
                                         ? 'Last modified (desc)'
                                         : 'Last modified (asc)'}
-                                </Button>
+                                </Button> */}
                             </Box>
                         </Grid>
                     </Grid>

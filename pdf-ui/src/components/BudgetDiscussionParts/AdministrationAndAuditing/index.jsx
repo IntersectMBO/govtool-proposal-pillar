@@ -361,6 +361,10 @@ const AdministrationAndAuditing = ({
                                         // helperText={errors['intersect_admin_further_text']?.trim()}
                                         // error={!!errors['intersect_admin_further_text']?.trim()}
                                         sx={{ mb: 2 }}
+                                        InputProps={{
+                                            'data-testid':
+                                                'intersect-admin-further-text',
+                                        }}
                                     />
                                 )}
                             </Box>

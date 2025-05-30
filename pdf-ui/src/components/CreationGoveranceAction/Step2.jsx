@@ -12,6 +12,8 @@ import { LinkManager, WithdrawalsManager, ConstitutionManager } from '.';
 import { useAppContext } from '../../context/context';
 import { getGovernanceActionTypes } from '../../lib/api';
 import { containsString, maxLengthCheck } from '../../lib/utils';
+import { set } from 'date-fns';
+import HardForkManager from './HardForkManager';
 const Step2 = ({
     setStep,
     proposalData,
@@ -31,6 +33,8 @@ const Step2 = ({
     setWithdrawalsErrors,
     constitutionErrors,
     setConstitutionErrors,
+    hardForkErrors,
+    setHardForkErrors,
 }) => {
     const titleMaxLength = 80;
     const abstractMaxLength = 2500;
@@ -114,7 +118,7 @@ const Step2 = ({
         }
 
         setHelperText((prev) => ({
-            ...prev, 
+            ...prev,
             [errorField]: errorMessage === true ? '' : errorMessage,
         }));
 
@@ -138,6 +142,18 @@ const Step2 = ({
     }, [governanceActionTypes]);
 
     useEffect(() => {
+        if (linksErrors && typeof linksErrors === 'object') {
+            const hasLinkError = Object.values(linksErrors).some(
+                (err) =>
+                    (typeof err?.url === 'string' && err.url.trim() !== '') ||
+                    (typeof err?.text === 'string' && err.text.trim() !== '')
+            );
+            if (hasLinkError) {
+                setIsDraftDisabled(true);
+                return;
+            }
+        }
+        setIsDraftDisabled(false);
         if (
             proposalData?.gov_action_type_id &&
             proposalData?.prop_name?.length !== 0
@@ -159,7 +175,7 @@ const Step2 = ({
                 setIsDraftDisabled(false);
             } else setIsDraftDisabled(true);
         }
-    }, [proposalData]);
+    }, [proposalData, linksErrors]);
 
     return (
         <Card>
@@ -440,6 +456,17 @@ const Step2 = ({
                                     setConstitutionErrors
                                 }
                             ></ConstitutionManager>
+                        ) : null
+                    }
+                    {
+                        /// 'Hard Fork'
+                        selectedGovActionId === 6 ? (
+                            <HardForkManager
+                                proposalData={proposalData}
+                                setProposalData={setProposalData}
+                                hardForkErrors={hardForkErrors}
+                                setHardForkErrors={setHardForkErrors}
+                            ></HardForkManager>
                         ) : null
                     }
                     <Box

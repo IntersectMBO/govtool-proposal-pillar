@@ -521,6 +521,9 @@ const CreateBudgetDiscussionDialog = ({
             open={open}
             onClose={onClose}
             data-testid='create-budget-discussion-dialog'
+            PaperProps={{
+                sx: { borderRadius: 0 },
+            }}
         >
             <Box
                 sx={{
