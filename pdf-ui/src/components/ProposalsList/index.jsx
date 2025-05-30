@@ -16,7 +16,7 @@ import {
     alpha,
     useMediaQuery,
 } from '@mui/material';
-import { useEffect, useRef, useState, useCallback } from 'react';
+import { useEffect, useRef, useState, useCallback, useMemo } from 'react';
 import Slider from 'react-slick';
 import { ProposalCard } from '..';
 import { useDebounce } from '../..//lib/hooks';
@@ -27,7 +27,7 @@ import { useTheme } from '@emotion/react';
 const ProposalsList = ({
     governanceAction,
     searchText = '',
-    sortType = 'desc',
+    sortType = { fieldId: 'createdAt', type: 'DESC', title: 'Newest' },
     isDraft = false,
     statusList = [],
     startEdittinButtonClick = false,
@@ -77,10 +77,10 @@ const ProposalsList = ({
             let query = '';
             if (isDraft) {
                 if (statusList?.length === 0 || statusList?.length === 2) {
-                    query = `filters[$and][2][is_draft]=true&pagination[page]=${page}&pagination[pageSize]=25&sort[createdAt]=${sortType}&populate[0]=proposal_links&populate[1]=proposal_withdrawals&populate[2]=proposal_constitution_content`;
+                    query = `filters[$and][2][is_draft]=true&pagination[page]=${page}&pagination[pageSize]=25&sort[createdAt]=desc&populate[0]=proposal_links&populate[1]=proposal_withdrawals&populate[2]=proposal_constitution_content`;
                 } else {
                     const isSubmitted = haveSubmittedFilter ? 'true' : 'false';
-                    query = `filters[$and][2][is_draft]=true&filters[$and][3][prop_submitted]=${isSubmitted}&pagination[page]=${page}&pagination[pageSize]=25&sort[createdAt]=${sortType}&populate[0]=proposal_links&populate[1]=proposal_withdrawals&populate[2]=proposal_constitution_content`;
+                    query = `filters[$and][2][is_draft]=true&filters[$and][3][prop_submitted]=${isSubmitted}&pagination[page]=${page}&pagination[pageSize]=25&sort[createdAt]=desc&populate[0]=proposal_links&populate[1]=proposal_withdrawals&populate[2]=proposal_constitution_content`;
                 }
             } else {
                 if (statusList?.length === 0 || statusList?.length === 2) {
@@ -88,14 +88,14 @@ const ProposalsList = ({
                         governanceAction?.id
                     }&filters[$and][1][prop_name][$containsi]=${
                         debouncedSearchValue || ''
-                    }&pagination[page]=${page}&pagination[pageSize]=25&sort[createdAt]=${sortType}&populate[0]=proposal_links&populate[1]=proposal_withdrawals&populate[2]=proposal_constitution_content`;
+                    }&pagination[page]=${page}&pagination[pageSize]=25&sort[${sortType.fieldId}]=${sortType.type}&populate[0]=proposal_links&populate[1]=proposal_withdrawals&populate[2]=proposal_constitution_content&populate[3]=proposal`;
                 } else {
                     const isSubmitted = haveSubmittedFilter ? 'true' : 'false';
                     query = `filters[$and][0][gov_action_type_id]=${
                         governanceAction?.id
                     }&filters[$and][1][prop_name][$containsi]=${
                         debouncedSearchValue || ''
-                    }&filters[$and][2][prop_submitted]=${isSubmitted}&pagination[page]=${page}&pagination[pageSize]=25&sort[createdAt]=${sortType}&populate[0]=proposal_links&populate[1]=proposal_withdrawals&populate[2]=proposal_constitution_content`;
+                    }&filters[$and][2][prop_submitted]=${isSubmitted}&pagination[page]=${page}&pagination[pageSize]=25&sort[${sortType.fieldId}]=${sortType.type}&populate[0]=proposal_links&populate[1]=proposal_withdrawals&populate[2]=proposal_constitution_content&populate[3]=proposal`;
                 }
             }
             const { proposals, pgCount } = await getProposals(query);
@@ -106,12 +106,18 @@ const ProposalsList = ({
             } else {
                 setProposalsList((prev) => [...prev, ...proposals]);
             }
-            console.log(pgCount);
             setPageCount(pgCount);
         } catch (error) {
             console.error(error);
         }
     };
+
+    // Memoize sortType and statusList dependencies to prevent infinite re-renders
+    const sortTypeString = useMemo(() => JSON.stringify(sortType), [sortType]);
+    const statusListString = useMemo(
+        () => JSON.stringify(statusList),
+        [statusList]
+    );
 
     useEffect(() => {
         if (!mounted) {
@@ -123,8 +129,8 @@ const ProposalsList = ({
     }, [
         mounted,
         debouncedSearchValue,
-        sortType,
-        isDraft ? null : statusList,
+        sortTypeString,
+        isDraft ? null : statusListString,
         showAllActivated,
     ]);
 

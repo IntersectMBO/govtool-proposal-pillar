@@ -150,26 +150,33 @@ const ProposalOwnership = ({
                                 onChange={(e) => {
                                     handleSubmitedOnBehalfChange(e);
                                 }}
-                                // SelectProps={{
-                                //     SelectDisplayProps: {
-                                //         'data-testid': '',
-                                //     },
-                                // }}
-                                InputProps={{
-                                    inputProps: {
+                                SelectProps={{
+                                    SelectDisplayProps: {
                                         'data-testid': 'proposal-committee',
                                     },
                                 }}
                                 helperText='If you are submitting on behalf of an Intersect Committee, please select Group. The Group Name would be the “Name of the Committee (e.g. MCC, TSC)”. The Type of Group would be “Intersect Committee”. The Key Information to Identify the Group would be the names of the Voting members of the Committee.'
                                 sx={{ mb: 2 }}
                             >
-                                <MenuItem key={'1'} value={'Individual'}>
+                                <MenuItem
+                                    key={'1'}
+                                    value={'Individual'}
+                                    data-testid='individual-submission'
+                                >
                                     Individual
                                 </MenuItem>
-                                <MenuItem key={'2'} value={'Company'}>
+                                <MenuItem
+                                    key={'2'}
+                                    value={'Company'}
+                                    data-testid='company-submission'
+                                >
                                     Company
                                 </MenuItem>
-                                <MenuItem key={'3'} value={'Group'}>
+                                <MenuItem
+                                    key={'3'}
+                                    value={'Group'}
+                                    data-testid='group-submission'
+                                >
                                     Group
                                 </MenuItem>
                             </TextField>
@@ -261,15 +268,11 @@ const ProposalOwnership = ({
                                         onChange={(e) =>
                                             handleDataChange(e, 'be_country')
                                         }
-                                        // SelectProps={{
-                                        //     SelectDisplayProps: {
-                                        //         'data-testid':
-                                        //             'country-of-incorporation',
-                                        //     },
-                                        // }}
-                                        inputProps={{
-                                            'data-testid':
-                                                'country-of-incorporation',
+                                        SelectProps={{
+                                            SelectDisplayProps: {
+                                                'data-testid':
+                                                    'country-of-incorporation',
+                                            },
                                         }}
                                         sx={{ mb: 2 }}
                                     >

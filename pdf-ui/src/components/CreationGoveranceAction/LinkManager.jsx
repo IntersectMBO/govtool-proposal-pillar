@@ -25,25 +25,45 @@ const LinkManager = ({
             ...proposalData,
             proposal_links: newLinks,
         });
-
-        // If the URL is empty, remove the error
         if (field === 'prop_link' && value === '') {
             return setLinksErrors((prev) => {
                 const { [index]: removed, ...rest } = prev;
                 return rest;
             });
         }
-
-        // Validate URL
         if (field === 'prop_link') {
-            const isValid = isValidURLFormat(value);
+            let urlError = '';
+            if (value.length > 2048) {
+                urlError = 'URL must be 2048 characters or less';
+            } else if (value && !isValidURLFormat(value)) {
+                urlError = 'Invalid URL format';
+            }
             setLinksErrors((prev) => ({
                 ...prev,
                 [index]: {
                     ...prev[index],
-                    url: isValid ? '' : 'Invalid URL format',
+                    url: urlError,
                 },
             }));
+        }
+        if (field === 'prop_link_text') {
+            let textError = '';
+            if (value.length > 255) {
+                textError = 'Text must be 255 characters or less';
+            }
+            setLinksErrors((prev) => {
+                if (value === '' || value < 255) {
+                    const { [index]: removed, ...rest } = prev;
+                    return rest;
+                }
+                return {
+                    ...prev,
+                    [index]: {
+                        ...prev[index],
+                        text: textError,
+                    },
+                };
+            });
         }
     };
 
@@ -125,7 +145,7 @@ const LinkManager = ({
                                 inputProps={{
                                     'data-testid': `link-${index}-url-input`,
                                     //link length limited to 255 characters
-                                    maxLength: 255,
+                                    // maxLength: 255,
                                 }}
                                 error={!!linksErrors[index]?.url}
                                 helperText={linksErrors[index]?.url}
@@ -160,6 +180,14 @@ const LinkManager = ({
                                 }}
                                 inputProps={{
                                     'data-testid': `link-${index}-text-input`,
+                                }}
+                                error={!!linksErrors[index]?.text}
+                                helperText={linksErrors[index]?.text}
+                                FormHelperTextProps={{
+                                    sx: {
+                                        backgroundColor: 'transparent',
+                                    },
+                                    'data-testid': `link-text-${index}-url-input-error`,
                                 }}
                             />
                         </Box>

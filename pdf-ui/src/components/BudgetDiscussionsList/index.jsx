@@ -42,6 +42,7 @@ const BudgetDiscussionsList = ({
 }) => {
     const theme = useTheme();
     const sliderRef = useRef(null);
+    const observer = useRef();
 
     const [showAll, setShowAll] = useState(false);
     const [budgetDiscussionList, setBudgetDiscussionList] = useState([]);
@@ -208,6 +209,24 @@ const BudgetDiscussionsList = ({
         setIsAllProposalsListEmpty,
     ]);
 
+    const lastBudgetProposalRef = useCallback(
+        (node) => {
+            if (observer.current) observer.current.disconnect();
+            observer.current = new window.IntersectionObserver((entries) => {
+                if (
+                    entries[0].isIntersecting &&
+                    currentPage < pageCount &&
+                    budgetDiscussionList.length > 0
+                ) {
+                    fetchBudgetDiscussions(false, currentPage + 1);
+                    setCurrentPage((prev) => prev + 1);
+                }
+            });
+            if (node) observer.current.observe(node);
+        },
+        [currentPage, pageCount, budgetDiscussionList.length]
+    );
+
     return budgetDiscussionList?.length === 0 ? null : (
         <Box overflow={'visible'}>
             <Box
@@ -293,21 +312,38 @@ const BudgetDiscussionsList = ({
                 ) ? (
                     <Box>
                         <Grid container spacing={4} paddingY={4}>
-                            {budgetDiscussionList?.map((bd, index) => (
-                                <Grid item key={index} xs={12} sm={6} md={4}>
-                                    <BudgetDiscussionsCard
-                                        budgetDiscussion={bd}
-                                        isDraft={isDraft}
-                                        startEdittingDraft={startEdittingDraft}
-                                        startEdittinButtonClick={
-                                            startEdittinButtonClick
+                            {budgetDiscussionList?.map((bd, index) => {
+                                const isLast =
+                                    index === budgetDiscussionList.length - 1;
+                                return (
+                                    <Grid
+                                        item
+                                        key={index}
+                                        xs={12}
+                                        sm={6}
+                                        md={4}
+                                        ref={
+                                            isLast
+                                                ? lastBudgetProposalRef
+                                                : null
                                         }
-                                    />
-                                </Grid>
-                            ))}
+                                    >
+                                        <BudgetDiscussionsCard
+                                            budgetDiscussion={bd}
+                                            isDraft={isDraft}
+                                            startEdittingDraft={
+                                                startEdittingDraft
+                                            }
+                                            startEdittinButtonClick={
+                                                startEdittinButtonClick
+                                            }
+                                        />
+                                    </Grid>
+                                );
+                            })}
                         </Grid>
 
-                        {currentPage < pageCount && (
+                        {/* {currentPage < pageCount && (
                             <Box
                                 marginY={2}
                                 display={'flex'}
@@ -325,7 +361,7 @@ const BudgetDiscussionsList = ({
                                     Load more
                                 </Button>
                             </Box>
-                        )}
+                        )} */}
                     </Box>
                 ) : (
                     <Box py={2}>
