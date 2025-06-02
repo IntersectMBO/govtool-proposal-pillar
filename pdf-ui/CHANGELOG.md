@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 As a minor extension, we also keep a semantic version for the `UNRELEASED`
 changes.
+
+## [v0.7.0-beta-33](https://www.npmjs.com/package/@intersect.mbo/pdf-ui/v/0.7.0-beta-33) 2025-06-02
+-   Remove CSS Rounded Edges on Creating Governance Action Pages on background
+-   Fix data-testIds
+
+
+
 ## [v0.7.0-beta-32](https://www.npmjs.com/package/@intersect.mbo/pdf-ui/v/0.7.0-beta-32) 2025-05-29
 -   fix: Update data-testid attributes for improved accessibility in form…
 -   Hardware Wallet warning #2575 wording updated 

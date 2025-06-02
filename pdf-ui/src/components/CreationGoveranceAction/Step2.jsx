@@ -145,7 +145,6 @@ const Step2 = ({
                     (typeof err?.url === 'string' && err.url.trim() !== '') ||
                     (typeof err?.text === 'string' && err.text.trim() !== '')
             );
-            console.log('🚀 ~ useEffect ~ hasLinkError:', hasLinkError);
             if (hasLinkError) {
                 setIsDraftDisabled(true);
                 return;
