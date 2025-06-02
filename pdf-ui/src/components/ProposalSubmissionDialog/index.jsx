@@ -24,6 +24,9 @@ const ProposalSubmissionDialog = ({
             open={openEditDialog}
             onClose={handleCloseSubmissionDialog}
             data-testid='proposal-submission-dialog'
+            PaperProps={{
+                sx: { borderRadius: 0 },
+            }}
         >
             <Box
                 sx={{
