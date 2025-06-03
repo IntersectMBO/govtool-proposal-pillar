@@ -1137,21 +1137,19 @@ const SingleGovernanceAction = ({ id }) => {
                                         >
                                             Abstract
                                         </Typography>
-                                        <div data-testid='abstract-content'>
-                                            <MarkdownTypography
-                                                content={
-                                                    showFullText || !maxLength
-                                                        ? AbstractMarkdownText
-                                                        : truncatedText
-                                                }
-                                                testId={`abstract-content`}
-                                            />
-                                            {/* <ReactMarkdown data-testid='abstract-content'>
+                                        <MarkdownTypography
+                                            content={
+                                                showFullText || !maxLength
+                                                    ? AbstractMarkdownText
+                                                    : truncatedText
+                                            }
+                                            testId={`abstract-content`}
+                                        />
+                                        {/* <ReactMarkdown data-testid='abstract-content'>
                                                 {showFullText || !maxLength
                                                     ? AbstractMarkdownText
                                                     : truncatedText}
                                             </ReactMarkdown> */}
-                                        </div>
                                         {!showFullText &&
                                             totalCharLength > maxLength && (
                                                 <Button
