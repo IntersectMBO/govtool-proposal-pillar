@@ -1189,7 +1189,7 @@ const SingleGovernanceAction = ({ id }) => {
                                             >
                                                 Motivation
                                             </Typography>
-                                            <div data-testid='motivation-content'>
+                                            <div>
                                                 <MarkdownTypography
                                                     content={
                                                         proposal?.attributes
@@ -1220,7 +1220,7 @@ const SingleGovernanceAction = ({ id }) => {
                                             >
                                                 Rationale
                                             </Typography>
-                                            <div data-testid='rationale-content'>
+                                            <div>
                                                 <MarkdownTypography
                                                     content={
                                                         proposal?.attributes
@@ -1455,9 +1455,9 @@ const SingleGovernanceAction = ({ id }) => {
                                                                     item?.prop_link
                                                                 )
                                                             }
-                                                            data-testid={
-                                                                'link-${index}-text-content'
-                                                            }
+                                                            // data-testid={
+                                                            //     'link-${index}-text-content'
+                                                            // }
                                                         >
                                                             <Typography
                                                                 component={'p'}
