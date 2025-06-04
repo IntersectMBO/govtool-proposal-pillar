@@ -448,6 +448,7 @@ const SingleGovernanceAction = ({ id }) => {
         }
     }, [commentsSortType]);
 
+    console.log('🚀 ~ SingleGovernanceAction ~ proposal:', proposal);
     return !proposal ? null : proposal?.attributes?.content?.attributes
           ?.is_draft ? null : (
         <>
@@ -1295,7 +1296,10 @@ const SingleGovernanceAction = ({ id }) => {
                                         : null}
                                     {showFullText &&
                                     proposal?.attributes?.content?.attributes
-                                        ?.gov_action_type_id == 3 ? (
+                                        ?.gov_action_type_id == 3 &&
+                                    proposal?.attributes?.content?.attributes
+                                        ?.proposal_constitution_content
+                                        ?.data ? (
                                         <div>
                                             <Box mt={4}>
                                                 <Typography
@@ -1314,8 +1318,8 @@ const SingleGovernanceAction = ({ id }) => {
                                                             ?.content
                                                             ?.attributes
                                                             ?.proposal_constitution_content
-                                                            .data.attributes
-                                                            .prop_constitution_url ||
+                                                            ?.data?.attributes
+                                                            ?.prop_constitution_url ||
                                                             ''}
                                                     </ReactMarkdown>
                                                 </div>
@@ -1323,8 +1327,8 @@ const SingleGovernanceAction = ({ id }) => {
                                             {proposal?.attributes?.content
                                                 ?.attributes
                                                 ?.proposal_constitution_content
-                                                .data.attributes
-                                                .prop_have_guardrails_script ===
+                                                ?.data?.attributes
+                                                ?.prop_have_guardrails_script ===
                                             true ? (
                                                 <div>
                                                     <Box mt={4}>
@@ -1350,9 +1354,9 @@ const SingleGovernanceAction = ({ id }) => {
                                                                     ?.content
                                                                     ?.attributes
                                                                     ?.proposal_constitution_content
-                                                                    .data
-                                                                    .attributes
-                                                                    .prop_guardrails_script_url ||
+                                                                    ?.data
+                                                                    ?.attributes
+                                                                    ?.prop_guardrails_script_url ||
                                                                     ''}
                                                             </ReactMarkdown>
                                                         </div>
@@ -1380,9 +1384,9 @@ const SingleGovernanceAction = ({ id }) => {
                                                                     ?.content
                                                                     ?.attributes
                                                                     ?.proposal_constitution_content
-                                                                    .data
-                                                                    .attributes
-                                                                    .prop_guardrails_script_hash ||
+                                                                    ?.data
+                                                                    ?.attributes
+                                                                    ?.prop_guardrails_script_hash ||
                                                                     ''}
                                                             </ReactMarkdown>
                                                         </div>
@@ -1390,6 +1394,106 @@ const SingleGovernanceAction = ({ id }) => {
                                                 </div>
                                             ) : null}
                                         </div>
+                                    ) : null}
+                                    {showFullText &&
+                                    proposal?.attributes?.content?.attributes
+                                        ?.gov_action_type_id == 6 ? (
+                                        <>
+                                            <Box>
+                                                <Typography
+                                                    variant='caption'
+                                                    sx={{
+                                                        color: (theme) =>
+                                                            theme?.palette?.text
+                                                                ?.grey,
+                                                    }}
+                                                >
+                                                    Previous Gov Action Hash
+                                                </Typography>
+                                                <Typography
+                                                    variant='body1'
+                                                    gutterBottom
+                                                    data-testid={`previous-gov-action-hash-content`}
+                                                >
+                                                    {proposal?.attributes
+                                                        ?.content?.attributes
+                                                        ?.proposal_hard_fork_content
+                                                        ?.data?.attributes
+                                                        ?.previous_ga_hash ||
+                                                        ''}
+                                                </Typography>
+                                            </Box>
+                                            <Box>
+                                                <Typography
+                                                    variant='caption'
+                                                    sx={{
+                                                        color: (theme) =>
+                                                            theme?.palette?.text
+                                                                ?.grey,
+                                                    }}
+                                                >
+                                                    Previous Gov Action ID
+                                                </Typography>
+                                                <Typography
+                                                    variant='body1'
+                                                    gutterBottom
+                                                    data-testid={`previous-gov-action-id-content`}
+                                                >
+                                                    {proposal?.attributes
+                                                        ?.content?.attributes
+                                                        ?.proposal_hard_fork_content
+                                                        ?.data?.attributes
+                                                        ?.previous_ga_id || ''}
+                                                </Typography>
+                                            </Box>
+
+                                            <Box>
+                                                <Typography
+                                                    variant='caption'
+                                                    sx={{
+                                                        color: (theme) =>
+                                                            theme?.palette?.text
+                                                                ?.grey,
+                                                    }}
+                                                >
+                                                    Major version
+                                                </Typography>
+                                                <Typography
+                                                    variant='body1'
+                                                    gutterBottom
+                                                    data-testid={`major-version-content`}
+                                                >
+                                                    {proposal?.attributes
+                                                        ?.content?.attributes
+                                                        ?.proposal_hard_fork_content
+                                                        ?.data?.attributes
+                                                        ?.major || ''}
+                                                </Typography>
+                                            </Box>
+                                            <Box>
+                                                <Typography
+                                                    variant='caption'
+                                                    sx={{
+                                                        color: (theme) =>
+                                                            theme?.palette?.text
+                                                                ?.grey,
+                                                    }}
+                                                >
+                                                    Minor version
+                                                </Typography>
+                                                <Typography
+                                                    variant='body1'
+                                                    gutterBottom
+                                                    data-testid={`minor-version-content`}
+                                                >
+                                                    {proposal?.attributes
+                                                        ?.content?.attributes
+                                                        ?.proposal_hard_fork_content
+                                                        ?.data?.attributes
+                                                        ?.minor || ''}
+                                                </Typography>
+                                            </Box>
+                                        </>
                                     ) : null}
                                     {showFullText &&
                                         totalCharLength > maxLength && (

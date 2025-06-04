@@ -55,6 +55,7 @@ const CreateGovernanceActionDialog = ({ open = false, onClose = false }) => {
     const [withdrawalsErrors, setWithdrawalsErrors] = useState({});
     const [constitutionErrors, setConstitutionErrors] = useState({});
     const [hardForkErrors, setHardForkErrors] = useState({});
+    const [committeeErrors, setCommitteeErrors] = useState({});
     const isSmallScreen = useMediaQuery((theme) =>
         theme.breakpoints.down('sm')
     );
@@ -145,14 +146,6 @@ const CreateGovernanceActionDialog = ({ open = false, onClose = false }) => {
                     setIsContinueDisabled(false);
                 }
             }
-            console.log(
-                '🚀 ~ handleIsContinueDisabled ~ proposalData:',
-                proposalData
-            );
-            console.log(
-                '🚀 ~ handleIsContinueDisabled ~ hardForkErrors:',
-                hardForkErrors
-            );
             if (proposalData?.gov_action_type_id == 6) {
                 if (
                     !proposalData?.proposal_hard_fork_content?.major ||
@@ -332,6 +325,8 @@ const CreateGovernanceActionDialog = ({ open = false, onClose = false }) => {
                                     }
                                     hardForkErrors={hardForkErrors}
                                     setHardForkErrors={setHardForkErrors}
+                                    committeeErrors={committeeErrors}
+                                    setCommitteeErrors={setCommitteeErrors}
                                 />
                             )}
 

@@ -8,7 +8,9 @@ const HardForkManager = ({
     setProposalData,
     hardForkErrors,
     setHardForkErrors,
+    isEdit = false, // Flag to indicate if the component is in edit mode
 }) => {
+    console.log('🚀 ~ proposalData:', proposalData);
     const fetchAndSetHardForkData = async () => {
         try {
             const resp = await getHardForkData();
@@ -30,6 +32,12 @@ const HardForkManager = ({
     };
 
     useEffect(() => {
+        if (
+            (isEdit &&
+                proposalData?.proposal_hard_fork_content?.previous_ga_hash) ||
+            proposalData?.proposal_hard_fork_content?.previous_ga_id
+        )
+            return; // Skip fetching data in edit mode
         fetchAndSetHardForkData();
     }, []);
 

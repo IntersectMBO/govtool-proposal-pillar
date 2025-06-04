@@ -14,6 +14,7 @@ import { getGovernanceActionTypes } from '../../lib/api';
 import { containsString, maxLengthCheck } from '../../lib/utils';
 import { set } from 'date-fns';
 import HardForkManager from './HardForkManager';
+import CommitteeManager from './CommitteeManager';
 const Step2 = ({
     setStep,
     proposalData,
@@ -35,6 +36,8 @@ const Step2 = ({
     setConstitutionErrors,
     hardForkErrors,
     setHardForkErrors,
+    committeeErrors,
+    setCommitteeErrors,
 }) => {
     const titleMaxLength = 80;
     const abstractMaxLength = 2500;
@@ -221,7 +224,6 @@ const Step2 = ({
                             Proposal Details
                         </Typography>
                     </Box>
-
                     <TextField
                         select
                         label='Governance Action Type'
@@ -245,7 +247,6 @@ const Step2 = ({
                             </MenuItem>
                         ))}
                     </TextField>
-
                     <TextField
                         label='Title'
                         variant='outlined'
@@ -264,7 +265,6 @@ const Step2 = ({
                             'data-testid': 'title-input-error',
                         }}
                     />
-
                     <TextField
                         size='large'
                         name='Abstract'
@@ -313,7 +313,6 @@ const Step2 = ({
                                 : 'abstract-helper',
                         }}
                     />
-
                     <TextField
                         size='large'
                         name='Motivation'
@@ -367,7 +366,6 @@ const Step2 = ({
                                 : 'motivation-helper',
                         }}
                     />
-
                     <TextField
                         size='large'
                         name='Rationale'
@@ -459,6 +457,17 @@ const Step2 = ({
                         ) : null
                     }
                     {
+                        /// 'Committee'
+                        selectedGovActionId === 5 ? (
+                            <CommitteeManager
+                                proposalData={proposalData}
+                                setProposalData={setProposalData}
+                                committeeManagerErrors={committeeErrors}
+                                setCommitteeManagerErrors={setCommitteeErrors}
+                            />
+                        ) : null
+                    }
+                    {
                         /// 'Hard Fork'
                         selectedGovActionId === 6 ? (
                             <HardForkManager
@@ -497,7 +506,6 @@ const Step2 = ({
                             (up to 7 entries)
                         </Typography>
                     </Box>
-
                     <LinkManager
                         proposalData={proposalData}
                         setProposalData={setProposalData}
