@@ -56,6 +56,7 @@ const LinkManager = ({
                 if (value === '' || value < 255) {
                     const { [index]: removed, ...rest } = prev;
                     return rest;
+                }
                 if (value === '') {
                     const currentErrors = prev[index] || {};
                     const { text, ...otherErrors } = currentErrors;
