@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 As a minor extension, we also keep a semantic version for the `UNRELEASED`
 changes.
+## [v1.0.0-alfa](https://www.npmjs.com/package/@intersect.mbo/pdf-ui/v/1.0.0-alfa) 2025-06-05
+-   Added Hard Fork Proposal type
 
 ## [v0.7.0-beta-36](https://www.npmjs.com/package/@intersect.mbo/pdf-ui/v/0.7.0-beta-36) 2025-06-04
 -   Fix data-testIds
