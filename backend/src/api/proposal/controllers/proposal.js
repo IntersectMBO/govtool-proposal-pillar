@@ -263,8 +263,6 @@ module.exports = createCoreController(
       if (!user) {
         return ctx.badRequest(null, "User is required");
       }
-
-      console.log("🚀 ~ create ~ data:", data);
       let proposal;
       let proposal_content;
       // Delete the Prposal
@@ -460,6 +458,7 @@ module.exports = createCoreController(
               }
             );
 
+
             let proposalHardForkContent = null;
             //only create proposal hard fork content if gov_action_type_id is 6 and proposal_hard_fork_content exists
             if (gov_action_type_id == 6 && !!data?.proposal_hard_fork_content) {
@@ -487,11 +486,6 @@ module.exports = createCoreController(
                   error
                 );
               }
-
-              console.log(
-                "🚀 ~ create ~ proposalHardForkContent:",
-                proposalHardForkContent
-              );
               if (!proposalHardForkContent?.id) {
                 return ctx.badRequest(
                   null,

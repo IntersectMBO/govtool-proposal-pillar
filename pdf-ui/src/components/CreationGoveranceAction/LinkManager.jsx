@@ -52,9 +52,23 @@ const LinkManager = ({
                 textError = 'Text must be 255 characters or less';
             }
             setLinksErrors((prev) => {
+
                 if (value === '' || value < 255) {
                     const { [index]: removed, ...rest } = prev;
                     return rest;
+                if (value === '') {
+                    const currentErrors = prev[index] || {};
+                    const { text, ...otherErrors } = currentErrors;
+
+                    if (Object.keys(otherErrors).length === 0) {
+                        const { [index]: removed, ...rest } = prev;
+                        return rest;
+                    } else {
+                        return {
+                            ...prev,
+                            [index]: otherErrors,
+                        };
+                    }
                 }
                 return {
                     ...prev,

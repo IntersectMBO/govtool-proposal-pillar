@@ -1138,21 +1138,19 @@ const SingleGovernanceAction = ({ id }) => {
                                         >
                                             Abstract
                                         </Typography>
-                                        <div data-testid='abstract-content'>
-                                            <MarkdownTypography
-                                                content={
-                                                    showFullText || !maxLength
-                                                        ? AbstractMarkdownText
-                                                        : truncatedText
-                                                }
-                                                testId={`abstract-content`}
-                                            />
-                                            {/* <ReactMarkdown data-testid='abstract-content'>
+                                        <MarkdownTypography
+                                            content={
+                                                showFullText || !maxLength
+                                                    ? AbstractMarkdownText
+                                                    : truncatedText
+                                            }
+                                            testId={`abstract-content`}
+                                        />
+                                        {/* <ReactMarkdown data-testid='abstract-content'>
                                                 {showFullText || !maxLength
                                                     ? AbstractMarkdownText
                                                     : truncatedText}
                                             </ReactMarkdown> */}
-                                        </div>
                                         {!showFullText &&
                                             totalCharLength > maxLength && (
                                                 <Button
@@ -1192,7 +1190,7 @@ const SingleGovernanceAction = ({ id }) => {
                                             >
                                                 Motivation
                                             </Typography>
-                                            <div data-testid='motivation-content'>
+                                            <div>
                                                 <MarkdownTypography
                                                     content={
                                                         proposal?.attributes
@@ -1223,7 +1221,7 @@ const SingleGovernanceAction = ({ id }) => {
                                             >
                                                 Rationale
                                             </Typography>
-                                            <div data-testid='rationale-content'>
+                                            <div>
                                                 <MarkdownTypography
                                                     content={
                                                         proposal?.attributes
@@ -1561,9 +1559,9 @@ const SingleGovernanceAction = ({ id }) => {
                                                                     item?.prop_link
                                                                 )
                                                             }
-                                                            data-testid={
-                                                                'link-${index}-text-content'
-                                                            }
+                                                            // data-testid={
+                                                            //     'link-${index}-text-content'
+                                                            // }
                                                         >
                                                             <Typography
                                                                 component={'p'}

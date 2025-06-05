@@ -143,6 +143,7 @@ const CreateGovernanceActionDialog = ({ open = false, onClose = false }) => {
                     )
                         return setIsContinueDisabled(true);
                 } else {
+
                     setIsContinueDisabled(false);
                 }
             }
