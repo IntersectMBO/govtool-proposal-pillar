@@ -79,6 +79,12 @@
       "type": "boolean",
       "default": false
     },
+    "proposal_hard_fork_content": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::proposal-hard-fork-content.proposal-hard-fork-content",
+      "mappedBy": "proposal_content"
+    },
     "proposal": {
       "type": "relation",
       "relation": "manyToOne",

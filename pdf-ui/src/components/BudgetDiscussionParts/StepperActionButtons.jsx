@@ -21,6 +21,7 @@ const StepperActionButtons = ({
     backText = 'Back',
     errors,
 }) => {
+    console.log('🚀 ~ errors:', errors);
     // Calculate backStep if not provided
     const calculatedBackStep = backStep !== undefined ? backStep : nextStep - 2;
     const [continueDisabled, setContinueDisabled] = useState(false);

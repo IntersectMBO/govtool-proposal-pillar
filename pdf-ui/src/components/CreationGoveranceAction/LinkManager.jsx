@@ -25,14 +25,12 @@ const LinkManager = ({
             ...proposalData,
             proposal_links: newLinks,
         });
-
         if (field === 'prop_link' && value === '') {
             return setLinksErrors((prev) => {
                 const { [index]: removed, ...rest } = prev;
                 return rest;
             });
         }
-
         if (field === 'prop_link') {
             let urlError = '';
             if (value.length > 2048) {
@@ -48,13 +46,16 @@ const LinkManager = ({
                 },
             }));
         }
-
         if (field === 'prop_link_text') {
             let textError = '';
             if (value.length > 255) {
                 textError = 'Text must be 255 characters or less';
             }
             setLinksErrors((prev) => {
+
+                if (value === '' || value < 255) {
+                    const { [index]: removed, ...rest } = prev;
+                    return rest;
                 if (value === '') {
                     const currentErrors = prev[index] || {};
                     const { text, ...otherErrors } = currentErrors;

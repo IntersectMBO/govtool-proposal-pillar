@@ -54,6 +54,8 @@ const CreateGovernanceActionDialog = ({ open = false, onClose = false }) => {
     const [linksErrors, setLinksErrors] = useState({});
     const [withdrawalsErrors, setWithdrawalsErrors] = useState({});
     const [constitutionErrors, setConstitutionErrors] = useState({});
+    const [hardForkErrors, setHardForkErrors] = useState({});
+    const [committeeErrors, setCommitteeErrors] = useState({});
     const isSmallScreen = useMediaQuery((theme) =>
         theme.breakpoints.down('sm')
     );
@@ -140,6 +142,19 @@ const CreateGovernanceActionDialog = ({ open = false, onClose = false }) => {
                             .prop_guardrails_script_hash
                     )
                         return setIsContinueDisabled(true);
+                } else {
+
+                    setIsContinueDisabled(false);
+                }
+            }
+            if (proposalData?.gov_action_type_id == 6) {
+                if (
+                    !proposalData?.proposal_hard_fork_content?.major ||
+                    hardForkErrors?.major ||
+                    !proposalData?.proposal_hard_fork_content?.minor ||
+                    hardForkErrors?.minor
+                ) {
+                    return setIsContinueDisabled(true);
                 } else {
                     setIsContinueDisabled(false);
                 }
@@ -309,6 +324,10 @@ const CreateGovernanceActionDialog = ({ open = false, onClose = false }) => {
                                     setConstitutionErrors={
                                         setConstitutionErrors
                                     }
+                                    hardForkErrors={hardForkErrors}
+                                    setHardForkErrors={setHardForkErrors}
+                                    committeeErrors={committeeErrors}
+                                    setCommitteeErrors={setCommitteeErrors}
                                 />
                             )}
 
