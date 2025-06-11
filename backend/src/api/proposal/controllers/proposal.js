@@ -164,7 +164,7 @@ module.exports = createCoreController(
           "api::proposal.proposal",
           proposalContent?.proposal_id
         );
-
+        
         const proposalUser = await strapi
           .query("plugin::users-permissions.user")
           .findOne({ where: { id: +proposal?.user_id } });
@@ -232,18 +232,16 @@ module.exports = createCoreController(
             },
           },
         });
-      if (proposalContent?.data?.length > 0) {
-        if (proposalContent?.data?.[0]?.attributes?.is_draft) {
-          return ctx.badRequest(
-            null,
-            "You can not access draft proposal details."
-          );
-        }
-        proposal.content = proposalContent?.data?.[0];
+        if(proposalContent?.data?.length > 0) {
+          proposal.content = proposalContent?.data?.[0];
+          if (proposalContent?.data?.length > 0) {
+            if (proposalContent?.data?.[0]?.attributes?.is_draft) {
+              return ctx.badRequest(null,"You can not access draft proposal details.");
+              }
+          }
       } else {
         proposal.content = null;
       }
-
       const proposalUser = await strapi
         .query("plugin::users-permissions.user")
         .findOne({ where: { id: +proposal?.user_id } });
@@ -253,7 +251,6 @@ module.exports = createCoreController(
       } else {
         proposal.user_govtool_username = "Anonymous";
       }
-
       return this.transformResponse(proposal);
     },
     async create(ctx) {
@@ -407,6 +404,37 @@ module.exports = createCoreController(
             console.error("Error creating proposal:", error);
             return ctx.badRequest(null, "Proposal not created");
           }
+          let proposalHardForkContent = null;
+            //only create proposal hard fork content if gov_action_type_id is 6 and proposal_hard_fork_content exists
+          if (gov_action_type_id == 6 && !!data?.proposal_hard_fork_content) {
+            try {
+              proposalHardForkContent = await strapi.entityService.create(
+                "api::proposal-hard-fork-content.proposal-hard-fork-content",
+                {
+                  data: {
+                    previous_ga_hash:
+                      data?.proposal_hard_fork_content?.previous_ga_hash,
+                    previous_ga_id: String(
+                      data?.proposal_hard_fork_content?.previous_ga_id
+                    ),
+                    major: data?.proposal_hard_fork_content?.major,
+                    minor: data?.proposal_hard_fork_content?.minor
+                  },
+                }
+              );
+            } catch (error) {
+              console.error(
+                "Error creating proposal hard fork content:",
+                error
+              );
+            }
+            if (!proposalHardForkContent?.id) {
+              return ctx.badRequest(
+                null,
+                "Proposal hard fork content not created"
+              );
+            }
+          }
           try {
             const proposalContentData = {
               ...data,
@@ -415,6 +443,7 @@ module.exports = createCoreController(
               prop_rev_active: true,
               user_id: user?.id?.toString(),
               proposal: proposal?.id,
+              proposal_hard_fork_content: proposalHardForkContent?.id,
             };
             // Only create proposal_constitution_content if gov_action_type_id is 3
             let proposalConstitutionContent = null;
@@ -457,52 +486,7 @@ module.exports = createCoreController(
                 data: proposalContentData,
               }
             );
-
-
-            let proposalHardForkContent = null;
-            //only create proposal hard fork content if gov_action_type_id is 6 and proposal_hard_fork_content exists
-            if (gov_action_type_id == 6 && !!data?.proposal_hard_fork_content) {
-              try {
-                proposalHardForkContent = await strapi.entityService.create(
-                  "api::proposal-hard-fork-content.proposal-hard-fork-content",
-                  {
-                    data: {
-                      previous_ga_hash:
-                        data.proposal_hard_fork_content.previous_ga_hash,
-                      previous_ga_id: String(
-                        data.proposal_hard_fork_content.previous_ga_id
-                      ),
-                      major: data.proposal_hard_fork_content.major,
-
-                      minor: data.proposal_hard_fork_content.minor,
-
-                      proposal_content: proposal_content.id,
-                    },
-                  }
-                );
-              } catch (error) {
-                console.error(
-                  "Error creating proposal hard fork content:",
-                  error
-                );
-              }
-              if (!proposalHardForkContent?.id) {
-                return ctx.badRequest(
-                  null,
-                  "Proposal hard fork content not created"
-                );
-              }
-              proposalContentData.proposal_hard_fork_content = {
-                connect: [proposalHardForkContent.id], // over ID
-              };
-
-              proposal_content = await strapi.entityService.create(
-                "api::proposal-content.proposal-content",
-                {
-                  data: proposalContentData,
-                }
-              );
-            }
+            
           } catch (error) {
             console.error("Error creating proposal content:", error);
             // Delete the Proposal because the Proposal content was not created

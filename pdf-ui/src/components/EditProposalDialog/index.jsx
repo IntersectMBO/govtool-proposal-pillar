@@ -159,6 +159,28 @@ const EditProposalDialog = ({
                     setIsSaveDisabled(false);
                 }
             }
+             if (draft?.gov_action_type_id == 6) {
+                if (
+                    draft?.proposal_hard_fork_content?.major == '' ||
+                    draft?.proposal_hard_fork_content?.minor == '' ||
+                    isNaN(Number(draft?.proposal_hard_fork_content?.major)) ||
+                    isNaN(Number(draft?.proposal_hard_fork_content?.minor))
+                ) {
+                    return setIsSaveDisabled(true);
+                } else {
+                    setIsSaveDisabled(false);
+                }
+            }
+            // if(draft?.gov_action_type_id == 6){
+            //     console.log(draft,"drafttttt")
+            //     draft.proposal_hard_fork_content.id = draft.proposal_hard_fork_content.data.id
+            //     draft.proposal_hard_fork_content.previous_ga_hash = draft.proposal_hard_fork_content.data.attributes.previous_ga_hash
+            //     draft.proposal_hard_fork_content.previous_ga_id = draft.proposal_hard_fork_content.data.attributes.previous_ga_id
+            //     draft.proposal_hard_fork_content.major = draft.proposal_hard_fork_content.data.attributes.major
+            //     draft.proposal_hard_fork_content.minor = draft.proposal_hard_fork_content.data.attributes.minor     
+            //  //   delete draft.proposal_hard_fork_content.data 
+            //     setDraftData(draft)
+            // }
 
             const selectedLabel = governanceActionTypes.find(
                 (option) => option?.value === draft?.gov_action_type_id
@@ -221,7 +243,11 @@ const EditProposalDialog = ({
                 proposalData?.attributes?.content?.attributes?.proposal_links,
             proposal_constitution_content:
                 proposalData?.attributes?.content?.attributes
-                    ?.proposal_constitution_content || {},
+                    ?.proposal_constitution_content,
+            proposal_hard_fork_content:
+                proposalData?.attributes?.content?.attributes
+                    ?.proposal_hard_fork_content
+                     || {},
         };
         return draft;
     };
@@ -287,8 +313,16 @@ const EditProposalDialog = ({
         }
 
         try {
+            let payload = {...draft, proposal_hard_fork_content : 
+                {  
+                    previous_ga_hash : draft.proposal_hard_fork_content.previous_ga_hash, 
+                    previous_ga_id : draft.proposal_hard_fork_content.previous_ga_id, 
+                    major : draft.proposal_hard_fork_content.major,
+                    minor : draft.proposal_hard_fork_content.minor
+                }
+            }
             const response = await createProposalContent({
-                ...draft,
+                ...payload,
                 ...proposalConentObj,
             });
             if (!response) return;
@@ -865,17 +899,17 @@ const EditProposalDialog = ({
                                                         setProposalData={
                                                             setDraft
                                                         }
-                                                        hardForkManagerErrors={
+                                                        hardForkErrors={
                                                             hardForkErrors
                                                         }
-                                                        setHardForkManagerErrors={
+                                                        setHardForkErrors={
                                                             setHardForkErrors
                                                         }
                                                         isEdit={true}
                                                     />
+                                                    
                                                 ) : null
                                             }
-
                                             <Box
                                                 sx={{
                                                     display: 'flex',

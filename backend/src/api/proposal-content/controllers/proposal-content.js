@@ -24,17 +24,10 @@ module.exports = createCoreController(
       if (!sanitizedQueryParams?.populate?.includes("proposal_withdrawals")) {
         sanitizedQueryParams.populate.push("proposal_withdrawals");
       }
-      if (
-        !sanitizedQueryParams?.populate?.includes(
-          "proposal_constitution_content"
-        )
-      ) {
+      if (!sanitizedQueryParams?.populate?.includes("proposal_constitution_content")) {
         sanitizedQueryParams.populate.push("proposal_constitution_content");
       }
-
-      if (
-        !sanitizedQueryParams?.populate?.includes("proposal_hard_fork_content")
-      ) {
+      if (!sanitizedQueryParams?.populate?.includes("proposal_hard_fork_content")) {
         sanitizedQueryParams.populate.push("proposal_hard_fork_content");
       }
       const { results, pagination } = await strapi
@@ -79,7 +72,19 @@ module.exports = createCoreController(
       if (!proposalId) {
         return ctx.badRequest(null, "Proposal ID is required");
       }
-      let proposal_content;
+      let proposal_hard_fork_content = null;
+      if(!data.proposal_hard_fork_content.previous_ga_id === false ){
+        // Hard Fromk Content
+        const hardForkContent = await strapi.entityService.create("api::proposal-hard-fork-content.proposal-hard-fork-content", {
+         data: {
+           previous_ga_hash: data.proposal_hard_fork_content.previous_ga_hash,
+           previous_ga_id: data.proposal_hard_fork_content.previous_ga_id,
+           major: data.proposal_hard_fork_content.major,
+           minor: data.proposal_hard_fork_content.minor,
+          } 
+       });
+       proposal_hard_fork_content = hardForkContent.id
+      }
       try {
         const proposalContentData = {
           ...data,
@@ -126,7 +131,8 @@ module.exports = createCoreController(
             connect: [proposalConstitutionContent.id], // over ID
           };
         }
-        proposal_content = await strapi.entityService.create(
+        proposalContentData.proposal_hard_fork_content = proposal_hard_fork_content;
+        const proposal_content = await strapi.entityService.create(
           "api::proposal-content.proposal-content",
           {
             data: proposalContentData,
