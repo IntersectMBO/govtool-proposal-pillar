@@ -1,4 +1,4 @@
-import { Box, TextField } from '@mui/material';
+import { Box, minor, TextField } from '@mui/material';
 import React, { useEffect } from 'react';
 import { getHardForkData } from '../../lib/api';
 import { numberValidation } from '../../lib/utils';
@@ -8,10 +8,9 @@ const HardForkManager = ({
     setProposalData,
     hardForkErrors,
     setHardForkErrors,
-    isEdit = false, // Flag to indicate if the component is in edit mode
+    isEdit = null, // Flag to indicate if the component is in edit mode
 }) => {
-    console.log('🚀 ~ proposalData:', proposalData);
-    const fetchAndSetHardForkData = async () => {
+        const fetchAndSetHardForkData = async () => {
         try {
             const resp = await getHardForkData();
             const data = resp.data;
@@ -31,17 +30,30 @@ const HardForkManager = ({
         }
     };
 
-    useEffect(() => {
-        if (
-            (isEdit &&
-                proposalData?.proposal_hard_fork_content?.previous_ga_hash) ||
-            proposalData?.proposal_hard_fork_content?.previous_ga_id
-        )
-            return; // Skip fetching data in edit mode
+  useEffect(() => {    
+        if (isEdit === false) 
         fetchAndSetHardForkData();
+        
     }, []);
-
-    const handleHardForkDataChange = (field, value) => {
+    useEffect(() => {   
+        if (isEdit === true)
+        {
+            if(proposalData?.proposal_hard_fork_content?.data?.attributes) 
+            {
+                let temp = proposalData?.proposal_hard_fork_content?.data?.attributes;
+            
+                setProposalData((prevData) => ({
+                ...prevData,
+                proposal_hard_fork_content: {
+                        previous_ga_hash: temp?.previous_ga_hash,
+                        previous_ga_id: temp?.previous_ga_id,
+                        major: temp?.major,
+                        minor: temp?.minor,
+            
+        }}))
+        }}
+    }, [proposalData?.proposal_hard_fork_content?.data?.attributes]);
+        const handleHardForkDataChange = (field, value) => {
         setProposalData((prevData) => ({
             ...prevData,
             proposal_hard_fork_content: {
@@ -156,7 +168,6 @@ const HardForkManager = ({
                     }}
                 />
             </Box>
-
             <Box display='flex' flexDirection='column' flexGrow={1}>
                 <TextField
                     margin='normal'
@@ -187,5 +198,4 @@ const HardForkManager = ({
         </>
     );
 };
-
 export default HardForkManager;

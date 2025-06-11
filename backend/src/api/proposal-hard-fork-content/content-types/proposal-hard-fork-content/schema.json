@@ -23,12 +23,6 @@
     },
     "minor": {
       "type": "string"
-    },
-    "proposal_content": {
-      "type": "relation",
-      "relation": "oneToOne",
-      "target": "api::proposal-content.proposal-content",
-      "inversedBy": "proposal_hard_fork_content"
     }
   }
 }

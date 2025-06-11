@@ -475,6 +475,7 @@ const Step2 = ({
                                 setProposalData={setProposalData}
                                 hardForkErrors={hardForkErrors}
                                 setHardForkErrors={setHardForkErrors}
+                                isEdit={false}
                             ></HardForkManager>
                         ) : null
                     }

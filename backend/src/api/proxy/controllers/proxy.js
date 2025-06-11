@@ -4,7 +4,6 @@ const axios = require("axios");
 module.exports = {
   // POST /proxy
   async forward(ctx) {
-    console.log("🚀 ~ forward ~ ctx:", ctx);
     try {
       const {
         url,
@@ -30,10 +29,8 @@ module.exports = {
     try {
       const endpoint = ctx.params.endpoint;
       if (!endpoint) return ctx.badRequest("Endpoint is required");
-      console.log(endpoint);
       const baseUrl = process.env.GOVTOOL_API_BASE_URL;
       const fullUrl = `${baseUrl.replace(/\/$/, "")}/${endpoint}`;
-      console.log(fullUrl);
       const response = await axios.get(fullUrl, {
         params: ctx.query,
         headers: {

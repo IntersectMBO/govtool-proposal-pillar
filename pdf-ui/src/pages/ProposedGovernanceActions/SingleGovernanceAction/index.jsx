@@ -448,7 +448,6 @@ const SingleGovernanceAction = ({ id }) => {
         }
     }, [commentsSortType]);
 
-    console.log('🚀 ~ SingleGovernanceAction ~ proposal:', proposal);
     return !proposal ? null : proposal?.attributes?.content?.attributes
           ?.is_draft ? null : (
         <>
