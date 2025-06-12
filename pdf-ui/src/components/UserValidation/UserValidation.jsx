@@ -1,34 +1,32 @@
-'use client';
-
-import { Box } from '@mui/material';
-import { useEffect, useState } from 'react';
-import { UsernameModal } from '../components';
-import { useAppContext } from '../context/context';
+import {
+    Box,
+    Button,
+    Card,
+    CardContent,
+    List,
+    ListItem,
+    Typography,
+} from '@mui/material';
+import React, { useMemo, useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
+import { IdentificationPage } from '../../pages';
+import { useAppContext } from '../../context/context';
+import { loginUserToApp } from '../../lib/helpers';
+import { use } from 'react';
 import {
     clearSession,
     decodeJWT,
     getDataFromSession,
     saveDataInSession,
-} from '../lib/utils';
-import {
-    ProposedGovernanceActions,
-    SingleGovernanceAction,
-    IdentificationPage,
-    CommentReviewPage,
-    ProposedBudgetDiscussion,
-    SingleBudgetDiscussion,
-} from '../pages';
-import { loginUserToApp } from '../lib/helpers';
-import { setAxiosBaseURL } from '../lib/axiosInstance'; // Import axiosInstance and setAxiosBaseURL
-import { getRefreshToken } from '../lib/api';
-import { ScrollToTop } from '../lib/hooks';
+} from '../../lib/utils';
+import { getRefreshToken } from '../../lib/api';
 
-const GlobalWrapper = ({ ...props }) => {
-    const pathname = props?.pathname;
-
+const UserValidation = ({ type = 'budget' }) => {
     const {
         setWalletAPI,
+        loading,
         setLocale,
+        walletAPI,
         setUser,
         openUsernameModal,
         setOpenUsernameModal,
@@ -46,9 +44,9 @@ const GlobalWrapper = ({ ...props }) => {
         setAddChangesSavedAlert,
         showIdentificationPage,
         setShowIdentificationPage,
-        setLoading,
-        setGovtoolProps,
+        govtoolProps,
     } = useAppContext();
+
     const [mounted, setMounted] = useState(false);
 
     const {
@@ -63,32 +61,7 @@ const GlobalWrapper = ({ ...props }) => {
         addErrorAlert: GovToolAddErrorAlert,
         addWarningAlert: GovToolAddWarningAlert,
         addChangesSavedAlert: GovToolAddChangesSavedAlert,
-    } = props;
-
-    useEffect(() => {
-        setLoading(true);
-        setGovtoolProps(props);
-        setLoading(false);
-    }, [GovToolAssemblyWalletAPI]);
-
-    function getProposalID(url) {
-        const parts = url.split('/');
-        const lastSegment = parts[parts.length - 1];
-
-        if (isNaN(lastSegment) || lastSegment.trim() === '') {
-            return null;
-        }
-
-        return lastSegment;
-    }
-    function getReviewHash(url) {
-        const parts = url.split('/');
-        const lastSegment = parts[parts.length - 1];
-        if (lastSegment.trim() === '') {
-            return null;
-        }
-        return lastSegment;
-    }
+    } = govtoolProps;
 
     const handleLogin = async (trigerSignData, useDRepKey = false) => {
         if (GovToolAssemblyWalletAPI?.address) {
@@ -224,98 +197,154 @@ const GlobalWrapper = ({ ...props }) => {
         }
     }, [user]);
 
-    setAxiosBaseURL(GovToolAssemblyPdfApiUrl);
+    const showValidationMessage = useMemo(() => {
+        const messages = [];
 
-    const renderComponentBasedOnPath = (path) => {
-        if (GovToolAssemblyPdfApiUrl) {
-            // if (
-            //     !user &&
-            //     GovToolAssemblyWalletAPI?.address &&
-            //     showIdentificationPage
-            // ) {
-            //     return <IdentificationPage handleLogin={handleLogin} />;
-            // } else {
-            //     if (
-            //         GovToolAssemblyWalletAPI?.dRepID &&
-            //         (GovToolAssemblyWalletAPI?.voter?.isRegisteredAsDRep ||
-            //             GovToolAssemblyWalletAPI?.voter
-            //                 ?.isRegisteredAsSoleVoter)
-            //     ) {
-            //         const jwtData = decodeJWT();
+        const showAll = !user;
 
-            //         if (jwtData) {
-            //             let jwtDrepId = jwtData?.dRepID;
-            //             if (!jwtDrepId) {
-            //                 return (
-            //                     <IdentificationPage
-            //                         handleLogin={handleLogin}
-            //                         isDRep={
-            //                             (GovToolAssemblyWalletAPI?.dRepID &&
-            //                                 (GovToolAssemblyWalletAPI?.voter
-            //                                     ?.isRegisteredAsDRep ||
-            //                                     GovToolAssemblyWalletAPI?.voter
-            //                                         ?.isRegisteredAsSoleVoter)) ||
-            //                             false
-            //                         }
-            //                     />
-            //                 );
-            //             }
-            //         } else {
-            //             return null;
-            //         }
-            //     }
-            if (path.includes('propose')) {
-                return <ProposedGovernanceActions />;
-            } else if (
-                path.includes('proposal_discussion/proposal_comment_review/') &&
-                getReviewHash(path)
-            ) {
-                return <CommentReviewPage reportHash={getReviewHash(path)} />;
-            } else if (
-                path.includes('budget_discussion/') &&
-                getProposalID(path)
-            ) {
-                return <SingleBudgetDiscussion id={getProposalID(path)} />;
-            } else if (path.includes('budget_discussion')) {
-                return <ProposedBudgetDiscussion />;
-            } else if (
-                path.includes('proposal_discussion/') &&
-                getProposalID(path)
-            ) {
-                return <SingleGovernanceAction id={getProposalID(path)} />;
-            } else if (path.includes('proposal_discussion')) {
-                return <ProposedGovernanceActions />;
-            } else {
-                return <ProposedGovernanceActions />;
-            }
+        if (!walletAPI) {
+            messages.push(
+                <Box sx={{ display: 'flex', flexDirection: 'row', gap: 1 }}>
+                    <Typography>To connect a Cardano wallet</Typography>
+                </Box>
+            );
         }
-        // } else {
-        //     return null;
-        // }
+
+        if (!user) {
+            messages.push(
+                <Typography>Verify yourself with your wallet</Typography>
+            );
+        }
+
+        if (!user?.user?.govtool_username) {
+            messages.push(<Typography>A GovTool Display Name</Typography>);
+        }
+
+        if (showAll) {
+            messages.push(
+                <Typography>
+                    Verify your status as a DRep if you are one.
+                </Typography>
+            );
+        }
+
+        return messages;
+    }, [user, walletAPI]);
+
+    const checkFunctionCall = () => {
+        if (!walletAPI?.address) {
+            const button = document.querySelector(
+                '[data-testId="connect-wallet-button"]'
+            );
+            button?.click();
+        } else if (!user) {
+            handleLogin(true);
+        } else if (!user?.user?.govtool_username) {
+            setOpenUsernameModal({
+                open: true,
+                callBackFn: () => {},
+            });
+        }
     };
 
-    return (
-        <Box
-            component='section'
-            display={'flex'}
-            flexDirection={'column'}
-            flexGrow={1}
-        >
-            <ScrollToTop />
-            {renderComponentBasedOnPath(pathname)}
-            <UsernameModal
-                open={openUsernameModal}
-                handleClose={
-                    () =>
-                        setOpenUsernameModal({
-                            open: false,
-                            callBackFn: () => {},
-                        }) // Reset open and callbackFn state
-                }
-                setPDFUsername={GovToolAssemblySetUsername}
-            />
-        </Box>
-    );
+    const checkButtonText = () => {
+        if (!walletAPI?.address) {
+            return 'Get started';
+        } else if (!user) {
+            return 'Verify';
+        } else if (!user?.user?.govtool_username) {
+            return 'Create Display Name';
+        } else {
+        }
+    };
+
+    if (type === 'budget') {
+        return (
+            <Box mt={4}>
+                <Card>
+                    <CardContent>
+                        <Box
+                            sx={{
+                                display: 'flex',
+                                flexDirection: 'row',
+                                justifyContent: 'space-between',
+                            }}
+                        >
+                            <Box>
+                                <Typography
+                                    variant='caption'
+                                    sx={{
+                                        color: (theme) =>
+                                            theme.palette.text.grey,
+                                    }}
+                                    mt={2}
+                                >
+                                    Submit a comment
+                                </Typography>
+                                <Box
+                                    ml={2}
+                                    mt={2}
+                                    sx={{
+                                        display: 'flex',
+                                        flexDirection: 'row',
+                                        alignItems: 'center',
+                                        gap: 1,
+                                    }}
+                                >
+                                    <Typography
+                                        variant='body1'
+                                        fontWeight={600}
+                                    >
+                                        To submit a comment, you will need:
+                                    </Typography>
+
+                                    <Typography variant='body1'>
+                                        <Link data-test='user-validation-learn-more'>
+                                            Learn more
+                                        </Link>
+                                    </Typography>
+                                </Box>
+                            </Box>
+                            <Box>
+                                <Button
+                                    variant='contained'
+                                    data-test='user-validation-get-started'
+                                    onClick={() => {
+                                        checkFunctionCall();
+                                    }}
+                                >
+                                    {checkButtonText()}
+                                </Button>
+                            </Box>
+                        </Box>
+                        <Box>
+                            <List sx={{ py: 0 }}>
+                                {showValidationMessage.map((item, index) => (
+                                    <ListItem
+                                        key={item.key || index}
+                                        disableGutters
+                                        sx={{ py: 0.2, pl: 2 }}
+                                    >
+                                        <Box
+                                            sx={{
+                                                width: 3,
+                                                height: 3,
+                                                borderRadius: '50%',
+                                                bgcolor: 'black',
+                                                display: 'inline-block',
+                                                mr: 1,
+                                            }}
+                                        />
+                                        {item.props.children}
+                                    </ListItem>
+                                ))}
+                            </List>
+                        </Box>
+                    </CardContent>
+                </Card>
+            </Box>
+        );
+    }
 };
 
-export default GlobalWrapper;
+export default UserValidation;
