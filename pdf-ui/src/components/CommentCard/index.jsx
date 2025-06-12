@@ -31,12 +31,15 @@ import Subcomponent from './Subcomponent';
 import { isCommentRestricted } from '../../lib/helpers';
 import UsernameSection from './UsernameSection';
 import MarkdownTypography from '../../lib/markdownRenderer';
+import UserValidation from '../UserValidation/UserValidation';
 
 const CommentCard = ({
     comment,
     proposal,
     fetchComments,
     setRefetchProposal,
+    checkShowComments,
+    drepCheck,
 }) => {
     const {
         setLoading,
@@ -125,7 +128,9 @@ const CommentCard = ({
             loadSubComments(1);
             setCommentHasReplays(true);
             setShowReply(false);
-            setRefetchProposal(true);
+            if (!newComment?.data?.attributes?.comment_parent_id) {
+                setRefetchProposal(true);
+            }
             addSuccessAlert('Commented successfully');
         } catch (error) {
             addErrorAlert('Failed to comment');
@@ -525,97 +530,108 @@ const CommentCard = ({
                             )}
                         </Box>
 
-                        {showReply && (
-                            <Box>
-                                <TextField
-                                    fullWidth
-                                    sx={{
-                                        mt: 1,
-                                    }}
-                                    size='large'
-                                    name='subcomment'
-                                    label=''
-                                    placeholder='Add comment'
-                                    maxRows={5}
-                                    multiline
-                                    value={subcommentText || ''}
-                                    variant='outlined'
-                                    onChange={(e) => handleChange(e)}
-                                    onBlur={handleBlur}
-                                    inputProps={{
-                                        maxLength: subcommentMaxLength,
-                                        spellCheck: 'false',
-                                        autoCorrect: 'off',
-                                        autoCapitalize: 'none',
-                                        autoComplete: 'off',
-                                    }}
-                                    helperText={
-                                        <Typography
-                                            variant='caption'
-                                            sx={{
-                                                float: 'right',
-                                                mr: 2,
-                                                color: (theme) =>
-                                                    subcommentText?.length ===
-                                                        subcommentMaxLength &&
-                                                    theme?.palette?.error?.main,
-                                            }}
-                                        >
-                                            {`${
-                                                subcommentText?.length || 0
-                                            }/${subcommentMaxLength}`}
-                                        </Typography>
-                                    }
-                                    InputProps={{
-                                        inputProps: {
+                        {showReply ? (
+                            checkShowComments() ? (
+                                <Box>
+                                    <TextField
+                                        fullWidth
+                                        sx={{
+                                            mt: 1,
+                                        }}
+                                        size='large'
+                                        name='subcomment'
+                                        label=''
+                                        placeholder='Add comment'
+                                        maxRows={5}
+                                        multiline
+                                        value={subcommentText || ''}
+                                        variant='outlined'
+                                        onChange={(e) => handleChange(e)}
+                                        onBlur={handleBlur}
+                                        inputProps={{
                                             maxLength: subcommentMaxLength,
-                                            'data-testid': 'reply-input',
-                                        },
-                                    }}
-                                />
+                                            spellCheck: 'false',
+                                            autoCorrect: 'off',
+                                            autoCapitalize: 'none',
+                                            autoComplete: 'off',
+                                        }}
+                                        helperText={
+                                            <Typography
+                                                variant='caption'
+                                                sx={{
+                                                    float: 'right',
+                                                    mr: 2,
+                                                    color: (theme) =>
+                                                        subcommentText?.length ===
+                                                            subcommentMaxLength &&
+                                                        theme?.palette?.error
+                                                            ?.main,
+                                                }}
+                                            >
+                                                {`${
+                                                    subcommentText?.length || 0
+                                                }/${subcommentMaxLength}`}
+                                            </Typography>
+                                        }
+                                        InputProps={{
+                                            inputProps: {
+                                                maxLength: subcommentMaxLength,
+                                                'data-testid': 'reply-input',
+                                            },
+                                        }}
+                                    />
 
-                                <Box
-                                    display={'flex'}
-                                    justifyContent={'flex-end'}
-                                    mt={1}
-                                >
-                                    <Button
-                                        variant='contained'
-                                        onClick={
-                                            user?.user?.govtool_username
-                                                ? () => {
-                                                      handleCreateComment();
-                                                      setShowSubcomments(true);
-                                                  }
-                                                : () =>
-                                                      setOpenUsernameModal({
-                                                          open: true,
-                                                          callBackFn: () => {},
-                                                      })
-                                        }
-                                        disabled={
-                                            !subcommentText ||
-                                            !walletAPI?.address
-                                        }
-                                        endIcon={
-                                            <IconReply
-                                                height={18}
-                                                width={18}
-                                                fill={
-                                                    !subcommentText ||
-                                                    !walletAPI?.address
-                                                        ? 'rgba(0,0,0, 0.26)'
-                                                        : 'white'
-                                                }
-                                            />
-                                        }
-                                        data-testid='reply-comment-button'
+                                    <Box
+                                        display={'flex'}
+                                        justifyContent={'flex-end'}
+                                        mt={1}
                                     >
-                                        Comment
-                                    </Button>
+                                        <Button
+                                            variant='contained'
+                                            onClick={
+                                                user?.user?.govtool_username
+                                                    ? () => {
+                                                          handleCreateComment();
+                                                          setShowSubcomments(
+                                                              true
+                                                          );
+                                                      }
+                                                    : () =>
+                                                          setOpenUsernameModal({
+                                                              open: true,
+                                                              callBackFn:
+                                                                  () => {},
+                                                          })
+                                            }
+                                            disabled={
+                                                !subcommentText ||
+                                                !walletAPI?.address
+                                            }
+                                            endIcon={
+                                                <IconReply
+                                                    height={18}
+                                                    width={18}
+                                                    fill={
+                                                        !subcommentText ||
+                                                        !walletAPI?.address
+                                                            ? 'rgba(0,0,0, 0.26)'
+                                                            : 'white'
+                                                    }
+                                                />
+                                            }
+                                            data-testid='reply-comment-button'
+                                        >
+                                            Comment
+                                        </Button>
+                                    </Box>
                                 </Box>
-                            </Box>
-                        )}
+                            ) : (
+                                <UserValidation
+                                    type='comment'
+                                    drepCheck={drepCheck}
+                                />
+                            )
+                        ) : null}
 
                         {showSubcomments &&
                             subcommnetsList?.map((subcomment, index) => (

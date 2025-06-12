@@ -8,7 +8,7 @@ const IdentificationPage = ({ handleLogin, isDRep = false }) => {
             width={'100%'}
             height={'70vh'}
             display={'flex'}
-            justifyContent={'centet'}
+            justifyContent={'center'}
             alignItems={'center'}
         >
             <Box textAlign={'center'} width={'100%'}>

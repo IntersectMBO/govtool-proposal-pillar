@@ -44,6 +44,10 @@ const GlobalWrapper = ({ ...props }) => {
         setAddWarningAlert,
         addChangesSavedAlert,
         setAddChangesSavedAlert,
+        showIdentificationPage,
+        setShowIdentificationPage,
+        setLoading,
+        setGovtoolProps,
     } = useAppContext();
     const [mounted, setMounted] = useState(false);
 
@@ -60,6 +64,12 @@ const GlobalWrapper = ({ ...props }) => {
         addWarningAlert: GovToolAddWarningAlert,
         addChangesSavedAlert: GovToolAddChangesSavedAlert,
     } = props;
+
+    useEffect(() => {
+        setLoading(true);
+        setGovtoolProps(props);
+        setLoading(false);
+    }, [GovToolAssemblyWalletAPI]);
 
     function getProposalID(url) {
         const parts = url.split('/');
@@ -218,70 +228,70 @@ const GlobalWrapper = ({ ...props }) => {
 
     const renderComponentBasedOnPath = (path) => {
         if (GovToolAssemblyPdfApiUrl) {
-            if (!user && GovToolAssemblyWalletAPI?.address) {
-                return <IdentificationPage handleLogin={handleLogin} />;
-            } else {
-                if (
-                    GovToolAssemblyWalletAPI?.dRepID &&
-                    (GovToolAssemblyWalletAPI?.voter?.isRegisteredAsDRep ||
-                        GovToolAssemblyWalletAPI?.voter
-                            ?.isRegisteredAsSoleVoter)
-                ) {
-                    const jwtData = decodeJWT();
+            // if (
+            //     !user &&
+            //     GovToolAssemblyWalletAPI?.address &&
+            //     showIdentificationPage
+            // ) {
+            //     return <IdentificationPage handleLogin={handleLogin} />;
+            // } else {
+            //     if (
+            //         GovToolAssemblyWalletAPI?.dRepID &&
+            //         (GovToolAssemblyWalletAPI?.voter?.isRegisteredAsDRep ||
+            //             GovToolAssemblyWalletAPI?.voter
+            //                 ?.isRegisteredAsSoleVoter)
+            //     ) {
+            //         const jwtData = decodeJWT();
 
-                    if (jwtData) {
-                        let jwtDrepId = jwtData?.dRepID;
-                        if (!jwtDrepId) {
-                            return (
-                                <IdentificationPage
-                                    handleLogin={handleLogin}
-                                    isDRep={
-                                        (GovToolAssemblyWalletAPI?.dRepID &&
-                                            (GovToolAssemblyWalletAPI?.voter
-                                                ?.isRegisteredAsDRep ||
-                                                GovToolAssemblyWalletAPI?.voter
-                                                    ?.isRegisteredAsSoleVoter)) ||
-                                        false
-                                    }
-                                />
-                            );
-                        }
-                    } else {
-                        return null;
-                    }
-                }
-                if (path.includes('propose')) {
-                    return <ProposedGovernanceActions />;
-                } else if (
-                    path.includes(
-                        'proposal_discussion/proposal_comment_review/'
-                    ) &&
-                    getReviewHash(path)
-                ) {
-                    return (
-                        <CommentReviewPage reportHash={getReviewHash(path)} />
-                    );
-                } else if (
-                    path.includes('budget_discussion/') &&
-                    getProposalID(path)
-                ) {
-                    return <SingleBudgetDiscussion id={getProposalID(path)} />;
-                } else if (path.includes('budget_discussion')) {
-                    return <ProposedBudgetDiscussion />;
-                } else if (
-                    path.includes('proposal_discussion/') &&
-                    getProposalID(path)
-                ) {
-                    return <SingleGovernanceAction id={getProposalID(path)} />;
-                } else if (path.includes('proposal_discussion')) {
-                    return <ProposedGovernanceActions />;
-                } else {
-                    return <ProposedGovernanceActions />;
-                }
+            //         if (jwtData) {
+            //             let jwtDrepId = jwtData?.dRepID;
+            //             if (!jwtDrepId) {
+            //                 return (
+            //                     <IdentificationPage
+            //                         handleLogin={handleLogin}
+            //                         isDRep={
+            //                             (GovToolAssemblyWalletAPI?.dRepID &&
+            //                                 (GovToolAssemblyWalletAPI?.voter
+            //                                     ?.isRegisteredAsDRep ||
+            //                                     GovToolAssemblyWalletAPI?.voter
+            //                                         ?.isRegisteredAsSoleVoter)) ||
+            //                             false
+            //                         }
+            //                     />
+            //                 );
+            //             }
+            //         } else {
+            //             return null;
+            //         }
+            //     }
+            if (path.includes('propose')) {
+                return <ProposedGovernanceActions />;
+            } else if (
+                path.includes('proposal_discussion/proposal_comment_review/') &&
+                getReviewHash(path)
+            ) {
+                return <CommentReviewPage reportHash={getReviewHash(path)} />;
+            } else if (
+                path.includes('budget_discussion/') &&
+                getProposalID(path)
+            ) {
+                return <SingleBudgetDiscussion id={getProposalID(path)} />;
+            } else if (path.includes('budget_discussion')) {
+                return <ProposedBudgetDiscussion />;
+            } else if (
+                path.includes('proposal_discussion/') &&
+                getProposalID(path)
+            ) {
+                return <SingleGovernanceAction id={getProposalID(path)} />;
+            } else if (path.includes('proposal_discussion')) {
+                return <ProposedGovernanceActions />;
+            } else {
+                return <ProposedGovernanceActions />;
             }
-        } else {
-            return null;
         }
+        // } else {
+        //     return null;
+        // }
     };
 
     return (

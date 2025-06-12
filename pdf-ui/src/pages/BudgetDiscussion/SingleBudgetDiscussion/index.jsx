@@ -20,6 +20,7 @@ import {
     CardHeader,
     Grid,
     IconButton,
+    List,
     Menu,
     MenuItem,
     Stack,
@@ -29,7 +30,7 @@ import {
     alpha,
 } from '@mui/material';
 import { useEffect, useState, useRef } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation, Link } from 'react-router-dom';
 import {
     CommentCard,
     BudgetDiscussionPoll,
@@ -48,12 +49,14 @@ import {
 } from '../../../lib/api';
 import {
     correctVoteAdaFormat,
+    decodeJWT,
     formatIsoDate,
     openInNewTab,
 } from '../../../lib/utils';
 import ProposalOwnModal from '../../../components/ProposalOwnModal';
 import BudgetDiscussionReviewVersions from '../../../components/BudgetDiscussionReviewVersions';
 import { useScrollToHashSection } from '../../../lib/hooks';
+import UserValidation from '../../../components/UserValidation/UserValidation';
 
 const SECTIONS = [
     'problem-statement',
@@ -233,10 +236,8 @@ const SingleBudgetDiscussion = ({ id }) => {
             if (!response) return;
 
             setProposal(response);
-        }catch (error) {
-            if (
-                error?.response?.data?.error?.message ===
-                    'Not Found' ) {
+        } catch (error) {
+            if (error?.response?.data?.error?.message === 'Not Found') {
                 return navigate('/budget_discussion');
             }
         } finally {
@@ -244,6 +245,35 @@ const SingleBudgetDiscussion = ({ id }) => {
         }
     };
 
+    const checkShowComments = () => {
+        let showComments = false;
+        if (checkIfDrepIsSignedIn()) {
+            showComments = false;
+        } else if (!user && !user?.user?.govtool_username) {
+            showComments = false;
+        } else {
+            showComments = true;
+        }
+
+        return showComments;
+    };
+
+    let drepCheck = false;
+
+    const checkIfDrepIsSignedIn = () => {
+        const jwtData = decodeJWT();
+        const isDrep =
+            walletAPI?.voter?.isRegisteredAsDRep ||
+            walletAPI?.voter?.isRegisteredAsSoleVoter;
+        const hasDrepID = !!jwtData?.dRepID;
+
+        if (isDrep && !hasDrepID) {
+            drepCheck = true;
+            return true;
+        }
+        drepCheck = false;
+        return false;
+    };
     const fetchComments = async (page = 1) => {
         setLoading(true);
         try {
@@ -1889,101 +1919,115 @@ const SingleBudgetDiscussion = ({ id }) => {
                                     />
                                 </Box>
                             )}
+                        {checkShowComments() ? (
+                            proposal?.attributes?.content?.attributes
+                                ?.prop_submitted ? null : (
+                                <Box mt={4}>
+                                    <Card>
+                                        <CardContent>
+                                            <Typography variant='subtitle1'>
+                                                Submit a comment
+                                            </Typography>
 
-                        {proposal?.attributes?.content?.attributes
-                            ?.prop_submitted ? null : (
-                            <Box mt={4}>
-                                <Card>
-                                    <CardContent>
-                                        <Typography variant='subtitle1'>
-                                            Submit a comment
-                                        </Typography>
+                                            <TextField
+                                                fullWidth
+                                                margin='normal'
+                                                variant='outlined'
+                                                multiline={true}
+                                                maxRows={5}
+                                                helperText={
+                                                    <Typography
+                                                        variant='caption'
+                                                        sx={{
+                                                            float: 'right',
+                                                            mr: 2,
+                                                            color: (theme) =>
+                                                                newCommentText?.length ===
+                                                                    MAX_COMMENT_LENGTH &&
+                                                                theme?.palette
+                                                                    ?.error
+                                                                    ?.main,
+                                                        }}
+                                                    >
+                                                        {`${
+                                                            newCommentText?.length ||
+                                                            0
+                                                        }/${MAX_COMMENT_LENGTH}`}
+                                                    </Typography>
+                                                }
+                                                value={newCommentText || ''}
+                                                onChange={(e) =>
+                                                    handleChange(e)
+                                                }
+                                                inputProps={{
+                                                    maxLength:
+                                                        MAX_COMMENT_LENGTH,
+                                                    onKeyDown: handleKeyDown,
+                                                    onBlur: handleBlur,
+                                                    spellCheck: 'false',
+                                                    autoCorrect: 'off',
+                                                    autoCapitalize: 'none',
+                                                    autoComplete: 'off',
+                                                    'data-testid':
+                                                        'comment-input',
+                                                }}
+                                            />
 
-                                        <TextField
-                                            fullWidth
-                                            margin='normal'
-                                            variant='outlined'
-                                            multiline={true}
-                                            maxRows={5}
-                                            helperText={
-                                                <Typography
-                                                    variant='caption'
-                                                    sx={{
-                                                        float: 'right',
-                                                        mr: 2,
-                                                        color: (theme) =>
-                                                            newCommentText?.length ===
-                                                                MAX_COMMENT_LENGTH &&
-                                                            theme?.palette
-                                                                ?.error?.main,
-                                                    }}
-                                                >
-                                                    {`${
-                                                        newCommentText?.length ||
-                                                        0
-                                                    }/${MAX_COMMENT_LENGTH}`}
-                                                </Typography>
-                                            }
-                                            value={newCommentText || ''}
-                                            onChange={(e) => handleChange(e)}
-                                            inputProps={{
-                                                maxLength: MAX_COMMENT_LENGTH,
-                                                onKeyDown: handleKeyDown,
-                                                onBlur: handleBlur,
-                                                spellCheck: 'false',
-                                                autoCorrect: 'off',
-                                                autoCapitalize: 'none',
-                                                autoComplete: 'off',
-                                                'data-testid': 'comment-input',
-                                            }}
-                                        />
-
-                                        <Box
-                                            mt={2}
-                                            display='flex'
-                                            justifyContent={'flex-end'}
-                                            flexDirection={{
-                                                xs: 'column',
-                                                sm: 'row',
-                                            }}
-                                            gap={2}
-                                            ref={targetRef}
-                                        >
-                                            <Button
-                                                variant='contained'
-                                                onClick={() =>
-                                                    user?.user?.govtool_username
-                                                        ? handleCreateComment()
-                                                        : setOpenUsernameModal({
-                                                              open: true,
-                                                              callBackFn:
-                                                                  () => {},
-                                                          })
-                                                }
-                                                disabled={
-                                                    !newCommentText ||
-                                                    !walletAPI?.address
-                                                }
-                                                endIcon={
-                                                    <IconReply
-                                                        height={18}
-                                                        width={18}
-                                                        fill={
-                                                            !newCommentText ||
-                                                            !walletAPI?.address
-                                                                ? 'rgba(0,0,0, 0.26)'
-                                                                : 'white'
-                                                        }
-                                                    />
-                                                }
-                                                data-testid='comment-button'
+                                            <Box
+                                                mt={2}
+                                                display='flex'
+                                                justifyContent={'flex-end'}
+                                                flexDirection={{
+                                                    xs: 'column',
+                                                    sm: 'row',
+                                                }}
+                                                gap={2}
+                                                ref={targetRef}
                                             >
-                                                Comment
-                                            </Button>
-                                        </Box>
-                                    </CardContent>
-                                </Card>
-                            </Box>
+                                                <Button
+                                                    variant='contained'
+                                                    onClick={() =>
+                                                        user?.user
+                                                            ?.govtool_username
+                                                            ? handleCreateComment()
+                                                            : setOpenUsernameModal(
+                                                                  {
+                                                                      open: true,
+                                                                      callBackFn:
+                                                                          () => {},
+                                                                  }
+                                                              )
+                                                    }
+                                                    disabled={
+                                                        !newCommentText ||
+                                                        !walletAPI?.address
+                                                    }
+                                                    endIcon={
+                                                        <IconReply
+                                                            height={18}
+                                                            width={18}
+                                                            fill={
+                                                                !newCommentText ||
+                                                                !walletAPI?.address
+                                                                    ? 'rgba(0,0,0, 0.26)'
+                                                                    : 'white'
+                                                            }
+                                                        />
+                                                    }
+                                                    data-testid='comment-button'
+                                                >
+                                                    Comment
+                                                </Button>
+                                            </Box>
+                                        </CardContent>
+                                    </Card>
+                                </Box>
+                            )
+                        ) : (
+                            <UserValidation
+                                type='budget'
+                                drepCheck={drepCheck}
+                            />
                         )}
                         {proposal?.attributes?.prop_comments_number === 0 ? (
                             <Card
@@ -2027,6 +2071,8 @@ const SingleBudgetDiscussion = ({ id }) => {
                                     proposal={proposal}
                                     fetchComments={fetchComments}
                                     setRefetchProposal={setRefetchProposal}
+                                    checkShowComments={checkShowComments}
+                                    drepCheck={drepCheck}
                                 />
                             </Box>
                         ))}

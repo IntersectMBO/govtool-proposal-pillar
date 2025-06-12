@@ -31,6 +31,8 @@ import { getGovernanceActionTypes } from '../../lib/api';
 import { useAppContext } from '../../context/context';
 import { loginUserToApp } from '../../lib/helpers';
 import { useLocation } from 'react-router-dom';
+import { decodeJWT } from '../../lib/utils';
+import UserValidation from '../../components/UserValidation/UserValidation';
 
 let sortOptions = [
     { fieldId: 'createdAt', type: 'DESC', title: 'Newest' },
@@ -55,7 +57,7 @@ let sortOptions = [
         type: 'ASC',
         title: 'Least dislikes',
     },
-        {
+    {
         fieldId: 'proposal][prop_comments_number',
         type: 'DESC',
         title: 'Most comments',
@@ -207,6 +209,37 @@ const ProposedGovernanceActions = () => {
         }
     }, [location.pathname]);
 
+    const checkShowButton = () => {
+        let showButton = false;
+        if (checkIfDrepIsSignedIn()) {
+            showButton = false;
+        } else if (!user && !user?.user?.govtool_username) {
+            showButton = false;
+        } else {
+            showButton = true;
+        }
+
+        return showButton;
+    };
+
+    let drepCheck = false;
+
+    const checkIfDrepIsSignedIn = () => {
+        const jwtData = decodeJWT();
+        const isDrep =
+            walletAPI?.voter?.isRegisteredAsDRep ||
+            walletAPI?.voter?.isRegisteredAsSoleVoter;
+        const hasDrepID = !!jwtData?.dRepID;
+
+        if (isDrep && !hasDrepID) {
+            drepCheck = true;
+            return true;
+        }
+
+        drepCheck = false;
+        return false;
+    };
+
     return (
         <Box sx={{ mt: 3 }}>
             <Grid container spacing={3} flexDirection={'column'}>
@@ -246,9 +279,8 @@ const ProposedGovernanceActions = () => {
                                 </Button>
                             </Grid>
                         )}
-
-                        {walletAPI?.address && (
-                            <Grid item xs={12} paddingBottom={2}>
+                        <Grid item xs={12} paddingBottom={2}>
+                            {checkShowButton() ? (
                                 <Button
                                     variant='contained'
                                     onClick={async () =>
@@ -271,8 +303,13 @@ const ProposedGovernanceActions = () => {
                                 >
                                     Propose a Governance Action
                                 </Button>
-                            </Grid>
-                        )}
+                            ) : (
+                                <UserValidation
+                                    type='proposal'
+                                    drepCheck={drepCheck}
+                                />
+                            )}
+                        </Grid>
 
                         <Grid item md={6} sx={{ flexGrow: { xs: 1 } }}>
                             <TextField
