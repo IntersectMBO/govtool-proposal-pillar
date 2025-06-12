@@ -21,7 +21,7 @@ import {
 } from '../../lib/utils';
 import { getRefreshToken } from '../../lib/api';
 
-const UserValidation = ({ type = 'budget' }) => {
+const UserValidation = ({ type = 'budget', drepCheck = false }) => {
     const {
         setWalletAPI,
         loading,
@@ -61,7 +61,7 @@ const UserValidation = ({ type = 'budget' }) => {
         addErrorAlert: GovToolAddErrorAlert,
         addWarningAlert: GovToolAddWarningAlert,
         addChangesSavedAlert: GovToolAddChangesSavedAlert,
-    } = govtoolProps;
+    } = govtoolProps || {};
 
     const handleLogin = async (trigerSignData, useDRepKey = false) => {
         if (GovToolAssemblyWalletAPI?.address) {
@@ -200,14 +200,8 @@ const UserValidation = ({ type = 'budget' }) => {
     const showValidationMessage = useMemo(() => {
         const messages = [];
 
-        const showAll = !user;
-
         if (!walletAPI) {
-            messages.push(
-                <Box sx={{ display: 'flex', flexDirection: 'row', gap: 1 }}>
-                    <Typography>To connect a Cardano wallet</Typography>
-                </Box>
-            );
+            messages.push(<Typography>To connect a Cardano wallet</Typography>);
         }
 
         if (!user) {
@@ -219,12 +213,9 @@ const UserValidation = ({ type = 'budget' }) => {
         if (!user?.user?.govtool_username) {
             messages.push(<Typography>A GovTool Display Name</Typography>);
         }
-
-        if (showAll) {
+        if (drepCheck) {
             messages.push(
-                <Typography>
-                    Verify your status as a DRep if you are one.
-                </Typography>
+                <Typography>Verify your status as a DRep.</Typography>
             );
         }
 
@@ -244,6 +235,9 @@ const UserValidation = ({ type = 'budget' }) => {
                 open: true,
                 callBackFn: () => {},
             });
+        } else if (drepCheck) {
+            console.log('DRep check');
+            handleLogin(true, true);
         }
     };
 
@@ -254,23 +248,39 @@ const UserValidation = ({ type = 'budget' }) => {
             return 'Verify';
         } else if (!user?.user?.govtool_username) {
             return 'Create Display Name';
-        } else {
+        } else if (drepCheck) {
+            return 'Verify';
         }
     };
 
-    if (type === 'budget') {
-        return (
-            <Box mt={4}>
-                <Card>
-                    <CardContent>
-                        <Box
-                            sx={{
-                                display: 'flex',
-                                flexDirection: 'row',
-                                justifyContent: 'space-between',
-                            }}
-                        >
-                            <Box>
+    const checkTitleText = (type) => {
+        switch (type) {
+            case 'budget':
+                return 'To submit a comment, you will need:';
+            case 'comment':
+                return 'To submit a reply, you will need:';
+            case 'budget-proposal':
+                return 'To submit a budget proposal, you will need:';
+            case 'proposal':
+                return 'To submit a proposal, you will need:';
+            default:
+                return 'To submit a comment, you will need:';
+        }
+    };
+
+    return (
+        <Box mt={4}>
+            <Card>
+                <CardContent>
+                    <Box
+                        sx={{
+                            display: 'flex',
+                            flexDirection: 'row',
+                            justifyContent: 'space-between',
+                        }}
+                    >
+                        <Box>
+                            {type === 'budget' && (
                                 <Typography
                                     variant='caption'
                                     sx={{
@@ -281,70 +291,67 @@ const UserValidation = ({ type = 'budget' }) => {
                                 >
                                     Submit a comment
                                 </Typography>
-                                <Box
-                                    ml={2}
-                                    mt={2}
-                                    sx={{
-                                        display: 'flex',
-                                        flexDirection: 'row',
-                                        alignItems: 'center',
-                                        gap: 1,
-                                    }}
-                                >
-                                    <Typography
-                                        variant='body1'
-                                        fontWeight={600}
-                                    >
-                                        To submit a comment, you will need:
-                                    </Typography>
+                            )}
+                            <Box
+                                ml={2}
+                                mt={2}
+                                sx={{
+                                    display: 'flex',
+                                    flexDirection: 'row',
+                                    alignItems: 'center',
+                                    gap: 1,
+                                }}
+                            >
+                                <Typography variant='body1' fontWeight={600}>
+                                    {checkTitleText(type)}
+                                </Typography>
 
-                                    <Typography variant='body1'>
-                                        <Link data-test='user-validation-learn-more'>
-                                            Learn more
-                                        </Link>
-                                    </Typography>
-                                </Box>
-                            </Box>
-                            <Box>
-                                <Button
-                                    variant='contained'
-                                    data-test='user-validation-get-started'
-                                    onClick={() => {
-                                        checkFunctionCall();
-                                    }}
-                                >
-                                    {checkButtonText()}
-                                </Button>
+                                <Typography variant='body1'>
+                                    <Link data-test='user-validation-learn-more'>
+                                        Learn more
+                                    </Link>
+                                </Typography>
                             </Box>
                         </Box>
                         <Box>
-                            <List sx={{ py: 0 }}>
-                                {showValidationMessage.map((item, index) => (
-                                    <ListItem
-                                        key={item.key || index}
-                                        disableGutters
-                                        sx={{ py: 0.2, pl: 2 }}
-                                    >
-                                        <Box
-                                            sx={{
-                                                width: 3,
-                                                height: 3,
-                                                borderRadius: '50%',
-                                                bgcolor: 'black',
-                                                display: 'inline-block',
-                                                mr: 1,
-                                            }}
-                                        />
-                                        {item.props.children}
-                                    </ListItem>
-                                ))}
-                            </List>
+                            <Button
+                                variant='contained'
+                                data-test='user-validation-get-started'
+                                onClick={() => {
+                                    checkFunctionCall();
+                                }}
+                            >
+                                {checkButtonText()}
+                            </Button>
                         </Box>
-                    </CardContent>
-                </Card>
-            </Box>
-        );
-    }
+                    </Box>
+                    <Box>
+                        <List sx={{ py: 0 }}>
+                            {showValidationMessage.map((item, index) => (
+                                <ListItem
+                                    key={item.key || index}
+                                    disableGutters
+                                    sx={{ py: 0.2, pl: 2 }}
+                                >
+                                    <Box
+                                        sx={{
+                                            width: 3,
+                                            height: 3,
+                                            borderRadius: '50%',
+                                            bgcolor: 'black',
+                                            display: 'inline-block',
+                                            mr: 1,
+                                        }}
+                                    />
+                                    {item.props.children}
+                                </ListItem>
+                            ))}
+                        </List>
+                    </Box>
+                </CardContent>
+            </Card>
+        </Box>
+    );
 };
 
 export default UserValidation;

@@ -39,6 +39,8 @@ import { useAppContext } from '../../context/context';
 import { loginUserToApp } from '../../lib/helpers';
 import { useLocation } from 'react-router-dom';
 import { ScrollToTop, useDebounce } from '../../lib/hooks';
+import UserValidation from '../../components/UserValidation/UserValidation';
+import { decodeJWT } from '../../lib/utils';
 
 let proposalsOwnersList = [{ id: 'all-proposals', label: 'All Proposals' }];
 let sortOptions = [
@@ -240,6 +242,37 @@ const ProposedBudgetDiscussion = () => {
         }
     }, [user?.user?.id]);
 
+    const checkShowButton = () => {
+        let showButton = false;
+        if (checkIfDrepIsSignedIn()) {
+            showButton = false;
+        } else if (!user && !user?.user?.govtool_username) {
+            showButton = false;
+        } else {
+            showButton = true;
+        }
+
+        return showButton;
+    };
+
+    let drepCheck = false;
+
+    const checkIfDrepIsSignedIn = () => {
+        const jwtData = decodeJWT();
+        const isDrep =
+            walletAPI?.voter?.isRegisteredAsDRep ||
+            walletAPI?.voter?.isRegisteredAsSoleVoter;
+        const hasDrepID = !!jwtData?.dRepID;
+
+        if (isDrep && !hasDrepID) {
+            drepCheck = true;
+            return true;
+        }
+
+        drepCheck = false;
+        return false;
+    };
+
     return (
         <Box sx={{ mt: 3 }}>
             <ScrollToTop step={showAllActivated?.is_activated} />
@@ -281,8 +314,8 @@ const ProposedBudgetDiscussion = () => {
                             </Grid>
                         )}
 
-                        {walletAPI && (
-                            <Grid item xs={12} paddingBottom={2}>
+                        <Grid item xs={12} paddingBottom={2}>
+                            {checkShowButton() ? (
                                 <Button
                                     variant='contained'
                                     onClick={async () =>
@@ -305,8 +338,13 @@ const ProposedBudgetDiscussion = () => {
                                 >
                                     Submit proposal for Cardano budget
                                 </Button>
-                            </Grid>
-                        )}
+                            ) : (
+                                <UserValidation
+                                    type='budget-proposal'
+                                    drepCheck={drepCheck}
+                                />
+                            )}
+                        </Grid>
 
                         <Grid item md={6} sx={{ flexGrow: { xs: 1 } }}>
                             <SearchInput

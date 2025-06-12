@@ -49,6 +49,7 @@ import {
 } from '../../../lib/api';
 import {
     correctVoteAdaFormat,
+    decodeJWT,
     formatIsoDate,
     openInNewTab,
 } from '../../../lib/utils';
@@ -244,6 +245,35 @@ const SingleBudgetDiscussion = ({ id }) => {
         }
     };
 
+    const checkShowComments = () => {
+        let showComments = false;
+        if (checkIfDrepIsSignedIn()) {
+            showComments = false;
+        } else if (!user && !user?.user?.govtool_username) {
+            showComments = false;
+        } else {
+            showComments = true;
+        }
+
+        return showComments;
+    };
+
+    let drepCheck = false;
+
+    const checkIfDrepIsSignedIn = () => {
+        const jwtData = decodeJWT();
+        const isDrep =
+            walletAPI?.voter?.isRegisteredAsDRep ||
+            walletAPI?.voter?.isRegisteredAsSoleVoter;
+        const hasDrepID = !!jwtData?.dRepID;
+
+        if (isDrep && !hasDrepID) {
+            drepCheck = true;
+            return true;
+        }
+        drepCheck = false;
+        return false;
+    };
     const fetchComments = async (page = 1) => {
         setLoading(true);
         try {
@@ -1889,8 +1919,7 @@ const SingleBudgetDiscussion = ({ id }) => {
                                     />
                                 </Box>
                             )}
-                        {/* ovde */}
-                        {user?.user?.govtool_username ? (
+                        {checkShowComments() ? (
                             proposal?.attributes?.content?.attributes
                                 ?.prop_submitted ? null : (
                                 <Box mt={4}>
@@ -1995,7 +2024,10 @@ const SingleBudgetDiscussion = ({ id }) => {
                                 </Box>
                             )
                         ) : (
-                            <UserValidation type='budget' />
+                            <UserValidation
+                                type='budget'
+                                drepCheck={drepCheck}
+                            />
                         )}
                         {proposal?.attributes?.prop_comments_number === 0 ? (
                             <Card
@@ -2039,6 +2071,8 @@ const SingleBudgetDiscussion = ({ id }) => {
                                     proposal={proposal}
                                     fetchComments={fetchComments}
                                     setRefetchProposal={setRefetchProposal}
+                                    checkShowComments={checkShowComments}
+                                    drepCheck={drepCheck}
                                 />
                             </Box>
                         ))}

@@ -187,8 +187,10 @@ export const loginUserToApp = async ({
             errorMessage = error?.response?.data?.error?.message;
         }
         addErrorAlert(errorMessage);
-        clearStates();
-        clearSession();
+        if (error?.code !== 3) {
+            clearStates();
+            clearSession();
+        }
     }
 };
 export const cleanObject = (obj) => {
