@@ -91,9 +91,11 @@ export const loginUserToApp = async ({
             } else {
                 if (trigerSignData) {
                     const keyToSign = wallet?.stakeKey;
+
                     const challengeRes = await getChallenge({
                         query: `?identifier=${keyToSign}`,
                     });
+
                     const { message } = challengeRes;
                     const messageHex = utf8ToHex(message);
 
@@ -238,5 +240,41 @@ export const isCommentRestricted = (curComment) => {
     if (banned || x.length >= 3) {
         return true;
     }
+    return false;
+};
+
+export const checkShowValidation = (drepRequired = false, walletAPI, user) => {
+    let showButton = false;
+
+    if (!walletAPI) {
+        showButton = true;
+    } else if (!user) {
+        showButton = true;
+    } else if (!user?.user?.govtool_username) {
+        showButton = true;
+    } else if (drepRequired) {
+        if (checkIfDrepIsSignedIn(walletAPI)) {
+            showButton = true;
+        } else {
+            showButton = false;
+        }
+    } else {
+        showButton = false;
+    }
+
+    return showButton;
+};
+
+export const checkIfDrepIsSignedIn = (walletAPI) => {
+    const jwtData = decodeJWT();
+    const isDrep =
+        walletAPI?.voter?.isRegisteredAsDRep ||
+        walletAPI?.voter?.isRegisteredAsSoleVoter;
+    const hasDrepID = !!jwtData?.dRepID;
+
+    if (isDrep && !hasDrepID) {
+        return true;
+    }
+
     return false;
 };

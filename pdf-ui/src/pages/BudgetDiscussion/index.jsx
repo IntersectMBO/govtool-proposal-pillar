@@ -36,11 +36,14 @@ import {
     SearchInput,
 } from '../../components';
 import { useAppContext } from '../../context/context';
-import { loginUserToApp } from '../../lib/helpers';
+import {
+    checkIfDrepIsSignedIn,
+    checkShowValidation,
+    loginUserToApp,
+} from '../../lib/helpers';
 import { useLocation } from 'react-router-dom';
 import { ScrollToTop, useDebounce } from '../../lib/hooks';
 import UserValidation from '../../components/UserValidation/UserValidation';
-import { decodeJWT } from '../../lib/utils';
 
 let proposalsOwnersList = [{ id: 'all-proposals', label: 'All Proposals' }];
 let sortOptions = [
@@ -242,37 +245,6 @@ const ProposedBudgetDiscussion = () => {
         }
     }, [user?.user?.id]);
 
-    const checkShowButton = () => {
-        let showButton = false;
-        if (checkIfDrepIsSignedIn()) {
-            showButton = false;
-        } else if (!user && !user?.user?.govtool_username) {
-            showButton = false;
-        } else {
-            showButton = true;
-        }
-
-        return showButton;
-    };
-
-    let drepCheck = false;
-
-    const checkIfDrepIsSignedIn = () => {
-        const jwtData = decodeJWT();
-        const isDrep =
-            walletAPI?.voter?.isRegisteredAsDRep ||
-            walletAPI?.voter?.isRegisteredAsSoleVoter;
-        const hasDrepID = !!jwtData?.dRepID;
-
-        if (isDrep && !hasDrepID) {
-            drepCheck = true;
-            return true;
-        }
-
-        drepCheck = false;
-        return false;
-    };
-
     return (
         <Box sx={{ mt: 3 }}>
             <ScrollToTop step={showAllActivated?.is_activated} />
@@ -315,9 +287,21 @@ const ProposedBudgetDiscussion = () => {
                         )}
 
                         <Grid item xs={12} paddingBottom={2}>
-                            {checkShowButton() ? (
+                            <Box
+                                style={{
+                                    display: 'flex',
+                                    flexDirection: 'row',
+                                    alignItems: 'center',
+                                    gap: '8px',
+                                }}
+                            >
                                 <Button
                                     variant='contained'
+                                    style={{
+                                        maxHeight: '40px',
+                                        maxWidth: '350px',
+                                    }}
+                                    disabled={checkShowValidation(false, walletAPI, user)}
                                     onClick={async () =>
                                         await loginUserToApp({
                                             wallet: walletAPI,
@@ -338,12 +322,16 @@ const ProposedBudgetDiscussion = () => {
                                 >
                                     Submit proposal for Cardano budget
                                 </Button>
-                            ) : (
-                                <UserValidation
-                                    type='budget-proposal'
-                                    drepCheck={drepCheck}
-                                />
-                            )}
+                                {checkShowValidation(false, walletAPI, user) && (
+                                    <UserValidation
+                                        type='budget-proposal'
+                                        drepCheck={checkIfDrepIsSignedIn(
+                                            walletAPI
+                                        )}
+                                        drepRequired={false}
+                                    />
+                                )}
+                            </Box>
                         </Grid>
 
                         <Grid item md={6} sx={{ flexGrow: { xs: 1 } }}>

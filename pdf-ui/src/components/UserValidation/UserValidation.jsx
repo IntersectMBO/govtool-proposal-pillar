@@ -21,7 +21,11 @@ import {
 } from '../../lib/utils';
 import { getRefreshToken } from '../../lib/api';
 
-const UserValidation = ({ type = 'budget', drepCheck = false }) => {
+const UserValidation = ({
+    type = 'budget',
+    drepCheck = false,
+    drepRequired = false,
+}) => {
     const {
         setWalletAPI,
         loading,
@@ -62,7 +66,6 @@ const UserValidation = ({ type = 'budget', drepCheck = false }) => {
         addWarningAlert: GovToolAddWarningAlert,
         addChangesSavedAlert: GovToolAddChangesSavedAlert,
     } = govtoolProps || {};
-
     const handleLogin = async (trigerSignData, useDRepKey = false) => {
         if (GovToolAssemblyWalletAPI?.address) {
             setWalletAPI(GovToolAssemblyWalletAPI);
@@ -145,14 +148,6 @@ const UserValidation = ({ type = 'budget', drepCheck = false }) => {
     }, [GovToolAddChangesSavedAlert]);
 
     useEffect(() => {
-        if (!mounted) {
-            setMounted(true);
-        } else {
-            handleLogin(false);
-        }
-    }, [GovToolAssemblyWalletAPI?.address, mounted]);
-
-    useEffect(() => {
         if (GovToolAssemblyLocale) {
             setLocale(GovToolAssemblyLocale);
         }
@@ -187,7 +182,6 @@ const UserValidation = ({ type = 'budget', drepCheck = false }) => {
                         }
                     }
                 } else {
-                    console.log('No token found');
                     setUser(null);
                     clearInterval(interval); // Clear interval if there is no token
                 }
@@ -196,31 +190,6 @@ const UserValidation = ({ type = 'budget', drepCheck = false }) => {
             return () => clearInterval(interval); // Clear interval on component unmount
         }
     }, [user]);
-
-    const showValidationMessage = useMemo(() => {
-        const messages = [];
-
-        if (!walletAPI) {
-            messages.push(<Typography>To connect a Cardano wallet</Typography>);
-        }
-
-        if (!user) {
-            messages.push(
-                <Typography>Verify yourself with your wallet</Typography>
-            );
-        }
-
-        if (!user?.user?.govtool_username) {
-            messages.push(<Typography>A GovTool Display Name</Typography>);
-        }
-        if (drepCheck) {
-            messages.push(
-                <Typography>Verify your status as a DRep.</Typography>
-            );
-        }
-
-        return messages;
-    }, [user, walletAPI]);
 
     const checkFunctionCall = () => {
         if (!walletAPI?.address) {
@@ -236,120 +205,85 @@ const UserValidation = ({ type = 'budget', drepCheck = false }) => {
                 callBackFn: () => {},
             });
         } else if (drepCheck) {
-            console.log('DRep check');
             handleLogin(true, true);
-        }
-    };
-
-    const checkButtonText = () => {
-        if (!walletAPI?.address) {
-            return 'Get started';
-        } else if (!user) {
-            return 'Verify';
-        } else if (!user?.user?.govtool_username) {
-            return 'Create Display Name';
-        } else if (drepCheck) {
-            return 'Verify';
         }
     };
 
     const checkTitleText = (type) => {
         switch (type) {
             case 'budget':
-                return 'To submit a comment, you will need:';
+                return 'To submit a comment, you need to';
             case 'comment':
-                return 'To submit a reply, you will need:';
+                return 'To submit a reply, you need to';
             case 'budget-proposal':
-                return 'To submit a budget proposal, you will need:';
+                return 'To submit a budget proposal, you need to';
             case 'proposal':
-                return 'To submit a proposal, you will need:';
+                return 'To submit a proposal, you need to';
+            case 'governance':
+                return 'If this is your Proposal, to submit it, you need to';
+            case 'sentiment':
+                'To show sentiment, you need to';
             default:
-                return 'To submit a comment, you will need:';
+                return 'To submit a comment, you need to';
         }
     };
 
-    return (
-        <Box mt={4}>
-            <Card>
-                <CardContent>
-                    <Box
-                        sx={{
-                            display: 'flex',
-                            flexDirection: 'row',
-                            justifyContent: 'space-between',
-                        }}
-                    >
-                        <Box>
-                            {type === 'budget' && (
-                                <Typography
-                                    variant='caption'
-                                    sx={{
-                                        color: (theme) =>
-                                            theme.palette.text.grey,
-                                    }}
-                                    mt={2}
-                                >
-                                    Submit a comment
-                                </Typography>
-                            )}
-                            <Box
-                                ml={2}
-                                mt={2}
-                                sx={{
-                                    display: 'flex',
-                                    flexDirection: 'row',
-                                    alignItems: 'center',
-                                    gap: 1,
-                                }}
-                            >
-                                <Typography variant='body1' fontWeight={600}>
-                                    {checkTitleText(type)}
-                                </Typography>
+    const showValidationMessage = useMemo(() => {
+        if (!walletAPI) {
+            return (
+                <Link onClick={checkFunctionCall}>
+                    connect a Cardano wallet
+                </Link>
+            );
+        }
 
-                                <Typography variant='body1'>
-                                    <Link data-test='user-validation-learn-more'>
-                                        Learn more
-                                    </Link>
-                                </Typography>
-                            </Box>
-                        </Box>
-                        <Box>
-                            <Button
-                                variant='contained'
-                                data-test='user-validation-get-started'
-                                onClick={() => {
-                                    checkFunctionCall();
-                                }}
-                            >
-                                {checkButtonText()}
-                            </Button>
-                        </Box>
-                    </Box>
-                    <Box>
-                        <List sx={{ py: 0 }}>
-                            {showValidationMessage.map((item, index) => (
-                                <ListItem
-                                    key={item.key || index}
-                                    disableGutters
-                                    sx={{ py: 0.2, pl: 2 }}
-                                >
-                                    <Box
-                                        sx={{
-                                            width: 3,
-                                            height: 3,
-                                            borderRadius: '50%',
-                                            bgcolor: 'black',
-                                            display: 'inline-block',
-                                            mr: 1,
-                                        }}
-                                    />
-                                    {item.props.children}
-                                </ListItem>
-                            ))}
-                        </List>
-                    </Box>
-                </CardContent>
-            </Card>
+        if (!user) {
+            return (
+                <Link onClick={checkFunctionCall}>
+                    verify yourself by signing a transaction
+                </Link>
+            );
+        }
+
+        if (!user?.user?.govtool_username) {
+            return (
+                <Link onClick={checkFunctionCall}>
+                    create a GovTool Display Name
+                </Link>
+            );
+        }
+        if (drepRequired && drepCheck) {
+            return (
+                <Link onClick={checkFunctionCall}>
+                    verify your status as a DRep.
+                </Link>
+            );
+        }
+    }, [user, walletAPI]);
+
+    return (
+        <Box
+            sx={{
+                display: 'flex',
+                flexDirection: { xs: 'column', sm: 'row' },
+                justifyContent: 'space-between',
+                alignItems: { xs: 'flex-start', sm: 'center' },
+            }}
+        >
+            <Box
+                sx={{
+                    display: 'flex',
+                    flexDirection: 'row',
+                    flexWrap: 'wrap',
+                    gap: 1,
+                    marginTop: 0.3,
+                }}
+            >
+                <Typography variant='body1' fontWeight={600}>
+                    {checkTitleText(type)}
+                </Typography>
+                <Typography variant='body1'>{showValidationMessage}</Typography>
+            </Box>
         </Box>
     );
 };

@@ -92,7 +92,9 @@ const GlobalWrapper = ({ ...props }) => {
 
     const handleLogin = async (trigerSignData, useDRepKey = false) => {
         if (GovToolAssemblyWalletAPI?.address) {
-            setWalletAPI(GovToolAssemblyWalletAPI);
+            setWalletAPI((prevWalletAPI) => {
+                return GovToolAssemblyWalletAPI;
+            });
             if (GovToolAssemblyValidateMetadata) {
                 setValidateMetadata(() => GovToolAssemblyValidateMetadata);
             }
@@ -177,7 +179,11 @@ const GlobalWrapper = ({ ...props }) => {
         } else {
             handleLogin(false);
         }
-    }, [GovToolAssemblyWalletAPI?.address, mounted]);
+    }, [
+        GovToolAssemblyWalletAPI?.address,
+        mounted,
+        props?.walletAPI
+    ]);
 
     useEffect(() => {
         if (GovToolAssemblyLocale) {
