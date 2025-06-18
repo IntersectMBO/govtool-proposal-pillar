@@ -1,10 +1,6 @@
 {
     "name": "@intersect.mbo/pdf-ui",
-<<<<<<< fix/-Move-verification-modal-in-Proposals-to-better-places-(#3549)
-    "version": "1.0.1-beta",
-=======
-    "version": "1.0.1-alfa",
->>>>>>> dev
+    "version": "1.0.2-alfa",
     "description": "Proposal discussion ui",
     "main": "./src/index.js",
     "exports": {

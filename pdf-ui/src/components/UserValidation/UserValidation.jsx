@@ -8,11 +8,10 @@ import {
     Typography,
 } from '@mui/material';
 import React, { useMemo, useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link } from '@mui/material';
 import { IdentificationPage } from '../../pages';
 import { useAppContext } from '../../context/context';
 import { loginUserToApp } from '../../lib/helpers';
-import { use } from 'react';
 import {
     clearSession,
     decodeJWT,
@@ -100,6 +99,7 @@ const UserValidation = ({
                 addErrorAlert: GovToolAddErrorAlert,
                 addSuccessAlert: GovToolAddSuccessAlert,
                 addChangesSavedAlert: GovToolAddChangesSavedAlert,
+                // callBackFn: () => {},
             });
         } else {
             if (
@@ -223,8 +223,8 @@ const UserValidation = ({
                 return 'If this is your Proposal, to submit it, you need to';
             case 'sentiment':
                 return 'To show sentiment, you need to';
-                case "drep-poll":
-                    return "If you are a Drep, you need to"
+            case 'drep-poll':
+                return 'If you are a Drep, you need to';
             default:
                 return '';
         }
@@ -233,31 +233,53 @@ const UserValidation = ({
     const showValidationMessage = useMemo(() => {
         if (!walletAPI) {
             return (
-                <Link onClick={checkFunctionCall} data-testId="connect-wallet-link">
-                    connect a Cardano wallet
+                <Link
+                    onClick={checkFunctionCall}
+                    data-testId='connect-wallet-link'
+                >
+                    <Typography variant='caption' sx={{ fontSize: '16px' }}>
+                        connect a Cardano wallet
+                    </Typography>
                 </Link>
             );
         }
 
         if (!user) {
             return (
-                <Link onClick={checkFunctionCall} data-testId="verify-user-link">
-                    verify yourself by signing a transaction
+                <Link
+                    variant='caption'
+                    onClick={checkFunctionCall}
+                    data-testId='verify-user-link'
+                >
+                    <Typography variant='caption' sx={{ fontSize: '16px' }}>
+                        verify yourself by signing a transaction
+                    </Typography>
                 </Link>
             );
         }
 
         if (!user?.user?.govtool_username) {
             return (
-                <Link onClick={checkFunctionCall} data-testId="create-govtool-display-name-link">
-                    create a GovTool Display Name
+                <Link
+                    variant='caption'
+                    onClick={checkFunctionCall}
+                    data-testId='create-govtool-display-name-link'
+                >
+                    <Typography variant='caption' sx={{ fontSize: '16px' }}>
+                        create a GovTool Display Name
+                    </Typography>
                 </Link>
             );
         }
         if (drepRequired && drepCheck) {
             return (
-                <Link onClick={checkFunctionCall} data-testId="verify-drep-link">
-                    verify your status as a DRep.
+                <Link
+                    onClick={checkFunctionCall}
+                    data-testId='verify-drep-link'
+                >
+                    <Typography variant='caption' sx={{ fontSize: '16px' }}>
+                        verify your status as a DRep.
+                    </Typography>
                 </Link>
             );
         }
@@ -279,15 +301,15 @@ const UserValidation = ({
                     flexWrap: 'wrap',
                     gap: 0.5,
                     marginTop: 0.3,
+                    alignItems: 'center',
                 }}
             >
-                <Typography variant='body1' fontWeight={600}>
-                    {checkTitleText(type)}
-                </Typography>
+                <Typography variant='body1'>{checkTitleText(type)}</Typography>
                 <Typography variant='body1'>{showValidationMessage}</Typography>
-                {type === "drep-poll" && !user && (
-                    <Typography variant='body1' fontWeight={600}>
-                        and Drep key to vote. This is a two step process for security.
+                {type === 'drep-poll' && !user && (
+                    <Typography variant='body1'>
+                        and Drep key to vote. This is a two step process for
+                        security.
                     </Typography>
                 )}
             </Box>
