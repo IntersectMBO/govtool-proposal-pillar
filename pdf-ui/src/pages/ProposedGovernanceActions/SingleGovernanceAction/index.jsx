@@ -127,7 +127,6 @@ const SingleGovernanceAction = ({ id }) => {
             });
         }
     };
-
     useEffect(() => {
         let domain = new URL(window.location.href);
         let origin = domain.origin;
@@ -746,16 +745,18 @@ const SingleGovernanceAction = ({ id }) => {
                                             xs={2}
                                             display='flex'
                                             justifyContent='flex-end'
-                                        >
+                                        > 
                                             <Box>
                                                 {user &&
+                                                proposal?.attributes?.content?.attributes?.prop_submitted === false &&
+                                                //proposal?.attributes?.prop_submitted &&
                                                 user?.user?.id?.toString() ===
                                                     proposal?.attributes?.user_id?.toString() ? (
                                                     <Button
                                                         variant='outlined'
                                                         data-testid='submit-as-GA-button'
                                                         sx={{
-                                                            width: 'max-content',
+                                                            width: 'max-content', 
                                                         }}
                                                         onClick={async () => {
                                                             const balance =
@@ -1137,31 +1138,49 @@ const SingleGovernanceAction = ({ id }) => {
                                             }
                                         </Typography>
                                     </Box>
-
-                                    <Box mt={4}>
-                                        <Typography
-                                            variant='caption'
-                                            sx={{
-                                                color: (theme) =>
-                                                    theme?.palette?.text?.grey,
-                                            }}
-                                        >
-                                            {proposal?.attributes?.content
-                                                ?.attributes?.prop_submitted
-                                                ? `Submitted for vote on:`
-                                                : `Proposed on:`}
-                                        </Typography>
-                                        <Typography>
-                                            {proposal?.attributes?.content
-                                                ?.attributes?.prop_submitted
-                                                ? `${formatIsoDate(proposal?.attributes?.content?.attributes?.prop_submission_date)}`
-                                                : `${formatIsoDate(
-                                                      proposal?.attributes
-                                                          ?.createdAt
-                                                  )}`}
-                                        </Typography>
+                                    <Box
+                                        mt={2}
+                                        display='flex'
+                                        alignItems='flex-end'
+                                        gap={2}
+                                    >
+                                        <Box>
+                                            {' '}
+                                            <Typography
+                                                variant='caption'
+                                                sx={{
+                                                    color: (theme) =>
+                                                        theme?.palette?.text?.grey,
+                                                }}
+                                            >
+                                                {proposal?.attributes?.content
+                                                    ?.attributes?.prop_submitted
+                                                    ? `Submitted on:`
+                                                    : `Proposed on:`}
+                                            </Typography>
+                                            <Typography>
+                                                {proposal?.attributes?.content
+                                                    ?.attributes?.prop_submitted
+                                                    ? `${formatIsoDate(proposal?.attributes?.content?.attributes?.prop_submission_date)}`
+                                                    : `${formatIsoDate(
+                                                        proposal?.attributes
+                                                            ?.createdAt
+                                                    )}`}
+                                            </Typography>
+                                        </Box>
+                                        <Box>
+                                            <Link
+                                                variant='outlined'
+                                                data-testid='review-and-vote-link'
+                                                        onClick={() =>
+                                                            navigate(
+                                                               `/connected/governance_actions/${proposal?.attributes?.content?.attributes?.prop_submission_tx_hash}#0`
+                                                            )}
+                                                sx={{ cursor: 'pointer' }} 
+                                            >Vote</Link>
+                                        </Box>
+                                        <Box></Box>
                                     </Box>
-
                                     <Box
                                         mt={2}
                                         display='flex'
@@ -1206,6 +1225,7 @@ const SingleGovernanceAction = ({ id }) => {
                                                     handleOpenReviewVersions()
                                                 }
                                                 data-testid='review-version'
+                                                sx={{ cursor: 'pointer' }} 
                                             >
                                                 Review Versions
                                             </Link>

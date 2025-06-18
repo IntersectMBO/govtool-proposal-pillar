@@ -236,6 +236,7 @@ const UserValidation = ({
                 <Link
                     onClick={checkFunctionCall}
                     data-testId='connect-wallet-link'
+                    sx={{ cursor: 'pointer' }} 
                 >
                     <Typography variant='caption' sx={{ fontSize: '16px' }}>
                         connect a Cardano wallet
@@ -250,6 +251,7 @@ const UserValidation = ({
                     variant='caption'
                     onClick={checkFunctionCall}
                     data-testId='verify-user-link'
+                    sx={{ cursor: 'pointer' }} 
                 >
                     <Typography variant='caption' sx={{ fontSize: '16px' }}>
                         verify yourself by signing a transaction
@@ -264,6 +266,7 @@ const UserValidation = ({
                     variant='caption'
                     onClick={checkFunctionCall}
                     data-testId='create-govtool-display-name-link'
+                    sx={{ cursor: 'pointer' }} 
                 >
                     <Typography variant='caption' sx={{ fontSize: '16px' }}>
                         create a GovTool Display Name
@@ -276,6 +279,7 @@ const UserValidation = ({
                 <Link
                     onClick={checkFunctionCall}
                     data-testId='verify-drep-link'
+                    sx={{ cursor: 'pointer' }} 
                 >
                     <Typography variant='caption' sx={{ fontSize: '16px' }}>
                         verify your status as a DRep.

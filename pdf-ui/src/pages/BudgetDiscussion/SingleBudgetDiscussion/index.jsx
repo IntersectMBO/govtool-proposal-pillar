@@ -906,6 +906,7 @@ const SingleBudgetDiscussion = ({ id }) => {
                                                     handleOpenReviewVersions()
                                                 }
                                                 data-testid='review-version'
+                                                sx={{ cursor: 'pointer' }} 
                                             >
                                                 Review Versions
                                             </Link>
