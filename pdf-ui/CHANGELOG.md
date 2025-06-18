@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 As a minor extension, we also keep a semantic version for the `UNRELEASED`
 changes.
+## [v1.0.2-beta](https://www.npmjs.com/package/@intersect.mbo/pdf-ui/v/1.0.2-beta) 2025-06-19
+-   Fix submit to ga button 
+-   Added pointer to links
+
 ## [v1.0.2-alfa](https://www.npmjs.com/package/@intersect.mbo/pdf-ui/v/1.0.2-alfa) 2025-06-18
 -   Change login
 
