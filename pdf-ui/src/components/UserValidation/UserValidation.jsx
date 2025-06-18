@@ -233,7 +233,7 @@ const UserValidation = ({
     const showValidationMessage = useMemo(() => {
         if (!walletAPI) {
             return (
-                <Link onClick={checkFunctionCall}>
+                <Link onClick={checkFunctionCall} data-testId="connect-wallet-link">
                     connect a Cardano wallet
                 </Link>
             );
@@ -241,7 +241,7 @@ const UserValidation = ({
 
         if (!user) {
             return (
-                <Link onClick={checkFunctionCall}>
+                <Link onClick={checkFunctionCall} data-testId="verify-user-link">
                     verify yourself by signing a transaction
                 </Link>
             );
@@ -249,14 +249,14 @@ const UserValidation = ({
 
         if (!user?.user?.govtool_username) {
             return (
-                <Link onClick={checkFunctionCall}>
+                <Link onClick={checkFunctionCall} data-testId="create-govtool-display-name-link">
                     create a GovTool Display Name
                 </Link>
             );
         }
         if (drepRequired && drepCheck) {
             return (
-                <Link onClick={checkFunctionCall}>
+                <Link onClick={checkFunctionCall} data-testId="verify-drep-link">
                     verify your status as a DRep.
                 </Link>
             );
