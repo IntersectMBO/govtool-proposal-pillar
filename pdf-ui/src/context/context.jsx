@@ -6,6 +6,7 @@ export function AppContextProvider({ children }) {
     const [user, setUser] = useState();
     const [loading, setLoading] = useState(false);
     const [walletAPI, setWalletAPI] = useState(null);
+
     const [validateMetadata, setValidateMetadata] = useState(null);
     const [locale, setLocale] = useState('en');
     const [openUsernameModal, setOpenUsernameModal] = useState({
@@ -21,6 +22,7 @@ export function AppContextProvider({ children }) {
     const [showIdentificationPage, setShowIdentificationPage] = useState(false);
     const [identificationType, setIdentificationType] = useState('wallet');
     const [govtoolProps, setGovtoolProps] = useState();
+
 
     const clearStates = () => {
         setWalletAPI(null);

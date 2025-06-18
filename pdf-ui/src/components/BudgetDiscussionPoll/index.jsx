@@ -19,7 +19,9 @@ import {
 } from '../../lib/api';
 import { decodeJWT, formatDateWithOffset } from '../../lib/utils';
 import DrepVotersDialog from '../DrepVotersDialog';
-import { add } from 'date-fns';
+import { add, max } from 'date-fns';
+import { checkIfDrepIsSignedIn, checkShowValidation } from '../../lib/helpers';
+import UserValidation from '../UserValidation/UserValidation';
 
 const BudgetDiscussionPoll = ({
     fetchActivePoll = false,
@@ -156,7 +158,7 @@ const BudgetDiscussionPoll = ({
     if (poll) {
         return (
             <>
-                {user &&
+                {/* {user &&
                 !userPollVote &&
                 (walletAPI?.voter?.isRegisteredAsDRep ||
                     walletAPI?.voter?.isRegisteredAsSoleVoter) &&
@@ -209,18 +211,18 @@ const BudgetDiscussionPoll = ({
                             </Button>
                         </CardContent>
                     </Card>
-                ) : null}
+                ) : null} */}
 
                 <Card data-testid='poll-result-card'>
                     <CardContent
                         sx={{ display: 'flex', flexDirection: 'column' }}
                     >
-                        {proposalAuthorUsername ? (
+                        {/* {proposalAuthorUsername ? (
                             <Typography variant='body2'>
                                 @{proposalAuthorUsername}
                             </Typography>
-                        ) : null}
-                        <Typography
+                        ) : null} */}
+                        {/* <Typography
                             variant='caption'
                             sx={{
                                 color: (theme) => theme.palette.text.grey,
@@ -240,7 +242,69 @@ const BudgetDiscussionPoll = ({
                         <Typography variant='body2' mt={1}>
                             Do you support this proposal to be included in the
                             next Cardano Budget?
-                        </Typography>
+                        </Typography> */}
+                        <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+                            <Typography variant='body1' fontWeight={600} my={2}>
+                                Should this proposal be included in the next
+                                Cardano Budget?
+                            </Typography>
+                            {checkShowValidation(true, walletAPI, user) ? (
+                                <UserValidation
+                                    type='drep-poll'
+                                    drepCheck={checkIfDrepIsSignedIn(walletAPI)}
+                                    drepRequired={true}
+                                />
+                            ) : (
+                                <Box
+                                    style={{
+                                        display: 'flex',
+                                        gap: '20px',
+                                        flexDirection: 'row',
+                                        alignItems: 'center',
+                                        maxWidth: '30%',
+                                    }}
+                                >
+                                    <Button
+                                        variant='outlined'
+                                        sx={{ mb: 1, width: '50%' }}
+                                        onClick={
+                                            user?.user?.govtool_username
+                                                ? () =>
+                                                      handlePollVote({
+                                                          vote: true,
+                                                      })
+                                                : () =>
+                                                      setOpenUsernameModal({
+                                                          open: true,
+                                                          callBackFn: () => {},
+                                                      })
+                                        }
+                                        data-testid='poll-yes-button'
+                                    >
+                                        Yes
+                                    </Button>
+                                    <Button
+                                        sx={{ mb: 1, width: '50%' }}
+                                        variant='outlined'
+                                        onClick={
+                                            user?.user?.govtool_username
+                                                ? () =>
+                                                      handlePollVote({
+                                                          vote: false,
+                                                      })
+                                                : () =>
+                                                      setOpenUsernameModal({
+                                                          open: true,
+                                                          callBackFn: () => {},
+                                                      })
+                                        }
+                                        data-testid='poll-no-button'
+                                    >
+                                        No
+                                    </Button>
+                                </Box>
+                            )}
+                        </Box>
                         <Divider
                             variant='fullWidth'
                             sx={{

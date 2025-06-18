@@ -7,8 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 As a minor extension, we also keep a semantic version for the `UNRELEASED`
 changes.
+<<<<<<< fix/-Move-verification-modal-in-Proposals-to-better-places-(#3549)
+## [v1.0.0-beta](https://www.npmjs.com/package/@intersect.mbo/pdf-ui/v/1.0.1-beta) 2025-06-18
+-   Change login
+-   Fix Invalid Link Validation Bypassed in Proposal Creation via UI and API #3715
+=======
 ## [v1.0.1-alfa](https://www.npmjs.com/package/@intersect.mbo/pdf-ui/v/1.0.1-alfa) 2025-06-12
 -   Change: User verification mechanism changed to follow process 
+>>>>>>> dev
 
 ## [v1.0.0-beta](https://www.npmjs.com/package/@intersect.mbo/pdf-ui/v/1.0.0-beta) 2025-06-11
 -   Fix Hard Fork Proposal type

@@ -29,7 +29,7 @@ import { useEffect, useState } from 'react';
 import { ProposalsList, CreateGovernanceActionDialog } from '../../components';
 import { getGovernanceActionTypes } from '../../lib/api';
 import { useAppContext } from '../../context/context';
-import { loginUserToApp } from '../../lib/helpers';
+import { checkIfDrepIsSignedIn, checkShowValidation, loginUserToApp } from '../../lib/helpers';
 import { useLocation } from 'react-router-dom';
 import { decodeJWT } from '../../lib/utils';
 import UserValidation from '../../components/UserValidation/UserValidation';
@@ -209,37 +209,6 @@ const ProposedGovernanceActions = () => {
         }
     }, [location.pathname]);
 
-    const checkShowButton = () => {
-        let showButton = false;
-        if (checkIfDrepIsSignedIn()) {
-            showButton = false;
-        } else if (!user && !user?.user?.govtool_username) {
-            showButton = false;
-        } else {
-            showButton = true;
-        }
-
-        return showButton;
-    };
-
-    let drepCheck = false;
-
-    const checkIfDrepIsSignedIn = () => {
-        const jwtData = decodeJWT();
-        const isDrep =
-            walletAPI?.voter?.isRegisteredAsDRep ||
-            walletAPI?.voter?.isRegisteredAsSoleVoter;
-        const hasDrepID = !!jwtData?.dRepID;
-
-        if (isDrep && !hasDrepID) {
-            drepCheck = true;
-            return true;
-        }
-
-        drepCheck = false;
-        return false;
-    };
-
     return (
         <Box sx={{ mt: 3 }}>
             <Grid container spacing={3} flexDirection={'column'}>
@@ -280,9 +249,23 @@ const ProposedGovernanceActions = () => {
                             </Grid>
                         )}
                         <Grid item xs={12} paddingBottom={2}>
-                            {checkShowButton() ? (
+                            <Box
+                                style={{
+                                    display: 'flex',
+                                    flexDirection: 'row',
+                                    alignItems: 'center',
+                                    gap: '8px',
+                                }}
+                            >
                                 <Button
                                     variant='contained'
+                                    disabled={
+                                        checkShowValidation(
+                                            false,
+                                            walletAPI,
+                                            user
+                                        )
+                                    }
                                     onClick={async () =>
                                         await loginUserToApp({
                                             wallet: walletAPI,
@@ -298,17 +281,25 @@ const ProposedGovernanceActions = () => {
                                                 addChangesSavedAlert,
                                         })
                                     }
-                                    startIcon={<IconPlusCircle fill='white' />}
+                                    // startIcon={<IconPlusCircle fill='white' />}
                                     data-testid='propose-a-governance-action-button'
                                 >
                                     Propose a Governance Action
                                 </Button>
-                            ) : (
-                                <UserValidation
-                                    type='proposal'
-                                    drepCheck={drepCheck}
-                                />
-                            )}
+                                {checkShowValidation(
+                                    false,
+                                    walletAPI,
+                                    user
+                                ) && (
+                                    <UserValidation
+                                        type='proposal'
+                                        drepCheck={checkIfDrepIsSignedIn(
+                                            walletAPI
+                                        )}
+                                        drepRequired={false}
+                                    />
+                                )}
+                            </Box>
                         </Grid>
 
                         <Grid item md={6} sx={{ flexGrow: { xs: 1 } }}>

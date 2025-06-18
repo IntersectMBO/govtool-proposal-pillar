@@ -28,7 +28,11 @@ import {
     Chip,
 } from '@mui/material';
 import Subcomponent from './Subcomponent';
-import { isCommentRestricted } from '../../lib/helpers';
+import {
+    checkIfDrepIsSignedIn,
+    checkShowValidation,
+    isCommentRestricted,
+} from '../../lib/helpers';
 import UsernameSection from './UsernameSection';
 import MarkdownTypography from '../../lib/markdownRenderer';
 import UserValidation from '../UserValidation/UserValidation';
@@ -503,134 +507,147 @@ const CommentCard = ({
                             </Box>
                             {proposal?.attributes?.content?.attributes
                                 ?.prop_submitted ? null : (
-                                <Button
-                                    variant='outlined'
-                                    startIcon={
-                                        showReply ? (
-                                            <IconMinus
-                                                fill={
-                                                    theme.palette.primary.main
-                                                }
-                                            />
-                                        ) : (
-                                            <IconPlus
-                                                fill={
-                                                    theme.palette.primary.main
-                                                }
-                                            />
-                                        )
-                                    }
-                                    onClick={() =>
-                                        setShowReply((prev) => !prev)
-                                    }
-                                    data-testid='reply-button'
-                                >
-                                    {showReply ? 'Cancel' : 'Reply'}
-                                </Button>
+                                <Box display='flex' gap={2}>
+                                    {checkShowValidation(
+                                        true,
+                                        walletAPI,
+                                        user
+                                    ) && (
+                                        <UserValidation
+                                            type='comment'
+                                            drepCheck={checkIfDrepIsSignedIn(
+                                                walletAPI
+                                            )}
+                                            drepRequired={true}
+                                        />
+                                    )}
+                                    <Button
+                                        variant='outlined'
+                                        startIcon={
+                                            showReply ? (
+                                                <IconMinus
+                                                    fill={
+                                                        theme.palette.primary
+                                                            .main
+                                                    }
+                                                />
+                                            ) : (
+                                                <IconPlus
+                                                    fill={
+                                                        theme.palette.primary
+                                                            .main
+                                                    }
+                                                />
+                                            )
+                                        }
+                                        onClick={() =>
+                                            setShowReply((prev) => !prev)
+                                        }
+                                        data-testid='reply-button'
+                                        disabled={
+                                            checkShowValidation(
+                                                true,
+                                                walletAPI,
+                                                user
+                                            )
+                                        }
+                                    >
+                                        {showReply ? 'Cancel' : 'Reply'}
+                                    </Button>
+                                </Box>
                             )}
                         </Box>
 
                         {showReply ? (
-                            checkShowComments() ? (
-                                <Box>
-                                    <TextField
-                                        fullWidth
-                                        sx={{
-                                            mt: 1,
-                                        }}
-                                        size='large'
-                                        name='subcomment'
-                                        label=''
-                                        placeholder='Add comment'
-                                        maxRows={5}
-                                        multiline
-                                        value={subcommentText || ''}
-                                        variant='outlined'
-                                        onChange={(e) => handleChange(e)}
-                                        onBlur={handleBlur}
-                                        inputProps={{
-                                            maxLength: subcommentMaxLength,
-                                            spellCheck: 'false',
-                                            autoCorrect: 'off',
-                                            autoCapitalize: 'none',
-                                            autoComplete: 'off',
-                                        }}
-                                        helperText={
-                                            <Typography
-                                                variant='caption'
-                                                sx={{
-                                                    float: 'right',
-                                                    mr: 2,
-                                                    color: (theme) =>
-                                                        subcommentText?.length ===
-                                                            subcommentMaxLength &&
-                                                        theme?.palette?.error
-                                                            ?.main,
-                                                }}
-                                            >
-                                                {`${
-                                                    subcommentText?.length || 0
-                                                }/${subcommentMaxLength}`}
-                                            </Typography>
-                                        }
-                                        InputProps={{
-                                            inputProps: {
-                                                maxLength: subcommentMaxLength,
-                                                'data-testid': 'reply-input',
-                                            },
-                                        }}
-                                    />
-
-                                    <Box
-                                        display={'flex'}
-                                        justifyContent={'flex-end'}
-                                        mt={1}
-                                    >
-                                        <Button
-                                            variant='contained'
-                                            onClick={
-                                                user?.user?.govtool_username
-                                                    ? () => {
-                                                          handleCreateComment();
-                                                          setShowSubcomments(
-                                                              true
-                                                          );
-                                                      }
-                                                    : () =>
-                                                          setOpenUsernameModal({
-                                                              open: true,
-                                                              callBackFn:
-                                                                  () => {},
-                                                          })
-                                            }
-                                            disabled={
-                                                !subcommentText ||
-                                                !walletAPI?.address
-                                            }
-                                            endIcon={
-                                                <IconReply
-                                                    height={18}
-                                                    width={18}
-                                                    fill={
-                                                        !subcommentText ||
-                                                        !walletAPI?.address
-                                                            ? 'rgba(0,0,0, 0.26)'
-                                                            : 'white'
-                                                    }
-                                                />
-                                            }
-                                            data-testid='reply-comment-button'
+                            <Box>
+                                <TextField
+                                    fullWidth
+                                    sx={{
+                                        mt: 1,
+                                    }}
+                                    size='large'
+                                    name='subcomment'
+                                    label=''
+                                    placeholder='Add comment'
+                                    maxRows={5}
+                                    multiline
+                                    value={subcommentText || ''}
+                                    variant='outlined'
+                                    onChange={(e) => handleChange(e)}
+                                    onBlur={handleBlur}
+                                    inputProps={{
+                                        maxLength: subcommentMaxLength,
+                                        spellCheck: 'false',
+                                        autoCorrect: 'off',
+                                        autoCapitalize: 'none',
+                                        autoComplete: 'off',
+                                    }}
+                                    helperText={
+                                        <Typography
+                                            variant='caption'
+                                            sx={{
+                                                float: 'right',
+                                                mr: 2,
+                                                color: (theme) =>
+                                                    subcommentText?.length ===
+                                                        subcommentMaxLength &&
+                                                    theme?.palette?.error?.main,
+                                            }}
                                         >
-                                            Comment
-                                        </Button>
-                                    </Box>
-                                </Box>
-                            ) : (
-                                <UserValidation
-                                    type='comment'
-                                    drepCheck={drepCheck}
+                                            {`${
+                                                subcommentText?.length || 0
+                                            }/${subcommentMaxLength}`}
+                                        </Typography>
+                                    }
+                                    InputProps={{
+                                        inputProps: {
+                                            maxLength: subcommentMaxLength,
+                                            'data-testid': 'reply-input',
+                                        },
+                                    }}
                                 />
-                            )
+
+                                <Box
+                                    display={'flex'}
+                                    justifyContent={'flex-end'}
+                                    mt={1}
+                                >
+                                    <Button
+                                        variant='contained'
+                                        onClick={
+                                            user?.user?.govtool_username
+                                                ? () => {
+                                                      handleCreateComment();
+                                                      setShowSubcomments(true);
+                                                  }
+                                                : () =>
+                                                      setOpenUsernameModal({
+                                                          open: true,
+                                                          callBackFn: () => {},
+                                                      })
+                                        }
+                                        disabled={
+                                            !subcommentText ||
+                                            !walletAPI?.address
+                                        }
+                                        endIcon={
+                                            <IconReply
+                                                height={18}
+                                                width={18}
+                                                fill={
+                                                    !subcommentText ||
+                                                    !walletAPI?.address
+                                                        ? 'rgba(0,0,0, 0.26)'
+                                                        : 'white'
+                                                }
+                                            />
+                                        }
+                                        data-testid='reply-comment-button'
+                                    >
+                                        Comment
+                                    </Button>
+                                </Box>
+                            </Box>
                         ) : null}
 
                         {showSubcomments &&
