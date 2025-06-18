@@ -28,9 +28,10 @@ import {
     Tooltip,
     Typography,
     alpha,
+    Link,
 } from '@mui/material';
 import { useEffect, useState, useRef } from 'react';
-import { useNavigate, useLocation, Link } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import {
     CommentCard,
     BudgetDiscussionPoll,
@@ -1850,30 +1851,8 @@ const SingleBudgetDiscussion = ({ id }) => {
                             justifyContent='space-between'
                         >
                             <Typography variant='h4' component='h3'>
-                                Drep Poll
+                                Poll of DRep sentiment
                             </Typography>
-
-                            <IconButton
-                                sx={{
-                                    width: 40,
-                                    height: 40,
-                                }}
-                                onClick={() =>
-                                    proposal?.attributes
-                                        ?.prop_comments_number === 0
-                                        ? null
-                                        : setCommentsSortType((prev) =>
-                                              prev === 'desc' ? 'asc' : 'desc'
-                                          )
-                                }
-                                data-testid='sort-comments'
-                            >
-                                <IconSort
-                                    width='24'
-                                    height='24'
-                                    fill={theme.palette.primary.main}
-                                />
-                            </IconButton>
                         </Box>
 
                         {activePoll &&
@@ -1903,6 +1882,28 @@ const SingleBudgetDiscussion = ({ id }) => {
                             <Typography variant='h4' component='h3'>
                                 Comments
                             </Typography>
+
+                            <IconButton
+                                sx={{
+                                    width: 40,
+                                    height: 40,
+                                }}
+                                onClick={() =>
+                                    proposal?.attributes
+                                        ?.prop_comments_number === 0
+                                        ? null
+                                        : setCommentsSortType((prev) =>
+                                              prev === 'desc' ? 'asc' : 'desc'
+                                          )
+                                }
+                                data-testid='sort-comments'
+                            >
+                                <IconSort
+                                    width='24'
+                                    height='24'
+                                    fill={theme.palette.primary.main}
+                                />
+                            </IconButton>
                         </Box>
                         {proposal?.attributes?.content?.attributes
                             ?.prop_submitted ? null : (

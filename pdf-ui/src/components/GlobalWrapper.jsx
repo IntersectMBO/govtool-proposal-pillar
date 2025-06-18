@@ -174,16 +174,14 @@ const GlobalWrapper = ({ ...props }) => {
     }, [GovToolAddChangesSavedAlert]);
 
     useEffect(() => {
-        if (!mounted) {
-            setMounted(true);
-        } else {
-            handleLogin(false);
+        if (!user) {
+            if (!mounted) {
+                setMounted(true);
+            } else {
+                handleLogin(false);
+            }
         }
-    }, [
-        GovToolAssemblyWalletAPI?.address,
-        mounted,
-        props?.walletAPI
-    ]);
+    }, [GovToolAssemblyWalletAPI?.address, mounted, props?.walletAPI]);
 
     useEffect(() => {
         if (GovToolAssemblyLocale) {

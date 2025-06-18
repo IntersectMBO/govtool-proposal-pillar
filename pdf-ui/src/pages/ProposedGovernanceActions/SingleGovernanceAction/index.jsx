@@ -761,8 +761,7 @@ const SingleGovernanceAction = ({ id }) => {
                                                             const balance =
                                                                 await fetchCurrentWalletBalance();
                                                             if (
-                                                                balance >=
-                                                                100000.18
+                                                                balance >= 10.18
                                                             ) {
                                                                 await loginUserToApp(
                                                                     {
@@ -2136,31 +2135,11 @@ const SingleGovernanceAction = ({ id }) => {
                             alignItems='center'
                             justifyContent='space-between'
                         >
-                            <Typography variant='h4' component='h3'>
-                                Polls
-                            </Typography>
-
-                            <IconButton
-                                sx={{
-                                    width: 40,
-                                    height: 40,
-                                }}
-                                onClick={() =>
-                                    proposal?.attributes
-                                        ?.prop_comments_number === 0
-                                        ? null
-                                        : setCommentsSortType((prev) =>
-                                              prev === 'desc' ? 'asc' : 'desc'
-                                          )
-                                }
-                                data-testid='sort-comments'
-                            >
-                                <IconSort
-                                    width='24'
-                                    height='24'
-                                    fill={theme.palette.primary.main}
-                                />
-                            </IconButton>
+                            {activePoll && (
+                                <Typography variant='h4' component='h3'>
+                                    Polls
+                                </Typography>
+                            )}
                         </Box>
                         {proposal?.attributes?.content?.attributes
                             ?.prop_submitted ? null : user &&
@@ -2258,6 +2237,28 @@ const SingleGovernanceAction = ({ id }) => {
                             <Typography variant='h4' component='h3'>
                                 Comments
                             </Typography>
+
+                            <IconButton
+                                sx={{
+                                    width: 40,
+                                    height: 40,
+                                }}
+                                onClick={() =>
+                                    proposal?.attributes
+                                        ?.prop_comments_number === 0
+                                        ? null
+                                        : setCommentsSortType((prev) =>
+                                              prev === 'desc' ? 'asc' : 'desc'
+                                          )
+                                }
+                                data-testid='sort-comments'
+                            >
+                                <IconSort
+                                    width='24'
+                                    height='24'
+                                    fill={theme.palette.primary.main}
+                                />
+                            </IconButton>
                         </Box>
                         {proposal?.attributes?.content?.attributes
                             ?.prop_submitted ? null : (
