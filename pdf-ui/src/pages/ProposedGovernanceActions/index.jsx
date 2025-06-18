@@ -281,7 +281,7 @@ const ProposedGovernanceActions = () => {
                                                 addChangesSavedAlert,
                                         })
                                     }
-                                    startIcon={<IconPlusCircle fill='white' />}
+                                    // startIcon={<IconPlusCircle fill='white' />}
                                     data-testid='propose-a-governance-action-button'
                                 >
                                     Propose a Governance Action

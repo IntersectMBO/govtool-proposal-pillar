@@ -51,13 +51,11 @@ const LinkManager = ({
             if (value.length > 255) {
                 textError = 'Text must be 255 characters or less';
             }
+            if (value.trim() === '') {
+                textError = 'Text cannot be empty';
+            }
             setLinksErrors((prev) => {
-
-                if (value === '' || value < 255) {
-                    const { [index]: removed, ...rest } = prev;
-                    return rest;
-                }
-                if (value === '') {
+                if (textError === '') {
                     const currentErrors = prev[index] || {};
                     const { text, ...otherErrors } = currentErrors;
 
@@ -109,6 +107,8 @@ const LinkManager = ({
             return rest;
         });
     };
+
+    console.log('linksErrors', linksErrors);
 
     return (
         <Box>

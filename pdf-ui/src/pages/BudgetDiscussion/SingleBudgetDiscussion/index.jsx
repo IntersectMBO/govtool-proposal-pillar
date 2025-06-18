@@ -875,7 +875,7 @@ const SingleBudgetDiscussion = ({ id }) => {
                                         mt={2}
                                         display='flex'
                                         alignItems='center'
-                                        justifyContent='space-between'
+                                        gap={2}
                                     >
                                         <Typography
                                             variant='caption'
@@ -889,7 +889,7 @@ const SingleBudgetDiscussion = ({ id }) => {
                                             )}`}
                                         </Typography>
                                         <Box>
-                                            <Button
+                                            <Link
                                                 variant='outlined'
                                                 startIcon={
                                                     <IconLink
@@ -907,7 +907,7 @@ const SingleBudgetDiscussion = ({ id }) => {
                                                 data-testid='review-version'
                                             >
                                                 Review Versions
-                                            </Button>
+                                            </Link>
                                             <BudgetDiscussionReviewVersions
                                                 open={reviewVersionsOpen}
                                                 onClose={
@@ -1850,7 +1850,7 @@ const SingleBudgetDiscussion = ({ id }) => {
                             justifyContent='space-between'
                         >
                             <Typography variant='h4' component='h3'>
-                                Polls
+                                Drep Poll
                             </Typography>
 
                             <IconButton

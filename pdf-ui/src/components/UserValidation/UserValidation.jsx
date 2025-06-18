@@ -222,9 +222,11 @@ const UserValidation = ({
             case 'governance':
                 return 'If this is your Proposal, to submit it, you need to';
             case 'sentiment':
-                'To show sentiment, you need to';
+                return 'To show sentiment, you need to';
+                case "drep-poll":
+                    return "If you are a Drep, you need to"
             default:
-                return 'To submit a comment, you need to';
+                return '';
         }
     };
 
@@ -275,7 +277,7 @@ const UserValidation = ({
                     display: 'flex',
                     flexDirection: 'row',
                     flexWrap: 'wrap',
-                    gap: 1,
+                    gap: 0.5,
                     marginTop: 0.3,
                 }}
             >
@@ -283,6 +285,11 @@ const UserValidation = ({
                     {checkTitleText(type)}
                 </Typography>
                 <Typography variant='body1'>{showValidationMessage}</Typography>
+                {type === "drep-poll" && !user && (
+                    <Typography variant='body1' fontWeight={600}>
+                        and Drep key to vote. This is a two step process for security.
+                    </Typography>
+                )}
             </Box>
         </Box>
     );

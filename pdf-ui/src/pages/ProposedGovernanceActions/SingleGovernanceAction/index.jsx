@@ -1730,7 +1730,6 @@ const SingleGovernanceAction = ({ id }) => {
                                                 </Box>
                                             </span>
                                         </Tooltip>
-                                        {/* OVDE */}
                                         <Box
                                             style={{
                                                 display: 'flex',
@@ -1780,7 +1779,7 @@ const SingleGovernanceAction = ({ id }) => {
                                                                                 ? `You already liked this proposal`
                                                                                 : 'Like this proposal\n\nClick to like this proposal'
                                                                             : 'Like this proposal\n\nClick to like this proposal'
-                                                                      : 'Like this proposal\n\nClick to like this proposal'
+                                                                      : 'Verify yourself to like this proposal'
                                                                   : 'Connect wallet to like this proposal'}
                                                         </span>
                                                     }
@@ -1792,6 +1791,14 @@ const SingleGovernanceAction = ({ id }) => {
                                                                     theme
                                                                 ) =>
                                                                     `1px solid ${theme.palette.iconButton.outlineLightColor}`,
+                                                                opacity:
+                                                                    checkShowValidation(
+                                                                        false,
+                                                                        walletAPI,
+                                                                        user
+                                                                    )
+                                                                        ? 0.5
+                                                                        : 1,
                                                             }}
                                                             data-testid='like-button'
                                                             disabled={
@@ -1958,7 +1965,7 @@ const SingleGovernanceAction = ({ id }) => {
                                                                                 ? `You already disliked this proposal`
                                                                                 : 'Dislike this proposal\n\nClick to dislike this proposal'
                                                                             : 'Dislike this proposal\n\nClick to dislike this proposal'
-                                                                      : 'Dislike this proposal\n\nClick to dislike this proposal'
+                                                                      : 'Verify yourself to dislike this proposal'
                                                                   : 'Connect wallet to dislike this proposal'}
                                                         </span>
                                                     }
@@ -1970,6 +1977,14 @@ const SingleGovernanceAction = ({ id }) => {
                                                                     theme
                                                                 ) =>
                                                                     `1px solid ${theme.palette.iconButton.outlineLightColor}`,
+                                                                opacity:
+                                                                    checkShowValidation(
+                                                                        false,
+                                                                        walletAPI,
+                                                                        user
+                                                                    )
+                                                                        ? 0.5
+                                                                        : 1,
                                                             }}
                                                             data-testid='dislike-button'
                                                             disabled={
