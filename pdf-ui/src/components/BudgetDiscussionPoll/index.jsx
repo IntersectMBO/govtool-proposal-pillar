@@ -155,30 +155,30 @@ const BudgetDiscussionPoll = ({
         }
     }, [user, poll]);
 
-    user &&
-        userPollVote &&
-        poll?.attributes?.is_poll_active &&
-        (walletAPI?.voter?.isRegisteredAsDRep ||
-            walletAPI?.voter?.isRegisteredAsSoleVoter) &&
-        jwtData?.dRepID;
+    // user &&
+    //     userPollVote &&
+    //     poll?.attributes?.is_poll_active &&
+    //     (walletAPI?.voter?.isRegisteredAsDRep ||
+    //         walletAPI?.voter?.isRegisteredAsSoleVoter) &&
+    //     jwtData?.dRepID;
 
-    console.log('user', user);
-    console.log('userPollVote', userPollVote);
-    console.log('poll', poll?.attributes?.is_poll_active);
-    console.log('walletAPI', walletAPI?.voter?.isRegisteredAsDRep);
-    console.log('walletAPI', walletAPI?.voter?.isRegisteredAsSoleVoter);
-    console.log('jwtData', jwtData);
-    console.log('jwtData.dRepID', jwtData?.dRepID);
+    // console.log('user', user);
+    // console.log('userPollVote', userPollVote);
+    // console.log('poll', poll?.attributes?.is_poll_active);
+    // console.log('walletAPI', walletAPI?.voter?.isRegisteredAsDRep);
+    // console.log('walletAPI', walletAPI?.voter?.isRegisteredAsSoleVoter);
+    // console.log('jwtData', jwtData);
+    // console.log('jwtData.dRepID', jwtData?.dRepID);
 
-    console.log(
-        'log',
-        user &&
-            userPollVote &&
-            poll?.attributes?.is_poll_active &&
-            (walletAPI?.voter?.isRegisteredAsDRep ||
-                walletAPI?.voter?.isRegisteredAsSoleVoter) &&
-            jwtData?.dRepID
-    );
+    // console.log(
+    //     'log',
+    //     user &&
+    //         userPollVote &&
+    //         poll?.attributes?.is_poll_active &&
+    //         (walletAPI?.voter?.isRegisteredAsDRep ||
+    //             walletAPI?.voter?.isRegisteredAsSoleVoter) &&
+    //         jwtData?.dRepID
+    // );
 
     if (poll) {
         return (
@@ -267,7 +267,11 @@ const BudgetDiscussionPoll = ({
                                                 )}
                                                 drepRequired={true}
                                             />
-                                        ) : (
+                                        ) : 
+
+                                        (walletAPI?.voter?.isRegisteredAsDRep ||
+                                            walletAPI?.voter
+                                        ?.isRegisteredAsSoleVoter)&&(
                                             <Box
                                                 style={{
                                                     display: 'flex',
