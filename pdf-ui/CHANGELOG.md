@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 As a minor extension, we also keep a semantic version for the `UNRELEASED`
 changes.
+
+## [v1.0.3-alfa](https://www.npmjs.com/package/@intersect.mbo/pdf-ui/v/1.0.3-beta) 2025-06-19
+-  Fix Vote link visibility
+
 ## [v1.0.3-alfa](https://www.npmjs.com/package/@intersect.mbo/pdf-ui/v/1.0.3-alfa) 2025-06-19
 -   Fix removed voting button for non drep on budget proposal
 

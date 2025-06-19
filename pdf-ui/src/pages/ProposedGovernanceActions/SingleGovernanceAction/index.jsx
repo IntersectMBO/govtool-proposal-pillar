@@ -1168,7 +1168,8 @@ const SingleGovernanceAction = ({ id }) => {
                                                     )}`}
                                             </Typography>
                                         </Box>
-                                        <Box>
+                                        {proposal?.attributes?.content?.attributes?.prop_submitted &&
+                                        (<Box>
                                             <Link
                                                 variant='outlined'
                                                 data-testid='review-and-vote-link'
@@ -1179,7 +1180,8 @@ const SingleGovernanceAction = ({ id }) => {
                                                 sx={{ cursor: 'pointer' }} 
                                             >Vote</Link>
                                         </Box>
-                                        <Box></Box>
+                                        )
+                                        }
                                     </Box>
                                     <Box
                                         mt={2}
