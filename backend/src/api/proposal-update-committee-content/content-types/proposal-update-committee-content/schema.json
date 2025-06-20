@@ -1,0 +1,32 @@
+{
+  "kind": "collectionType",
+  "collectionName": "proposal_update_committee_contents",
+  "info": {
+    "singularName": "proposal-update-committee-content",
+    "pluralName": "proposal-update-committee-contents",
+    "displayName": "Proposal Update Committee content",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "numerator": {
+      "type": "integer"
+    },
+    "denominator": {
+      "type": "integer"
+    },
+    "add_members": {
+      "type": "component",
+      "repeatable": true,
+      "component": "proposal.committee-member"
+    },
+    "remove_members": {
+      "type": "component",
+      "repeatable": true,
+      "component": "proposal.committee-member"
+    }
+  }
+}

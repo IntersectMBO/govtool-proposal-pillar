@@ -19,7 +19,9 @@ import {
 } from '../../lib/api';
 import { decodeJWT, formatDateWithOffset } from '../../lib/utils';
 import DrepVotersDialog from '../DrepVotersDialog';
-import { add } from 'date-fns';
+import { add, max } from 'date-fns';
+import { checkIfDrepIsSignedIn, checkShowValidation } from '../../lib/helpers';
+import UserValidation from '../UserValidation/UserValidation';
 
 const BudgetDiscussionPoll = ({
     fetchActivePoll = false,
@@ -153,10 +155,35 @@ const BudgetDiscussionPoll = ({
         }
     }, [user, poll]);
 
+    // user &&
+    //     userPollVote &&
+    //     poll?.attributes?.is_poll_active &&
+    //     (walletAPI?.voter?.isRegisteredAsDRep ||
+    //         walletAPI?.voter?.isRegisteredAsSoleVoter) &&
+    //     jwtData?.dRepID;
+
+    // console.log('user', user);
+    // console.log('userPollVote', userPollVote);
+    // console.log('poll', poll?.attributes?.is_poll_active);
+    // console.log('walletAPI', walletAPI?.voter?.isRegisteredAsDRep);
+    // console.log('walletAPI', walletAPI?.voter?.isRegisteredAsSoleVoter);
+    // console.log('jwtData', jwtData);
+    // console.log('jwtData.dRepID', jwtData?.dRepID);
+
+    // console.log(
+    //     'log',
+    //     user &&
+    //         userPollVote &&
+    //         poll?.attributes?.is_poll_active &&
+    //         (walletAPI?.voter?.isRegisteredAsDRep ||
+    //             walletAPI?.voter?.isRegisteredAsSoleVoter) &&
+    //         jwtData?.dRepID
+    // );
+
     if (poll) {
         return (
             <>
-                {user &&
+                {/* {user &&
                 !userPollVote &&
                 (walletAPI?.voter?.isRegisteredAsDRep ||
                     walletAPI?.voter?.isRegisteredAsSoleVoter) &&
@@ -209,38 +236,106 @@ const BudgetDiscussionPoll = ({
                             </Button>
                         </CardContent>
                     </Card>
-                ) : null}
+                ) : null} */}
 
                 <Card data-testid='poll-result-card'>
                     <CardContent
                         sx={{ display: 'flex', flexDirection: 'column' }}
                     >
-                        {proposalAuthorUsername ? (
-                            <Typography variant='body2'>
-                                @{proposalAuthorUsername}
+                        <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+                            <Typography variant='body1' fontWeight={600} my={2}>
+                                Should this proposal be included in the next
+                                Cardano Budget?
                             </Typography>
-                        ) : null}
-                        <Typography
-                            variant='caption'
-                            sx={{
-                                color: (theme) => theme.palette.text.grey,
-                            }}
-                            mt={2}
-                        >
-                            {formatDateWithOffset(
-                                new Date(poll?.attributes?.createdAt),
-                                0,
-                                'dd/MM/yyyy - p',
-                                'UTC'
-                            )}
-                        </Typography>
-                        <Typography variant='body1' fontWeight={600} mt={2}>
-                            Poll Results
-                        </Typography>
-                        <Typography variant='body2' mt={1}>
-                            Do you support this proposal to be included in the
-                            next Cardano Budget?
-                        </Typography>
+                            {!(user &&
+                                userPollVote &&
+                                poll?.attributes?.is_poll_active &&
+                                (walletAPI?.voter?.isRegisteredAsDRep ||
+                                    walletAPI?.voter
+                                        ?.isRegisteredAsSoleVoter) &&
+                                jwtData?.dRepID) && (
+                                    <Box>
+                                        {checkShowValidation(
+                                            true,
+                                            walletAPI,
+                                            user
+                                        ) ? (
+                                            <UserValidation
+                                                type='drep-poll'
+                                                drepCheck={checkIfDrepIsSignedIn(
+                                                    walletAPI
+                                                )}
+                                                drepRequired={true}
+                                            />
+                                        ) : 
+
+                                        (walletAPI?.voter?.isRegisteredAsDRep ||
+                                            walletAPI?.voter
+                                        ?.isRegisteredAsSoleVoter)&&(
+                                            <Box
+                                                style={{
+                                                    display: 'flex',
+                                                    gap: '20px',
+                                                    flexDirection: 'row',
+                                                    alignItems: 'center',
+                                                    maxWidth: '30%',
+                                                }}
+                                            >
+                                                <Button
+                                                    variant='outlined'
+                                                    sx={{ mb: 1, width: '50%' }}
+                                                    onClick={
+                                                        user?.user
+                                                            ?.govtool_username
+                                                            ? () =>
+                                                                  handlePollVote(
+                                                                      {
+                                                                          vote: true,
+                                                                      }
+                                                                  )
+                                                            : () =>
+                                                                  setOpenUsernameModal(
+                                                                      {
+                                                                          open: true,
+                                                                          callBackFn:
+                                                                              () => {},
+                                                                      }
+                                                                  )
+                                                    }
+                                                    data-testid='poll-yes-button'
+                                                >
+                                                    Yes
+                                                </Button>
+                                                <Button
+                                                    sx={{ mb: 1, width: '50%' }}
+                                                    variant='outlined'
+                                                    onClick={
+                                                        user?.user
+                                                            ?.govtool_username
+                                                            ? () =>
+                                                                  handlePollVote(
+                                                                      {
+                                                                          vote: false,
+                                                                      }
+                                                                  )
+                                                            : () =>
+                                                                  setOpenUsernameModal(
+                                                                      {
+                                                                          open: true,
+                                                                          callBackFn:
+                                                                              () => {},
+                                                                      }
+                                                                  )
+                                                    }
+                                                    data-testid='poll-no-button'
+                                                >
+                                                    No
+                                                </Button>
+                                            </Box>
+                                        )}
+                                    </Box>
+                                )}
+                        </Box>
                         <Divider
                             variant='fullWidth'
                             sx={{

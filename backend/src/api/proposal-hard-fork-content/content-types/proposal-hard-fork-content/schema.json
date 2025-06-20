@@ -1,0 +1,28 @@
+{
+  "kind": "collectionType",
+  "collectionName": "proposal_hard_fork_contents",
+  "info": {
+    "singularName": "proposal-hard-fork-content",
+    "pluralName": "proposal-hard-fork-contents",
+    "displayName": "Proposal Hard Fork content",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "previous_ga_hash": {
+      "type": "string"
+    },
+    "previous_ga_id": {
+      "type": "string"
+    },
+    "major": {
+      "type": "string"
+    },
+    "minor": {
+      "type": "string"
+    }
+  }
+}
