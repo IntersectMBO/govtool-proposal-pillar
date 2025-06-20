@@ -334,7 +334,7 @@ const ProposalCard = ({
                                         proposal?.attributes?.content
                                             ?.attributes?.prop_abstract || ''
                                     }
-                                    testId={`abstract-content`}
+                                    testId={`proposal-${proposal?.id}-abstract-content`}
                                 />
                             </div>
 

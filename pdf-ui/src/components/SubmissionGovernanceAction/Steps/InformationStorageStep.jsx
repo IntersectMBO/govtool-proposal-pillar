@@ -161,7 +161,18 @@ const InformationStorageStep = ({ proposal, handleCloseSubmissionDialog }) => {
                             url: fileURL,
                         });
                 }
-
+                else if(parseInt(proposalGATypeId) === 6)
+                { ///Hard Fork Initiation
+                    govActionBuilder =
+                        await walletAPI.buildHardForkInitiationGovernanceActions({
+                            prevGovernanceActionHash: proposal?.attributes?.content?.attributes?.proposal_hard_fork_content.previous_ga_hash,
+                            prevGovernanceActionIndex: proposal?.attributes?.content?.attributes?.proposal_hard_fork_content.previous_ga_id,
+                            major: proposal?.attributes?.content?.attributes?.proposal_hard_fork_content.major,
+                            minor: proposal?.attributes?.content?.attributes?.proposal_hard_fork_content.minor,
+                            hash: hashData,
+                            url: fileURL,
+                        });
+                }
 
                 if (govActionBuilder) {
                     const tx = await walletAPI.buildSignSubmitConwayCertTx({

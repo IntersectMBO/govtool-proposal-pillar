@@ -588,3 +588,14 @@ export const getChallenge = async ({ query = '' }) => {
         throw error;
     }
 };
+
+export const getHardForkData = async () => {
+    try {
+        const data = await axiosInstance.get(
+            '/api/proxy/govtool/proposal/enacted-details?type=HardForkInitiation'
+        );
+        return data.data;
+    } catch (error) {
+        throw error;
+    }
+};

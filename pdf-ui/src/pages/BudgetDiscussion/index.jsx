@@ -36,11 +36,19 @@ import {
     SearchInput,
 } from '../../components';
 import { useAppContext } from '../../context/context';
-import { loginUserToApp } from '../../lib/helpers';
+import {
+    checkIfDrepIsSignedIn,
+    checkShowValidation,
+    loginUserToApp,
+} from '../../lib/helpers';
 import { useLocation } from 'react-router-dom';
 import { ScrollToTop, useDebounce } from '../../lib/hooks';
+import UserValidation from '../../components/UserValidation/UserValidation';
 
-let proposalsOwnersList = [{ id: 'all-proposals', label: 'All Proposals' }];
+let proposalsOwnersList = [
+    { id: 'all-proposals', label: 'All Proposals', disabled: false },
+    { id: 'my-proposals', label: 'My Proposals', disabled: true },
+];
 let sortOptions = [
     { fieldId: 'createdAt', type: 'DESC', title: 'Newest' },
     { fieldId: 'createdAt', type: 'ASC', title: 'Oldest' },
@@ -224,20 +232,28 @@ const ProposedBudgetDiscussion = () => {
     const showNoProposals = allEmptyMatchBudget || allFilteredAreEmpty;
 
     useEffect(() => {
+        console.log(proposalsOwnersList);
         if (user?.user?.id) {
-            if (proposalsOwnersList?.find((f) => f?.id === 'my-proposals'))
+            const myProposals = proposalsOwnersList?.find(
+                (f) => f?.id === 'my-proposals'
+            );
+            if (myProposals) {
+                myProposals.disabled = false;
                 return;
+            }
             proposalsOwnersList?.push({
                 id: 'my-proposals',
                 label: 'My Proposals',
+                disabled: false,
             });
-        } else {
-            if (proposalsOwnersList?.find((f) => f?.id === 'my-proposals')) {
-                proposalsOwnersList = proposalsOwnersList.filter(
-                    (f) => f?.id === 'my-proposals'
-                );
-            }
         }
+        // else {
+        //     if (proposalsOwnersList?.find((f) => f?.id === 'my-proposals')) {
+        //         proposalsOwnersList = proposalsOwnersList.filter(
+        //             (f) => f?.id === 'my-proposals'
+        //         );
+        //     }
+        // }
     }, [user?.user?.id]);
 
     return (
@@ -281,10 +297,26 @@ const ProposedBudgetDiscussion = () => {
                             </Grid>
                         )}
 
-                        {walletAPI && (
-                            <Grid item xs={12} paddingBottom={2}>
+                        <Grid item xs={12} paddingBottom={2}>
+                            <Box
+                                style={{
+                                    display: 'flex',
+                                    flexDirection: 'row',
+                                    alignItems: 'center',
+                                    gap: '8px',
+                                }}
+                            >
                                 <Button
                                     variant='contained'
+                                    style={{
+                                        maxHeight: '40px',
+                                        maxWidth: '350px',
+                                    }}
+                                    disabled={checkShowValidation(
+                                        false,
+                                        walletAPI,
+                                        user
+                                    )}
                                     onClick={async () =>
                                         await loginUserToApp({
                                             wallet: walletAPI,
@@ -300,13 +332,26 @@ const ProposedBudgetDiscussion = () => {
                                                 addChangesSavedAlert,
                                         })
                                     }
-                                    startIcon={<IconPlusCircle fill='white' />}
+                                    // startIcon={<IconPlusCircle fill='white' />}
                                     data-testid='propose-a-budget-discussion-button'
                                 >
                                     Submit proposal for Cardano budget
                                 </Button>
-                            </Grid>
-                        )}
+                                {checkShowValidation(
+                                    false,
+                                    walletAPI,
+                                    user
+                                ) && (
+                                    <UserValidation
+                                        type='budget-proposal'
+                                        drepCheck={checkIfDrepIsSignedIn(
+                                            walletAPI
+                                        )}
+                                        drepRequired={false}
+                                    />
+                                )}
+                            </Box>
+                        </Grid>
 
                         <Grid item md={6} sx={{ flexGrow: { xs: 1 } }}>
                             <SearchInput
@@ -519,6 +564,9 @@ const ProposedBudgetDiscussion = () => {
                                                                 checked={
                                                                     proposalsOwnerFilter?.id ===
                                                                     ga?.id
+                                                                }
+                                                                disabled={
+                                                                    ga?.disabled
                                                                 }
                                                             />
                                                         }

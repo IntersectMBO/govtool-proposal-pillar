@@ -370,7 +370,6 @@ const MarkdownTypography = ({ content, testId, onLinkClick }) => {
 
         // Change special symbols
         text = symbolReplacements(text);
-
         return text;
     };
 
@@ -389,7 +388,7 @@ const MarkdownTypography = ({ content, testId, onLinkClick }) => {
                 }
             });
         });
-    }, []);
+    }, [processedContent]);
 
     return (
         <div data-testid={testId}>

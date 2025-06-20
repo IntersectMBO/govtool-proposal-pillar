@@ -43,6 +43,8 @@ const WithdrawalsManager = ({
                 },
             }));
             }
+            // To DO add validation for registered stake address
+            
             if (field === 'prop_amount') {
                 const validationResult = numberValidation(value);
                 setWithdrawalsErrors((prev) => ({
