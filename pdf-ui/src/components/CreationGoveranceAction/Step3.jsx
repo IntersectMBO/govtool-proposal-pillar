@@ -80,7 +80,6 @@ const Step3 = ({
                             Review Your Submission
                         </Typography>
                     </Box>
-
                     <Typography
                         variant='h5'
                         gutterBottom
@@ -88,7 +87,6 @@ const Step3 = ({
                     >
                         {proposalData?.prop_name}
                     </Typography>
-
                     <Box>
                         <Typography
                             variant='body1'
@@ -111,7 +109,6 @@ const Step3 = ({
                             }
                         </Typography>
                     </Box>
-
                     <Box>
                         <Typography
                             variant='body1'
@@ -145,7 +142,6 @@ const Step3 = ({
                             {proposalData?.prop_abstract || ''}
                         </ReactMarkdown> */}
                     </Box>
-
                     <Box>
                         <Typography
                             variant='body1'
@@ -180,7 +176,6 @@ const Step3 = ({
                             {proposalData?.prop_motivation || ''}
                         </ReactMarkdown> */}
                     </Box>
-
                     <Box>
                         <Typography
                             variant='body1'
@@ -313,6 +308,88 @@ const Step3 = ({
                             )}
                         </Box>
                     ) : null}
+                    {selectedGATypeId == 6 ? (
+                        <>
+                            <Box>
+                                <Typography
+                                    variant='body1'
+                                    color={theme.palette.text.grey}
+                                    gutterBottom
+                                >
+                                    Previous Gov Action Hash
+                                </Typography>
+                                <Typography
+                                    variant='body1'
+                                    gutterBottom
+                                    data-testid='previous-ga-hash-content'
+                                >
+                                    {
+                                        proposalData?.proposal_hard_fork_content
+                                            ?.previous_ga_hash
+                                    }
+                                </Typography>
+                            </Box>
+                            <Box>
+                                <Typography
+                                    variant='body1'
+                                    color={theme.palette.text.grey}
+                                    gutterBottom
+                                >
+                                    Previous Gov Action ID
+                                </Typography>
+                                <Typography
+                                    variant='body1'
+                                    gutterBottom
+                                    data-testid='previous-ga-id-content'
+                                >
+                                    {
+                                        proposalData?.proposal_hard_fork_content
+                                            ?.previous_ga_id
+                                    }
+                                </Typography>
+                            </Box>
+
+                            <Box>
+                                <Typography
+                                    variant='body1'
+                                    color={theme.palette.text.grey}
+                                    gutterBottom
+                                >
+                                    Major version
+                                </Typography>
+                                <Typography
+                                    variant='body1'
+                                    gutterBottom
+                                    data-testid='major-version-content'
+                                >
+                                    {
+                                        proposalData?.proposal_hard_fork_content
+                                            ?.major
+                                    }
+                                </Typography>
+                            </Box>
+                            <Box>
+                                <Typography
+                                    variant='body1'
+                                    color={theme.palette.text.grey}
+                                    gutterBottom
+                                >
+                                    Minor version
+                                </Typography>
+                                <Typography
+                                    variant='body1'
+                                    gutterBottom
+                                    data-testid='minor-version-content'
+                                >
+                                    {
+                                        proposalData?.proposal_hard_fork_content
+                                            ?.minor
+                                    }
+                                </Typography>
+                            </Box>
+                        </>
+                    ) : null}
+
                     {proposalData?.proposal_links?.length > 0 && (
                         <Box>
                             <Typography

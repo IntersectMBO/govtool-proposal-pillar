@@ -28,15 +28,22 @@ import {
     Chip,
 } from '@mui/material';
 import Subcomponent from './Subcomponent';
-import { isCommentRestricted } from '../../lib/helpers';
+import {
+    checkIfDrepIsSignedIn,
+    checkShowValidation,
+    isCommentRestricted,
+} from '../../lib/helpers';
 import UsernameSection from './UsernameSection';
 import MarkdownTypography from '../../lib/markdownRenderer';
+import UserValidation from '../UserValidation/UserValidation';
 
 const CommentCard = ({
     comment,
     proposal,
     fetchComments,
     setRefetchProposal,
+    checkShowComments,
+    drepCheck,
 }) => {
     const {
         setLoading,
@@ -125,7 +132,9 @@ const CommentCard = ({
             loadSubComments(1);
             setCommentHasReplays(true);
             setShowReply(false);
-            setRefetchProposal(true);
+            if (!newComment?.data?.attributes?.comment_parent_id) {
+                setRefetchProposal(true);
+            }
             addSuccessAlert('Commented successfully');
         } catch (error) {
             addErrorAlert('Failed to comment');
@@ -498,34 +507,58 @@ const CommentCard = ({
                             </Box>
                             {proposal?.attributes?.content?.attributes
                                 ?.prop_submitted ? null : (
-                                <Button
-                                    variant='outlined'
-                                    startIcon={
-                                        showReply ? (
-                                            <IconMinus
-                                                fill={
-                                                    theme.palette.primary.main
-                                                }
-                                            />
-                                        ) : (
-                                            <IconPlus
-                                                fill={
-                                                    theme.palette.primary.main
-                                                }
-                                            />
-                                        )
-                                    }
-                                    onClick={() =>
-                                        setShowReply((prev) => !prev)
-                                    }
-                                    data-testid='reply-button'
-                                >
-                                    {showReply ? 'Cancel' : 'Reply'}
-                                </Button>
+                                <Box display='flex' gap={2}>
+                                    {checkShowValidation(
+                                        true,
+                                        walletAPI,
+                                        user
+                                    ) && (
+                                        <UserValidation
+                                            type='comment'
+                                            drepCheck={checkIfDrepIsSignedIn(
+                                                walletAPI
+                                            )}
+                                            drepRequired={true}
+                                        />
+                                    )}
+                                    <Button
+                                        variant='outlined'
+                                        startIcon={
+                                            showReply ? (
+                                                <IconMinus
+                                                    fill={
+                                                        theme.palette.primary
+                                                            .main
+                                                    }
+                                                />
+                                            ) : (
+                                                <IconPlus
+                                                    fill={
+                                                        theme.palette.primary
+                                                            .main
+                                                    }
+                                                />
+                                            )
+                                        }
+                                        onClick={() =>
+                                            setShowReply((prev) => !prev)
+                                        }
+                                        data-testid='reply-button'
+                                        disabled={
+                                            checkShowValidation(
+                                                true,
+                                                walletAPI,
+                                                user
+                                            )
+                                        }
+                                    >
+                                        {showReply ? 'Cancel' : 'Reply'}
+                                    </Button>
+                                </Box>
                             )}
                         </Box>
 
-                        {showReply && (
+                        {showReply ? (
                             <Box>
                                 <TextField
                                     fullWidth
@@ -615,7 +648,7 @@ const CommentCard = ({
                                     </Button>
                                 </Box>
                             </Box>
-                        )}
+                        ) : null}
 
                         {showSubcomments &&
                             subcommnetsList?.map((subcomment, index) => (

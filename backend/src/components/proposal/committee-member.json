@@ -1,0 +1,16 @@
+{
+  "collectionName": "components_proposal_committee_members",
+  "info": {
+    "displayName": "Committee_member",
+    "description": ""
+  },
+  "options": {},
+  "attributes": {
+    "address_hash": {
+      "type": "string"
+    },
+    "epoch": {
+      "type": "integer"
+    }
+  }
+}

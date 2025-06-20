@@ -20,6 +20,7 @@ import {
     CardHeader,
     Grid,
     IconButton,
+    List,
     Menu,
     MenuItem,
     Stack,
@@ -27,6 +28,7 @@ import {
     Tooltip,
     Typography,
     alpha,
+    Link,
 } from '@mui/material';
 import { useEffect, useState, useRef } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
@@ -48,12 +50,18 @@ import {
 } from '../../../lib/api';
 import {
     correctVoteAdaFormat,
+    decodeJWT,
     formatIsoDate,
     openInNewTab,
 } from '../../../lib/utils';
 import ProposalOwnModal from '../../../components/ProposalOwnModal';
 import BudgetDiscussionReviewVersions from '../../../components/BudgetDiscussionReviewVersions';
 import { useScrollToHashSection } from '../../../lib/hooks';
+import UserValidation from '../../../components/UserValidation/UserValidation';
+import {
+    checkIfDrepIsSignedIn,
+    checkShowValidation,
+} from '../../../lib/helpers';
 
 const SECTIONS = [
     'problem-statement',
@@ -233,10 +241,8 @@ const SingleBudgetDiscussion = ({ id }) => {
             if (!response) return;
 
             setProposal(response);
-        }catch (error) {
-            if (
-                error?.response?.data?.error?.message ===
-                    'Not Found' ) {
+        } catch (error) {
+            if (error?.response?.data?.error?.message === 'Not Found') {
                 return navigate('/budget_discussion');
             }
         } finally {
@@ -870,7 +876,7 @@ const SingleBudgetDiscussion = ({ id }) => {
                                         mt={2}
                                         display='flex'
                                         alignItems='center'
-                                        justifyContent='space-between'
+                                        gap={2}
                                     >
                                         <Typography
                                             variant='caption'
@@ -884,7 +890,7 @@ const SingleBudgetDiscussion = ({ id }) => {
                                             )}`}
                                         </Typography>
                                         <Box>
-                                            <Button
+                                            <Link
                                                 variant='outlined'
                                                 startIcon={
                                                     <IconLink
@@ -900,9 +906,10 @@ const SingleBudgetDiscussion = ({ id }) => {
                                                     handleOpenReviewVersions()
                                                 }
                                                 data-testid='review-version'
+                                                sx={{ cursor: 'pointer' }} 
                                             >
                                                 Review Versions
-                                            </Button>
+                                            </Link>
                                             <BudgetDiscussionReviewVersions
                                                 open={reviewVersionsOpen}
                                                 onClose={
@@ -1845,6 +1852,35 @@ const SingleBudgetDiscussion = ({ id }) => {
                             justifyContent='space-between'
                         >
                             <Typography variant='h4' component='h3'>
+                                Poll of DRep sentiment
+                            </Typography>
+                        </Box>
+
+                        {activePoll &&
+                            proposal?.attributes?.submitted_for_vote ===
+                                null && (
+                                <Box mt={4}>
+                                    <BudgetDiscussionPoll
+                                        proposalUserId={
+                                            proposal?.attributes?.creator?.data
+                                                ?.id
+                                        }
+                                        proposalAuthorUsername={
+                                            proposal?.attributes
+                                                ?.user_govtool_username
+                                        }
+                                        poll={activePoll}
+                                        fetchActivePoll={fetchActivePoll}
+                                    />
+                                </Box>
+                            )}
+                        <Box
+                            mt={4}
+                            display='flex'
+                            alignItems='center'
+                            justifyContent='space-between'
+                        >
+                            <Typography variant='h4' component='h3'>
                                 Comments
                             </Typography>
 
@@ -1870,26 +1906,6 @@ const SingleBudgetDiscussion = ({ id }) => {
                                 />
                             </IconButton>
                         </Box>
-
-                        {activePoll &&
-                            proposal?.attributes?.submitted_for_vote ===
-                                null && (
-                                <Box mt={4}>
-                                    <BudgetDiscussionPoll
-                                        proposalUserId={
-                                            proposal?.attributes?.creator?.data
-                                                ?.id
-                                        }
-                                        proposalAuthorUsername={
-                                            proposal?.attributes
-                                                ?.user_govtool_username
-                                        }
-                                        poll={activePoll}
-                                        fetchActivePoll={fetchActivePoll}
-                                    />
-                                </Box>
-                            )}
-
                         {proposal?.attributes?.content?.attributes
                             ?.prop_submitted ? null : (
                             <Box mt={4}>
@@ -1941,7 +1957,15 @@ const SingleBudgetDiscussion = ({ id }) => {
                                         <Box
                                             mt={2}
                                             display='flex'
-                                            justifyContent={'flex-end'}
+                                            justifyContent={
+                                                !checkShowValidation(
+                                                    true,
+                                                    walletAPI,
+                                                    user
+                                                )
+                                                    ? 'flex-end'
+                                                    : 'space-between'
+                                            }
                                             flexDirection={{
                                                 xs: 'column',
                                                 sm: 'row',
@@ -1949,6 +1973,19 @@ const SingleBudgetDiscussion = ({ id }) => {
                                             gap={2}
                                             ref={targetRef}
                                         >
+                                            {checkShowValidation(
+                                                true,
+                                                walletAPI,
+                                                user
+                                            ) && (
+                                                <UserValidation
+                                                    type='budget'
+                                                    drepCheck={checkIfDrepIsSignedIn(
+                                                        walletAPI
+                                                    )}
+                                                    drepRequired={true}
+                                                />
+                                            )}
                                             <Button
                                                 variant='contained'
                                                 onClick={() =>
@@ -1962,7 +1999,11 @@ const SingleBudgetDiscussion = ({ id }) => {
                                                 }
                                                 disabled={
                                                     !newCommentText ||
-                                                    !walletAPI?.address
+                                                    checkShowValidation(
+                                                        true,
+                                                        walletAPI,
+                                                        user
+                                                    )
                                                 }
                                                 endIcon={
                                                     <IconReply
@@ -2027,6 +2068,13 @@ const SingleBudgetDiscussion = ({ id }) => {
                                     proposal={proposal}
                                     fetchComments={fetchComments}
                                     setRefetchProposal={setRefetchProposal}
+                                    checkShowComments={checkShowValidation(
+                                        false,
+                                        walletAPI,
+                                        user
+                                    )}
+                                    drepCheck={checkIfDrepIsSignedIn(walletAPI)}
+                                    user={user}
                                 />
                             </Box>
                         ))}
