@@ -43,7 +43,7 @@ const ProposalsList = ({
     const [pageCount, setPageCount] = useState(0);
     const [currentPage, setCurrentPage] = useState(1);
     const [mounted, setMounted] = useState(false);
-    const debouncedSearchValue = useDebounce(searchText.trim());
+    // const debouncedSearchValue = useDebounce(searchText.trim());
     const [shouldRefresh, setShouldRefresh] = useState(false);
     const isXs = useMediaQuery(theme.breakpoints.only('xs'));
     const isSm = useMediaQuery(theme.breakpoints.only('sm'));
@@ -69,6 +69,7 @@ const ProposalsList = ({
     ));
 
     const fetchProposals = async (reset = true, page) => {
+        console.log('Fetching proposals');
         const haveSubmittedFilter = statusList?.some(
             (filter) => filter === 'submitted'
         );
@@ -87,14 +88,14 @@ const ProposalsList = ({
                     query = `filters[$and][0][gov_action_type_id]=${
                         governanceAction?.id
                     }&filters[$and][1][prop_name][$containsi]=${
-                        debouncedSearchValue || ''
+                        searchText || ''
                     }&pagination[page]=${page}&pagination[pageSize]=25&sort[${sortType.fieldId}]=${sortType.type}&populate[0]=proposal_links&populate[1]=proposal_withdrawals&populate[2]=proposal_constitution_content&populate[3]=proposal`;
                 } else {
                     const isSubmitted = haveSubmittedFilter ? 'true' : 'false';
                     query = `filters[$and][0][gov_action_type_id]=${
                         governanceAction?.id
                     }&filters[$and][1][prop_name][$containsi]=${
-                        debouncedSearchValue || ''
+                        searchText || ''
                     }&filters[$and][2][prop_submitted]=${isSubmitted}&pagination[page]=${page}&pagination[pageSize]=25&sort[${sortType.fieldId}]=${sortType.type}&populate[0]=proposal_links&populate[1]=proposal_withdrawals&populate[2]=proposal_constitution_content&populate[3]=proposal`;
                 }
             }
@@ -128,7 +129,8 @@ const ProposalsList = ({
         }
     }, [
         mounted,
-        debouncedSearchValue,
+        // debouncedSearchValue,
+        searchText,
         sortTypeString,
         isDraft ? null : statusListString,
         showAllActivated,
