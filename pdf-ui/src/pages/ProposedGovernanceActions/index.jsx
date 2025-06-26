@@ -26,10 +26,18 @@ import {
     Divider,
 } from '@mui/material';
 import { useEffect, useState } from 'react';
-import { ProposalsList, CreateGovernanceActionDialog } from '../../components';
+import {
+    ProposalsList,
+    CreateGovernanceActionDialog,
+    SearchInput,
+} from '../../components';
 import { getGovernanceActionTypes } from '../../lib/api';
 import { useAppContext } from '../../context/context';
-import { checkIfDrepIsSignedIn, checkShowValidation, loginUserToApp } from '../../lib/helpers';
+import {
+    checkIfDrepIsSignedIn,
+    checkShowValidation,
+    loginUserToApp,
+} from '../../lib/helpers';
 import { useLocation } from 'react-router-dom';
 import { decodeJWT } from '../../lib/utils';
 import UserValidation from '../../components/UserValidation/UserValidation';
@@ -259,13 +267,11 @@ const ProposedGovernanceActions = () => {
                             >
                                 <Button
                                     variant='contained'
-                                    disabled={
-                                        checkShowValidation(
-                                            false,
-                                            walletAPI,
-                                            user
-                                        )
-                                    }
+                                    disabled={checkShowValidation(
+                                        false,
+                                        walletAPI,
+                                        user
+                                    )}
                                     onClick={async () =>
                                         await loginUserToApp({
                                             wallet: walletAPI,
@@ -303,15 +309,22 @@ const ProposedGovernanceActions = () => {
                         </Grid>
 
                         <Grid item md={6} sx={{ flexGrow: { xs: 1 } }}>
-                            <TextField
+                            <SearchInput
+                                onDebouncedChange={
+                                    setProposalSearchText
+                                }
+                                placeholder='Search...'
+                            />
+                            {/* <TextField
                                 fullWidth
                                 id='outlined-basic'
                                 placeholder='Search...'
                                 variant='outlined'
                                 value={proposalSearchText || ''}
-                                onChange={(e) =>
-                                    setProposalSearchText(e.target.value)
-                                }
+                                onChange={(e) => {
+                                    console.log(e.target.value);
+                                    setProposalSearchText(e.target.value);
+                                }}
                                 InputProps={{
                                     startAdornment: (
                                         <InputAdornment position='start'>
@@ -342,7 +355,7 @@ const ProposedGovernanceActions = () => {
                                         },
                                     },
                                 }}
-                            />
+                            /> */}
                         </Grid>
                         <Grid item>
                             <Box gap={1} display={'flex'}>
