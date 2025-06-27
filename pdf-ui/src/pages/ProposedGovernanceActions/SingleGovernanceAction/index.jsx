@@ -745,54 +745,7 @@ const SingleGovernanceAction = ({ id }) => {
                                             xs={2}
                                             display='flex'
                                             justifyContent='flex-end'
-                                        > 
-                                            <Box>
-                                                {user &&
-                                                proposal?.attributes?.content?.attributes?.prop_submitted === false &&
-                                                //proposal?.attributes?.prop_submitted &&
-                                                user?.user?.id?.toString() ===
-                                                    proposal?.attributes?.user_id?.toString() ? (
-                                                    <Button
-                                                        variant='outlined'
-                                                        data-testid='submit-as-GA-button'
-                                                        sx={{
-                                                            width: 'max-content', 
-                                                        }}
-                                                        onClick={async () => {
-                                                            const balance =
-                                                                await fetchCurrentWalletBalance();
-                                                            if (
-                                                                balance >= 10.18
-                                                            ) {
-                                                                await loginUserToApp(
-                                                                    {
-                                                                        wallet: walletAPI,
-                                                                        setUser,
-                                                                        setOpenUsernameModal,
-                                                                        callBackFn:
-                                                                            () => {
-                                                                                setOpenGASubmissionDialog(
-                                                                                    true
-                                                                                );
-                                                                            },
-                                                                        clearStates,
-                                                                        addErrorAlert,
-                                                                        addSuccessAlert,
-                                                                        addChangesSavedAlert,
-                                                                    }
-                                                                );
-                                                            } else {
-                                                                setOpenAlertDialog(
-                                                                    true
-                                                                );
-                                                            }
-                                                        }}
-                                                    >
-                                                        Submit as Governance
-                                                        Action
-                                                    </Button>
-                                                ) : null}
-                                            </Box>
+                                        >
                                             {/* SHARE BUTTON */}
 
                                             <Tooltip
@@ -1138,6 +1091,27 @@ const SingleGovernanceAction = ({ id }) => {
                                             }
                                         </Typography>
                                     </Box>
+                                    {proposal?.attributes?.content?.attributes
+                                        ?.prop_submitted && (
+                                        <Box mt={2}>
+                                            <Typography
+                                                variant='caption'
+                                                sx={{
+                                                    color: (theme) =>
+                                                        theme?.palette?.text
+                                                            ?.grey,
+                                                }}
+                                            >
+                                                Proposed on:
+                                            </Typography>
+                                            <Typography>
+                                                {formatIsoDate(
+                                                    proposal?.attributes
+                                                        ?.createdAt
+                                                )}
+                                            </Typography>
+                                        </Box>
+                                    )}
                                     <Box
                                         mt={2}
                                         display='flex'
@@ -1150,7 +1124,8 @@ const SingleGovernanceAction = ({ id }) => {
                                                 variant='caption'
                                                 sx={{
                                                     color: (theme) =>
-                                                        theme?.palette?.text?.grey,
+                                                        theme?.palette?.text
+                                                            ?.grey,
                                                 }}
                                             >
                                                 {proposal?.attributes?.content
@@ -1158,30 +1133,95 @@ const SingleGovernanceAction = ({ id }) => {
                                                     ? `Submitted on:`
                                                     : `Proposed on:`}
                                             </Typography>
-                                            <Typography>
-                                                {proposal?.attributes?.content
-                                                    ?.attributes?.prop_submitted
-                                                    ? `${formatIsoDate(proposal?.attributes?.content?.attributes?.prop_submission_date)}`
-                                                    : `${formatIsoDate(
-                                                        proposal?.attributes
-                                                            ?.createdAt
-                                                    )}`}
-                                            </Typography>
+                                            <Box
+                                                style={{
+                                                    display: 'flex',
+                                                    alignItems: 'center',
+                                                    gap: '8px',
+                                                }}
+                                            >
+                                                <Typography>
+                                                    {proposal?.attributes
+                                                        ?.content?.attributes
+                                                        ?.prop_submitted
+                                                        ? `${formatIsoDate(proposal?.attributes?.content?.attributes?.prop_submission_date)}`
+                                                        : `${formatIsoDate(
+                                                              proposal
+                                                                  ?.attributes
+                                                                  ?.createdAt
+                                                          )}`}
+                                                </Typography>
+                                                <Box>
+                                                    {user &&
+                                                    proposal?.attributes
+                                                        ?.content?.attributes
+                                                        ?.prop_submitted ===
+                                                        false &&
+                                                    //proposal?.attributes?.prop_submitted &&
+                                                    user?.user?.id?.toString() ===
+                                                        proposal?.attributes?.user_id?.toString() ? (
+                                                        <Link
+                                                            variant='outlined'
+                                                            data-testid='submit-as-GA-button'
+                                                            sx={{
+                                                                width: 'max-content',
+                                                            }}
+                                                            onClick={async () => {
+                                                                const balance =
+                                                                    await fetchCurrentWalletBalance();
+                                                                if (
+                                                                    balance >=
+                                                                    10.18
+                                                                ) {
+                                                                    await loginUserToApp(
+                                                                        {
+                                                                            wallet: walletAPI,
+                                                                            setUser,
+                                                                            setOpenUsernameModal,
+                                                                            callBackFn:
+                                                                                () => {
+                                                                                    setOpenGASubmissionDialog(
+                                                                                        true
+                                                                                    );
+                                                                                },
+                                                                            clearStates,
+                                                                            addErrorAlert,
+                                                                            addSuccessAlert,
+                                                                            addChangesSavedAlert,
+                                                                        }
+                                                                    );
+                                                                } else {
+                                                                    setOpenAlertDialog(
+                                                                        true
+                                                                    );
+                                                                }
+                                                            }}
+                                                        >
+                                                            Submit as Governance
+                                                            Action
+                                                        </Link>
+                                                    ) : null}
+                                                </Box>
+                                            </Box>
                                         </Box>
-                                        {proposal?.attributes?.content?.attributes?.prop_submitted &&
-                                        (<Box>
-                                            <Link
-                                                variant='outlined'
-                                                data-testid='review-and-vote-link'
-                                                        onClick={() =>
-                                                            navigate(
-                                                               `/connected/governance_actions/${proposal?.attributes?.content?.attributes?.prop_submission_tx_hash}#0`
-                                                            )}
-                                                sx={{ cursor: 'pointer' }} 
-                                            >Vote</Link>
-                                        </Box>
-                                        )
-                                        }
+
+                                        {proposal?.attributes?.content
+                                            ?.attributes?.prop_submitted && (
+                                            <Box>
+                                                <Link
+                                                    variant='outlined'
+                                                    data-testid='review-and-vote-link'
+                                                    onClick={() =>
+                                                        navigate(
+                                                            `/connected/governance_actions/${proposal?.attributes?.content?.attributes?.prop_submission_tx_hash}#0`
+                                                        )
+                                                    }
+                                                    sx={{ cursor: 'pointer' }}
+                                                >
+                                                    Vote
+                                                </Link>
+                                            </Box>
+                                        )}
                                     </Box>
                                     <Box
                                         mt={2}
@@ -1227,7 +1267,7 @@ const SingleGovernanceAction = ({ id }) => {
                                                     handleOpenReviewVersions()
                                                 }
                                                 data-testid='review-version'
-                                                sx={{ cursor: 'pointer' }} 
+                                                sx={{ cursor: 'pointer' }}
                                             >
                                                 Review Versions
                                             </Link>
