@@ -1091,6 +1091,27 @@ const SingleGovernanceAction = ({ id }) => {
                                             }
                                         </Typography>
                                     </Box>
+                                    {proposal?.attributes?.content?.attributes
+                                        ?.prop_submitted && (
+                                        <Box mt={2}>
+                                            <Typography
+                                                variant='caption'
+                                                sx={{
+                                                    color: (theme) =>
+                                                        theme?.palette?.text
+                                                            ?.grey,
+                                                }}
+                                            >
+                                                Proposed on:
+                                            </Typography>
+                                            <Typography>
+                                                {formatIsoDate(
+                                                    proposal?.attributes
+                                                        ?.createdAt
+                                                )}
+                                            </Typography>
+                                        </Box>
+                                    )}
                                     <Box
                                         mt={2}
                                         display='flex'
