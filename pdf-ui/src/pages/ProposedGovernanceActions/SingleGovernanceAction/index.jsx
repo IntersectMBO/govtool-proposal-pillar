@@ -1137,7 +1137,7 @@ const SingleGovernanceAction = ({ id }) => {
                                                 style={{
                                                     display: 'flex',
                                                     alignItems: 'center',
-                                                    gap: '8px',
+                                                    gap: '16px',
                                                 }}
                                             >
                                                 <Typography>
@@ -1171,7 +1171,7 @@ const SingleGovernanceAction = ({ id }) => {
                                                                     await fetchCurrentWalletBalance();
                                                                 if (
                                                                     balance >=
-                                                                    10.18
+                                                                    100000.18
                                                                 ) {
                                                                     await loginUserToApp(
                                                                         {
@@ -1253,16 +1253,16 @@ const SingleGovernanceAction = ({ id }) => {
                                         <Box>
                                             <Link
                                                 variant='outlined'
-                                                startIcon={
-                                                    <IconLink
-                                                        fill={
-                                                            theme.palette
-                                                                .primary.main
-                                                        }
-                                                        width='18'
-                                                        height='18'
-                                                    />
-                                                }
+                                                // startIcon={
+                                                //     <IconLink
+                                                //         fill={
+                                                //             theme.palette
+                                                //                 .primary.main
+                                                //         }
+                                                //         width='18'
+                                                //         height='18'
+                                                //     />
+                                                // }
                                                 onClick={() =>
                                                     handleOpenReviewVersions()
                                                 }
