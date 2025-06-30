@@ -1138,7 +1138,9 @@ const SingleGovernanceAction = ({ id }) => {
                                                 }}
                                                 gap={2}
                                             >
-                                                <Typography>
+                                                <Typography
+                                                    style={{ width: '105px' }}
+                                                >
                                                     {proposal?.attributes
                                                         ?.content?.attributes
                                                         ?.prop_submitted
@@ -1205,8 +1207,8 @@ const SingleGovernanceAction = ({ id }) => {
                                         </Box>
 
                                         {proposal?.attributes?.content
-                                            ?.attributes?.prop_submitted && (
-                                            <Box>
+                                            ?.attributes?.prop_submitted ? (
+                                            <Box gap={2}>
                                                 <Link
                                                     variant='outlined'
                                                     data-testid='review-and-vote-link'
@@ -1215,12 +1217,15 @@ const SingleGovernanceAction = ({ id }) => {
                                                             `/connected/governance_actions/${proposal?.attributes?.content?.attributes?.prop_submission_tx_hash}#0`
                                                         )
                                                     }
-                                                    sx={{ cursor: 'pointer' }}
+                                                    sx={{
+                                                        width: 'max-content',
+                                                        cursor: 'pointer',
+                                                    }}
                                                 >
                                                     Vote
                                                 </Link>
                                             </Box>
-                                        )}
+                                        ) : null}
                                     </Box>
                                     <Box
                                         mt={2}
@@ -1229,7 +1234,6 @@ const SingleGovernanceAction = ({ id }) => {
                                         gap={2}
                                     >
                                         <Box>
-                                            {' '}
                                             <Typography
                                                 variant='caption'
                                                 sx={{
@@ -1240,7 +1244,9 @@ const SingleGovernanceAction = ({ id }) => {
                                             >
                                                 Last Edit:
                                             </Typography>
-                                            <Typography>
+                                            <Typography
+                                                style={{ width: '105px' }}
+                                            >
                                                 {formatIsoDate(
                                                     proposal?.attributes
                                                         ?.content?.attributes
