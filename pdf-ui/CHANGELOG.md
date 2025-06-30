@@ -12,9 +12,6 @@ changes.
 -  Align Vote link
 -  Add conditional statement for visibility of poll header text
 
-## [v1.0.3-alfa](https://www.npmjs.com/package/@intersect.mbo/pdf-ui/v/1.0.3-beta) 2025-06-19
--  Fix Vote link visibility
-
 ## [v1.0.3-alfa](https://www.npmjs.com/package/@intersect.mbo/pdf-ui/v/1.0.3-alfa) 2025-06-19
 -   Fix removed voting button for non drep on budget proposal
 
