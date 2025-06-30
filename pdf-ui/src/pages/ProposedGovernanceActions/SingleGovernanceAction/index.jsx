@@ -1116,7 +1116,6 @@ const SingleGovernanceAction = ({ id }) => {
                                         mt={2}
                                         display='flex'
                                         alignItems='flex-end'
-                                        gap={2}
                                     >
                                         <Box>
                                             <Typography
@@ -1136,8 +1135,8 @@ const SingleGovernanceAction = ({ id }) => {
                                                 style={{
                                                     display: 'flex',
                                                     alignItems: 'center',
-                                                    gap: '16px',
                                                 }}
+                                                gap={2}
                                             >
                                                 <Typography>
                                                     {proposal?.attributes
