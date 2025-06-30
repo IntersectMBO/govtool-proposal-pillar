@@ -8,59 +8,75 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 As a minor extension, we also keep a semantic version for the `UNRELEASED`
 changes.
 
+## [v1.0.5-beta](https://www.npmjs.com/package/@intersect.mbo/pdf-ui/v/1.0.5-beta) 2025-06-30
+-   Align Vote link
+
 ## [v1.0.4-beta](https://www.npmjs.com/package/@intersect.mbo/pdf-ui/v/1.0.4-beta) 2025-06-30
--  Align Vote link
--  Add conditional statement for visibility of poll header text
+
+-   Align Vote link
+-   Add conditional statement for visibility of poll header text
 
 ## [v1.0.3-alfa](https://www.npmjs.com/package/@intersect.mbo/pdf-ui/v/1.0.3-alfa) 2025-06-19
+
 -   Fix removed voting button for non drep on budget proposal
 
 ## [v1.0.2-beta](https://www.npmjs.com/package/@intersect.mbo/pdf-ui/v/1.0.2-beta) 2025-06-19
--   Fix submit to ga button 
+
+-   Fix submit to ga button
 -   Added pointer to links
 
 ## [v1.0.2-alfa](https://www.npmjs.com/package/@intersect.mbo/pdf-ui/v/1.0.2-alfa) 2025-06-18
+
 -   Change login
 
 ## [v1.0.0-beta](https://www.npmjs.com/package/@intersect.mbo/pdf-ui/v/1.0.1-beta) 2025-06-18
+
 -   Change login
 -   Fix Invalid Link Validation Bypassed in Proposal Creation via UI and API #3715
 
 ## [v1.0.1-alfa](https://www.npmjs.com/package/@intersect.mbo/pdf-ui/v/1.0.1-alfa) 2025-06-12
--   Change: User verification mechanism changed to follow process 
+
+-   Change: User verification mechanism changed to follow process
 
 ## [v1.0.0-beta](https://www.npmjs.com/package/@intersect.mbo/pdf-ui/v/1.0.0-beta) 2025-06-11
+
 -   Fix Hard Fork Proposal type
 
 ## [v1.0.0-alfa](https://www.npmjs.com/package/@intersect.mbo/pdf-ui/v/1.0.0-alfa) 2025-06-05
+
 -   Added Hard Fork Proposal type
 
 ## [v0.7.0-beta-36](https://www.npmjs.com/package/@intersect.mbo/pdf-ui/v/0.7.0-beta-36) 2025-06-04
+
 -   Fix data-testIds
 
 ## [v0.7.0-beta-35](https://www.npmjs.com/package/@intersect.mbo/pdf-ui/v/0.7.0-beta-35) 2025-06-03
+
 -   Fix data-testIds
 
 ## [v0.7.0-beta-34](https://www.npmjs.com/package/@intersect.mbo/pdf-ui/v/0.7.0-beta-34) 2025-06-03
+
 -   Fix data-testIds
 -   Adjust link validation in proposal
 
-
 ## [v0.7.0-beta-33](https://www.npmjs.com/package/@intersect.mbo/pdf-ui/v/0.7.0-beta-33) 2025-06-02
+
 -   Remove CSS Rounded Edges on Creating Governance Action Pages on background
 -   Fix data-testIds
 
-
-
 ## [v0.7.0-beta-32](https://www.npmjs.com/package/@intersect.mbo/pdf-ui/v/0.7.0-beta-32) 2025-05-29
+
 -   fix: Update data-testid attributes for improved accessibility in form…
--   Hardware Wallet warning #2575 wording updated 
+-   Hardware Wallet warning #2575 wording updated
 -   fix: Refactor sorting mechanism
 -   fix: Fix display cards in Proposal Discussion
 
 ### Fixed
+
 ## [v0.7.0-beta-31](https://www.npmjs.com/package/@intersect.mbo/pdf-ui/v/0.7.0-beta-31) 2025-05-28
+
 ### Fixed
+
 -   feat: Enhanced Markdown rendering to support additional tags and styl…
 -   fix: Update data-testid attributes for improved accessibility in form…
 -   Hardware Wallet warning #2575
@@ -72,7 +88,6 @@ changes.
 -   Fix Insufficient Balance check
 -   Fix labeling for USD to ADA conversation rate #3692
 -   feat: Enhance sorting functionality in ProposalsList and ProposedGove…
-
 
 ## [v0.7.0-beta-28](https://www.npmjs.com/package/@intersect.mbo/pdf-ui/v/0.7.0-beta-30) 2025-05-26
 
@@ -86,6 +101,7 @@ changes.
 -   fix: Remove unnecessary optional chaining for content attribute in BudgetDiscussionReviewVersions component
 
 ### Added
+
 -   feat/ Implement Infinite Scroll for Proposal Discussion Forum Section…
 
 ## [v0.7.0-beta-28](https://www.npmjs.com/package/@intersect.mbo/pdf-ui/v/0.7.0-beta-29) 2025-05-15
