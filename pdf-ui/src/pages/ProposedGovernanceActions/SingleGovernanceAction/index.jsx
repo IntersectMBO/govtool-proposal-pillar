@@ -1119,7 +1119,6 @@ const SingleGovernanceAction = ({ id }) => {
                                         gap={2}
                                     >
                                         <Box>
-                                            {' '}
                                             <Typography
                                                 variant='caption'
                                                 sx={{
@@ -1165,6 +1164,7 @@ const SingleGovernanceAction = ({ id }) => {
                                                             data-testid='submit-as-GA-button'
                                                             sx={{
                                                                 width: 'max-content',
+                                                                cursor: 'pointer',
                                                             }}
                                                             onClick={async () => {
                                                                 const balance =
