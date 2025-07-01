@@ -1119,13 +1119,21 @@ const SingleGovernanceAction = ({ id }) => {
                                             </Typography>
                                         </Box>
                                     )}
+                                    {/* OVDE */}
                                     <Box
                                         mt={2}
-                                        display='flex'
-                                        alignItems='flex-end'
-                                        gap={2}
+                                        sx={{
+                                            display: 'flex',
+                                            alignItems: 'flex-end',
+                                            flexDirection: 'row',
+                                            gap: 2,
+                                            '@media (max-width: 800px)': {
+                                                flexDirection: 'column',
+                                                alignItems: 'flex-start',
+                                            },
+                                        }}
                                     >
-                                        <Box width={110}>
+                                        <Box width={160}>
                                             <Typography
                                                 variant='caption'
                                                 sx={{
@@ -1220,11 +1228,18 @@ const SingleGovernanceAction = ({ id }) => {
                                     </Box>
                                     <Box
                                         mt={2}
-                                        display='flex'
-                                        alignItems='flex-end'
-                                        gap={2}
+                                        sx={{
+                                            display: 'flex',
+                                            alignItems: 'flex-end',
+                                            flexDirection: 'row',
+                                            gap: 2,
+                                            '@media (max-width: 800px)': {
+                                                flexDirection: 'column',
+                                                alignItems: 'flex-start',
+                                            },
+                                        }}
                                     >
-                                        <Box width={110}>
+                                        <Box width={160}>
                                             <Typography
                                                 variant='caption'
                                                 sx={{
