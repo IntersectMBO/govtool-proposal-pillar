@@ -168,7 +168,8 @@ const CreateGovernanceActionDialog = ({ open = false, onClose = false }) => {
         linksErrors,
         withdrawalsErrors,
         constitutionErrors,
-    ]); // proposalData is a dependency
+    ]);
+
     // useEffect(() => {
     //     handleIsContinueDisabled()
     // },[proposalData])
