@@ -108,8 +108,6 @@ const LinkManager = ({
         });
     };
 
-    console.log('linksErrors', linksErrors);
-
     return (
         <Box>
             {proposalData?.proposal_links?.map((link, index) => (

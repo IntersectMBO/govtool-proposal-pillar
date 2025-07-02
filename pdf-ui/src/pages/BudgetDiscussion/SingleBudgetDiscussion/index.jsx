@@ -906,7 +906,7 @@ const SingleBudgetDiscussion = ({ id }) => {
                                                     handleOpenReviewVersions()
                                                 }
                                                 data-testid='review-version'
-                                                sx={{ cursor: 'pointer' }} 
+                                                sx={{ cursor: 'pointer' }}
                                             >
                                                 Review Versions
                                             </Link>
@@ -1844,17 +1844,20 @@ const SingleBudgetDiscussion = ({ id }) => {
                                 </CardContent>
                             </Card>
                         </Box>
-
-                        <Box
-                            mt={4}
-                            display='flex'
-                            alignItems='center'
-                            justifyContent='space-between'
-                        >
-                            <Typography variant='h4' component='h3'>
-                                Poll of DRep sentiment
-                            </Typography>
-                        </Box>
+                        {activePoll &&
+                            proposal?.attributes?.submitted_for_vote ===
+                                null && (
+                                <Box
+                                    mt={4}
+                                    display='flex'
+                                    alignItems='center'
+                                    justifyContent='space-between'
+                                >
+                                    <Typography variant='h4' component='h3'>
+                                        Poll of DRep sentiment
+                                    </Typography>
+                                </Box>
+                            )}
 
                         {activePoll &&
                             proposal?.attributes?.submitted_for_vote ===

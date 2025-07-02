@@ -697,15 +697,22 @@ const SingleGovernanceAction = ({ id }) => {
                                 }
                             </Card>
                         </Box> */}
-                        <Box display={'flex'} justifyContent={'flex-end'}>
-                            {checkShowValidation(false, walletAPI, user) && (
-                                <UserValidation
-                                    type='governance'
-                                    drepCheck={false}
-                                    drepRequired={false}
-                                />
-                            )}
-                        </Box>
+                        {!proposal?.attributes?.content?.attributes
+                            ?.prop_submitted && (
+                            <Box display={'flex'} justifyContent={'flex-end'}>
+                                {checkShowValidation(
+                                    false,
+                                    walletAPI,
+                                    user
+                                ) && (
+                                    <UserValidation
+                                        type='governance'
+                                        drepCheck={false}
+                                        drepRequired={false}
+                                    />
+                                )}
+                            </Box>
+                        )}
 
                         <Box mt={4}>
                             <Card>
@@ -745,54 +752,7 @@ const SingleGovernanceAction = ({ id }) => {
                                             xs={2}
                                             display='flex'
                                             justifyContent='flex-end'
-                                        > 
-                                            <Box>
-                                                {user &&
-                                                proposal?.attributes?.content?.attributes?.prop_submitted === false &&
-                                                //proposal?.attributes?.prop_submitted &&
-                                                user?.user?.id?.toString() ===
-                                                    proposal?.attributes?.user_id?.toString() ? (
-                                                    <Button
-                                                        variant='outlined'
-                                                        data-testid='submit-as-GA-button'
-                                                        sx={{
-                                                            width: 'max-content', 
-                                                        }}
-                                                        onClick={async () => {
-                                                            const balance =
-                                                                await fetchCurrentWalletBalance();
-                                                            if (
-                                                                balance >= 10.18
-                                                            ) {
-                                                                await loginUserToApp(
-                                                                    {
-                                                                        wallet: walletAPI,
-                                                                        setUser,
-                                                                        setOpenUsernameModal,
-                                                                        callBackFn:
-                                                                            () => {
-                                                                                setOpenGASubmissionDialog(
-                                                                                    true
-                                                                                );
-                                                                            },
-                                                                        clearStates,
-                                                                        addErrorAlert,
-                                                                        addSuccessAlert,
-                                                                        addChangesSavedAlert,
-                                                                    }
-                                                                );
-                                                            } else {
-                                                                setOpenAlertDialog(
-                                                                    true
-                                                                );
-                                                            }
-                                                        }}
-                                                    >
-                                                        Submit as Governance
-                                                        Action
-                                                    </Button>
-                                                ) : null}
-                                            </Box>
+                                        >
                                             {/* SHARE BUTTON */}
 
                                             <Tooltip
@@ -1138,19 +1098,48 @@ const SingleGovernanceAction = ({ id }) => {
                                             }
                                         </Typography>
                                     </Box>
-                                    <Box
-                                        mt={2}
-                                        display='flex'
-                                        alignItems='flex-end'
-                                        gap={2}
-                                    >
-                                        <Box>
-                                            {' '}
+                                    {proposal?.attributes?.content?.attributes
+                                        ?.prop_submitted && (
+                                        <Box mt={2}>
                                             <Typography
                                                 variant='caption'
                                                 sx={{
                                                     color: (theme) =>
-                                                        theme?.palette?.text?.grey,
+                                                        theme?.palette?.text
+                                                            ?.grey,
+                                                }}
+                                            >
+                                                Proposed on:
+                                            </Typography>
+                                            <Typography>
+                                                {formatIsoDate(
+                                                    proposal?.attributes
+                                                        ?.createdAt
+                                                )}
+                                            </Typography>
+                                        </Box>
+                                    )}
+                                    {/* OVDE */}
+                                    <Box
+                                        mt={2}
+                                        sx={{
+                                            display: 'flex',
+                                            alignItems: 'flex-end',
+                                            flexDirection: 'row',
+                                            gap: 2,
+                                            '@media (max-width: 800px)': {
+                                                flexDirection: 'column',
+                                                alignItems: 'flex-start',
+                                            },
+                                        }}
+                                    >
+                                        <Box width={160}>
+                                            <Typography
+                                                variant='caption'
+                                                sx={{
+                                                    color: (theme) =>
+                                                        theme?.palette?.text
+                                                            ?.grey,
                                                 }}
                                             >
                                                 {proposal?.attributes?.content
@@ -1158,39 +1147,99 @@ const SingleGovernanceAction = ({ id }) => {
                                                     ? `Submitted on:`
                                                     : `Proposed on:`}
                                             </Typography>
+
                                             <Typography>
                                                 {proposal?.attributes?.content
                                                     ?.attributes?.prop_submitted
                                                     ? `${formatIsoDate(proposal?.attributes?.content?.attributes?.prop_submission_date)}`
                                                     : `${formatIsoDate(
-                                                        proposal?.attributes
-                                                            ?.createdAt
-                                                    )}`}
+                                                          proposal?.attributes
+                                                              ?.createdAt
+                                                      )}`}
                                             </Typography>
                                         </Box>
-                                        {proposal?.attributes?.content?.attributes?.prop_submitted &&
-                                        (<Box>
-                                            <Link
-                                                variant='outlined'
-                                                data-testid='review-and-vote-link'
-                                                        onClick={() =>
-                                                            navigate(
-                                                               `/connected/governance_actions/${proposal?.attributes?.content?.attributes?.prop_submission_tx_hash}#0`
-                                                            )}
-                                                sx={{ cursor: 'pointer' }} 
-                                            >Vote</Link>
+                                        <Box>
+                                            {user &&
+                                            proposal?.attributes?.content
+                                                ?.attributes?.prop_submitted ===
+                                                false &&
+                                            //proposal?.attributes?.prop_submitted &&
+                                            user?.user?.id?.toString() ===
+                                                proposal?.attributes?.user_id?.toString() ? (
+                                                <Link
+                                                    variant='outlined'
+                                                    data-testid='submit-as-GA-button'
+                                                    sx={{
+                                                        width: 'max-content',
+                                                        cursor: 'pointer',
+                                                    }}
+                                                    onClick={async () => {
+                                                        const balance =
+                                                            await fetchCurrentWalletBalance();
+                                                        if (
+                                                            balance >= 100000.18
+                                                        ) {
+                                                            await loginUserToApp(
+                                                                {
+                                                                    wallet: walletAPI,
+                                                                    setUser,
+                                                                    setOpenUsernameModal,
+                                                                    callBackFn:
+                                                                        () => {
+                                                                            setOpenGASubmissionDialog(
+                                                                                true
+                                                                            );
+                                                                        },
+                                                                    clearStates,
+                                                                    addErrorAlert,
+                                                                    addSuccessAlert,
+                                                                    addChangesSavedAlert,
+                                                                }
+                                                            );
+                                                        } else {
+                                                            setOpenAlertDialog(
+                                                                true
+                                                            );
+                                                        }
+                                                    }}
+                                                >
+                                                    Submit as Governance Action
+                                                </Link>
+                                            ) : null}
+                                            {proposal?.attributes?.content
+                                                ?.attributes?.prop_submitted ? (
+                                                <Link
+                                                    variant='outlined'
+                                                    data-testid='review-and-vote-link'
+                                                    onClick={() =>
+                                                        navigate(
+                                                            `/connected/governance_actions/${proposal?.attributes?.content?.attributes?.prop_submission_tx_hash}#0`
+                                                        )
+                                                    }
+                                                    sx={{
+                                                        width: 'max-content',
+                                                        cursor: 'pointer',
+                                                    }}
+                                                >
+                                                    Vote
+                                                </Link>
+                                            ) : null}
                                         </Box>
-                                        )
-                                        }
                                     </Box>
                                     <Box
                                         mt={2}
-                                        display='flex'
-                                        alignItems='flex-end'
-                                        gap={2}
+                                        sx={{
+                                            display: 'flex',
+                                            alignItems: 'flex-end',
+                                            flexDirection: 'row',
+                                            gap: 2,
+                                            '@media (max-width: 800px)': {
+                                                flexDirection: 'column',
+                                                alignItems: 'flex-start',
+                                            },
+                                        }}
                                     >
-                                        <Box>
-                                            {' '}
+                                        <Box width={160}>
                                             <Typography
                                                 variant='caption'
                                                 sx={{
@@ -1213,21 +1262,11 @@ const SingleGovernanceAction = ({ id }) => {
                                         <Box>
                                             <Link
                                                 variant='outlined'
-                                                startIcon={
-                                                    <IconLink
-                                                        fill={
-                                                            theme.palette
-                                                                .primary.main
-                                                        }
-                                                        width='18'
-                                                        height='18'
-                                                    />
-                                                }
                                                 onClick={() =>
                                                     handleOpenReviewVersions()
                                                 }
                                                 data-testid='review-version'
-                                                sx={{ cursor: 'pointer' }} 
+                                                sx={{ cursor: 'pointer' }}
                                             >
                                                 Review Versions
                                             </Link>
