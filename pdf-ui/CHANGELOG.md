@@ -8,6 +8,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 As a minor extension, we also keep a semantic version for the `UNRELEASED`
 changes.
 
+## [v1.0.9-beta](https://www.npmjs.com/package/@intersect.mbo/pdf-ui/v/1.0.9-beta) 2025-07-03
+-   Support IPFS Links for Governance Action Submissions #3851
+
 ## [v1.0.8-beta](https://www.npmjs.com/package/@intersect.mbo/pdf-ui/v/1.0.8-beta) 2025-06-30
 -   Align Vote link
 
