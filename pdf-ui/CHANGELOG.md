@@ -8,6 +8,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 As a minor extension, we also keep a semantic version for the `UNRELEASED`
 changes.
 
+## [v1.0.10-beta](https://www.npmjs.com/package/@intersect.mbo/pdf-ui/v/1.0.10-beta) 2025-07-29
+-   Submitting Governance Action with IPFS Metadata URL Fails Due to Unsupported URL Scheme #3979
+
 ## [v1.0.9-beta](https://www.npmjs.com/package/@intersect.mbo/pdf-ui/v/1.0.9-beta) 2025-07-03
 -   Support IPFS Links for Governance Action Submissions #3851
 

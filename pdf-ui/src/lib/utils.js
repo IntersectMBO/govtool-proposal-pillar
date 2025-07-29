@@ -64,7 +64,9 @@ export function isValidURLLength(s) {
 }
 
 export const openInNewTab = (url) => {
-    if (!url.startsWith('http://') && !url.startsWith('https://')) {
+    if (url.startsWith('ipfs://')) {
+        url = `https://ipfs.io/ipfs/${url.replace('ipfs://', '')}`;
+    } else if (!url.startsWith('http://') && !url.startsWith('https://')) {
         url = 'https://' + url;
     }
     const newWindow = window.open(url, '_blank', 'noopener,noreferrer');
