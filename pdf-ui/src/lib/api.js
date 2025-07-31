@@ -599,3 +599,13 @@ export const getHardForkData = async () => {
         throw error;
     }
 };
+
+export const getViaProxy = async (endpoint = '', payload) => {
+    try {
+        const { data } = await axiosInstance.post(`/api/proxy`, payload);
+        return data;
+    } catch (error) {
+        console.error('Error posting data via govtool proxy:', error);
+        throw error;
+    }
+};
