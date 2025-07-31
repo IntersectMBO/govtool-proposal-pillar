@@ -159,7 +159,7 @@ const EditProposalDialog = ({
                     setIsSaveDisabled(false);
                 }
             }
-             if (draft?.gov_action_type_id == 6) {
+            if (draft?.gov_action_type_id == 6) {
                 if (
                     draft?.proposal_hard_fork_content?.major == '' ||
                     draft?.proposal_hard_fork_content?.minor == '' ||
@@ -177,8 +177,8 @@ const EditProposalDialog = ({
             //     draft.proposal_hard_fork_content.previous_ga_hash = draft.proposal_hard_fork_content.data.attributes.previous_ga_hash
             //     draft.proposal_hard_fork_content.previous_ga_id = draft.proposal_hard_fork_content.data.attributes.previous_ga_id
             //     draft.proposal_hard_fork_content.major = draft.proposal_hard_fork_content.data.attributes.major
-            //     draft.proposal_hard_fork_content.minor = draft.proposal_hard_fork_content.data.attributes.minor     
-            //  //   delete draft.proposal_hard_fork_content.data 
+            //     draft.proposal_hard_fork_content.minor = draft.proposal_hard_fork_content.data.attributes.minor
+            //  //   delete draft.proposal_hard_fork_content.data
             //     setDraftData(draft)
             // }
 
@@ -246,8 +246,7 @@ const EditProposalDialog = ({
                     ?.proposal_constitution_content,
             proposal_hard_fork_content:
                 proposalData?.attributes?.content?.attributes
-                    ?.proposal_hard_fork_content
-                     || {},
+                    ?.proposal_hard_fork_content || {},
         };
         return draft;
     };
@@ -313,14 +312,17 @@ const EditProposalDialog = ({
         }
 
         try {
-            let payload = {...draft, proposal_hard_fork_content : 
-                {  
-                    previous_ga_hash : draft.proposal_hard_fork_content.previous_ga_hash, 
-                    previous_ga_id : draft.proposal_hard_fork_content.previous_ga_id, 
-                    major : draft.proposal_hard_fork_content.major,
-                    minor : draft.proposal_hard_fork_content.minor
-                }
-            }
+            let payload = {
+                ...draft,
+                proposal_hard_fork_content: {
+                    previous_ga_hash:
+                        draft.proposal_hard_fork_content.previous_ga_hash,
+                    previous_ga_id:
+                        draft.proposal_hard_fork_content.previous_ga_id,
+                    major: draft.proposal_hard_fork_content.major,
+                    minor: draft.proposal_hard_fork_content.minor,
+                },
+            };
             const response = await createProposalContent({
                 ...payload,
                 ...proposalConentObj,
@@ -413,6 +415,9 @@ const EditProposalDialog = ({
                 open={openEditDialog}
                 onClose={handleCloseEditDialog}
                 data-testid='edit-proposal-dialog'
+                PaperProps={{
+                    sx: { borderRadius: 0 },
+                }}
             >
                 <Box height={'100%'} position={'relative'}>
                     <Grid
@@ -907,7 +912,6 @@ const EditProposalDialog = ({
                                                         }
                                                         isEdit={true}
                                                     />
-                                                    
                                                 ) : null
                                             }
                                             <Box

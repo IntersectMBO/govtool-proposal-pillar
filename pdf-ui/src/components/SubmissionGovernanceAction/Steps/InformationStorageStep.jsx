@@ -21,7 +21,7 @@ import {
     GovernanceActionSubmittedModal,
     InsufficientBallanceModal,
 } from '../../../components/SubmissionGovernanceAction';
-import { updateProposalContent } from '../../../lib/api';
+import { getViaProxy, updateProposalContent } from '../../../lib/api';
 import {
     isValidURLFormat,
     isValidURLLength,
@@ -256,25 +256,24 @@ const InformationStorageStep = ({ proposal, handleCloseSubmissionDialog }) => {
             if (!url) {
                 throw new Error('url is not defined or null');
             }
-            // Fetch the data from the URL
-            const response = await fetch(url, {
-                'User-Agent': 'govtool-agent',
-            });
-            // Check if the response is successful
-            if (!response.ok) {
+            const response = await getViaProxy('', { url: url, method: 'GET' });
+            console.log('🚀 ~ getHashFromUrl ~ response:', response);
+            if (response.status !== 200) {
                 throw new Error(`HTTP error! Status: ${response.status}`);
             }
-            // Read the text content from the response
-            const content = await response.text();
-            // Create a hash from the fetched content
+            const content =
+                typeof response.data === 'string'
+                    ? response.data
+                    : JSON.stringify(response.data);
             const urlHash = await walletAPI.createHash(content);
             return urlHash;
         } catch (error) {
-            console.error('Error fetching or hashing the content:', error);
-            throw error; // Re-throw the error if you want to handle it further up the call stack
+            alert(
+                `Error fetching data from URL: Please verify that the URL is publicly accessible and try again.`
+            );
+            throw error;
         }
     }
-
     useEffect(() => {
         if (proposal && walletAPI) {
             handleCreateGAJsonLD();

@@ -10,7 +10,7 @@ module.exports = {
         method = "GET",
         data = {},
         params = {},
-        headers = {},
+        headers = { "User-Agent": "govtool-proxy" },
       } = ctx.request.body;
       const response = await axios({ url, method, data, params, headers });
       ctx.send({ status: response.status, data: response.data });
