@@ -8,6 +8,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 As a minor extension, we also keep a semantic version for the `UNRELEASED`
 changes.
 
+## [v1.0.11-beta](https://www.npmjs.com/package/@intersect.mbo/pdf-ui/v/1.0.11-beta) 2025-07-31
+-   feat: Implement proxy data fetching and enhance error handling in InformationStorageStep
+-   feat: Add getViaProxy function to facilitate API requests through the proxy
+-   fix: Update User-Agent header in proxy controller for consistency
+-   refactor: Improve proposal data handling in ConstitutionManager and EditProposalDialog
+
 ## [v1.0.10-beta](https://www.npmjs.com/package/@intersect.mbo/pdf-ui/v/1.0.10-beta) 2025-07-29
 -   Submitting Governance Action with IPFS Metadata URL Fails Due to Unsupported URL Scheme #3979
 
