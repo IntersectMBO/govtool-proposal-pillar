@@ -244,7 +244,7 @@ const Step3 = ({
                                               gutterBottom
                                               data-testid={`amount-${index}-content`}
                                           >
-                                              {withdrawal.prop_amount}
+                                              ₳ {withdrawal.prop_amount}
                                           </Typography>
                                       </Box>
                                   </Box>
