@@ -141,6 +141,10 @@ const InformationStorageStep = ({ proposal, handleCloseSubmissionDialog }) => {
                             url: fileURL,
                             withdrawals: getWithdrawalsArray(),
                         });
+                    console.log(
+                        '🚀 ~ handleGASubmission ~ govActionBuilder:',
+                        govActionBuilder
+                    );
                 } else if (parseInt(proposalGATypeId) === 3) {
                     const constitUrl =
                         proposal?.attributes?.content?.attributes
@@ -230,7 +234,7 @@ const InformationStorageStep = ({ proposal, handleCloseSubmissionDialog }) => {
                 (withdrawal) => {
                     withdrawalsArray.push({
                         receivingAddress: withdrawal.prop_receiving_address,
-                        amount: withdrawal.prop_amount.toString(),
+                        amount: (withdrawal.prop_amount * 1000000).toString(),
                     });
                 }
             );
