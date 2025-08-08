@@ -8,6 +8,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 As a minor extension, we also keep a semantic version for the `UNRELEASED`
 changes.
 
+## [v1.0.12-beta](https://www.npmjs.com/package/@intersect.mbo/pdf-ui/v/1.0.12-beta) 2025-08-08
+-   feat:  Update Treasury Proposal Amount Field to Accept ADA Instead of Lovelace #4000
+
 ## [v1.0.11-beta](https://www.npmjs.com/package/@intersect.mbo/pdf-ui/v/1.0.11-beta) 2025-07-31
 -   feat: Implement proxy data fetching and enhance error handling in InformationStorageStep
 -   feat: Add getViaProxy function to facilitate API requests through the proxy
