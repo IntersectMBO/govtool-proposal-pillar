@@ -118,7 +118,7 @@ const WithdrawalsManager = ({
 
                         <TextField
                             margin='normal'
-                            label={`Receiving stake address ${index + 1}`}
+                            label={`Receiving stake address #${index + 1}`}
                             variant='outlined'
                             placeholder='e.g. stake1...'
                             value={withdrawal.prop_receiving_address || ''}
@@ -150,7 +150,7 @@ const WithdrawalsManager = ({
                         />
                         <TextField
                             margin='normal'
-                            label={`Amount (in ada) - ${index + 1}`}
+                            label={`Amount (in ada) #${index + 1}`}
                             type='tel'
                             variant='outlined'
                             placeholder='e.g. 2000 ada'
