@@ -8,6 +8,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 As a minor extension, we also keep a semantic version for the `UNRELEASED`
 changes.
 
+## [v1.0.13-beta](https://www.npmjs.com/package/@intersect.mbo/pdf-ui/v/1.0.13-beta) 2025-08-11
+-   Add # to Proposal Details WithdrawalsManager
+
 ## [v1.0.12-beta](https://www.npmjs.com/package/@intersect.mbo/pdf-ui/v/1.0.12-beta) 2025-08-08
 -   feat:  Update Treasury Proposal Amount Field to Accept ADA Instead of Lovelace #4000
 
