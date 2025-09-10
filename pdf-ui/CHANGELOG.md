@@ -8,35 +8,48 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 As a minor extension, we also keep a semantic version for the `UNRELEASED`
 changes.
 
+## [v1.0.14-beta](https://www.npmjs.com/package/@intersect.mbo/pdf-ui/v/1.0.14-beta) 2025-09-10
+
+-  fix: Proposal form resets guardrails script data on Constitution URL change. #4041
+
 ## [v1.0.13-beta](https://www.npmjs.com/package/@intersect.mbo/pdf-ui/v/1.0.13-beta) 2025-08-11
+
 -   Add # to Proposal Details WithdrawalsManager
 
 ## [v1.0.12-beta](https://www.npmjs.com/package/@intersect.mbo/pdf-ui/v/1.0.12-beta) 2025-08-08
--   feat:  Update Treasury Proposal Amount Field to Accept ADA Instead of Lovelace #4000
+
+-   feat: Update Treasury Proposal Amount Field to Accept ADA Instead of Lovelace #4000
 
 ## [v1.0.11-beta](https://www.npmjs.com/package/@intersect.mbo/pdf-ui/v/1.0.11-beta) 2025-07-31
+
 -   feat: Implement proxy data fetching and enhance error handling in InformationStorageStep
 -   feat: Add getViaProxy function to facilitate API requests through the proxy
 -   fix: Update User-Agent header in proxy controller for consistency
 -   refactor: Improve proposal data handling in ConstitutionManager and EditProposalDialog
 
 ## [v1.0.10-beta](https://www.npmjs.com/package/@intersect.mbo/pdf-ui/v/1.0.10-beta) 2025-07-29
+
 -   Submitting Governance Action with IPFS Metadata URL Fails Due to Unsupported URL Scheme #3979
 
 ## [v1.0.9-beta](https://www.npmjs.com/package/@intersect.mbo/pdf-ui/v/1.0.9-beta) 2025-07-03
+
 -   Support IPFS Links for Governance Action Submissions #3851
 
 ## [v1.0.8-beta](https://www.npmjs.com/package/@intersect.mbo/pdf-ui/v/1.0.8-beta) 2025-06-30
+
 -   Align Vote link
 
 ## [v1.0.7-beta](https://www.npmjs.com/package/@intersect.mbo/pdf-ui/v/1.0.7-beta) 2025-06-30
+
 -   Align Vote link
-- Fix: "Verify Yourself to submit" Message Displayed on Already Submitted Proposals #3857
+-   Fix: "Verify Yourself to submit" Message Displayed on Already Submitted Proposals #3857
 
 ## [v1.0.6-beta](https://www.npmjs.com/package/@intersect.mbo/pdf-ui/v/1.0.6-beta) 2025-06-30
+
 -   Align Vote link
 
 ## [v1.0.5-beta](https://www.npmjs.com/package/@intersect.mbo/pdf-ui/v/1.0.5-beta) 2025-06-30
+
 -   Align Vote link
 
 ## [v1.0.4-beta](https://www.npmjs.com/package/@intersect.mbo/pdf-ui/v/1.0.4-beta) 2025-06-30
