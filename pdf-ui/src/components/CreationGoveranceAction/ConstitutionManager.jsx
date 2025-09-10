@@ -54,12 +54,7 @@ const ConstitutionManager = ({
     };
     const handleUrlChange = (url_text) => {
         constcheckLinkValue(url_text, 'prop_constitution_url');
-        let pk = { ...proposalData.proposal_constitution_content }
-            ? {
-                  ...proposalData.proposal_constitution_content?.data
-                      ?.attributes,
-              }
-            : {};
+        let pk = proposalData.proposal_constitution_content || {};
         pk.prop_constitution_url = url_text;
         setProposalData({ ...proposalData, proposal_constitution_content: pk });
     };
