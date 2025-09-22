@@ -8,6 +8,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 As a minor extension, we also keep a semantic version for the `UNRELEASED`
 changes.
 
+## [v1.0.15-beta](https://www.npmjs.com/package/@intersect.mbo/pdf-ui/v/1.0.15-beta) 2025-09-22
+
+-  Increase Reference Links Limit per Proposal in Proposal Discussion Forum #4087
+
 ## [v1.0.14-beta](https://www.npmjs.com/package/@intersect.mbo/pdf-ui/v/1.0.14-beta) 2025-09-10
 
 -  fix: Proposal form resets guardrails script data on Constitution URL change. #4041

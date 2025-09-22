@@ -134,6 +134,10 @@ const InformationStorageStep = ({ proposal, handleCloseSubmissionDialog }) => {
                             hash: hashData,
                             url: fileURL,
                         });
+                    console.log(
+                        '🚀 ~ handleGASubmission ~ walletAPI:',
+                        walletAPI
+                    );
                 } else if (parseInt(proposalGATypeId) === 2) {
                     govActionBuilder =
                         await walletAPI.buildTreasuryGovernanceAction({
@@ -206,7 +210,7 @@ const InformationStorageStep = ({ proposal, handleCloseSubmissionDialog }) => {
                                 prop_submission_tx_hash: tx,
                             }
                         );
-                        setShowGovernanceActionSubmittedModal(true);
+                        setShowGovernanceActionSubmittedModal(true); 
                     }
                 }
             } else {
@@ -261,7 +265,6 @@ const InformationStorageStep = ({ proposal, handleCloseSubmissionDialog }) => {
                 throw new Error('url is not defined or null');
             }
             const response = await getViaProxy('', { url: url, method: 'GET' });
-            console.log('🚀 ~ getHashFromUrl ~ response:', response);
             if (response.status !== 200) {
                 throw new Error(`HTTP error! Status: ${response.status}`);
             }

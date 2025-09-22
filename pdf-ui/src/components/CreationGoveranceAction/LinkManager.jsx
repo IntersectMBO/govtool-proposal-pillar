@@ -81,15 +81,13 @@ const LinkManager = ({
     };
 
     const handleAddLink = () => {
-        if (proposalData?.proposal_links?.length < maxLinks) {
-            setProposalData({
-                ...proposalData,
-                proposal_links: [
-                    ...proposalData?.proposal_links,
-                    { prop_link: '' },
-                ],
-            });
-        }
+        setProposalData({
+            ...proposalData,
+            proposal_links: [
+                ...proposalData?.proposal_links,
+                { prop_link: '' },
+            ],
+        });
     };
 
     const handleRemoveLink = (index) => {
@@ -107,8 +105,6 @@ const LinkManager = ({
             return rest;
         });
     };
-
-    console.log('linksErrors', linksErrors);
 
     return (
         <Box>
@@ -209,27 +205,23 @@ const LinkManager = ({
                     </Box>
                 </Box>
             ))}
-            {proposalData?.proposal_links?.length < maxLinks && (
-                <Box
-                    sx={{
-                        display: 'flex',
-                        justifyContent: 'center',
-                        mt: 2,
-                    }}
+            <Box
+                sx={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    mt: 2,
+                }}
+            >
+                <Button
+                    variant='text'
+                    mt={2}
+                    startIcon={<IconPlus fill={theme.palette.primary.main} />}
+                    onClick={handleAddLink}
+                    data-testid='add-link-button'
                 >
-                    <Button
-                        variant='text'
-                        mt={2}
-                        startIcon={
-                            <IconPlus fill={theme.palette.primary.main} />
-                        }
-                        onClick={handleAddLink}
-                        data-testid='add-link-button'
-                    >
-                        Add link
-                    </Button>
-                </Box>
-            )}
+                    Add link
+                </Button>
+            </Box>
         </Box>
     );
 };
