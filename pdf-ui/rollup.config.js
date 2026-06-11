@@ -6,7 +6,7 @@ import terser from '@rollup/plugin-terser';
 import json from '@rollup/plugin-json';
 import postcss from 'rollup-plugin-postcss';
 
-module.exports = [
+export default [
     {
         input: './src/App.jsx',
         output: [
