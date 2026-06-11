@@ -11,6 +11,20 @@ const ConstitutionManager = ({
 }) => {
     const theme = useTheme();
 
+    console.log(proposalData);
+
+    useEffect(() => {
+        if (proposalData?.proposal_constitution_content?.data?.attributes) {
+            setProposalData({
+                ...proposalData,
+                proposal_constitution_content:
+                    proposalData.proposal_constitution_content.data.attributes,
+            });
+        } else {
+            return;
+        }
+    }, [proposalData]);
+
     const togglePropHhaveGuScript = (checked) => {
         let pk = proposalData.proposal_constitution_content;
         pk.prop_have_guardrails_script = checked;
@@ -40,9 +54,7 @@ const ConstitutionManager = ({
     };
     const handleUrlChange = (url_text) => {
         constcheckLinkValue(url_text, 'prop_constitution_url');
-        let pk = { ...proposalData.proposal_constitution_content }
-            ? { ...proposalData.proposal_constitution_content }
-            : {};
+        let pk = proposalData.proposal_constitution_content || {};
         pk.prop_constitution_url = url_text;
         setProposalData({ ...proposalData, proposal_constitution_content: pk });
     };
@@ -88,7 +100,9 @@ const ConstitutionManager = ({
     };
 
     useEffect(() => {
-        let pk = proposalData.proposal_constitution_content;
+        let pk =
+            proposalData.proposal_constitution_content ||
+            proposalData.data?.attributes?.proposal_constitution_content;
         if (pk != undefined) {
             if (Boolean(pk.prop_constitution_url))
                 constcheckLinkValue(

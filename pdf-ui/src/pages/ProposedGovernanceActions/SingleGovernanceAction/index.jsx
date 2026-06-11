@@ -1436,6 +1436,7 @@ const SingleGovernanceAction = ({ id }) => {
                                                               gutterBottom
                                                               data-testid={`amount-${index}-content`}
                                                           >
+                                                              ₳{' '}
                                                               {
                                                                   withdrawal.prop_amount
                                                               }

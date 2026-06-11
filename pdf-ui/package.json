@@ -1,6 +1,6 @@
 {
     "name": "@intersect.mbo/pdf-ui",
-    "version": "1.0.8-beta",
+    "version": "1.0.16-beta",
     "description": "Proposal discussion ui",
     "main": "./src/index.js",
     "exports": {
@@ -42,11 +42,13 @@
         "web-vitals": "^2.1.4"
     },
     "devDependencies": {
+        "@babel/preset-env": "^7.29.2",
+        "@babel/preset-react": "^7.28.5",
         "@rollup/plugin-babel": "^6.0.4",
         "@rollup/plugin-commonjs": "^25.0.8",
         "@rollup/plugin-json": "^6.1.0",
         "@rollup/plugin-node-resolve": "^15.2.3",
-        "@rollup/plugin-terser": "^0.4.4",
+        "@rollup/plugin-terser": "^1.0.0",
         "@testing-library/jest-dom": "^5.17.0",
         "@testing-library/react": "^13.4.0",
         "@testing-library/user-event": "^13.5.0",
@@ -61,7 +63,6 @@
         "react": "^18.3.1",
         "react-dom": "^18.3.1",
         "react-router-dom": "^6.23.1",
-        "react-scripts": "5.0.1",
         "sass": "^1.77.2"
     },
     "prettier": {

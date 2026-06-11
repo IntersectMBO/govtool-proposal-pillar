@@ -21,7 +21,7 @@ import {
     GovernanceActionSubmittedModal,
     InsufficientBallanceModal,
 } from '../../../components/SubmissionGovernanceAction';
-import { updateProposalContent } from '../../../lib/api';
+import { getViaProxy, updateProposalContent } from '../../../lib/api';
 import {
     isValidURLFormat,
     isValidURLLength,
@@ -31,7 +31,6 @@ import { IconExternalLink } from '@intersect.mbo/intersectmbo.org-icons-set';
 import { useTheme } from '@emotion/react';
 
 const InformationStorageStep = ({ proposal, handleCloseSubmissionDialog }) => {
-   
     const theme = useTheme();
     const navigate = useNavigate();
     const { walletAPI, validateMetadata } = useAppContext();
@@ -112,12 +111,17 @@ const InformationStorageStep = ({ proposal, handleCloseSubmissionDialog }) => {
         const hash = await walletAPI.createHash(jsonLd);
         setHashData(hash);
     };
-    const proposalGATypeId= proposal?.attributes?.content?.attributes.gov_action_type_id;
+    const proposalGATypeId =
+        proposal?.attributes?.content?.attributes.gov_action_type_id;
     const handleGASubmission = async () => {
         try {
+            let url = fileURL;
             setCheckingDataModal(true);
+            if (fileURL.startsWith('ipfs://')) {
+                url = `https://ipfs.io/ipfs/${fileURL.replace('ipfs://', '')}`;
+            }
             const response = await validateMetadata({
-                url: fileURL,
+                url: url,
                 hash: hashData,
                 standard: 'CIP108',
             });
@@ -130,48 +134,65 @@ const InformationStorageStep = ({ proposal, handleCloseSubmissionDialog }) => {
                             hash: hashData,
                             url: fileURL,
                         });
+                    console.log(
+                        '🚀 ~ handleGASubmission ~ walletAPI:',
+                        walletAPI
+                    );
                 } else if (parseInt(proposalGATypeId) === 2) {
                     govActionBuilder =
                         await walletAPI.buildTreasuryGovernanceAction({
                             hash: hashData,
                             url: fileURL,
-                            withdrawals: getWithdrawalsArray()
+                            withdrawals: getWithdrawalsArray(),
                         });
-                }
-                else if (parseInt(proposalGATypeId) === 3)
-                {
-                    const constitUrl = proposal?.attributes?.content?.attributes.proposal_constitution_content.data.attributes.prop_constitution_url;   
+                    console.log(
+                        '🚀 ~ handleGASubmission ~ govActionBuilder:',
+                        govActionBuilder
+                    );
+                } else if (parseInt(proposalGATypeId) === 3) {
+                    const constitUrl =
+                        proposal?.attributes?.content?.attributes
+                            .proposal_constitution_content.data.attributes
+                            .prop_constitution_url;
                     const constiUrlHash = await getHashFromUrl(constitUrl);
                     govActionBuilder =
-                    await walletAPI.buildNewConstitutionGovernanceAction({
-                        hash: hashData,
-                        url: fileURL,
-                        constitutionUrl: constitUrl,
-                        constitutionHash: constiUrlHash
-                    //prevGovernanceActionHash: string;
-                    //prevGovernanceActionIndex: number;
-                    //scriptHash: string;
-                    });
-                }
-                else if(parseInt(proposalGATypeId) === 4)
-                { ///Motion of No Confidence
+                        await walletAPI.buildNewConstitutionGovernanceAction({
+                            hash: hashData,
+                            url: fileURL,
+                            constitutionUrl: constitUrl,
+                            constitutionHash: constiUrlHash,
+                            //prevGovernanceActionHash: string;
+                            //prevGovernanceActionIndex: number;
+                            //scriptHash: string;
+                        });
+                } else if (parseInt(proposalGATypeId) === 4) {
+                    ///Motion of No Confidence
                     govActionBuilder =
                         await walletAPI.buildNoConfidenceGovernanceAction({
                             hash: hashData,
                             url: fileURL,
                         });
-                }
-                else if(parseInt(proposalGATypeId) === 6)
-                { ///Hard Fork Initiation
+                } else if (parseInt(proposalGATypeId) === 6) {
+                    ///Hard Fork Initiation
                     govActionBuilder =
-                        await walletAPI.buildHardForkInitiationGovernanceActions({
-                            prevGovernanceActionHash: proposal?.attributes?.content?.attributes?.proposal_hard_fork_content.previous_ga_hash,
-                            prevGovernanceActionIndex: proposal?.attributes?.content?.attributes?.proposal_hard_fork_content.previous_ga_id,
-                            major: proposal?.attributes?.content?.attributes?.proposal_hard_fork_content.major,
-                            minor: proposal?.attributes?.content?.attributes?.proposal_hard_fork_content.minor,
-                            hash: hashData,
-                            url: fileURL,
-                        });
+                        await walletAPI.buildHardForkInitiationGovernanceActions(
+                            {
+                                prevGovernanceActionHash:
+                                    proposal?.attributes?.content?.attributes
+                                        ?.proposal_hard_fork_content
+                                        .previous_ga_hash,
+                                prevGovernanceActionIndex:
+                                    proposal?.attributes?.content?.attributes
+                                        ?.proposal_hard_fork_content
+                                        .previous_ga_id,
+                                major: proposal?.attributes?.content?.attributes
+                                    ?.proposal_hard_fork_content.major,
+                                minor: proposal?.attributes?.content?.attributes
+                                    ?.proposal_hard_fork_content.minor,
+                                hash: hashData,
+                                url: fileURL,
+                            }
+                        );
                 }
 
                 if (govActionBuilder) {
@@ -189,7 +210,7 @@ const InformationStorageStep = ({ proposal, handleCloseSubmissionDialog }) => {
                                 prop_submission_tx_hash: tx,
                             }
                         );
-                        setShowGovernanceActionSubmittedModal(true);
+                        setShowGovernanceActionSubmittedModal(true); 
                     }
                 }
             } else {
@@ -212,12 +233,17 @@ const InformationStorageStep = ({ proposal, handleCloseSubmissionDialog }) => {
 
     const getWithdrawalsArray = () => {
         let withdrawalsArray = [];
-        let x = proposal?.attributes?.content?.attributes?.proposal_withdrawals.forEach((withdrawal) =>
-        {
-            withdrawalsArray.push({receivingAddress:withdrawal.prop_receiving_address,amount:withdrawal.prop_amount.toString()})
-        });
+        let x =
+            proposal?.attributes?.content?.attributes?.proposal_withdrawals.forEach(
+                (withdrawal) => {
+                    withdrawalsArray.push({
+                        receivingAddress: withdrawal.prop_receiving_address,
+                        amount: (withdrawal.prop_amount * 1000000).toString(),
+                    });
+                }
+            );
         return withdrawalsArray;
-    }
+    };
 
     const handleDownloadJsonLD = () => {
         const blob = new Blob([JSON.stringify(jsonLdData, null, 2)], {
@@ -238,23 +264,23 @@ const InformationStorageStep = ({ proposal, handleCloseSubmissionDialog }) => {
             if (!url) {
                 throw new Error('url is not defined or null');
             }
-            // Fetch the data from the URL
-            const response = (await fetch(url,{'User-Agent': "govtool-agent"}));
-            // Check if the response is successful
-            if (!response.ok) {
+            const response = await getViaProxy('', { url: url, method: 'GET' });
+            if (response.status !== 200) {
                 throw new Error(`HTTP error! Status: ${response.status}`);
             }
-            // Read the text content from the response
-            const content = await response.text();
-            // Create a hash from the fetched content
+            const content =
+                typeof response.data === 'string'
+                    ? response.data
+                    : JSON.stringify(response.data);
             const urlHash = await walletAPI.createHash(content);
             return urlHash;
         } catch (error) {
-            console.error('Error fetching or hashing the content:', error);
-            throw error; // Re-throw the error if you want to handle it further up the call stack
+            alert(
+                `Error fetching data from URL: Please verify that the URL is publicly accessible and try again.`
+            );
+            throw error;
         }
     }
-
     useEffect(() => {
         if (proposal && walletAPI) {
             handleCreateGAJsonLD();
