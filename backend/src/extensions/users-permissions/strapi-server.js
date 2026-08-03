@@ -67,7 +67,12 @@ const issueRefreshToken = (payload, jwtOptions = {}) => {
 };
 
 module.exports = (plugin) => {
-	plugin.controllers.auth.callback = async (ctx) => {
+	const originalAuth = plugin.controllers.auth;
+	plugin.controllers.auth = ({ strapi }) => {
+		const core = originalAuth({ strapi });
+		return {
+			...core,
+			callback: async (ctx) => {
 		const provider = ctx.params.provider || 'local';
 		const params = ctx.request.body;
 
@@ -356,8 +361,8 @@ module.exports = (plugin) => {
 				});
 			}
 		}
-	};
-	plugin.controllers.auth['refreshToken'] = async (ctx) => {
+			},
+			refreshToken: async (ctx) => {
 		const store = await strapi.store({
 			type: 'plugin',
 			name: 'users-permissions',
@@ -435,6 +440,8 @@ module.exports = (plugin) => {
 			ctx.cookies.set('refreshToken', '', { expires: new Date(0) });
 			return ctx.badRequest(err.toString());
 		}
+			},
+		};
 	};
 	plugin.routes['content-api'].routes.push({
 		method: 'POST',
@@ -446,7 +453,15 @@ module.exports = (plugin) => {
 			auth: false,
 		},
 	});
-	plugin.controllers.user.update = async (ctx) => {
+	const originalUser = plugin.controllers.user;
+	plugin.controllers.user = ({ strapi }) => {
+		const core =
+			typeof originalUser === 'function'
+				? originalUser({ strapi })
+				: originalUser || {};
+		return {
+			...core,
+			update: async (ctx) => {
 		const params = ctx?.request?.body;
 		const userId = ctx?.state?.user?.id;
 
@@ -475,12 +490,14 @@ module.exports = (plugin) => {
 		} catch (error) {
 			ctx.throw(400, 'Failed to update user: ' + error.message);
 		}
-	};
-	plugin.controllers.user.find = async (ctx) => {
-		return {};
-	};
-	plugin.controllers.user.findOne = async (ctx) => {
-		return {};
+			},
+			find: async () => {
+				return {};
+			},
+			findOne: async () => {
+				return {};
+			},
+		};
 	};
 
 	return plugin;
