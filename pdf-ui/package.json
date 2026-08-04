@@ -27,7 +27,7 @@
         "src"
     ],
     "scripts": {
-        "build:rollup": "rollup -c",
+        "build:rollup": "rollup -c rollup.config.mjs",
         "prepublishOnly": "npm run build:rollup"
     },
     "dependencies": {
@@ -42,6 +42,7 @@
         "rehype-katex": "^7.0.1",
         "rehype-raw": "^7.0.0",
         "remark-breaks": "^4.0.0",
+        "remark-gfm": "^4.0.1",
         "remark-math": "^6.0.0",
         "slick-carousel": "^1.8.1",
         "web-vitals": "^2.1.4"
@@ -71,8 +72,7 @@
         "@mui/material": "^5.15.18",
         "react": "^19.2.8",
         "react-dom": "^19.2.8",
-        "react-router": "^8.3.0",
-        "sass": "^1.77.2"
+        "react-router": "^8.3.0"
     },
     "prettier": {
         "trailingComma": "es5",
