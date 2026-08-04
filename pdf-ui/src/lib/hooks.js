@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router';
 
 export const useDebounce = (value, delay = 1000) => {
     const [debouncedValue, setDebouncedValue] = useState(value);

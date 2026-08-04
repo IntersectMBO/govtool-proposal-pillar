@@ -11,7 +11,7 @@ import {
     FormControlLabel,
     Checkbox,
 } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 import { openInNewTab } from '../../../lib/utils';
 import CancelGovActionSubmissionModal from '../Modals/CancelGovActionSubmissionModal';
 

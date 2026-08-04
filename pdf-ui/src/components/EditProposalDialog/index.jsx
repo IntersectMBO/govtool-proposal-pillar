@@ -25,7 +25,7 @@ import {
     FormControlLabel,
 } from '@mui/material';
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 import { useAppContext } from '../../context/context';
 import {
     createProposalContent,

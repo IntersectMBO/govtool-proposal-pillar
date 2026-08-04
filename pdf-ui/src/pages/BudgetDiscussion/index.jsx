@@ -41,7 +41,7 @@ import {
     checkShowValidation,
     loginUserToApp,
 } from '../../lib/helpers';
-import { useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router';
 import { ScrollToTop, useDebounce } from '../../lib/hooks';
 import UserValidation from '../../components/UserValidation/UserValidation';
 

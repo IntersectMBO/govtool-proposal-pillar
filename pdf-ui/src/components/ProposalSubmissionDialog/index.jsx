@@ -6,7 +6,7 @@ import {
     StoreDataStep,
     InformationStorageStep,
 } from '../../components/SubmissionGovernanceAction';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 import { IconCheveronLeft } from '@intersect.mbo/intersectmbo.org-icons-set';
 import { useTheme } from '@emotion/react';
 import CreateGA2 from '../../assets/svg/CreateGA2';
