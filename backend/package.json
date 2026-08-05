@@ -46,6 +46,9 @@
   "overrides": {
     "ajv": "8.20.0",
     "@ai-sdk/provider-utils": "4.0.27",
+    "@ai-sdk/gateway": "3.0.121",
+    "@ai-sdk/react": "3.0.195",
+    "ai": "6.0.193",
     "sharp": "0.35.3",
     "@hono/node-server": "2.0.12",
     "hono": "4.12.34",
