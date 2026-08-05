@@ -5,7 +5,7 @@ import {
 } from '@intersect.mbo/intersectmbo.org-icons-set';
 import { Box, Button, IconButton, Modal, Typography } from '@mui/material';
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 
 const CancelRegistrationModal = ({ open, onClose }) => {
     const theme = useTheme();

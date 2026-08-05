@@ -38,7 +38,7 @@ import {
     checkShowValidation,
     loginUserToApp,
 } from '../../lib/helpers';
-import { useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router';
 import { decodeJWT } from '../../lib/utils';
 import UserValidation from '../../components/UserValidation/UserValidation';
 

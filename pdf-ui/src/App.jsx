@@ -1,6 +1,6 @@
 'use client';
 
-import './index.scss';
+import './index.css';
 import { GlobalWrapper, ThemeProviderWrapper } from './components';
 import { AppContextProvider } from './context/context';
 

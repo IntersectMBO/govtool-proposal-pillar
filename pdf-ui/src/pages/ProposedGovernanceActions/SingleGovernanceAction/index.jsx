@@ -36,11 +36,10 @@ import {
     DialogActions,
     DialogContent,
     DialogContentText,
-    badgeClasses,
     Link,
 } from '@mui/material';
 import { useEffect, useState, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 import {
     CommentCard,
     EditProposalDialog,

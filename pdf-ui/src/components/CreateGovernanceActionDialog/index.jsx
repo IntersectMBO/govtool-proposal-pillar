@@ -9,7 +9,7 @@ import {
     useMediaQuery,
 } from '@mui/material';
 import React, { useCallback, useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 import {
     Step1,
     Step2,
@@ -19,7 +19,7 @@ import {
 import { useAppContext } from '../../context/context';
 import { createProposal, deleteProposal } from '../../lib/api';
 import CreateGA2 from '../../assets/svg/CreateGA2.jsx';
-import { useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router';
 
 const CreateGovernanceActionDialog = ({ open = false, onClose = false }) => {
     const location = useLocation();

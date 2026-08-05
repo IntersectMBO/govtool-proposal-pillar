@@ -1,4 +1,4 @@
-import { Box, minor, TextField } from '@mui/material';
+import { Box, TextField } from '@mui/material';
 import React, { useEffect } from 'react';
 import { getHardForkData } from '../../lib/api';
 import { numberValidation } from '../../lib/utils';

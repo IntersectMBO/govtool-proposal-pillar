@@ -25,7 +25,7 @@ import {
 import { useEffect, useState } from 'react';
 
 import { useTheme } from '@emotion/react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router';
 import { useAppContext } from '../../context/context';
 import { correctVoteAdaFormat, formatIsoDate } from '../../lib/utils';
 import EditProposalDialog from '../EditProposalDialog';

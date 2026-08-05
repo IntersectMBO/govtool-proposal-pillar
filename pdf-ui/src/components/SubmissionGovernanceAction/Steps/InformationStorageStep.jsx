@@ -11,7 +11,7 @@ import {
     TextField,
     IconButton,
 } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 import { useAppContext } from '../../../context/context';
 import {
     CheckingDataModal,

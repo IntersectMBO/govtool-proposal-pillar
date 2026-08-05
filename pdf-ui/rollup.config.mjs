@@ -14,8 +14,18 @@ export default [
                 file: 'dist/app.cjs.js',
                 format: 'cjs',
                 sourcemap: true,
+                banner: "'use client';",
             },
         ],
+        onwarn(warning, warn) {
+            if (
+                warning.code === 'MODULE_LEVEL_DIRECTIVE' &&
+                warning.message.includes('use client')
+            ) {
+                return;
+            }
+            warn(warning);
+        },
         plugins: [
             external(),
             resolve({ extensions: ['.js', '.jsx'], browser: true }),
@@ -37,9 +47,14 @@ export default [
                 include: 'node_modules/**',
                 exclude: ['node_modules/@babel/runtime/**'],
             }),
-            postcss({ extract: true, inject: true, use: 'sass' }),
+            postcss({ extract: true, inject: true }),
             json(),
-            terser(),
+            terser({
+                compress: {
+                    // Keep the client boundary added to the bundled entry point.
+                    directives: false,
+                },
+            }),
         ],
     },
 ];

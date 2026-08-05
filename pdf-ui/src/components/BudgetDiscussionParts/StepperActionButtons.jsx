@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Box, Button } from '@mui/material';
 import PropTypes from 'prop-types';
-import { UNSAFE_ErrorResponseImpl } from 'react-router-dom';
-
 const StepperActionButtons = ({
     onClose,
     onSaveDraft = () => {},

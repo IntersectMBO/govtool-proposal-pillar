@@ -11,7 +11,7 @@ import {
     Box,
 } from '@mui/material';
 import React, { useEffect, useRef, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 import {
     DraftSuccessfulBudgetDiscussionModal,
     ProblemStatementsAndProposalBenefits,
@@ -32,7 +32,7 @@ import {
 } from '../../lib/api';
 import { cleanObject } from '../../lib/helpers';
 import { useAppContext } from '../../context/context';
-import { useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router';
 import BudgetDiscussionInfo from '../BudgetDiscussionParts/BudgetDiscussionInfo';
 import { add } from 'date-fns';
 

@@ -31,7 +31,7 @@ import {
     Link,
 } from '@mui/material';
 import { useEffect, useState, useRef } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router';
 import {
     CommentCard,
     BudgetDiscussionPoll,
