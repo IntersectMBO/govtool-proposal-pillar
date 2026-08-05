@@ -44,28 +44,13 @@
   },
   "license": "MIT",
   "overrides": {
-    "qs": "6.15.2",
-    "lodash": "4.18.1",
-    "styled-components": "6.4.2",
-    "vite": "6.4.3",
-    "@vitejs/plugin-react-swc": "4.3.1",
-    "@rushstack/node-core-library": "5.23.1",
-    "@rushstack/terminal": "0.24.0",
-    "@rushstack/ts-command-line": "5.3.9",
     "ajv": "8.20.0",
     "@ai-sdk/provider-utils": "4.0.27",
-    "@ai-sdk/gateway": "3.0.121",
-    "@ai-sdk/react": "3.0.195",
-    "ai": "6.0.193",
-    "uuid": "11.1.1",
-    "tar": "^7.5.21",
-    "ws": "8.21.0",
     "sharp": "0.35.3",
-    "undici": "6.27.0",
-    "brace-expansion": "5.0.8",
-    "markdown-it": "14.2.0",
-    "nodemailer": "9.0.3",
-    "esbuild": "0.28.1",
-    "@hono/node-server": "2.0.12"
+    "@hono/node-server": "2.0.12",
+    "hono": "4.12.34",
+    "undici": "6.28.0",
+    "brace-expansion": "5.0.9",
+    "fast-uri": "3.1.5"
   }
 }
