@@ -24,4 +24,7 @@ module.exports = createCoreRouter('api::auth-challenge.auth-challenge', {
 			roles: [],
 		},
 	},
+	// Only expose the 'create' route; find/findOne are unused by the
+	// wallet login flow which reads challenges directly via strapi.db.query()
+	only: ['create'],
 });
